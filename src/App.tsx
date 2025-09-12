@@ -1,57 +1,68 @@
-import React, { useEffect, useState } from 'react';
-import logo from './logo.svg';
-import { testConnection } from './services/api';
-import './App.css';
+import { useState } from "react";
 
 function App() {
-const [backendStatus, setBackendStatus] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
+  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    testConnection()
-      .then(data => {
-        setBackendStatus(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error('Backend connection failed:', err);
-        setLoading(false);
-      });
-  }, []);
+  const fetchHome = async () => {
+    try {
+      const res = await fetch("http://localhost:8080");
+      if (!res.ok) throw new Error(`Unable to fetch data`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  const fetchChat = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/chat");
+      if (!res.ok) throw new Error(`Unable to fetch data`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  const fetchHelp = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/help");
+      if (!res.ok) throw new Error(`Unable to fetch data`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  const fetchProfile = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/profile");
+      if (!res.ok) throw new Error(`Unable to fetch data`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Jargon App</h1>
-        <h2>Frontend ↔️ Backend Connection</h2>
-        
-        {loading ? (
-          <p>Testing backend connection...</p>
-        ) : backendStatus ? (
-          <div>
-            <h3>✅ Backend Connected!</h3>
-            <div style={{ 
-              background: '#282c34', 
-              padding: '20px', 
-              borderRadius: '8px',
-              marginTop: '20px'
-            }}>
-              <pre style={{ 
-                textAlign: 'left', 
-                fontSize: '14px',
-                color: '#61dafb'
-              }}>
-                {JSON.stringify(backendStatus, null, 2)}
-              </pre>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <h3>❌ Backend Connection Failed</h3>
-            <p>Make sure your backend is running on port 8000</p>
-          </div>
-        )}
-      </header>
+    <div style={{ padding: "2rem" }}>
+      <h1>Test API Backend</h1>
+      <button style={{ margin: "1rem" }} onClick={fetchHome}>
+        Fetch Home Page
+      </button>
+      <button style={{ margin: "1rem" }} onClick={fetchChat}>
+        Fetch Chat Page
+      </button>
+      <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+        Fetch Help Page
+      </button>
+      <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+        Fetch Profile Page
+      </button>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
   );
 }
