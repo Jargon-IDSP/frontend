@@ -47,6 +47,17 @@ function App() {
     }
   };
 
+  const fetchRandomFlashcard = async () => {
+    try {
+      const res = await fetch("http://localhost:8080/flashcards/random");
+      if (!res.ok) throw new Error(`Unable to fetch data`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      console.error("Error fetching data:", err);
+    }
+  };
+
   return (
     <div style={{ padding: "2rem" }}>
       <h1>Test API Backend</h1>
@@ -61,6 +72,9 @@ function App() {
       </button>
       <button style={{ margin: "1rem" }} onClick={fetchProfile}>
         Fetch Profile Page
+      </button>
+      <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+        Fetch Random Flashcard
       </button>
       <pre>{JSON.stringify(data, null, 2)}</pre>
     </div>
