@@ -25,7 +25,3 @@ env
 *.njsproj
 *.sln
 *.sw?
-
-.env
-dotenv
-env
