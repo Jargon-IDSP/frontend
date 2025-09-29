@@ -1,6 +1,12 @@
 import { useState } from "react";
+import {
+  SignedIn,
+  SignedOut,
+  SignInButton,
+  UserButton,
+} from "@clerk/clerk-react";
 
-function App() {
+export default function App() {
   const [data, setData] = useState(null);
 
   const fetchHome = async () => {
@@ -70,29 +76,37 @@ function App() {
   };
 
   return (
-    <div style={{ padding: "2rem" }}>
-      <h1>Test API Backend</h1>
-      <button style={{ margin: "1rem" }} onClick={fetchHome}>
-        Fetch Home Page
-      </button>
-      <button style={{ margin: "1rem" }} onClick={fetchChat}>
-        Fetch Chat Page
-      </button>
-      <button style={{ margin: "1rem" }} onClick={fetchHelp}>
-        Fetch Help Page
-      </button>
-      <button style={{ margin: "1rem" }} onClick={fetchProfile}>
-        Fetch Profile Page
-      </button>
-      <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
-        Fetch Random Flashcard
-      </button>
-      <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
-        Fetch Random Question
-      </button>
-      <pre>{JSON.stringify(data, null, 2)}</pre>
-    </div>
+    <>
+      <header>
+        <SignedOut>
+          <SignInButton />
+        </SignedOut>
+        <SignedIn>
+          <UserButton />
+        </SignedIn>
+      </header>
+      <div style={{ padding: "2rem" }}>
+        <h1>Test API Backend</h1>
+        <button style={{ margin: "1rem" }} onClick={fetchHome}>
+          Fetch Home Page
+        </button>
+        <button style={{ margin: "1rem" }} onClick={fetchChat}>
+          Fetch Chat Page
+        </button>
+        <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+          Fetch Help Page
+        </button>
+        <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+          Fetch Profile Page
+        </button>
+        <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+          Fetch Random Flashcard
+        </button>
+        <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
+          Fetch Random Question
+        </button>
+        <pre>{JSON.stringify(data, null, 2)}</pre>
+      </div>
+    </>
   );
 }
-
-export default App;
