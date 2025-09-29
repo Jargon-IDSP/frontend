@@ -4,10 +4,13 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  UserProfile,
+  useUser,
 } from "@clerk/clerk-react";
 
 export default function App() {
   const [data, setData] = useState(null);
+  const { isSignedIn, user } = useUser();
 
   const fetchHome = async () => {
     try {
@@ -80,33 +83,39 @@ export default function App() {
       <header>
         <SignedOut>
           <SignInButton />
+          <div style={{ padding: "2rem" }}>
+            <h1>Welcome to Jargon! 🗿</h1>
+            <button style={{ margin: "1rem" }} onClick={fetchHome}>
+              Fetch Home Page
+            </button>
+          </div>
         </SignedOut>
         <SignedIn>
           <UserButton />
+          <div style={{ padding: "2rem" }}>
+            <h1>Welcome {user?.fullName || user?.username || "User"}</h1>
+            <button style={{ margin: "1rem" }} onClick={fetchHome}>
+              Fetch Home Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchChat}>
+              Fetch Chat Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+              Fetch Help Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+              Fetch Profile Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+              Fetch Random Flashcard
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
+              Fetch Random Question
+            </button>
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
         </SignedIn>
       </header>
-      <div style={{ padding: "2rem" }}>
-        <h1>Test API Backend</h1>
-        <button style={{ margin: "1rem" }} onClick={fetchHome}>
-          Fetch Home Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchChat}>
-          Fetch Chat Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchHelp}>
-          Fetch Help Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchProfile}>
-          Fetch Profile Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
-          Fetch Random Flashcard
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
-          Fetch Random Question
-        </button>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </div>
     </>
   );
 }
