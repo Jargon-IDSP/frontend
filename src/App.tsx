@@ -12,9 +12,11 @@ export default function App() {
   const [data, setData] = useState(null);
   const { isSignedIn, user } = useUser();
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
   const fetchHome = async () => {
     try {
-      const res = await fetch("http://localhost:8080");
+      const res = await fetch(BACKEND_URL);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
@@ -25,7 +27,7 @@ export default function App() {
 
   const fetchChat = async () => {
     try {
-      const res = await fetch("http://localhost:8080/chat");
+      const res = await fetch(`${BACKEND_URL}/chat`);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
@@ -36,7 +38,7 @@ export default function App() {
 
   const fetchHelp = async () => {
     try {
-      const res = await fetch("http://localhost:8080/help");
+      const res = await fetch(`${BACKEND_URL}/help`);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
@@ -47,7 +49,7 @@ export default function App() {
 
   const fetchProfile = async () => {
     try {
-      const res = await fetch("http://localhost:8080/profile");
+      const res = await fetch(`${BACKEND_URL}/profile`);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
@@ -58,7 +60,7 @@ export default function App() {
 
   const fetchRandomFlashcard = async () => {
     try {
-      const res = await fetch("http://localhost:8080/flashcards/random");
+      const res = await fetch(`${BACKEND_URL}/random`);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
@@ -69,7 +71,7 @@ export default function App() {
 
   const fetchRandomQuestion = async () => {
     try {
-      const res = await fetch("http://localhost:8080/questions/random");
+      const res = await fetch(`${BACKEND_URL}/questions/random`);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
@@ -93,7 +95,7 @@ export default function App() {
         <SignedIn>
           <UserButton />
           <div style={{ padding: "2rem" }}>
-            <h1>Welcome {user?.fullName || user?.username || "User"}</h1>
+            <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
             <button style={{ margin: "1rem" }} onClick={fetchHome}>
               Fetch Home Page
             </button>
