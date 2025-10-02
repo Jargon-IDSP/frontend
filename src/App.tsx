@@ -4,13 +4,12 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
-  UserProfile,
   useUser,
 } from "@clerk/clerk-react";
 
 export default function App() {
   const [data, setData] = useState(null);
-  const { isSignedIn, user } = useUser();
+  const { user } = useUser();
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
