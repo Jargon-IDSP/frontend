@@ -59,7 +59,7 @@ export default function App() {
 
   const fetchRandomFlashcard = async () => {
     try {
-      const res = await fetch(`${BACKEND_URL}/random`);
+      const res = await fetch(`${BACKEND_URL}/flashcards/random`);
       if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
