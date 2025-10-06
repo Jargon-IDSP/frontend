@@ -10,6 +10,15 @@ import {
 export default function App() {
   const [data, setData] = useState(null);
   const { getToken } = useAuth();
+  useUser,
+} from "@clerk/clerk-react";
+
+export default function App() {
+  const [data, setData] = useState<any>(null);
+  const [error, setError] = useState<string | null>(null);
+  const { user } = useUser();
+
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
   const BACKEND_URL = "http://localhost:8080";
 
@@ -31,17 +40,22 @@ export default function App() {
       const json = await res.json();
       setData(json);
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
       console.error("Error fetching data:", err);
     }
   };
 
   const makeUnauthenticatedRequest = async (url: string) => {
     try {
-      const res = await fetch(url);
-      if (!res.ok) throw new Error(`Unable to fetch data`);
+      setError(null);
+      const res = await fetch(`${BACKEND_URL}/chat`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
       const json = await res.json();
       setData(json);
     } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
       console.error("Error fetching data:", err);
     }
   };
@@ -55,19 +69,73 @@ export default function App() {
   };
 
   const fetchHelp = async () => {
-    await makeUnauthenticatedRequest(`${BACKEND_URL}/help`);
+    try {
+      setError(null);
+      const res = await fetch(`${BACKEND_URL}/help`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
+      console.error("Error fetching data:", err);
+    }
   };
 
   const fetchProfile = async () => {
-    await makeAuthenticatedRequest(`${BACKEND_URL}/profile`);
+    try {
+      setError(null);
+      const res = await fetch(`${BACKEND_URL}/profile`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
+      console.error("Error fetching data:", err);
+    }
   };
 
   const fetchRandomFlashcard = async () => {
-    await makeUnauthenticatedRequest(`${BACKEND_URL}/flashcards/random`);
+    try {
+      setError(null);
+      const res = await fetch(`${BACKEND_URL}/flashcards/random`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
+      console.error("Error fetching data:", err);
+    }
+  };
+
+  const fetchFlashcards = async () => {
+    try {
+      setError(null);
+      const res = await fetch(`${BACKEND_URL}/flashcards`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
+      console.error("Error fetching data:", err);
+    }
   };
 
   const fetchRandomQuestion = async () => {
-    await makeUnauthenticatedRequest(`${BACKEND_URL}/questions/random`);
+    try {
+      setError(null);
+      const res = await fetch(`${BACKEND_URL}/questions/random`);
+      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const json = await res.json();
+      setData(json);
+    } catch (err) {
+      const errorMsg = err instanceof Error ? err.message : "Unknown error";
+      setError(errorMsg);
+      console.error("Error fetching data:", err);
+    }
   };
 
   // const fetchRandomQuestion = async () => {
@@ -95,30 +163,49 @@ export default function App() {
         </SignedOut>
         <SignedIn>
           <UserButton />
+          <div style={{ padding: "2rem" }}>
+            <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
+
+            {error && (
+              <div
+                style={{
+                  color: "red",
+                  padding: "1rem",
+                  border: "1px solid red",
+                  marginBottom: "1rem",
+                  borderRadius: "4px",
+                }}
+              >
+                Error: {error}
+              </div>
+            )}
+
+            <button style={{ margin: "1rem" }} onClick={fetchHome}>
+              Fetch Home Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchChat}>
+              Fetch Chat Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+              Fetch Help Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+              Fetch Profile Page
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+              Fetch Random Flashcard
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
+              Fetch All Flashcards
+            </button>
+            <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
+              Fetch Random Question
+            </button>
+
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
         </SignedIn>
       </header>
-      <div style={{ padding: "2rem" }}>
-        <h1>Test API Backend</h1>
-        <button style={{ margin: "1rem" }} onClick={fetchHome}>
-          Fetch Home Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchChat}>
-          Fetch Chat Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchHelp}>
-          Fetch Help Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchProfile}>
-          Fetch Profile Page
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
-          Fetch Random Flashcard
-        </button>
-        <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
-          Fetch Random Question
-        </button>
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-      </div>
     </>
   );
 }
