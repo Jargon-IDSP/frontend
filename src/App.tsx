@@ -4,6 +4,12 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
+  useAuth,
+} from "@clerk/clerk-react";
+
+export default function App() {
+  const [data, setData] = useState(null);
+  const { getToken } = useAuth();
   useUser,
 } from "@clerk/clerk-react";
 
@@ -14,11 +20,23 @@ export default function App() {
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 
-  const fetchHome = async () => {
+  const BACKEND_URL = "http://localhost:8080";
+
+  const makeAuthenticatedRequest = async (url: string) => {
     try {
-      setError(null);
-      const res = await fetch(BACKEND_URL);
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const token = await getToken();
+      const res = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+      });
+      
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || `Unable to fetch data`);
+      }
+      
       const json = await res.json();
       setData(json);
     } catch (err) {
@@ -28,7 +46,7 @@ export default function App() {
     }
   };
 
-  const fetchChat = async () => {
+  const makeUnauthenticatedRequest = async (url: string) => {
     try {
       setError(null);
       const res = await fetch(`${BACKEND_URL}/chat`);
@@ -40,6 +58,14 @@ export default function App() {
       setError(errorMsg);
       console.error("Error fetching data:", err);
     }
+  };
+
+  const fetchHome = async () => {
+    await makeUnauthenticatedRequest(BACKEND_URL);
+  };
+
+  const fetchChat = async () => {
+    await makeAuthenticatedRequest(`${BACKEND_URL}/chat`);
   };
 
   const fetchHelp = async () => {
@@ -111,6 +137,17 @@ export default function App() {
       console.error("Error fetching data:", err);
     }
   };
+
+  // const fetchRandomQuestion = async () => {
+  //   try {
+  //     const res = await fetch("http://localhost:8080/questions/random");
+  //     if (!res.ok) throw new Error(`Unable to fetch data`);
+  //     const json = await res.json();
+  //     setData(json);
+  //   } catch (err) {
+  //     console.error("Error fetching data:", err);
+  //   }
+  // };
 
   return (
     <>
