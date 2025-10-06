@@ -5,22 +5,17 @@ import {
   SignInButton,
   UserButton,
   useAuth,
-} from "@clerk/clerk-react";
-
-export default function App() {
-  const [data, setData] = useState(null);
-  const { getToken } = useAuth();
   useUser,
 } from "@clerk/clerk-react";
+
 
 export default function App() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
+  const { getToken } = useAuth();
   const { user } = useUser();
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-  const BACKEND_URL = "http://localhost:8080";
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const makeAuthenticatedRequest = async (url: string) => {
     try {
