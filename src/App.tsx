@@ -20,9 +20,7 @@ export default function App() {
   const { user } = useUser();
   const { getToken } = useAuth();
 
-  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
-
-  const BACKEND_URL = "http://localhost:8080";
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const makeAuthenticatedRequest = async (url: string) => {
     try {
