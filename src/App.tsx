@@ -70,6 +70,17 @@ export default function App() {
     await makeUnauthenticatedRequest(`${BACKEND_URL}/questions/random`);
   };
 
+  // const fetchRandomQuestion = async () => {
+  //   try {
+  //     const res = await fetch("http://localhost:8080/questions/random");
+  //     if (!res.ok) throw new Error(`Unable to fetch data`);
+  //     const json = await res.json();
+  //     setData(json);
+  //   } catch (err) {
+  //     console.error("Error fetching data:", err);
+  //   }
+  // };
+
   return (
     <>
       <header>
