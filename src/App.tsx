@@ -8,14 +8,21 @@ import {
   useUser,
 } from "@clerk/clerk-react";
 
+// export default function App() {
+//   const [data, setData] = useState(null);
+//   const { getToken } = useAuth();
+//   useUser,
+// } from "@clerk/clerk-react";
 
 export default function App() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
-  const { getToken } = useAuth();
   const { user } = useUser();
+  const { getToken } = useAuth();
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+  // const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+  const BACKEND_URL = "http://localhost:8080";
 
   const makeAuthenticatedRequest = async (url: string) => {
     try {
@@ -43,14 +50,11 @@ export default function App() {
 
   const makeUnauthenticatedRequest = async (url: string) => {
     try {
-      setError(null);
-      const res = await fetch(`${BACKEND_URL}/chat`);
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+      const res = await fetch(url);
+      if (!res.ok) throw new Error(`Unable to fetch data`);
       const json = await res.json();
       setData(json);
     } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMsg);
       console.error("Error fetching data:", err);
     }
   };
@@ -78,17 +82,7 @@ export default function App() {
   };
 
   const fetchProfile = async () => {
-    try {
-      setError(null);
-      const res = await fetch(`${BACKEND_URL}/profile`);
-      if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
-      const json = await res.json();
-      setData(json);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMsg);
-      console.error("Error fetching data:", err);
-    }
+    await makeAuthenticatedRequest(`${BACKEND_URL}/profile`);
   };
 
   const fetchRandomFlashcard = async () => {
