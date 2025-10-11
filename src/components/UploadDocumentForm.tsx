@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { useAuth } from '@clerk/clerk-react'
 
 interface UploadDocumentFormProps {
   onSuccess?: () => void
@@ -8,6 +9,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string>('')
   const [uploading, setUploading] = useState(false)
+  const { getToken } = useAuth()  // ← ADD THIS
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
 
@@ -30,10 +32,14 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     setError('')
 
     try {
-      // Step 1: Get presigned URL
+      const token = await getToken()  
+      
       const signResponse = await fetch(`${BACKEND_URL}/documents/upload/sign`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`  
+        },
         credentials: 'include',
         body: JSON.stringify({ filename: file.name, type: file.type }),
       })
@@ -41,7 +47,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       if (!signResponse.ok) throw new Error('Failed to get upload URL')
       const { uploadUrl, key } = await signResponse.json()
 
-      // Step 2: Upload to S3
       const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': file.type },
@@ -50,10 +55,12 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
       if (!uploadResponse.ok) throw new Error('Failed to upload file')
 
-      // Step 3: Save document metadata to database
       const saveResponse = await fetch(`${BACKEND_URL}/documents`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}` 
+        },
         credentials: 'include',
         body: JSON.stringify({
           fileKey: key,
@@ -69,7 +76,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       alert('Upload successful!')
       setFile(null)
       
-      // Trigger refresh
       onSuccess?.()
       
     } catch (err) {

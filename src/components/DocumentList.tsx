@@ -1,5 +1,6 @@
 // components/DocumentsList.tsx
 import { useState, useEffect } from 'react'
+import { useAuth } from '@clerk/clerk-react'
 
 interface DocumentsListProps {
   refresh?: number 
@@ -9,6 +10,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   const [documents, setDocuments] = useState<any[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string>('')
+  const { getToken } = useAuth()  // ← ADD THIS
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
 
@@ -18,7 +20,12 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
       setError('')
       
       try {
+        const token = await getToken()  
+        
         const response = await fetch(`${BACKEND_URL}/documents`, {
+          headers: {
+            'Authorization': `Bearer ${token}` 
+          },
           credentials: 'include',
         })
         
@@ -38,7 +45,12 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
 
   const handleDownload = async (docId: string) => {
     try {
+      const token = await getToken() 
+      
       const response = await fetch(`${BACKEND_URL}/documents/${docId}/download`, {
+        headers: {
+          'Authorization': `Bearer ${token}` 
+        },
         credentials: 'include',
       })
       
@@ -46,7 +58,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
       
       const { downloadUrl } = await response.json()
       
-      // Open download URL in new tab
       window.open(downloadUrl, '_blank')
     } catch (err) {
       console.error('Download error:', err)
