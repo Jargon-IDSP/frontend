@@ -5,12 +5,13 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
-  useAuth,
+  // useAuth,
   useUser,
 } from "@clerk/clerk-react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
+import AddDocumentPage from "./pages/AddDocumentPage"; 
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -107,6 +108,10 @@ function HomePage() {
     }
   };
 
+    const fetchAddDocument = () => {
+    navigate('/addDocument');
+  };
+
   return (
     <>
       <header>
@@ -159,6 +164,9 @@ function HomePage() {
             <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
               Fetch Random Question
             </button>
+            <button style={{ margin: "1rem" }} onClick={fetchAddDocument}>
+              Fetch Add Document Page
+            </button>
 
             <pre>{JSON.stringify(data, null, 2)}</pre>
           </div>
@@ -186,6 +194,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <ProfilePage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/addDocument" 
+          element={
+            <ProtectedRoute>
+              <AddDocumentPage />
             </ProtectedRoute>
           } 
         />
