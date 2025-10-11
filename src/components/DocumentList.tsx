@@ -1,3 +1,4 @@
+// components/DocumentsList.tsx
 import { useState, useEffect } from 'react'
 
 interface DocumentsListProps {
@@ -35,6 +36,24 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     fetchDocuments()
   }, [refresh]) 
 
+  const handleDownload = async (docId: string) => {
+    try {
+      const response = await fetch(`${BACKEND_URL}/documents/${docId}/download`, {
+        credentials: 'include',
+      })
+      
+      if (!response.ok) throw new Error('Failed to get download URL')
+      
+      const { downloadUrl } = await response.json()
+      
+      // Open download URL in new tab
+      window.open(downloadUrl, '_blank')
+    } catch (err) {
+      console.error('Download error:', err)
+      alert('Failed to download file')
+    }
+  }
+
   if (isLoading) return <p style={{ padding: '1.5rem', color: '#666' }}>Loading documents…</p>
   if (error) return <p style={{ padding: '1.5rem', color: 'red' }}>{error}</p>
 
@@ -65,19 +84,21 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
                   Uploaded: {new Date(doc.createdAt).toLocaleDateString()}
                 </p>
               </div>
-              
-                href={doc.fileUrl}
-                target="_blank"
-                rel="noopener noreferrer"
+              <button
+                onClick={() => handleDownload(doc.id)}
                 style={{ 
+                  background: 'none',
+                  border: 'none',
                   color: '#0066cc', 
                   textDecoration: 'none',
                   fontSize: '0.875rem',
-                  fontWeight: '500'
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  padding: '0.5rem'
                 }}
-             <a>
+              >
                 📄 Download
-              </a>
+              </button>
             </div>
           ))}
         </div>
