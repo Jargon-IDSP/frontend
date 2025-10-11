@@ -11,7 +11,7 @@ import {
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
-import AddDocumentPage from "./pages/AddDocumentPage"; 
+import DocumentsPage from "./pages/DocumentsPage"; 
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -108,8 +108,8 @@ function HomePage() {
     }
   };
 
-    const fetchAddDocument = () => {
-    navigate('/addDocument');
+    const fetchDocuments = () => {
+    navigate('/documents');
   };
 
   return (
@@ -164,8 +164,8 @@ function HomePage() {
             <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
               Fetch Random Question
             </button>
-            <button style={{ margin: "1rem" }} onClick={fetchAddDocument}>
-              Fetch Add Document Page
+            <button style={{ margin: "1rem" }} onClick={fetchDocuments}>
+              Fetch Documents Page
             </button>
 
             <pre>{JSON.stringify(data, null, 2)}</pre>
@@ -198,10 +198,10 @@ export default function App() {
           } 
         />
         <Route 
-          path="/addDocument" 
+          path="/documents" 
           element={
             <ProtectedRoute>
-              <AddDocumentPage />
+              <DocumentsPage />
             </ProtectedRoute>
           } 
         />

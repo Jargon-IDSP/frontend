@@ -1,11 +1,15 @@
 import { useState } from 'react'
 
-export function UploadDocumentForm() { 
+interface UploadDocumentFormProps {
+  onSuccess?: () => void
+}
+
+export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) { 
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string>('')
   const [uploading, setUploading] = useState(false)
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080"
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -26,6 +30,7 @@ export function UploadDocumentForm() {
     setError('')
 
     try {
+      // Step 1: Get presigned URL
       const signResponse = await fetch(`${BACKEND_URL}/documents/upload/sign`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -36,6 +41,7 @@ export function UploadDocumentForm() {
       if (!signResponse.ok) throw new Error('Failed to get upload URL')
       const { uploadUrl, key } = await signResponse.json()
 
+      // Step 2: Upload to S3
       const uploadResponse = await fetch(uploadUrl, {
         method: 'PUT',
         headers: { 'Content-Type': file.type },
@@ -44,9 +50,27 @@ export function UploadDocumentForm() {
 
       if (!uploadResponse.ok) throw new Error('Failed to upload file')
 
-      console.log('File uploaded! Key:', key)
+      // Step 3: Save document metadata to database
+      const saveResponse = await fetch(`${BACKEND_URL}/documents`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({
+          fileKey: key,
+          filename: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+        }),
+      })
+
+      if (!saveResponse.ok) throw new Error('Failed to save document metadata')
+
+      console.log('Upload successful!')
       alert('Upload successful!')
       setFile(null)
+      
+      // Trigger refresh
+      onSuccess?.()
       
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Upload failed')
