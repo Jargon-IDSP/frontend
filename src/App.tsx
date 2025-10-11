@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
 import {
   SignedIn,
   SignedOut,
@@ -7,6 +8,9 @@ import {
   useAuth,
   useUser,
 } from "@clerk/clerk-react";
+import ProtectedRoute from "./components/ProtectedRoute";
+import ChatPage from "./pages/ChatPage";
+import ProfilePage from "./pages/ProfilePage";
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -14,37 +18,15 @@ import {
 //   useUser,
 // } from "@clerk/clerk-react";
 
-export default function App() {
+function HomePage() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
-  const { getToken } = useAuth();
+  // const { getToken } = useAuth();
+  const navigate = useNavigate();
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
-  const makeAuthenticatedRequest = async (url: string) => {
-    try {
-      const token = await getToken();
-      const res = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `Unable to fetch data`);
-      }
-      
-      const json = await res.json();
-      setData(json);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMsg);
-      console.error("Error fetching data:", err);
-    }
-  };
 
   const makeUnauthenticatedRequest = async (url: string) => {
     try {
@@ -61,8 +43,8 @@ export default function App() {
     await makeUnauthenticatedRequest(BACKEND_URL);
   };
 
-  const fetchChat = async () => {
-    await makeAuthenticatedRequest(`${BACKEND_URL}/chat`);
+  const fetchChat = () => {
+    navigate('/chat');
   };
 
   const fetchHelp = async () => {
@@ -79,8 +61,8 @@ export default function App() {
     }
   };
 
-  const fetchProfile = async () => {
-    await makeAuthenticatedRequest(`${BACKEND_URL}/profile`);
+  const fetchProfile = () => {
+    navigate('/profile');
   };
 
   const fetchRandomFlashcard = async () => {
@@ -124,17 +106,6 @@ export default function App() {
       console.error("Error fetching data:", err);
     }
   };
-
-  // const fetchRandomQuestion = async () => {
-  //   try {
-  //     const res = await fetch("http://localhost:8080/questions/random");
-  //     if (!res.ok) throw new Error(`Unable to fetch data`);
-  //     const json = await res.json();
-  //     setData(json);
-  //   } catch (err) {
-  //     console.error("Error fetching data:", err);
-  //   }
-  // };
 
   return (
     <>
@@ -194,5 +165,31 @@ export default function App() {
         </SignedIn>
       </header>
     </>
+  );
+}
+
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<HomePage />} />
+        <Route 
+          path="/chat" 
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          } 
+        />
+        <Route 
+          path="/profile" 
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          } 
+        />
+      </Routes>
+    </Router>
   );
 }
