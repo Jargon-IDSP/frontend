@@ -209,60 +209,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
           {uploading ? "Uploading..." : "Upload Document"}
         </button>
       </form>
-
-      {/* Documents List */}
-      <div style={{ marginTop: "2rem" }}>
-        <h3 style={{ marginBottom: "1rem" }}>Your Documents</h3>
-
-        {loadingDocuments ? (
-          <p>Loading documents...</p>
-        ) : documents.length === 0 ? (
-          <p style={{ color: "#666" }}>No documents uploaded yet.</p>
-        ) : (
-          <div
-            style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}
-          >
-            {documents.map((doc) => (
-              <div
-                key={doc.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "1rem",
-                  border: "1px solid #ddd",
-                  borderRadius: "4px",
-                  // backgroundColor: "#f9f9f9",
-                }}
-              >
-                <div>
-                  <p style={{ fontWeight: "bold", marginBottom: "0.25rem" }}>
-                    {doc.filename}
-                  </p>
-                  <p style={{ fontSize: "0.85rem", color: "#666" }}>
-                    {formatFileSize(doc.fileSize)} •{" "}
-                    {new Date(doc.createdAt).toLocaleDateString()}
-                  </p>
-                </div>
-                <button
-                  onClick={() => handleDelete(doc.id)}
-                  disabled={deletingId === doc.id}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: deletingId === doc.id ? "#ccc" : "#dc3545",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "4px",
-                    cursor: deletingId === doc.id ? "not-allowed" : "pointer",
-                  }}
-                >
-                  {deletingId === doc.id ? "Deleting..." : "Delete"}
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
     </div>
   );
 }

@@ -1,17 +1,22 @@
 import { useState } from "react";
-import { BrowserRouter as Router, Routes, Route, useNavigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
 import {
   SignedIn,
   SignedOut,
   SignInButton,
   UserButton,
-  // useAuth,
+  useAuth,
   useUser,
 } from "@clerk/clerk-react";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
-import DocumentsPage from "./pages/DocumentsPage"; 
+import DocumentsPage from "./pages/DocumentsPage";
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -26,8 +31,8 @@ function HomePage() {
   // const { getToken } = useAuth();
   const navigate = useNavigate();
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
-
+  const BACKEND_URL =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const makeUnauthenticatedRequest = async (url: string) => {
     try {
@@ -45,7 +50,7 @@ function HomePage() {
   };
 
   const fetchChat = () => {
-    navigate('/chat');
+    navigate("/chat");
   };
 
   const fetchHelp = async () => {
@@ -63,7 +68,7 @@ function HomePage() {
   };
 
   const fetchProfile = () => {
-    navigate('/profile');
+    navigate("/profile");
   };
 
   const fetchRandomFlashcard = async () => {
@@ -108,8 +113,8 @@ function HomePage() {
     }
   };
 
-    const fetchDocuments = () => {
-    navigate('/documents');
+  const fetchDocuments = () => {
+    navigate("/documents");
   };
 
   return (
@@ -167,7 +172,6 @@ function HomePage() {
             <button style={{ margin: "1rem" }} onClick={fetchDocuments}>
               Fetch Documents Page
             </button>
-
             <pre>{JSON.stringify(data, null, 2)}</pre>
           </div>
         </SignedIn>
@@ -181,29 +185,29 @@ export default function App() {
     <Router>
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route 
-          path="/chat" 
+        <Route
+          path="/chat"
           element={
             <ProtectedRoute>
               <ChatPage />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/profile" 
+        <Route
+          path="/profile"
           element={
             <ProtectedRoute>
               <ProfilePage />
             </ProtectedRoute>
-          } 
+          }
         />
-        <Route 
-          path="/documents" 
+        <Route
+          path="/documents"
           element={
             <ProtectedRoute>
               <DocumentsPage />
             </ProtectedRoute>
-          } 
+          }
         />
       </Routes>
     </Router>
