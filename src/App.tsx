@@ -10,7 +10,6 @@ import {
   SignedOut,
   SignInButton,
   UserButton,
-  useAuth,
   useUser,
 } from "@clerk/clerk-react";
 import ProtectedRoute from "./components/ProtectedRoute";
@@ -124,9 +123,6 @@ function HomePage() {
           <SignInButton />
           <div style={{ padding: "2rem" }}>
             <h1>Welcome to Jargon! 🗿</h1>
-            <button style={{ margin: "1rem" }} onClick={fetchHome}>
-              Fetch Home Page
-            </button>
           </div>
         </SignedOut>
         <SignedIn>
