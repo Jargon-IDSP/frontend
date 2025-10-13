@@ -1,13 +1,5 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-
-interface Document {
-  id: string;
-  filename: string;
-  fileType: string;
-  fileSize: number | null;
-  createdAt: string;
-}
 
 interface UploadDocumentFormProps {
   onSuccess?: () => void;
@@ -17,39 +9,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
   const [uploading, setUploading] = useState(false);
-  const [documents, setDocuments] = useState<Document[]>([]);
-  const [loadingDocuments, setLoadingDocuments] = useState(true);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
   const { getToken } = useAuth();
 
   const BACKEND_URL =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
-
-  // Fetch user's documents
-  const fetchDocuments = async () => {
-    try {
-      const token = await getToken();
-      const response = await fetch(`${BACKEND_URL}/documents`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setDocuments(data.documents);
-      }
-    } catch (err) {
-      console.error("Failed to fetch documents:", err);
-    } finally {
-      setLoadingDocuments(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchDocuments();
-  }, []);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -114,51 +77,12 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       alert("Upload successful!");
       setFile(null);
 
-      // Refresh the documents list
-      await fetchDocuments();
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
     } finally {
       setUploading(false);
     }
-  };
-
-  const handleDelete = async (documentId: string) => {
-    if (!confirm("Are you sure you want to delete this document?")) {
-      return;
-    }
-
-    setDeletingId(documentId);
-
-    try {
-      const token = await getToken();
-      const response = await fetch(`${BACKEND_URL}/documents/${documentId}`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error("Failed to delete document");
-
-      alert("Document deleted successfully!");
-
-      // Refresh the documents list
-      await fetchDocuments();
-    } catch (err) {
-      alert(err instanceof Error ? err.message : "Delete failed");
-    } finally {
-      setDeletingId(null);
-    }
-  };
-
-  const formatFileSize = (bytes: number | null) => {
-    if (!bytes) return "Unknown size";
-    if (bytes < 1024) return bytes + " B";
-    if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " KB";
-    return (bytes / (1024 * 1024)).toFixed(1) + " MB";
   };
 
   return (
