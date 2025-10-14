@@ -12,10 +12,7 @@ import {
   UserButton,
   useUser,
 } from "@clerk/clerk-react";
-import ProtectedRoute from "./components/ProtectedRoute";
-import ChatPage from "./pages/ChatPage";
-import ProfilePage from "./pages/ProfilePage";
-import DocumentsPage from "./pages/DocumentsPage";
+
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -23,11 +20,17 @@ import DocumentsPage from "./pages/DocumentsPage";
 //   useUser,
 // } from "@clerk/clerk-react";
 
+import ProtectedRoute from "./components/ProtectedRoute";
+import ChatPage from "./pages/ChatPage";
+import ProfilePage from "./pages/ProfilePage";
+import DocumentsPage from "./pages/DocumentsPage";
+import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
+
+/** ---------- Home Page (signed-in content + buttons) ---------- */
 function HomePage() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
-  // const { getToken } = useAuth();
   const navigate = useNavigate();
 
   const BACKEND_URL =
@@ -48,9 +51,10 @@ function HomePage() {
     await makeUnauthenticatedRequest(BACKEND_URL);
   };
 
-  const fetchChat = () => {
-    navigate("/chat");
-  };
+  const fetchChat = () => navigate("/chat");
+  const fetchProfile = () => navigate("/profile");
+  const fetchDocuments = () => navigate("/documents");
+  const openRandomQuestions = () => navigate("/random-questions");
 
   const fetchHelp = async () => {
     try {
@@ -64,10 +68,6 @@ function HomePage() {
       setError(errorMsg);
       console.error("Error fetching data:", err);
     }
-  };
-
-  const fetchProfile = () => {
-    navigate("/profile");
   };
 
   const fetchRandomFlashcard = async () => {
@@ -112,75 +112,82 @@ function HomePage() {
     }
   };
 
-  const fetchDocuments = () => {
-    navigate("/documents");
-  };
-
   return (
-    <>
-      <header>
-        <SignedOut>
-          <SignInButton />
-          <div style={{ padding: "2rem" }}>
-            <h1>Welcome to Jargon! 🗿</h1>
-          </div>
-        </SignedOut>
-        <SignedIn>
-          <UserButton />
-          <div style={{ padding: "2rem" }}>
-            <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
+    <header>
+      <SignedOut>
+        <SignInButton />
+        <div style={{ padding: "2rem" }}>
+          <h1>Welcome to Jargon! 🗿</h1>
+        </div>
+      </SignedOut>
 
-            {error && (
-              <div
-                style={{
-                  color: "red",
-                  padding: "1rem",
-                  border: "1px solid red",
-                  marginBottom: "1rem",
-                  borderRadius: "4px",
-                }}
-              >
-                Error: {error}
-              </div>
-            )}
+      <SignedIn>
+        {/* Navigate to the Random Questions Stepper page */}
+        <button style={{ margin: "1rem" }} onClick={openRandomQuestions}>
+          Open Random Questions (Stepper)
+        </button>
 
-            <button style={{ margin: "1rem" }} onClick={fetchHome}>
-              Fetch Home Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchChat}>
-              Fetch Chat Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchHelp}>
-              Fetch Help Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchProfile}>
-              Fetch Profile Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
-              Fetch Random Flashcard
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
-              Fetch All Flashcards
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
-              Fetch Random Question
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchDocuments}>
-              Fetch Documents Page
-            </button>
-            <pre>{JSON.stringify(data, null, 2)}</pre>
-          </div>
-        </SignedIn>
-      </header>
-    </>
+        <UserButton />
+
+        <div style={{ padding: "2rem" }}>
+          <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
+
+          {error && (
+            <div
+              style={{
+                color: "red",
+                padding: "1rem",
+                border: "1px solid red",
+                marginBottom: "1rem",
+                borderRadius: "4px",
+              }}
+            >
+              Error: {error}
+            </div>
+          )}
+
+          <button style={{ margin: "1rem" }} onClick={fetchHome}>
+            Fetch Home Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchChat}>
+            Fetch Chat Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+            Fetch Help Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+            Fetch Profile Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+            Fetch Random Flashcard
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
+            Fetch All Flashcards
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
+            Fetch Random Question
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchDocuments}>
+            Fetch Documents Page
+          </button>
+
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      </SignedIn>
+    </header>
   );
 }
 
+/** ---------- App Router ---------- */
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<HomePage />} />
+        <Route path="/" element={
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        } />
         <Route
           path="/chat"
           element={
@@ -202,6 +209,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <DocumentsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/random-questions"
+          element={
+            <ProtectedRoute>
+              <RandomQuestionsStepper />
             </ProtectedRoute>
           }
         />
