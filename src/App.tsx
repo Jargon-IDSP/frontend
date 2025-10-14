@@ -183,11 +183,7 @@ export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={
-          <ProtectedRoute>
-            <HomePage />
-          </ProtectedRoute>
-        } />
+                <Route path="/" element={<HomePage />} />
         <Route
           path="/chat"
           element={
