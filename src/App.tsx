@@ -1,13 +1,18 @@
 import { useState } from "react";
 import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  useNavigate,
+} from "react-router-dom";
+import {
   SignedIn,
   SignedOut,
   SignInButton,
   UserButton,
-  useAuth,
   useUser,
 } from "@clerk/clerk-react";
-import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
+
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -15,38 +20,21 @@ import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
 //   useUser,
 // } from "@clerk/clerk-react";
 
-export default function App() {
-  const [showStepper, setShowStepper] = useState(false);
+import ProtectedRoute from "./components/ProtectedRoute";
+import ChatPage from "./pages/ChatPage";
+import ProfilePage from "./pages/ProfilePage";
+import DocumentsPage from "./pages/DocumentsPage";
+import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
+
+/** ---------- Home Page (signed-in content + buttons) ---------- */
+function HomePage() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
-  const { getToken } = useAuth();
+  const navigate = useNavigate();
 
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
-
-  const makeAuthenticatedRequest = async (url: string) => {
-    try {
-      const token = await getToken();
-      const res = await fetch(url, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-      });
-      
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || `Unable to fetch data`);
-      }
-      
-      const json = await res.json();
-      setData(json);
-    } catch (err) {
-      const errorMsg = err instanceof Error ? err.message : "Unknown error";
-      setError(errorMsg);
-      console.error("Error fetching data:", err);
-    }
-  };
+  const BACKEND_URL =
+    import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const makeUnauthenticatedRequest = async (url: string) => {
     try {
@@ -63,9 +51,10 @@ export default function App() {
     await makeUnauthenticatedRequest(BACKEND_URL);
   };
 
-  const fetchChat = async () => {
-    await makeAuthenticatedRequest(`${BACKEND_URL}/chat`);
-  };
+  const fetchChat = () => navigate("/chat");
+  const fetchProfile = () => navigate("/profile");
+  const fetchDocuments = () => navigate("/documents");
+  const openRandomQuestions = () => navigate("/random-questions");
 
   const fetchHelp = async () => {
     try {
@@ -79,10 +68,6 @@ export default function App() {
       setError(errorMsg);
       console.error("Error fetching data:", err);
     }
-  };
-
-  const fetchProfile = async () => {
-    await makeAuthenticatedRequest(`${BACKEND_URL}/profile`);
   };
 
   const fetchRandomFlashcard = async () => {
@@ -127,98 +112,115 @@ export default function App() {
     }
   };
 
-  // const fetchRandomQuestion = async () => {
-  //   try {
-  //     const res = await fetch("http://localhost:8080/questions/random");
-  //     if (!res.ok) throw new Error(`Unable to fetch data`);
-  //     const json = await res.json();
-  //     setData(json);
-  //   } catch (err) {
-  //     console.error("Error fetching data:", err);
-  //   }
-  // };
-
   return (
-    <>
-      <header>
-        <SignedOut>
-          <SignInButton />
-          <div style={{ padding: "2rem" }}>
-            <h1>Welcome to Jargon! 🗿</h1>
-            <button style={{ margin: "1rem" }} onClick={fetchHome}>
-              Fetch Home Page
-            </button>
-          </div>
-        </SignedOut>
-        <SignedIn>
-          {/* Open the stepper view; the rest of the buttons hide while stepper is open */}
-          <button style={{ margin: "1rem" }} onClick={() => setShowStepper(true)}>
-            Open Random Questions (Stepper)
+    <header>
+      <SignedOut>
+        <SignInButton />
+        <div style={{ padding: "2rem" }}>
+          <h1>Welcome to Jargon! 🗿</h1>
+        </div>
+      </SignedOut>
+
+      <SignedIn>
+        {/* Navigate to the Random Questions Stepper page */}
+        <button style={{ margin: "1rem" }} onClick={openRandomQuestions}>
+          Open Random Questions (Stepper)
+        </button>
+
+        <UserButton />
+
+        <div style={{ padding: "2rem" }}>
+          <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
+
+          {error && (
+            <div
+              style={{
+                color: "red",
+                padding: "1rem",
+                border: "1px solid red",
+                marginBottom: "1rem",
+                borderRadius: "4px",
+              }}
+            >
+              Error: {error}
+            </div>
+          )}
+
+          <button style={{ margin: "1rem" }} onClick={fetchHome}>
+            Fetch Home Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchChat}>
+            Fetch Chat Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+            Fetch Help Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+            Fetch Profile Page
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+            Fetch Random Flashcard
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
+            Fetch All Flashcards
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
+            Fetch Random Question
+          </button>
+          <button style={{ margin: "1rem" }} onClick={fetchDocuments}>
+            Fetch Documents Page
           </button>
 
-          <UserButton />
+          <pre>{JSON.stringify(data, null, 2)}</pre>
+        </div>
+      </SignedIn>
+    </header>
+  );
+}
 
-          <div style={{ padding: "2rem" }}>
-            <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
-
-            {error && (
-              <div
-                style={{
-                  color: "red",
-                  padding: "1rem",
-                  border: "1px solid red",
-                  marginBottom: "1rem",
-                  borderRadius: "4px",
-                }}
-              >
-                Error: {error}
-              </div>
-            )}
-
-            {showStepper ? (
-              <>
-                {/* Back to the regular button panel */}
-                <button
-                  style={{ margin: "1rem", border: "1px solid #3a3a3a", padding: "0.5rem 0.8rem", borderRadius: 8 }}
-                  onClick={() => setShowStepper(false)}
-                >
-                  ← Back
-                </button>
-
-                {/* Random Questions multi-step flow */}
-                <RandomQuestionsStepper />
-              </>
-            ) : (
-              <>
-                {/* Regular button panel only shows when stepper is closed */}
-                <button style={{ margin: "1rem" }} onClick={fetchHome}>
-                  Fetch Home Page
-                </button>
-                <button style={{ margin: "1rem" }} onClick={fetchChat}>
-                  Fetch Chat Page
-                </button>
-                <button style={{ margin: "1rem" }} onClick={fetchHelp}>
-                  Fetch Help Page
-                </button>
-                <button style={{ margin: "1rem" }} onClick={fetchProfile}>
-                  Fetch Profile Page
-                </button>
-                <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
-                  Fetch Random Flashcard
-                </button>
-                <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
-                  Fetch All Flashcards
-                </button>
-                <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
-                  Fetch Random Question
-                </button>
-
-                <pre>{JSON.stringify(data, null, 2)}</pre>
-              </>
-            )}
-          </div>
-        </SignedIn>
-      </header>
-    </>
+/** ---------- App Router ---------- */
+export default function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={
+          <ProtectedRoute>
+            <HomePage />
+          </ProtectedRoute>
+        } />
+        <Route
+          path="/chat"
+          element={
+            <ProtectedRoute>
+              <ChatPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/profile"
+          element={
+            <ProtectedRoute>
+              <ProfilePage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/documents"
+          element={
+            <ProtectedRoute>
+              <DocumentsPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/random-questions"
+          element={
+            <ProtectedRoute>
+              <RandomQuestionsStepper />
+            </ProtectedRoute>
+          }
+        />
+      </Routes>
+    </Router>
   );
 }
