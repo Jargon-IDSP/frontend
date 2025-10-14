@@ -7,6 +7,7 @@ import {
   useAuth,
   useUser,
 } from "@clerk/clerk-react";
+import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
 // something
 // export default function App() {
 //   const [data, setData] = useState(null);
@@ -15,6 +16,7 @@ import {
 // } from "@clerk/clerk-react";
 
 export default function App() {
+  const [showStepper, setShowStepper] = useState(false);
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { user } = useUser();
@@ -149,7 +151,13 @@ export default function App() {
           </div>
         </SignedOut>
         <SignedIn>
+          {/* Open the stepper view; the rest of the buttons hide while stepper is open */}
+          <button style={{ margin: "1rem" }} onClick={() => setShowStepper(true)}>
+            Open Random Questions (Stepper)
+          </button>
+
           <UserButton />
+
           <div style={{ padding: "2rem" }}>
             <h1>Welcome {user?.firstName || user?.username || "User"}</h1>
 
@@ -167,29 +175,47 @@ export default function App() {
               </div>
             )}
 
-            <button style={{ margin: "1rem" }} onClick={fetchHome}>
-              Fetch Home Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchChat}>
-              Fetch Chat Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchHelp}>
-              Fetch Help Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchProfile}>
-              Fetch Profile Page
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
-              Fetch Random Flashcard
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
-              Fetch All Flashcards
-            </button>
-            <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
-              Fetch Random Question
-            </button>
+            {showStepper ? (
+              <>
+                {/* Back to the regular button panel */}
+                <button
+                  style={{ margin: "1rem", border: "1px solid #3a3a3a", padding: "0.5rem 0.8rem", borderRadius: 8 }}
+                  onClick={() => setShowStepper(false)}
+                >
+                  ← Back
+                </button>
 
-            <pre>{JSON.stringify(data, null, 2)}</pre>
+                {/* Random Questions multi-step flow */}
+                <RandomQuestionsStepper />
+              </>
+            ) : (
+              <>
+                {/* Regular button panel only shows when stepper is closed */}
+                <button style={{ margin: "1rem" }} onClick={fetchHome}>
+                  Fetch Home Page
+                </button>
+                <button style={{ margin: "1rem" }} onClick={fetchChat}>
+                  Fetch Chat Page
+                </button>
+                <button style={{ margin: "1rem" }} onClick={fetchHelp}>
+                  Fetch Help Page
+                </button>
+                <button style={{ margin: "1rem" }} onClick={fetchProfile}>
+                  Fetch Profile Page
+                </button>
+                <button style={{ margin: "1rem" }} onClick={fetchRandomFlashcard}>
+                  Fetch Random Flashcard
+                </button>
+                <button style={{ margin: "1rem" }} onClick={fetchFlashcards}>
+                  Fetch All Flashcards
+                </button>
+                <button style={{ margin: "1rem" }} onClick={fetchRandomQuestion}>
+                  Fetch Random Question
+                </button>
+
+                <pre>{JSON.stringify(data, null, 2)}</pre>
+              </>
+            )}
           </div>
         </SignedIn>
       </header>
