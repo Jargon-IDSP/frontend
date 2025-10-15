@@ -2,6 +2,11 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import Stepper, { Step } from "../components/Stepper";
 
 // --------------------
+// Config
+// --------------------
+const MAX_QUESTIONS = 2; // 👈 set how many questions per session
+
+// --------------------
 // Type Definitions
 // --------------------
 interface Choice {
@@ -98,14 +103,7 @@ function ChoiceButton({
           {choice.id}
         </span>
 
-        <span
-          className={[
-            "font-medium",
-            isSelected ? "text-zinc-900" : "text-zinc-900",
-          ].join(" ")}
-        >
-          {choice.term}
-        </span>
+        <span className="font-medium text-zinc-900">{choice.term}</span>
 
         {isSelected && (
           <svg
@@ -179,6 +177,7 @@ export default function RandomQuestionsStepper({
   const [err, setErr] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [questionCounter, setQuestionCounter] = useState<number>(0);
+  const [finished, setFinished] = useState<boolean>(false);
 
   const correctChoice = useMemo<Choice | null>(() => {
     if (!question) return null;
@@ -238,34 +237,65 @@ export default function RandomQuestionsStepper({
   };
 
   const handleFinalCompleted = async () => {
+    // if answering the last question, end the session
+    if (questionCounter + 1 >= MAX_QUESTIONS) {
+      setFinished(true);
+      return;
+    }
     await loadQuestion();
     setQuestionCounter((n) => n + 1);
+  };
+
+  const resetSession = async () => {
+    setFinished(false);
+    setQuestionCounter(0);
+    await loadQuestion();
   };
 
   return (
     <div className="mx-auto w-full max-w-2xl p-4">
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-zinc-900">Random Questions</h1>
-        {question?.difficulty != null && (
+        {question?.difficulty != null && !finished && (
           <span className="rounded-lg border px-2 py-1 text-xs text-zinc-800 bg-white">
             Difficulty: <b>{question.difficulty}</b>
           </span>
         )}
       </div>
 
-      {loading && (
+      {/* Done screen */}
+      {finished && (
+        <div className="rounded-xl border border-green-300 bg-green-50 p-6 text-center">
+          <h2 className="text-xl font-bold text-green-800">
+            ✅ You finished all {MAX_QUESTIONS} questions!
+          </h2>
+          <p className="mt-2 text-sm text-green-800">
+            Nice work. Want to try another round?
+          </p>
+          <div className="mt-4 flex justify-center">
+            <button
+              onClick={resetSession}
+              className="rounded-lg border border-green-600 bg-green-600 px-4 py-2 text-white hover:opacity-90"
+            >
+              Restart
+            </button>
+          </div>
+        </div>
+      )}
+
+      {!finished && loading && (
         <div className="rounded-xl border border-zinc-200 p-6 bg-white">
           <p className="animate-pulse text-zinc-700">Loading question…</p>
         </div>
       )}
 
-      {err && (
+      {!finished && err && (
         <div className="rounded-xl border border-red-300 bg-red-50 p-4 text-sm text-red-700">
           {err}
         </div>
       )}
 
-      {!loading && !err && question && (
+      {!finished && !loading && !err && question && (
         <Stepper
           key={questionCounter}
           initialStep={0} // ensure step 1 first
@@ -273,13 +303,18 @@ export default function RandomQuestionsStepper({
             if (s === 0) setSelected(null);
           }}
           onFinalStepCompleted={handleFinalCompleted}
-          backButtonText={backButtonText}
-          nextButtonText={nextButtonText}
+          backButtonText={questionCounter === 0 ? "Previous" : "Previous"}
+          nextButtonText={
+            questionCounter + 1 >= MAX_QUESTIONS ? "Finish" : "Next"
+          }
         >
           {/* STEP 1: Question & Choices */}
           <Step>
             <div className="space-y-5">
               <div className="rounded-xl border border-zinc-200 bg-white p-5">
+                <div className="mb-2 text-xs text-zinc-600">
+                  Question {questionCounter + 1} of {MAX_QUESTIONS}
+                </div>
                 <p className="text-lg font-semibold text-zinc-900">
                   {question.prompt}
                 </p>
@@ -381,7 +416,9 @@ export default function RandomQuestionsStepper({
               </div>
 
               <p className="text-xs text-zinc-700">
-                Click <b>Next</b> to load another random question.
+                {questionCounter + 1 >= MAX_QUESTIONS
+                  ? "Click Finish to end this round."
+                  : "Click Next to load another random question."}
               </p>
             </div>
           </Step>
