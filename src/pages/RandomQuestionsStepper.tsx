@@ -293,9 +293,9 @@ export default function RandomQuestionsStepper({
             if (s === 0) setSelected(null);
           }}
           onFinalStepCompleted={handleFinalCompleted}
-          backButtonText={questionCounter === 0 ? "Previous" : "Previous"}
+          backButtonText={backButtonText}
           nextButtonText={
-            questionCounter + 1 >= MAX_QUESTIONS ? "Finish" : "Next"
+            questionCounter + 1 >= MAX_QUESTIONS ? "Finish" : nextButtonText
           }
         >
           {/* STEP 1: Question & Choices */}
