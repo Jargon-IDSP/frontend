@@ -14,11 +14,47 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const BACKEND_URL =
     import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
+  // Accepted file types
+  const ACCEPTED_TYPES = [
+    "application/pdf",
+    "image/png",
+    "image/jpeg",
+    "image/jpg",
+    "image/gif",
+    "image/bmp",
+    "image/tiff",
+    "application/msword",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+    "text/plain",
+  ];
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
-      setError("");
+    const selectedFile = e.target.files?.[0];
+
+    if (!selectedFile) {
+      setFile(null);
+      return;
     }
+
+    // Validate file type
+    if (!ACCEPTED_TYPES.includes(selectedFile.type)) {
+      setError(
+        "Invalid file type. Please upload a PDF, image (PNG, JPG, GIF, BMP, TIFF), or document file."
+      );
+      setFile(null);
+      return;
+    }
+
+    // Validate file size (10MB max)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (selectedFile.size > maxSize) {
+      setError("File size must be less than 10MB");
+      setFile(null);
+      return;
+    }
+
+    setFile(selectedFile);
+    setError("");
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -77,6 +113,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       alert("Upload successful!");
       setFile(null);
 
+      // Clear the file input
+      const fileInput = document.getElementById("document") as HTMLInputElement;
+      if (fileInput) fileInput.value = "";
+
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
@@ -89,48 +129,103 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     <div>
       <form onSubmit={handleSubmit} style={{ margin: "2rem 0" }}>
         <div style={{ marginBottom: "1rem" }}>
-          <label
-            htmlFor="document"
-            style={{
-              display: "block",
-              marginBottom: "0.5rem",
-              fontWeight: "bold",
-            }}
-          >
-            Upload Document
-          </label>
+          {/* Hidden file input */}
           <input
             id="document"
             type="file"
-            accept=".pdf,.doc,.docx,.txt"
+            accept=".pdf,.png,.jpg,.jpeg,.gif,.bmp,.tiff,.doc,.docx,.txt,image/*"
             onChange={handleFileChange}
             disabled={uploading}
-            style={{ display: "block" }}
+            style={{ display: "none" }}
           />
+
+          {/* Styled label as button */}
+          <label
+            htmlFor="document"
+            style={{
+              display: "inline-block",
+              padding: "0.75rem 1.5rem",
+              backgroundColor: "#6c757d",
+              color: "white",
+              border: "none",
+              borderRadius: "4px",
+              fontSize: "1rem",
+              fontWeight: "500",
+              cursor: uploading ? "not-allowed" : "pointer",
+              textAlign: "center",
+              opacity: uploading ? 0.6 : 1,
+            }}
+          >
+            📂 Upload Document or Image
+          </label>
+
+          <p
+            style={{
+              fontSize: "0.75rem",
+              color: "#666",
+              margin: "0.5rem 0 0 0",
+            }}
+          >
+            Accepted: PDF, PNG, JPG, GIF, BMP, TIFF, DOC, DOCX, TXT (max 10MB)
+          </p>
+
           {file && (
-            <p
-              style={{ marginTop: "0.5rem", fontSize: "0.9rem", color: "#666" }}
+            <div
+              style={{
+                marginTop: "0.75rem",
+                padding: "0.75rem",
+                backgroundColor: "#f0f9ff",
+                borderRadius: "4px",
+                border: "1px solid #b3d9ff",
+              }}
             >
-              Selected: {file.name}
-            </p>
+              <p
+                style={{
+                  fontSize: "0.875rem",
+                  fontWeight: "500",
+                  margin: "0 0 0.25rem 0",
+                }}
+              >
+                📄 Selected: {file.name}
+              </p>
+              <p style={{ fontSize: "0.75rem", color: "#666", margin: "0" }}>
+                Size: {(file.size / 1024).toFixed(2)} KB | Type: {file.type}
+              </p>
+            </div>
           )}
         </div>
 
-        {error && <p style={{ color: "red", marginBottom: "1rem" }}>{error}</p>}
+        {error && (
+          <p
+            style={{
+              color: "#dc3545",
+              backgroundColor: "#f8d7da",
+              padding: "0.75rem",
+              borderRadius: "4px",
+              marginBottom: "1rem",
+              fontSize: "0.875rem",
+            }}
+          >
+            ⚠️ {error}
+          </p>
+        )}
 
         <button
           type="submit"
           disabled={!file || uploading}
           style={{
-            padding: "0.5rem 1rem",
+            padding: "0.75rem 1.5rem",
             backgroundColor: file && !uploading ? "#0066cc" : "#ccc",
             color: "white",
             border: "none",
             borderRadius: "4px",
             cursor: file && !uploading ? "pointer" : "not-allowed",
+            fontSize: "1rem",
+            fontWeight: "500",
+            width: "100%",
           }}
         >
-          {uploading ? "Uploading..." : "Upload Document"}
+          {uploading ? "⏳ Uploading..." : "📤 Upload Document"}
         </button>
       </form>
     </div>

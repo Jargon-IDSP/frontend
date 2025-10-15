@@ -129,10 +129,8 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
 
       if (!response.ok) throw new Error("Failed to trigger OCR");
 
-      alert("OCR processing started! Results will be available shortly.");
-
-      // Refresh documents after a few seconds to get updated OCR status
-      setTimeout(() => fetchDocuments(), 3000);
+      alert("OCR processing completed! Check the document.");
+      await fetchDocuments();
     } catch (err) {
       alert(err instanceof Error ? err.message : "OCR trigger failed");
     } finally {
