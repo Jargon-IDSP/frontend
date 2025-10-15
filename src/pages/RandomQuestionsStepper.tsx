@@ -1,14 +1,12 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import Stepper, { Step } from "../components/Stepper";
 
-// --------------------
-// Config
-// --------------------
-const MAX_QUESTIONS = 2; // 👈 set how many questions per session
 
-// --------------------
+// Config
+const MAX_QUESTIONS = 2; //set how many questions per session
+
+
 // Type Definitions
-// --------------------
 interface Choice {
   id: string;
   term: string;
@@ -31,9 +29,7 @@ interface FetchResponse {
   data: QuestionData;
 }
 
-// --------------------
 // API Fetch
-// --------------------
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 async function defaultFetchRandomQuestion(): Promise<QuestionData> {
@@ -52,9 +48,7 @@ async function defaultFetchRandomQuestion(): Promise<QuestionData> {
   return json.data;
 }
 
-// --------------------
 // Choice Button
-// --------------------
 interface ChoiceButtonProps {
   choice: Choice;
   selectedId: string | null;
@@ -126,9 +120,7 @@ function ChoiceButton({
   );
 }
 
-// --------------------
 // Feedback Component
-// --------------------
 interface FeedbackProps {
   wasCorrect: boolean | null;
   correctChoice: Choice | null;
@@ -158,9 +150,7 @@ function Feedback({ wasCorrect, correctChoice }: FeedbackProps) {
   );
 }
 
-// --------------------
 // Main Component
-// --------------------
 interface RandomQuestionsStepperProps {
   fetchRandomQuestion?: () => Promise<QuestionData>;
   backButtonText?: string;
