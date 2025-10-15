@@ -25,6 +25,7 @@ import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import DocumentsPage from "./pages/DocumentsPage";
 import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
+import HappyRocky from "./components/avatar/HappyRocky";
 
 /** ---------- Home Page (signed-in content + buttons) ---------- */
 function HomePage() {
@@ -117,7 +118,8 @@ function HomePage() {
       <SignedOut>
         <SignInButton />
         <div style={{ padding: "2rem" }}>
-          <h1>Welcome to Jargon! 🗿</h1>
+          <h1>Welcome to Jargon!</h1>
+          <HappyRocky />
         </div>
       </SignedOut>
 

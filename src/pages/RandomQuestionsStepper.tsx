@@ -1,11 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import { useAuth, SignedIn, SignedOut, SignInButton } from "@clerk/clerk-react";
 import Stepper, { Step } from "../components/Stepper";
 import { fetchRandomQuestion } from "../lib/api";
 
 type Question = { id: string; prompt: string; details?: string };
 type Answer = { response: string; notes: string; confidence: number };
 
-export default function RandomQuestionsStepper() {
+function StepperContent() {
+  const { getToken } = useAuth();
+  
   // fixed at 2 questions
   const count = 2;
   const steps = useMemo(() => Array.from({ length: count }, (_, i) => i), []);
@@ -26,7 +29,8 @@ export default function RandomQuestionsStepper() {
       setLoading(true);
       setFetchErr(null);
       try {
-        const q = await fetchRandomQuestion();
+        const token = await getToken();
+        const q = await fetchRandomQuestion(token || undefined);
         if (!ignore) {
           setQuestions((prev) => {
             const copy = [...prev];
@@ -177,5 +181,25 @@ export default function RandomQuestionsStepper() {
         <Step><FinalSummary /></Step>
       </Stepper>
     </div>
+  );
+}
+
+export default function RandomQuestionsStepper() {
+  return (
+    <>
+      <SignedOut>
+        <div style={{ padding: "2rem", textAlign: "center" }}>
+          <h2>Please sign in to access Random Questions</h2>
+          <SignInButton mode="modal">
+            <button style={{ marginTop: "1rem", padding: "0.5rem 1rem" }}>
+              Sign In
+            </button>
+          </SignInButton>
+        </div>
+      </SignedOut>
+      <SignedIn>
+        <StepperContent />
+      </SignedIn>
+    </>
   );
 }

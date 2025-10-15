@@ -99,8 +99,13 @@ function findId(node: unknown, maxDepth = 4): string | undefined {
   return undefined;
 }
 
-export async function fetchRandomQuestion(): Promise<NormalizedQuestion & { __raw?: unknown }> {
-  const res = await fetch(`${BACKEND_URL}/questions/random`);
+export async function fetchRandomQuestion(token?: string): Promise<NormalizedQuestion & { __raw?: unknown }> {
+  const headers: HeadersInit = {};
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  const res = await fetch(`${BACKEND_URL}/questions/random`, { headers });
   if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
 
   const raw = await res.json();
