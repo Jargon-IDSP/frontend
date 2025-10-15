@@ -19,6 +19,7 @@ import ChatPage from "./pages/ChatPage";
 import ProfilePage from "./pages/ProfilePage";
 import DocumentsPage from "./pages/DocumentsPage";
 import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
+import LeaderboardPage from "./pages/LeaderboardPage";
 import HappyRocky from "./components/avatar/HappyRocky";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
@@ -496,6 +497,7 @@ function HomePage() {
   const fetchProfile = () => navigate("/profile");
   const fetchDocuments = () => navigate("/documents");
   const openRandomQuestions = () => navigate("/random-questions");
+  const openLeaderboard = () => navigate("/leaderboard");
 
   const fetchHelp = async () => {
     try {
@@ -610,6 +612,12 @@ function HomePage() {
               >
                 Documents Page
               </button>
+              <button
+                style={{ padding: "0.75rem 1rem" }}
+                onClick={openLeaderboard}
+              >
+                Leaderboard
+              </button>
             </div>
           </div>
 
@@ -722,6 +730,14 @@ export default function App() {
           element={
             <ProtectedRoute>
               <RandomQuestionsStepper />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/leaderboard"
+          element={
+            <ProtectedRoute>
+              <LeaderboardPage />
             </ProtectedRoute>
           }
         />
