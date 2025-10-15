@@ -3,7 +3,7 @@ export default function HappyRocky() {
 
             <img style={{ marginLeft: "9rem", marginTop: "2rem", width: "150px" }} 
             className="HappyRocky"
-            src="./src/assets/rocky.svg"
+            src="/rocky.svg"
             alt="Rocky the Mascot"
           />
   )
