@@ -31,10 +31,10 @@ interface FetchResponse {
 }
 
 // API Fetch
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
 async function defaultFetchRandomQuestion(): Promise<QuestionData> {
-  const res = await fetch(`${API_URL}/questions/random`, {
+  const res = await fetch(`${BACKEND_URL}/questions/random`, {
     credentials: "include",
   });
 

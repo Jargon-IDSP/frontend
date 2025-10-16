@@ -18,11 +18,13 @@ const LeaderboardPage: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
 
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
+
   const fetchLeaderboard = async () => {
     try {
       setLoading(true);
       setError(null);
-
+      
       const response = await fetch(`${BACKEND_URL}/leaderboard`);
       const data = await response.json();
       
