@@ -21,6 +21,9 @@ import DocumentsPage from "./pages/documents/DocumentsPage";
 import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import HappyRocky from "./components/avatar/HappyRocky";
+import AvatarPage from "./pages/users/avatar/AvatarPage";
+
+
 
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
@@ -717,7 +720,15 @@ export default function App() {
               <ProfilePage />
             </ProtectedRoute>
           }
-        />
+          />
+        <Route
+          path="/profile/avatar"
+          element={
+            <ProtectedRoute>
+              <AvatarPage />
+            </ProtectedRoute>
+          }
+                />
         <Route
           path="/documents"
           element={

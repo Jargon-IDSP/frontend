@@ -1,10 +1,12 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ChatPage() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { getToken } = useAuth();
+  const navigate = useNavigate();
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
@@ -39,6 +41,12 @@ export default function ChatPage() {
 
   return (
     <div style={{ padding: "2rem" }}>
+      <button 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: "1rem" }}
+      >
+        ← Back to Dashboard
+      </button>
       <h1>Chat Page</h1>
       
       {error && (

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import rockyLogo from '/rocky.svg';
+import { useNavigate } from "react-router-dom";
 
 interface User {
   id: string;
@@ -13,6 +14,7 @@ const LeaderboardPage: React.FC = () => {
   const [users, setUsers] = useState<User[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const navigate = useNavigate();
 
   const fetchLeaderboard = async () => {
     try {
@@ -90,6 +92,12 @@ const LeaderboardPage: React.FC = () => {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+      <button 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: "1rem" }}
+      >
+        ← Back to Dashboard
+      </button>
       <h1 style={{ textAlign: 'center', marginBottom: '2rem' }}>🏆 Leaderboard</h1>
       
       <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>

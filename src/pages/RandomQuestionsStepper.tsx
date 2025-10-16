@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
 import Stepper, { Step } from "../components/Stepper";
+import { useNavigate } from "react-router-dom";
 
 
 // Config
@@ -162,6 +163,7 @@ export default function RandomQuestionsStepper({
   backButtonText = "Previous",
   nextButtonText = "Next",
 }: RandomQuestionsStepperProps) {
+  const navigate = useNavigate();
   const [question, setQuestion] = useState<QuestionData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [err, setErr] = useState<string | null>(null);
@@ -243,7 +245,15 @@ export default function RandomQuestionsStepper({
   };
 
   return (
+    
     <div className="mx-auto w-full max-w-2xl p-4">
+      <button 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: "1rem" }}
+        className="text-sm text-zinc-600 hover:text-zinc-900"
+      >
+        ← Back to Dashboard
+      </button>
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-zinc-900">Random Questions</h1>
         {question?.difficulty != null && !finished && (

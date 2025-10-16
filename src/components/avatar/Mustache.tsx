@@ -1,4 +1,5 @@
-export const Mustache = ({ color = "#3d2817", className = "" }) => (
+export default function Mustache ({ color = "#3d2817", className = "" }) {
+  return (
   <svg 
     viewBox="0 0 200 200" 
     className={className}
@@ -17,4 +18,5 @@ export const Mustache = ({ color = "#3d2817", className = "" }) => (
     {/* Center connector */}
     <ellipse cx="100" cy="102" rx="8" ry="6" fill={color}/>
   </svg>
-);
+)
+}

@@ -41,7 +41,16 @@ export default function ProfilePage() {
   }, [getToken]);
 
   return (
+
+
     <div style={{ padding: "2rem" }}>
+
+      <button 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: "1rem" }}
+      >
+        ← Back to Dashboard
+      </button>
       <h1>Profile Page</h1>
       
       {error && (

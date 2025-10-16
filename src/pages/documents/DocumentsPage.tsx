@@ -1,9 +1,11 @@
 import { useState } from 'react'
 import { UploadDocumentForm } from '../../components/UploadDocumentForm'
 import { DocumentsList } from '../../components/DocumentList'
+import { useNavigate } from "react-router-dom";
 
 export default function DocumentsPage() {
   const [refreshKey, setRefreshKey] = useState(0)
+  const navigate = useNavigate();
 
   const handleUploadSuccess = () => {
     setRefreshKey(prev => prev + 1)
@@ -11,6 +13,14 @@ export default function DocumentsPage() {
 
   return (
     <div style={{ maxWidth: '48rem', margin: '0 auto', padding: '1.5rem' }}>
+      
+      <button 
+        onClick={() => navigate("/")}
+        style={{ marginBottom: "1rem" }}
+      >
+        ← Back to Dashboard
+      </button>
+      
       <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem' }}>
         My Documents
       </h1>

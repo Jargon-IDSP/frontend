@@ -1,4 +1,5 @@
-export const TopHat = ({ color = "#2c3e50", className = "TopHat" }) => (
+export default function TopHat ({ color = "#2c3e50", className = "TopHat" }) {
+  return (
   <svg 
     viewBox="0 0 200 200" 
     className={className}
@@ -10,4 +11,5 @@ export const TopHat = ({ color = "#2c3e50", className = "TopHat" }) => (
     <rect x="75" y="50" width="50" height="6" fill="#c0392b" rx="1"/>
     <ellipse cx="100" cy="35" rx="30" ry="5" fill={color} opacity="0.6"/>
   </svg>
-);
+  )
+}

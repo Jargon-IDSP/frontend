@@ -1,3 +1,6 @@
+import Mustache from "./Mustache";
+import TopHat from "./TopHat";
+
 interface RockyAvatarProps {
   config: {
     outfit: string;
@@ -13,13 +16,17 @@ interface RockyAvatarProps {
 export default function RockyAvatar({ config }: RockyAvatarProps) {
   return (
     <svg width="200" height="200" viewBox="0 0 200 200">
+      {/* Base body */}
       <circle cx="100" cy="100" r="80" fill={config.colors.primary} />
 
+      {/* Eyes */}
       <circle cx="80" cy="90" r="10" fill="#000" />
       <circle cx="120" cy="90" r="10" fill="#000" />
       
+      {/* Smile */}
       <path d="M 70 120 Q 100 140 130 120" stroke="#000" fill="none" strokeWidth="2" />
       
+      {/* Outfit - Space Suit */}
       {config.outfit === "space_suit" && (
         <g>
           <rect x="60" y="140" width="80" height="40" fill={config.colors.secondary} />
@@ -27,9 +34,9 @@ export default function RockyAvatar({ config }: RockyAvatarProps) {
         </g>
       )}
       
-      {config.accessories.includes("hat") && (
-        <polygon points="70,60 100,40 130,60" fill={config.colors.accent} />
-      )}
+      {/* Accessories */}
+      {config.accessories.includes("tophat") && <TopHat />}
+      {config.accessories.includes("mustache") && <Mustache />}
       
       {config.accessories.includes("glasses") && (
         <g>
