@@ -34,7 +34,7 @@ interface FetchResponse {
 const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
 async function defaultFetchRandomQuestion(): Promise<QuestionData> {
-  const res = await fetch(`${API_URL}/questions/random-question`, {
+  const res = await fetch(`${API_URL}/questions/random`, {
     credentials: "include",
   });
 
