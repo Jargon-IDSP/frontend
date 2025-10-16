@@ -16,11 +16,12 @@ import {
 
 import ProtectedRoute from "./components/ProtectedRoute";
 import ChatPage from "./pages/ChatPage";
-import ProfilePage from "./pages/ProfilePage";
-import DocumentsPage from "./pages/DocumentsPage";
+import ProfilePage from "./pages/users/ProfilePage";
+import DocumentsPage from "./pages/documents/DocumentsPage";
 import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import HappyRocky from "./components/avatar/HappyRocky";
+
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 

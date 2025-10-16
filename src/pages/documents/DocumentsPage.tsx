@@ -1,6 +1,6 @@
 import { useState } from 'react'
-import { UploadDocumentForm } from '../components/UploadDocumentForm'
-import { DocumentsList } from '../components/DocumentList'
+import { UploadDocumentForm } from '../../components/UploadDocumentForm'
+import { DocumentsList } from '../../components/DocumentList'
 
 export default function DocumentsPage() {
   const [refreshKey, setRefreshKey] = useState(0)

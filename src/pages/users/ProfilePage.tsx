@@ -1,10 +1,13 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 
 export default function ProfilePage() {
   const [data, setData] = useState<any>(null);
   const [error, setError] = useState<string | null>(null);
   const { getToken } = useAuth();
+  const navigate = useNavigate();
+
 
   const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
@@ -58,7 +61,23 @@ export default function ProfilePage() {
       {data && (
         <div>
           <pre>{JSON.stringify(data, null, 2)}</pre>
+          <button
+            style={{ 
+              padding: "0.75rem 1rem",
+              margin: "1rem",
+              cursor: "pointer",
+              backgroundColor: "#007bff",
+              color: "white",
+              border: "none",
+              borderRadius: "4px"
+            }}
+            onClick={() => navigate("/profile/avatar")}
+          >
+            View Avatar
+          </button>
         </div>
+
+        
       )}
     </div>
   );

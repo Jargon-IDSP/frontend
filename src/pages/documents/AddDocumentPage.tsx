@@ -1,4 +1,4 @@
-import { UploadDocumentForm } from '../components/UploadDocumentForm'
+import { UploadDocumentForm } from '../../components/UploadDocumentForm'
 
 export default function AddDocumentPage() {
   return (
