@@ -22,6 +22,16 @@ import RandomQuestionsStepper from "./pages/RandomQuestionsStepper";
 import LeaderboardPage from "./pages/LeaderboardPage";
 import HappyRocky from "./components/avatar/HappyRocky";
 import AvatarPage from "./pages/users/avatar/AvatarPage";
+import LearningHub from "./pages/learning/LearnJargon";
+import ExistingLearning from "./pages/learning/prebuild/ExistingLearning";
+import ExistingLevelSelect from "./pages/learning/prebuild/ExistingLevelSelect";
+import ExistingTerms from "./pages/learning/prebuild/ExistingPracticeTerms";
+import ExistingLevelQuiz from "./pages/learning/prebuild/ExistingLevelQuiz";
+import CustomLearning from "./pages/learning/custom/CustomLearning";
+import CustomPracticeQuestions from "./pages/learning/custom/CustomPracticeQuestions";
+import CustomPracticeTerms from "./pages/learning/custom/CustomPracticeTerms";
+import CustomQuizSelect from "./pages/learning/custom/CustomQuizSelect";
+import CustomQuiz from "./pages/learning/custom/CustomQuiz";
 
 
 
@@ -622,6 +632,12 @@ function HomePage() {
               >
                 Leaderboard
               </button>
+              <button
+                style={{ padding: "0.75rem 1rem" }}
+                onClick={() => navigate("/learning")}
+              >
+                Learn Jargon
+              </button>
             </div>
           </div>
 
@@ -750,6 +766,86 @@ export default function App() {
           element={
             <ProtectedRoute>
               <LeaderboardPage />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning"
+          element={
+            <ProtectedRoute>
+              <LearningHub />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/existing"
+          element={
+            <ProtectedRoute>
+              <ExistingLearning />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/existing/levels/:level"
+          element={
+            <ProtectedRoute>
+              <ExistingLevelSelect />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/existing/levels/:level/terms"
+          element={
+            <ProtectedRoute>
+              <ExistingTerms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/existing/levels/:level/quiz"
+          element={
+            <ProtectedRoute>
+              <ExistingLevelQuiz />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/custom"
+          element={
+            <ProtectedRoute>
+              <CustomLearning />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/custom/practice-questions"
+          element={
+            <ProtectedRoute>
+              <CustomPracticeQuestions />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/custom/practice-terms"
+          element={
+            <ProtectedRoute>
+              <CustomPracticeTerms />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/custom/quiz-select"
+          element={
+            <ProtectedRoute>
+              <CustomQuizSelect />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/learning/custom/quiz/:quizNumber"
+          element={
+            <ProtectedRoute>
+              <CustomQuiz />
             </ProtectedRoute>
           }
         />
