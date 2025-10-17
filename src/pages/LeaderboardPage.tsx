@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import rockyLogo from '/rocky.svg';
 import { useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "../lib/api";
 
 
 interface User {
