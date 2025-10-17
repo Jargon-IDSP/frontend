@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import { BACKEND_URL } from "../lib/api";
+
 
 interface UploadDocumentFormProps {
   onSuccess?: () => void;
@@ -10,9 +12,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [error, setError] = useState<string>("");
   const [uploading, setUploading] = useState(false);
   const { getToken } = useAuth();
-
-  const BACKEND_URL =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   // Accepted file types
   const ACCEPTED_TYPES = [

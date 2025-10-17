@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "../../lib/api";
+
 
 export default function ProfilePage() {
   const [data, setData] = useState<any>(null);
@@ -8,8 +10,6 @@ export default function ProfilePage() {
   const { getToken } = useAuth();
   const navigate = useNavigate();
 
-
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   useEffect(() => {
     const fetchProfile = async () => {

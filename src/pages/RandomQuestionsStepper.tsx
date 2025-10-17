@@ -1,13 +1,9 @@
 import { useEffect, useMemo, useState, useCallback } from "react";
+import { useAuth } from "@clerk/clerk-react";
 import Stepper, { Step } from "../components/Stepper";
 import { useNavigate } from "react-router-dom";
 
-
-// Config
-const MAX_QUESTIONS = 2; //set how many questions per session
-
-
-// Type Definitions
+const MAX_QUESTIONS = 2; 
 interface Choice {
   id: string;
   term: string;
@@ -30,26 +26,6 @@ interface FetchResponse {
   data: QuestionData;
 }
 
-// API Fetch
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
-
-async function defaultFetchRandomQuestion(): Promise<QuestionData> {
-  const res = await fetch(`${BACKEND_URL}/questions/random`, {
-    credentials: "include",
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("❌ Bad response:", text.slice(0, 200));
-    throw new Error(`Failed to fetch question (${res.status})`);
-  }
-
-  const json: FetchResponse = await res.json();
-  if (!json?.data) throw new Error("No question data received from backend.");
-  return json.data;
-}
-
-// Choice Button
 interface ChoiceButtonProps {
   choice: Choice;
   selectedId: string | null;
@@ -73,16 +49,11 @@ function ChoiceButton({
       onClick={() => onSelect(choice)}
       disabled={disabled}
       className={[
-        // layout
         "w-full text-left rounded-xl border px-4 py-3",
         "transition-colors duration-150",
-        // base colors (force readable text + white card)
         "bg-white text-zinc-900",
-        // borders, hover + focus
         "border-zinc-300 hover:bg-zinc-50 focus:outline-none focus:ring",
-        // selected state
         isSelected ? "border-blue-500 ring-2 ring-blue-200 bg-blue-50" : "",
-        // disabled
         disabled ? "opacity-70 cursor-not-allowed" : "cursor-pointer",
       ].join(" ")}
     >
@@ -121,7 +92,6 @@ function ChoiceButton({
   );
 }
 
-// Feedback Component
 interface FeedbackProps {
   wasCorrect: boolean | null;
   correctChoice: Choice | null;
@@ -151,25 +121,27 @@ function Feedback({ wasCorrect, correctChoice }: FeedbackProps) {
   );
 }
 
-// Main Component
 interface RandomQuestionsStepperProps {
-  fetchRandomQuestion?: () => Promise<QuestionData>;
   backButtonText?: string;
   nextButtonText?: string;
+  type?: 'existing' | 'custom';
 }
 
 export default function RandomQuestionsStepper({
-  fetchRandomQuestion = defaultFetchRandomQuestion,
   backButtonText = "Previous",
   nextButtonText = "Next",
+  type = 'existing',
 }: RandomQuestionsStepperProps) {
   const navigate = useNavigate();
+  const { getToken } = useAuth();
   const [question, setQuestion] = useState<QuestionData | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [err, setErr] = useState<string | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
   const [questionCounter, setQuestionCounter] = useState<number>(0);
   const [finished, setFinished] = useState<boolean>(false);
+
+  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
 
   const correctChoice = useMemo<Choice | null>(() => {
     if (!question) return null;
@@ -199,6 +171,34 @@ export default function RandomQuestionsStepper({
     return false;
   }, [question, selected, correctChoice]);
 
+  const fetchRandomQuestion = useCallback(async (): Promise<QuestionData> => {
+    const token = await getToken();
+    if (!token) {
+      throw new Error('No authentication token available. Please log in.');
+    }
+
+    const endpoint = type === 'custom' 
+      ? `${API_URL}/learning/custom/random/question`
+      : `${API_URL}/learning/existing/random/question`;
+
+    const res = await fetch(endpoint, {
+      headers: {
+        'Authorization': `Bearer ${token}`,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      const text = await res.text();
+      console.error("❌ Bad response:", text.slice(0, 200));
+      throw new Error(`Failed to fetch question (${res.status})`);
+    }
+
+    const json: FetchResponse = await res.json();
+    if (!json?.data) throw new Error("No question data received from backend.");
+    return json.data;
+  }, [getToken, API_URL, type]);
+
   const loadQuestion = useCallback(async () => {
     setLoading(true);
     setErr(null);
@@ -218,7 +218,6 @@ export default function RandomQuestionsStepper({
     loadQuestion();
   }, [loadQuestion]);
 
-  // reset when question changes
   useEffect(() => {
     setSelected(null);
     window.scrollTo(0, 0);
@@ -229,7 +228,6 @@ export default function RandomQuestionsStepper({
   };
 
   const handleFinalCompleted = async () => {
-    // if answering the last question, end the session
     if (questionCounter + 1 >= MAX_QUESTIONS) {
       setFinished(true);
       return;
@@ -245,7 +243,6 @@ export default function RandomQuestionsStepper({
   };
 
   return (
-    
     <div className="mx-auto w-full max-w-2xl p-4">
       <button 
         onClick={() => navigate("/")}
@@ -255,7 +252,9 @@ export default function RandomQuestionsStepper({
         ← Back to Dashboard
       </button>
       <div className="mb-4 flex items-center justify-between">
-        <h1 className="text-xl font-bold text-zinc-900">Random Questions</h1>
+        <h1 className="text-xl font-bold text-zinc-900">
+          Random Questions {type === 'custom' ? '(Custom)' : '(Red Seal)'}
+        </h1>
         {question?.difficulty != null && !finished && (
           <span className="rounded-lg border px-2 py-1 text-xs text-zinc-800 bg-white">
             Difficulty: <b>{question.difficulty}</b>
@@ -263,7 +262,6 @@ export default function RandomQuestionsStepper({
         )}
       </div>
 
-      {/* Done screen */}
       {finished && (
         <div className="rounded-xl border border-green-300 bg-green-50 p-6 text-center">
           <h2 className="text-xl font-bold text-green-800">
@@ -298,7 +296,7 @@ export default function RandomQuestionsStepper({
       {!finished && !loading && !err && question && (
         <Stepper
           key={questionCounter}
-          initialStep={0} // ensure step 1 first
+          initialStep={0}
           onStepChange={(s) => {
             if (s === 0) setSelected(null);
           }}
@@ -308,7 +306,6 @@ export default function RandomQuestionsStepper({
             questionCounter + 1 >= MAX_QUESTIONS ? "Finish" : nextButtonText
           }
         >
-          {/* STEP 1: Question & Choices */}
           <Step>
             <div className="space-y-5">
               <div className="rounded-xl border border-zinc-200 bg-white p-5">
@@ -350,7 +347,6 @@ export default function RandomQuestionsStepper({
             </div>
           </Step>
 
-          {/* STEP 2: Feedback */}
           <Step>
             <div className="space-y-5">
               <Feedback
