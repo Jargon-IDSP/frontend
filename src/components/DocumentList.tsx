@@ -1,6 +1,7 @@
 // components/DocumentsList.tsx
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
+import { BACKEND_URL } from "../lib/api";
 
 interface Document {
   id: string;
@@ -24,9 +25,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   const [downloadingId, setDownloadingId] = useState<string | null>(null);
   const [processingOCR, setProcessingOCR] = useState<string | null>(null);
   const { getToken } = useAuth();
-
-  const BACKEND_URL =
-    import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const fetchDocuments = async () => {
     setIsLoading(true);
