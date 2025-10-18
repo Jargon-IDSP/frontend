@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import Stepper, { Step } from "../components/Stepper";
 import { useNavigate } from "react-router-dom";
-import { BACKEND_URL } from "@/lib/api";
 
 const MAX_QUESTIONS = 2; 
 interface Choice {
