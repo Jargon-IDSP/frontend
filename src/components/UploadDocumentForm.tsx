@@ -2,7 +2,6 @@ import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";
 
-
 interface UploadDocumentFormProps {
   onSuccess?: () => void;
 }
@@ -11,9 +10,9 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string>("");
   const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState<string>("");
   const { getToken } = useAuth();
 
-  // Accepted file types
   const ACCEPTED_TYPES = [
     "application/pdf",
     "image/png",
@@ -35,7 +34,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       return;
     }
 
-    // Validate file type
     if (!ACCEPTED_TYPES.includes(selectedFile.type)) {
       setError(
         "Invalid file type. Please upload a PDF, image (PNG, JPG, GIF, BMP, TIFF), or document file."
@@ -44,8 +42,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       return;
     }
 
-    // Validate file size (10MB max)
-    const maxSize = 10 * 1024 * 1024; // 10MB
+    const maxSize = 10 * 1024 * 1024; 
     if (selectedFile.size > maxSize) {
       setError("File size must be less than 10MB");
       setFile(null);
@@ -66,6 +63,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
     setUploading(true);
     setError("");
+    setUploadStatus("Getting upload URL...");
 
     try {
       const token = await getToken();
@@ -83,6 +81,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       if (!signResponse.ok) throw new Error("Failed to get upload URL");
       const { uploadUrl, key } = await signResponse.json();
 
+      setUploadStatus("Uploading file to cloud...");
       const uploadResponse = await fetch(uploadUrl, {
         method: "PUT",
         headers: { "Content-Type": file.type },
@@ -91,6 +90,31 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
       if (!uploadResponse.ok) throw new Error("Failed to upload file");
 
+      let extractedText = null;
+      if (file.type === "application/pdf") {
+        try {
+          setUploadStatus("Extracting text from PDF...");
+          const formData = new FormData();
+          formData.append("pdf", file);
+
+          const ocrResponse = await fetch(`${BACKEND_URL}/ocr`, {
+            method: "POST",
+            body: formData,
+          });
+
+          if (ocrResponse.ok) {
+            const ocrResult = await ocrResponse.json();
+            extractedText = ocrResult.fullText;
+            console.log("OCR Success:", extractedText?.substring(0, 100) + "...");
+          } else {
+            console.warn("OCR failed, continuing without text extraction");
+          }
+        } catch (ocrError) {
+          console.error("OCR error:", ocrError);
+        }
+      }
+
+      setUploadStatus("Saving document...");
       const saveResponse = await fetch(`${BACKEND_URL}/documents`, {
         method: "POST",
         headers: {
@@ -103,22 +127,28 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
           filename: file.name,
           fileType: file.type,
           fileSize: file.size,
+          extractedText: extractedText, 
         }),
       });
 
       if (!saveResponse.ok) throw new Error("Failed to save document metadata");
 
       console.log("Upload successful!");
-      alert("Upload successful!");
+      const successMessage = extractedText 
+        ? "✅ Upload successful! Text extracted from PDF." 
+        : "✅ Upload successful!";
+      alert(successMessage);
+      
       setFile(null);
+      setUploadStatus("");
 
-      // Clear the file input
       const fileInput = document.getElementById("document") as HTMLInputElement;
       if (fileInput) fileInput.value = "";
 
       onSuccess?.();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Upload failed");
+      setUploadStatus("");
     } finally {
       setUploading(false);
     }
@@ -128,7 +158,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     <div>
       <form onSubmit={handleSubmit} style={{ margin: "2rem 0" }}>
         <div style={{ marginBottom: "1rem" }}>
-          {/* Hidden file input */}
           <input
             id="document"
             type="file"
@@ -138,7 +167,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
             style={{ display: "none" }}
           />
 
-          {/* Styled label as button */}
           <label
             htmlFor="document"
             style={{
@@ -166,6 +194,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
             }}
           >
             Accepted: PDF, PNG, JPG, GIF, BMP, TIFF, DOC, DOCX, TXT (max 10MB)
+            {file?.type === "application/pdf" && " • Text will be auto-extracted from PDFs"}
           </p>
 
           {file && (
@@ -189,6 +218,22 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
               </p>
               <p style={{ fontSize: "0.75rem", color: "#666", margin: "0" }}>
                 Size: {(file.size / 1024).toFixed(2)} KB | Type: {file.type}
+              </p>
+            </div>
+          )}
+
+          {uploadStatus && (
+            <div
+              style={{
+                marginTop: "0.75rem",
+                padding: "0.75rem",
+                backgroundColor: "#fff3cd",
+                borderRadius: "4px",
+                border: "1px solid #ffc107",
+              }}
+            >
+              <p style={{ fontSize: "0.875rem", margin: "0" }}>
+                ⏳ {uploadStatus}
               </p>
             </div>
           )}
@@ -224,7 +269,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
             width: "100%",
           }}
         >
-          {uploading ? "⏳ Uploading..." : "📤 Upload Document"}
+          {uploading ? `⏳ ${uploadStatus || "Uploading..."}` : "📤 Upload Document"}
         </button>
       </form>
     </div>
