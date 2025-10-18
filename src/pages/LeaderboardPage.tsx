@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import rockyLogo from '/rocky.svg';
 import { useNavigate } from "react-router-dom";
-
+import { BACKEND_URL } from "../lib/api";
 
 interface User {
   id: string;
@@ -15,8 +15,6 @@ const LeaderboardPage: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const navigate = useNavigate();
-
-  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const fetchLeaderboard = async () => {
     try {

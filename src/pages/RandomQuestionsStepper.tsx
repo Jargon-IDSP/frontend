@@ -2,6 +2,7 @@ import { useEffect, useMemo, useState, useCallback } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import Stepper, { Step } from "../components/Stepper";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_URL } from "@/lib/api";
 
 const MAX_QUESTIONS = 2; 
 interface Choice {
@@ -141,7 +142,7 @@ export default function RandomQuestionsStepper({
   const [questionCounter, setQuestionCounter] = useState<number>(0);
   const [finished, setFinished] = useState<boolean>(false);
 
-  const API_URL = import.meta.env.VITE_API_URL || "http://localhost:8080";
+  const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
   const correctChoice = useMemo<Choice | null>(() => {
     if (!question) return null;
@@ -178,8 +179,8 @@ export default function RandomQuestionsStepper({
     }
 
     const endpoint = type === 'custom' 
-      ? `${API_URL}/learning/custom/random/question`
-      : `${API_URL}/learning/existing/random/question`;
+      ? `${BACKEND_URL}/learning/custom/random/question`
+      : `${BACKEND_URL}/learning/existing/random/question`;
 
     const res = await fetch(endpoint, {
       headers: {
@@ -197,7 +198,7 @@ export default function RandomQuestionsStepper({
     const json: FetchResponse = await res.json();
     if (!json?.data) throw new Error("No question data received from backend.");
     return json.data;
-  }, [getToken, API_URL, type]);
+  }, [getToken, BACKEND_URL, type]);
 
   const loadQuestion = useCallback(async () => {
     setLoading(true);

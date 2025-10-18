@@ -1,4 +1,3 @@
-// components/DocumentsList.tsx
 import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";

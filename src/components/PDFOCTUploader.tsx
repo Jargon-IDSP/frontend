@@ -1,6 +1,6 @@
-// PDFOCRUploader.tsx
 import React, { useState, useRef } from 'react';
 import type { OCRResponse } from '../types/ocr';
+import { BACKEND_URL } from "../lib/api";
 
 const PDFOCRUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -9,9 +9,6 @@ const PDFOCRUploader: React.FC = () => {
   const [error, setError] = useState<string>('');
   const [selectedPage, setSelectedPage] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
-
-  // Use your Cloudflare Worker URL in production
-  const API_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080';
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -44,7 +41,7 @@ const PDFOCRUploader: React.FC = () => {
     formData.append('pdf', file);
 
     try {
-      const response = await fetch(`${API_URL}/ocr`, {
+      const response = await fetch(`${BACKEND_URL}/ocr`, {
         method: 'POST',
         body: formData,
       });
@@ -56,7 +53,7 @@ const PDFOCRUploader: React.FC = () => {
 
       const data: OCRResponse = await response.json();
       setResult(data);
-      setSelectedPage(0); // Reset to "All Pages"
+      setSelectedPage(0); 
     } catch (err) {
       if (err instanceof Error) {
         setError(err.message);
@@ -105,7 +102,6 @@ const PDFOCRUploader: React.FC = () => {
         PDF OCR Text Extractor
       </h1>
 
-      {/* Upload Section */}
       <div style={{
         border: '2px dashed #ccc',
         borderRadius: '8px',
@@ -180,7 +176,6 @@ const PDFOCRUploader: React.FC = () => {
         </div>
       </div>
 
-      {/* Error Display */}
       {error && (
         <div style={{
           padding: '15px',
@@ -193,7 +188,6 @@ const PDFOCRUploader: React.FC = () => {
         </div>
       )}
 
-      {/* Loading Indicator */}
       {loading && (
         <div style={{ textAlign: 'center', padding: '20px' }}>
           <div style={{
@@ -209,7 +203,6 @@ const PDFOCRUploader: React.FC = () => {
         </div>
       )}
 
-      {/* Results Section */}
       {result && result.success && (
         <div>
           <div style={{
@@ -234,7 +227,6 @@ const PDFOCRUploader: React.FC = () => {
             </button>
           </div>
 
-          {/* Page Selector */}
           {result.pages && result.pages.length > 1 && (
             <div style={{ marginBottom: '15px' }}>
               <label htmlFor="page-select" style={{ marginRight: '10px' }}>
@@ -261,7 +253,6 @@ const PDFOCRUploader: React.FC = () => {
             </div>
           )}
 
-          {/* Text Display */}
           <div style={{
             border: '1px solid #ddd',
             borderRadius: '4px',
@@ -277,7 +268,6 @@ const PDFOCRUploader: React.FC = () => {
             {getDisplayText() || 'No text found'}
           </div>
 
-          {/* Stats */}
           <div style={{
             marginTop: '15px',
             padding: '10px',
