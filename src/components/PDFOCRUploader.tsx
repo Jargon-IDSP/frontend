@@ -10,14 +10,17 @@ const PDFOCRUploader: React.FC = () => {
   const [selectedPage, setSelectedPage] = useState<number>(0);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+   const AllowedFileTypes = ['application/pdf', 'image/jpeg', 'image/png'];
+  const MaxFileSize = 20 * 1024 * 1024;
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
-      if (selectedFile.type !== 'application/pdf') {
+      if (!AllowedFileTypes.includes(selectedFile.type)) {
         setError('Please select a PDF file');
         return;
       }
-      if (selectedFile.size > 20 * 1024 * 1024) {
+      if (selectedFile.size > MaxFileSize) {
         setError('File size must be less than 20MB');
         return;
       }
@@ -38,7 +41,7 @@ const PDFOCRUploader: React.FC = () => {
     setResult(null);
 
     const formData = new FormData();
-    formData.append('pdf', file);
+    formData.append('file', file);
 
     try {
       const response = await fetch(`${BACKEND_URL}/ocr`, {
@@ -113,7 +116,7 @@ const PDFOCRUploader: React.FC = () => {
         <input
           ref={fileInputRef}
           type="file"
-          accept="application/pdf"
+          accept="application/pdf,image/jpeg,image/png"
           onChange={handleFileChange}
           style={{ display: 'none' }}
           id="file-upload"
