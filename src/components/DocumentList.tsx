@@ -25,6 +25,10 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   const [processingOCR, setProcessingOCR] = useState<string | null>(null);
   const { getToken } = useAuth();
 
+  const [generatingId, setGeneratingId] = useState<string | null>(null);
+
+
+
   const fetchDocuments = async () => {
     setIsLoading(true);
     setError("");
@@ -82,6 +86,33 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
       setDownloadingId(null);
     }
   };
+
+  async function handleGenerateCustom(docId: string) {
+  try {
+    setGeneratingId(docId);
+    const token = await getToken(); // from Clerk
+    const res = await fetch(`${BACKEND_URL}/documents/${docId}/generate-custom`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      credentials: "include",
+    });
+    const json = await res.json();
+    if (!res.ok) throw new Error(json?.error || "Failed to generate");
+
+    // Success UX: alert and optionally refresh the document list
+    alert(`✅ Generated!\nCards: ${json.savedFlashcards}, Qs: ${json.savedQuestions}\nJSON: ${json.jsonFile}`);
+    // If you want to refresh the list (e.g., if you display 'has custom set' somewhere):
+    await fetchDocuments?.();
+  } catch (e: any) {
+    alert(e?.message || "Error generating custom flashcards.");
+  } finally {
+    setGeneratingId(null);
+  }
+}
+  
 
   const handleDelete = async (docId: string) => {
     if (!confirm("Are you sure you want to delete this document?")) {
@@ -263,6 +294,27 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
                 >
                   {deletingId === doc.id ? "⏳ Deleting..." : "🗑️ Delete"}
                 </button>
+
+
+                <button
+  onClick={() => handleGenerateCustom(doc.id)}
+  disabled={generatingId === doc.id || !doc.ocrProcessed}
+  style={{
+    padding: "0.5rem 0.75rem",
+    backgroundColor: generatingId === doc.id || !doc.ocrProcessed ? "#ccc" : "#10b981",
+    color: "white",
+    border: "none",
+    borderRadius: "4px",
+    fontSize: "0.875rem",
+    fontWeight: "500",
+    cursor: generatingId === doc.id || !doc.ocrProcessed ? "not-allowed" : "pointer",
+    whiteSpace: "nowrap",
+  }}
+  title={!doc.ocrProcessed ? "Run OCR first to enable custom generation" : "Generate custom flashcards from this document"}
+>
+  {generatingId === doc.id ? "⏳ Generating..." : "✨ Generate Custom"}
+</button>
+
               </div>
             </div>
           ))}
