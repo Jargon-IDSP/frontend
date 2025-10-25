@@ -1,6 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import HappyRocky from '../components/avatar/HappyRocky';
+import rockyWhiteLogo from '/rockyWhite.svg';
 
 export default function HomePage() {
   const { user } = useUser();
@@ -16,34 +17,51 @@ export default function HomePage() {
   ];
 
   return (
-    <div>
+    <div className="home-page">
+      {/* Top Header Section */}
+      <div className="top-header">
+        {/* Welcome Text - Top Left */}
+        <div className="welcome-text-section">
+          <SignedOut>
+            <h1 className="welcome-title">Welcome to Jargon!</h1>
+          </SignedOut>
+          <SignedIn>
+            <h1 className="welcome-title">Welcome {user?.firstName || user?.username || 'User'}</h1>
+          </SignedIn>
+        </div>
+
+        {/* Rocky Logo - Top Right */}
+        <div className="rocky-logo-section">
+          <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+        </div>
+      </div>
+
       <SignedOut>
-        <div style={{ padding: '2rem', textAlign: 'center' }}>
-          <h1>Welcome to Jargon!</h1>
+        <SignInButton />
+        <div className="welcome-section">
           <HappyRocky />
-          <SignInButton />
         </div>
       </SignedOut>
 
       <SignedIn>
-        <div style={{ padding: '1rem', display: 'flex', justifyContent: 'space-between' }}>
+        <div className="welcome-section">
           <UserButton />
-        </div>
-
-        <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
+          
           <img src="../../public/Jargon_Wordmark.png" alt="Jargon Word Mark" style={{ borderRadius: '50%', width: '20rem' }} />
-          <h2> Welcome {user?.firstName || user?.username || 'User'}!</h2>
 
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginTop: '2rem' }}>
-            {navButtons.map(({ label, path }) => (
-              <button
-                key={path}
-                style={{ padding: '1rem' }}
-                onClick={() => navigate(path)}
-              >
-                {label}
-              </button>
-            ))}
+          <div className="quick-actions">
+            <h2 className="quick-actions-title">Quick Actions</h2>
+            <div className="quick-actions-grid">
+              {navButtons.map(({ label, path }) => (
+                <button
+                  key={path}
+                  className="p-2 border rounded"
+                  onClick={() => navigate(path)}
+                >
+                  {label}
+                </button>
+              ))}
+            </div>
           </div>
         </div>
       </SignedIn>
