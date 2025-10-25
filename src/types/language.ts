@@ -13,7 +13,7 @@ export interface LanguageOption {
   flag: string;
 }
 
-export const SUPPORTED_LANGUAGES: LanguageOption[] = [
+export const SupportedLanguages: LanguageOption[] = [
   { code: 'english', name: 'English', flag: '🇬🇧' },
   { code: 'french', name: 'French', flag: '🇫🇷' },
   { code: 'chinese', name: 'Chinese', flag: '🇨🇳' },

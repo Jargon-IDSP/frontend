@@ -1,3 +1,4 @@
+import { useNavigate } from 'react-router-dom';
 import type { Quiz, CustomQuiz } from '../../types/learning';
 
 interface QuizCardProps {
@@ -7,10 +8,24 @@ interface QuizCardProps {
 }
 
 export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardProps) {
-  const isCompleted = quiz.completed;
+  const navigate = useNavigate();
+  
+  // Check if this is a CustomQuiz (template) or Quiz (completed attempt)
+  const isCustomQuiz = !('score' in quiz);
+  const isCompleted = !isCustomQuiz && quiz.completed;
   const questionCount = quiz.questions?.length || 0;
   const maxScore = questionCount * 5; 
-  const scorePercentage = maxScore > 0 ? (quiz.score / maxScore) * 100 : 0;
+  const scoreValue = !isCustomQuiz && 'score' in quiz ? (quiz.score || 0) : 0;
+  const scorePercentage = maxScore > 0 ? (scoreValue / maxScore) * 100 : 0;
+
+  const handleStartQuiz = () => {
+    if (type === 'custom') {
+      // Pass the actual quiz ID to take the quiz
+      navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`);
+    } else if ('level' in quiz) {
+      navigate(`/learning/existing/levels/${quiz.level.id}/quiz/take`);
+    }
+  };
 
   return (
     <div
@@ -48,74 +63,97 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
 
         <span style={{
           padding: '0.5rem 1rem',
-          backgroundColor: isCompleted ? '#d1fae5' : '#fef3c7',
-          color: isCompleted ? '#065f46' : '#92400e',
+          backgroundColor: isCustomQuiz ? '#e0e7ff' : (isCompleted ? '#d1fae5' : '#fef3c7'),
+          color: isCustomQuiz ? '#3730a3' : (isCompleted ? '#065f46' : '#92400e'),
           borderRadius: '12px',
           fontWeight: '600',
           fontSize: '0.875rem'
         }}>
-          {isCompleted ? '✓ Completed' : 'In Progress'}
+          {isCustomQuiz ? 'Not Started' : (isCompleted ? '✓ Completed' : 'In Progress')}
         </span>
       </div>
 
-      <div style={{ 
-        display: 'grid',
-        gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-        gap: '1rem',
-        marginBottom: '1rem'
-      }}>
+      {/* Show Start Quiz button for unstarted quizzes */}
+      {isCustomQuiz && (
+        <button
+          onClick={handleStartQuiz}
+          style={{
+            width: '100%',
+            padding: '0.75rem',
+            backgroundColor: '#3b82f6',
+            color: 'white',
+            border: 'none',
+            borderRadius: '6px',
+            fontWeight: '600',
+            cursor: 'pointer',
+            marginBottom: '1rem'
+          }}
+        >
+          Start Quiz ({questionCount} questions)
+        </button>
+      )}
+
+      {/* Show score for completed quizzes */}
+      {!isCustomQuiz && (
         <div style={{ 
-          backgroundColor: '#f9fafb',
-          padding: '1rem',
-          borderRadius: '6px',
-          textAlign: 'center'
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
+          gap: '1rem',
+          marginBottom: '1rem'
         }}>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
-            Score
-          </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' }}>
-            {quiz.score}
-          </div>
-          {maxScore > 0 && (
-            <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-              out of {maxScore} ({Math.round(scorePercentage)}%)
+          <div style={{ 
+            backgroundColor: '#f9fafb',
+            padding: '1rem',
+            borderRadius: '6px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
+              Score
             </div>
-          )}
-        </div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' }}>
+              {scoreValue}
+            </div>
+            {maxScore > 0 && (
+              <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+                out of {maxScore} ({Math.round(scorePercentage)}%)
+              </div>
+            )}
+          </div>
 
-        <div style={{ 
-          backgroundColor: '#f9fafb',
-          padding: '1rem',
-          borderRadius: '6px',
-          textAlign: 'center'
-        }}>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
-            Questions
+          <div style={{ 
+            backgroundColor: '#f9fafb',
+            padding: '1rem',
+            borderRadius: '6px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
+              Questions
+            </div>
+            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' }}>
+              {questionCount}
+            </div>
           </div>
-          <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' }}>
-            {questionCount}
+
+          <div style={{ 
+            backgroundColor: '#f9fafb',
+            padding: '1rem',
+            borderRadius: '6px',
+            textAlign: 'center'
+          }}>
+            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
+              {isCompleted ? 'Completed' : 'Started'}
+            </div>
+            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#1f2937' }}>
+              {new Date('createdAt' in quiz ? quiz.createdAt : Date.now()).toLocaleDateString()}
+            </div>
+            <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+              {new Date('createdAt' in quiz ? quiz.createdAt : Date.now()).toLocaleTimeString()}
+            </div>
           </div>
         </div>
+      )}
 
-        <div style={{ 
-          backgroundColor: '#f9fafb',
-          padding: '1rem',
-          borderRadius: '6px',
-          textAlign: 'center'
-        }}>
-          <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
-            {isCompleted ? 'Completed' : 'Started'}
-          </div>
-          <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#1f2937' }}>
-            {new Date(isCompleted && quiz.completedAt ? quiz.completedAt : quiz.createdAt).toLocaleDateString()}
-          </div>
-          <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
-            {new Date(isCompleted && quiz.completedAt ? quiz.completedAt : quiz.createdAt).toLocaleTimeString()}
-          </div>
-        </div>
-      </div>
-
-      {isCompleted && maxScore > 0 && (
+      {!isCustomQuiz && isCompleted && maxScore > 0 && (
         <div style={{ marginTop: '1rem' }}>
           <div style={{ 
             width: '100%',
@@ -135,46 +173,13 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
       )}
 
       {questionCount > 0 && (
-        <details style={{ marginTop: '1rem' }}>
-          <summary style={{ 
-            cursor: 'pointer',
-            color: '#3b82f6',
-            fontWeight: '500',
-            fontSize: '0.9rem'
-          }}>
-            View Questions ({questionCount})
-          </summary>
-          <div style={{ 
-            marginTop: '0.75rem',
-            paddingTop: '0.75rem',
-            borderTop: '1px solid #e5e7eb'
-          }}>
-            {quiz.questions.slice(0, 5).map((q, i) => (
-              <div 
-                key={q.id}
-                style={{ 
-                  padding: '0.5rem',
-                  marginBottom: '0.5rem',
-                  backgroundColor: '#f9fafb',
-                  borderRadius: '4px',
-                  fontSize: '0.875rem'
-                }}
-              >
-                <strong>Q{i + 1}:</strong> {q.correctAnswer?.term || 'Question ' + (i + 1)}
-              </div>
-            ))}
-            {questionCount > 5 && (
-              <div style={{ 
-                fontSize: '0.875rem',
-                color: '#6b7280',
-                fontStyle: 'italic',
-                marginTop: '0.5rem'
-              }}>
-                ... and {questionCount - 5} more questions
-              </div>
-            )}
-          </div>
-        </details>
+        <div style={{ 
+          marginTop: '1rem',
+          fontSize: '0.875rem',
+          color: '#6b7280'
+        }}>
+          This quiz contains {questionCount} question{questionCount !== 1 ? 's' : ''}
+        </div>
       )}
     </div>
   );

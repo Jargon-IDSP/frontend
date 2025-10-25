@@ -1,16 +1,17 @@
-
 import { useParams, useSearchParams, useNavigate, useLocation } from 'react-router-dom';
 import { useLearning } from '../../hooks/useLearning';
 import { useUserPreferences } from '../../hooks/useUserPreferences';
 import TermCard from '../../components/learning/TermCard';
+import EmptyState from '../../components/learning/EmptyState';
 import type { Term } from '../../types/learning';
 
 export default function Terms() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { levelId, documentId } = useParams<{ 
+  const { levelId, documentId, category } = useParams<{ 
     levelId?: string;
     documentId?: string;
+    category?: string;
   }>();
   const [searchParams] = useSearchParams();
   
@@ -24,6 +25,8 @@ export default function Terms() {
   let endpoint = '';
   if (documentId) {
     endpoint = `documents/${documentId}/terms`;
+  } else if (category) {
+    endpoint = `category/${category}/terms`;
   } else if (levelId && type === 'existing') {
     endpoint = `levels/${levelId}/terms`;
   } else {
@@ -94,19 +97,13 @@ export default function Terms() {
           )}
 
           {isEmpty ? (
-            <div style={{ 
-              backgroundColor: '#f0f0f0', 
-              padding: '2rem', 
-              borderRadius: '6px',
-              marginTop: '2rem',
-              textAlign: 'center'
-            }}>
-              <p style={{ margin: 0, fontSize: '1.1rem', color: '#666' }}>
-                {type === 'custom' 
-                  ? 'No custom terms found. Upload a document to create custom flashcards.'
-                  : 'No terms found for this level.'}
-              </p>
-            </div>
+            type === 'custom' ? (
+              <EmptyState type="terms" />
+            ) : (
+              <div>
+                <p>No terms found for this level.</p>
+              </div>
+            )
           ) : (
             <div style={{ marginTop: '2rem' }}>
               {terms.map((term, index) => (

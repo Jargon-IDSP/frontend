@@ -1,6 +1,6 @@
 import React, { useState, useRef } from 'react';
-import type { OCRResponse } from '../types/ocr';
-import { BACKEND_URL } from "../lib/api";
+import type { OCRResponse } from '../../types/ocr';
+import { BACKEND_URL } from "../../lib/api";
 
 const OCRUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);

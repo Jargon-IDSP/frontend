@@ -86,7 +86,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         throw new Error('Failed to save document');
       }
 
-      const { document, redirectUrl } = await saveRes.json();
+      const { redirectUrl } = await saveRes.json();
 
       // Success! Reset form
       setFile(null);

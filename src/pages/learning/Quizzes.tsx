@@ -1,15 +1,18 @@
 import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useLearning } from '../../hooks/useLearning';
 import { useUserPreferences } from '../../hooks/useUserPreferences';
-import QuizCard from '../../components/learning/QuizCard'; 
+import QuizCard from '../../components/learning/QuizCard';
+import EmptyState from '../../components/learning/EmptyState';
 import type { Quiz, CustomQuiz } from '../../types/learning';
 
 export default function Quizzes() { 
   const navigate = useNavigate();
-  const { type, levelId, documentId } = useParams<{ 
+  const location = window.location;
+  const { type, levelId, documentId, category } = useParams<{ 
     type?: 'existing' | 'custom'; 
     levelId?: string;
     documentId?: string;
+    category?: string;
   }>();
   const [searchParams] = useSearchParams();
   
@@ -18,17 +21,22 @@ export default function Quizzes() {
   const queryLanguage = searchParams.get('language') || language;
   const queryIndustryId = searchParams.get('industry_id') || industryId?.toString();
 
+  // Determine the actual type based on URL path
+  const actualType = location.pathname.includes('/existing/') ? 'existing' : 'custom';
+
   let endpoint = '';
   if (documentId) {
     endpoint = `documents/${documentId}/quizzes`;  
-  } else if (levelId && type === 'existing') {
+  } else if (category) {
+    endpoint = `category/${category}/quizzes`;
+  } else if (levelId && actualType === 'existing') {
     endpoint = `levels/${levelId}/quizzes`;  
   } else {
     endpoint = 'quizzes';  
   }
 
 const { data, error } = useLearning<Quiz[] | CustomQuiz[]>({  
-  type: type || 'custom',
+  type: actualType,
   endpoint,
   params: { 
     language: queryLanguage,
@@ -43,9 +51,19 @@ const isEmpty = quizzes.length === 0;
 
   const showLoading = !data && !error;
 
+  const handleBack = () => {
+    if (documentId) {
+      navigate(`/documents/${documentId}/study`);
+    } else if (category) {
+      navigate(`/learning/custom/category/${category}`);
+    } else {
+      navigate(-1);
+    }
+  };
+
   return (
     <div style={{ padding: '2rem' }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: '1rem' }}>
+      <button onClick={handleBack} style={{ marginBottom: '1rem' }}>
         ← Back
       </button>
 
@@ -87,19 +105,13 @@ const isEmpty = quizzes.length === 0;
           )}
 
           {isEmpty ? (
-            <div style={{ 
-              backgroundColor: '#f0f0f0', 
-              padding: '2rem', 
-              borderRadius: '6px',
-              marginTop: '2rem',
-              textAlign: 'center'
-            }}>
-              <p style={{ margin: 0, fontSize: '1.1rem', color: '#666' }}>
-                {type === 'custom' 
-                  ? 'No quizzes taken yet. Take a quiz to see your history here.'
-                  : 'No quizzes found for this level.'}
-              </p>
-            </div>
+            type === 'custom' ? (
+              <EmptyState type="quizzes" />
+            ) : (
+              <div>
+                <p>No quizzes found for this level.</p>
+              </div>
+            )
           ) : (
             <div style={{ marginTop: '2rem' }}>
               {quizzes.map((quiz, index) => (
@@ -107,7 +119,7 @@ const isEmpty = quizzes.length === 0;
                   key={quiz.id}
                   quiz={quiz}
                   index={index + 1}
-                  type={type}
+                  type={actualType}
                 />
               ))}
             </div>

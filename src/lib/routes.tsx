@@ -1,22 +1,23 @@
 import type { RouteObject } from 'react-router-dom';
 import type { ReactElement } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
-import HomePage from '../pages/HomePage';
-import ChatPage from '../pages/ChatPage';
+import HomePage from '../mounting/HomePage';
+import ChatPage from '../mounting/ChatPage';
 import ProfilePage from '../pages/users/ProfilePage';
 import AvatarPage from '../pages/users/avatar/AvatarPage';
-import DocumentsPage from '../pages/documents/DocumentsPage';
-import RandomQuestionsStepper from '../pages/RandomQuestionsStepper';
-import LeaderboardPage from '../pages/LeaderboardPage';
+import RandomQuestionsStepper from '../mounting/RandomQuestionsStepper';
+import LeaderboardPage from '../mounting/LeaderboardPage';
 import LearningHub from '../pages/learning/LearnJargon';
 import Levels from '../pages/learning/Levels';
 import ExistingSelect from '../pages/learning/ExistingSelect';
 import CustomSelect from '../pages/learning/CustomSelect';
+import CategoryStudy from '../pages/learning/CategoryStudy';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
 import Quizzes from '../pages/learning/Quizzes';
 import TakeQuiz from '../pages/learning/TakeQuiz';
 import QuizSelection from '../pages/learning/QuizSelection';
+import { documentRoutes } from './documentRoutes';
 
 const protect = (element: ReactElement) => <ProtectedRoute>{element}</ProtectedRoute>;
 
@@ -37,10 +38,9 @@ export const routes: RouteObject[] = [
     path: '/profile/avatar',
     element: protect(<AvatarPage />),
   },
-  {
-    path: '/documents',
-    element: protect(<DocumentsPage />),
-  },
+  
+  ...documentRoutes,
+  
   {
     path: '/random-questions',
     element: protect(<RandomQuestionsStepper />),
@@ -50,7 +50,7 @@ export const routes: RouteObject[] = [
     element: protect(<LeaderboardPage />),
   },
   
-  // Learning routes
+ 
   {
     path: '/learning',
     element: protect(<LearningHub />),
@@ -67,8 +67,12 @@ export const routes: RouteObject[] = [
     path: '/learning/custom',
     element: protect(<CustomSelect />),
   },
+  {
+    path: '/learning/custom/category/:category',
+    element: protect(<CategoryStudy />),
+  },
   
-  // Terms routes
+
   {
     path: '/learning/existing/levels/:levelId/terms',
     element: protect(<Terms />),
@@ -78,11 +82,15 @@ export const routes: RouteObject[] = [
     element: protect(<Terms />),
   },
   {
+    path: '/learning/custom/category/:category/terms',
+    element: protect(<Terms />),
+  },
+  {
     path: '/learning/custom/terms',
     element: protect(<Terms />),
   },
   
-  // Questions routes
+
   {
     path: '/learning/existing/levels/:levelId/questions',
     element: protect(<Questions />),
@@ -96,13 +104,16 @@ export const routes: RouteObject[] = [
     element: protect(<Questions />),
   },
   
-  // Quizzes routes
   {
     path: '/learning/existing/levels/:levelId/quizzes',
     element: protect(<Quizzes />),
   },
   {
     path: '/learning/custom/documents/:documentId/quizzes',
+    element: protect(<Quizzes />),
+  },
+  {
+    path: '/learning/custom/category/:category/quizzes',
     element: protect(<Quizzes />),
   },
   {
@@ -123,7 +134,7 @@ export const routes: RouteObject[] = [
     element: protect(<QuizSelection />),
   },
   
-  // Take quiz routes
+
   {
     path: '/learning/existing/levels/:levelId/quiz/take',
     element: protect(<TakeQuiz />),

@@ -2,6 +2,7 @@ import { useParams, useSearchParams, useNavigate } from 'react-router-dom';
 import { useLearning } from '../../hooks/useLearning';
 import { useUserPreferences } from '../../hooks/useUserPreferences';
 import QuestionCard from '../../components/learning/QuestionCard';
+import EmptyState from '../../components/learning/EmptyState';
 import type { Question, CustomQuestion } from '../../types/learning';
 
 export default function Questions() {
@@ -87,19 +88,13 @@ export default function Questions() {
           )}
 
           {isEmpty ? (
-            <div style={{ 
-              backgroundColor: '#f0f0f0', 
-              padding: '2rem', 
-              borderRadius: '6px',
-              marginTop: '2rem',
-              textAlign: 'center'
-            }}>
-              <p style={{ margin: 0, fontSize: '1.1rem', color: '#666' }}>
-                {type === 'custom' 
-                  ? 'No custom questions found. Create questions from your documents.'
-                  : 'No questions found for this level.'}
-              </p>
-            </div>
+            type === 'custom' ? (
+              <EmptyState type="questions" />
+            ) : (
+              <div>
+                <p>No questions found for this level.</p>
+              </div>
+            )
           ) : (
             <div style={{ marginTop: '2rem' }}>
               {questions.map((question, index) => (

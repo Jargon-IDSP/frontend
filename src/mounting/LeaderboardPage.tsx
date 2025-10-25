@@ -57,16 +57,16 @@ const LeaderboardPage: React.FC = () => {
     if (!language) return 'ENG';
     
     const languageMap: { [key: string]: string } = {
-      'English': 'ENG',
-      'Chinese': 'CHN',
-      'Tagalog': 'TGL',
-      'French': 'FR',
-      'Korean': 'KO',
-      'Spanish': 'ES',
-      'Punjabi': 'PA'
+      'english': 'ENG',
+      'chinese': 'CHN',
+      'tagalog': 'TGL',
+      'french': 'FR',
+      'korean': 'KO',
+      'spanish': 'ES',
+      'punjabi': 'PA'
     };
     
-    return languageMap[language] || 'ENG';
+    return languageMap[language.toLowerCase()] || 'ENG';
   };
 
   if (loading) {

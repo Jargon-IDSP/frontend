@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { UploadDocumentForm } from '../../components/UploadDocumentForm'
-import { DocumentsList } from '../../components/DocumentList'
+import { DocumentsList } from './DocumentList'
 import { useNavigate } from "react-router-dom";
 
 export default function DocumentsPage() {

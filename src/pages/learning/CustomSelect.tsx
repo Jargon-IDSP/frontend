@@ -66,7 +66,7 @@ export default function CustomSelect() {
           {ocrProcessedDocs.map((doc) => (
             <button
               key={doc.id}
-              onClick={() => navigate(`/learning/custom/documents/${doc.id}/terms`)}
+              onClick={() => navigate(`/documents/${doc.id}/study`)}
               style={{ 
                 display: 'block',
                 width: '100%',
@@ -80,6 +80,28 @@ export default function CustomSelect() {
           ))}
         </div>
       )}
+
+      <h2>Study by Category</h2>
+      <div style={{ marginBottom: '2rem' }}>
+        <button onClick={() => navigate('/learning/custom/category/safety')}>
+          ⚠️ Safety
+        </button>
+        <button onClick={() => navigate('/learning/custom/category/technical')}>
+          🔧 Technical
+        </button>
+        <button onClick={() => navigate('/learning/custom/category/training')}>
+          📖 Training
+        </button>
+        <button onClick={() => navigate('/learning/custom/category/workplace')}>
+          🏢 Workplace
+        </button>
+        <button onClick={() => navigate('/learning/custom/category/professional')}>
+          💼 Professional
+        </button>
+        <button onClick={() => navigate('/learning/custom/category/general')}>
+          📝 General
+        </button>
+      </div>
 
       <h2>Other Options</h2>
       <PracticeType
