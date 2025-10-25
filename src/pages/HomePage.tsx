@@ -1,9 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
+import { SignedIn, SignedOut, SignInButton, useUser } from '@clerk/clerk-react';
 import HappyRocky from '../components/avatar/HappyRocky';
-import OCRDocumentsList from '../pages/documents/OCRDocumentsList';
+import TopLeaderboard from '../components/TopLeaderboard';
+import UploadFileCard from '../components/UploadFileCard';
+import StartLearningCard from '../components/StartLearningCard';
 import { BACKEND_URL } from '../lib/api';
+import rockyWhiteLogo from '/rockyWhite.svg';
 
 export default function HomePage() {
   const [data, setData] = useState<any>(null);
@@ -27,42 +30,46 @@ export default function HomePage() {
 
   const navButtons = [
     { label: 'Random Questions (Stepper)', path: '/random-questions' },
-    { label: 'Chat Page', path: '/chat' },
-    { label: 'Profile Page', path: '/profile' },
-    { label: 'Documents Page', path: '/documents' },
-    { label: 'Leaderboard', path: '/leaderboard' },
-    { label: 'Learn Jargon', path: '/learning' },
+    // { label: 'Profile Page', path: '/profile' },
   ];
 
   return (
-    <header>
+    <div className="home-page">
+      {/* Top Header Section */}
+      <div className="top-header">
+        {/* Welcome Text - Top Left */}
+        <div className="welcome-text-section">
+          <SignedOut>
+            <h1 className="welcome-title">Welcome to Jargon!</h1>
+          </SignedOut>
+          <SignedIn>
+            <h1 className="welcome-title">Welcome {user?.firstName || user?.username || 'User'}</h1>
+          </SignedIn>
+        </div>
+
+        {/* Rocky Logo - Top Right */}
+        <div className="rocky-logo-section">
+          <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+        </div>
+      </div>
+
       <SignedOut>
         <SignInButton />
-        <div style={{ padding: '2rem' }}>
-          <h1>Welcome to Jargon!</h1>
+        <div className="welcome-section">
           <HappyRocky />
         </div>
       </SignedOut>
 
       <SignedIn>
-        <UserButton />
+        <div className="welcome-section">
 
-        <div style={{ padding: '2rem', maxWidth: '1200px', margin: '0 auto' }}>
-          <h1>Welcome {user?.firstName || user?.username || 'User'}</h1>
-
-          <div style={{ marginTop: '2rem', marginBottom: '2rem' }}>
-            <OCRDocumentsList />
-          </div>
-
-          <hr style={{ margin: '2rem 0', border: 'none', borderTop: '1px solid #e5e7eb' }} />
-
-          <div style={{ marginBottom: '2rem' }}>
-            <h2 style={{ marginBottom: '1rem', color: '#1f2937' }}>Navigation</h2>
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
+          <div className="quick-actions">
+            <h2 className="quick-actions-title">Quick Actions</h2>
+            <div className="quick-actions-grid">
               {navButtons.map(({ label, path }) => (
                 <button
                   key={path}
-                  style={{ padding: '0.75rem 1rem' }}
+                  className="p-2 border rounded"
                   onClick={() => navigate(path)}
                 >
                   {label}
@@ -71,44 +78,38 @@ export default function HomePage() {
             </div>
           </div>
 
-          <details style={{ marginTop: '2rem' }}>
-            <summary style={{ cursor: 'pointer', fontWeight: 'bold', marginBottom: '1rem' }}>
+          <StartLearningCard />
+          <UploadFileCard />
+          <TopLeaderboard />
+
+
+          <details className="api-testing-section">
+            <summary className="api-testing-title cursor-pointer font-bold m-3">
               API Testing Tools
             </summary>
 
             {error && (
-              <div style={{
-                color: 'red',
-                padding: '1rem',
-                border: '1px solid red',
-                marginBottom: '1rem',
-                borderRadius: '4px',
-              }}>
+              <div className="text-red-500 p-3 border border-red-500 m-3 rounded">
                 Error: {error}
               </div>
             )}
 
-            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-              <button style={{ padding: '0.75rem 1rem' }} onClick={fetchHelp}>
+            <div className="flex flex-wrap gap-2">
+              <button className="p-2 border rounded" onClick={fetchHelp}>
                 Fetch Help
               </button>
             </div>
 
             {data && (
-              <pre style={{
-                marginTop: '1rem',
-                padding: '1rem',
-                backgroundColor: '#f9fafb',
-                borderRadius: '6px',
-                overflow: 'auto',
-                maxHeight: '400px',
-              }}>
-                {JSON.stringify(data, null, 2)}
-              </pre>
+              <div className="api-response">
+                <pre>
+                  {JSON.stringify(data, null, 2)}
+                </pre>
+              </div>
             )}
           </details>
         </div>
       </SignedIn>
-    </header>
+    </div>
   );
 }

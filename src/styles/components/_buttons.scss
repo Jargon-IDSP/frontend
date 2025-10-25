@@ -1,0 +1,40 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Basic Button Component Styles
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  background-color: $color-second-neutral;
+  color: $color-neutral;
+  text-decoration: none;
+  
+  &:hover {
+    background-color: $color-secondary;
+  }
+  
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
+
+.btn-primary {
+  @extend .btn;
+  background-color: $color-primary;
+  color: white;
+  border-color: $color-primary;
+  
+  &:hover {
+    background-color: color.adjust($color-primary, $lightness: -10%);
+  }
+}

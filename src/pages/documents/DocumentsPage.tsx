@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { UploadDocumentForm } from '../../components/UploadDocumentForm'
 import { DocumentsList } from '../../components/DocumentList'
+import OCRDocumentsList from './OCRDocumentsList'
+import RockySpeechBubble from '../../components/RockySpeechBubble'
 import { useNavigate } from "react-router-dom";
 
 export default function DocumentsPage() {
@@ -12,27 +14,44 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div style={{ maxWidth: '48rem', margin: '0 auto', padding: '1.5rem' }}>
+    <div className="container">
       
       <button 
         onClick={() => navigate("/")}
-        style={{ marginBottom: "1rem" }}
+        className="back-button"
       >
         ← Back to Dashboard
       </button>
       
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem' }}>
-        My Documents
+      <h1 className="page-title">
+        AI Translate & Lesson
       </h1>
 
-      <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '1.5rem', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+      <RockySpeechBubble 
+        text="Hey there! Just upload your manuals — I'll turn them into bite-sized lessons and flashcards for you to practice anytime!"
+        className="documents-speech-bubble"
+      />
+
+      <div className="upload-section">
+        <h2 className="section-title">
           Upload New Document
         </h2>
         <UploadDocumentForm onSuccess={handleUploadSuccess} />
       </div>
 
-      <DocumentsList refresh={refreshKey} />
+      <div className="ocr-section">
+        <h2 className="section-title">
+          OCR Processed Documents
+        </h2>
+        <OCRDocumentsList />
+      </div>
+
+      <div className="documents-section">
+        <h2 className="section-title">
+          All Documents
+        </h2>
+        <DocumentsList refresh={refreshKey} />
+      </div>
     </div>
   )
 }

@@ -1,0 +1,70 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Profile Page Specific Styles
+.profile-page {
+  @include container-mobile;
+  padding-top: $spacing-lg;
+  padding-bottom: $spacing-lg;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm $spacing-md;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  background: none;
+  color: $color-neutral;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    background-color: $color-secondary;
+  }
+}
+
+.profile-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+.profile-content {
+  margin-top: $spacing-lg;
+}
+
+.profile-data {
+  background-color: $color-second-neutral;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+  
+  pre {
+    margin: 0;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: $font-size-label;
+    line-height: 1.4;
+    overflow: auto;
+  }
+}
+
+.error-message {
+  color: $color-error;
+  padding: $spacing-md;
+  border: 1px solid $color-error;
+  border-radius: $spacing-sm;
+  margin-bottom: $spacing-md;
+  background-color: rgba(196, 0, 0, 0.1);
+}

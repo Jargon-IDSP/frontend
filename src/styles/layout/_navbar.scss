@@ -1,0 +1,65 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Navigation Bar - Bottom Mobile App Style
+.navbar {
+  background-color: $color-second-neutral-light;
+  box-shadow: 0 -2px 4px rgba(0, 0, 0, 0.1);
+  padding: $spacing-sm 0;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  width: 100%;
+}
+
+.nav-items {
+  display: flex;
+  justify-content: space-around;
+  gap: $spacing-sm;
+  
+  @include tablet-up {
+    gap: $spacing-md;
+  }
+}
+
+.nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-sm;
+  border: none;
+  background: none;
+  cursor: pointer;
+  border-radius: $spacing-sm;
+  transition: all 0.2s ease;
+  color: $color-neutral;
+  
+  &:hover {
+    background-color: $color-secondary;
+  }
+  
+  &.active {
+    background-color: $color-primary;
+    color: white;
+  }
+}
+
+.nav-icon {
+  font-size: $font-size-h3;
+  margin-bottom: $spacing-xs;
+  
+  @include tablet-up {
+    font-size: $font-size-h3;
+  }
+}
+
+.nav-label {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  
+  @include tablet-up {
+    font-size: $font-size-body;
+  }
+}
