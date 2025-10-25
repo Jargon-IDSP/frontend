@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, UserButton } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../lib/api";
 
@@ -41,52 +41,45 @@ export default function ProfilePage() {
   }, [getToken]);
 
   return (
-
-
-    <div style={{ padding: "2rem" }}>
-
-      <button 
-        onClick={() => navigate("/")}
-        style={{ marginBottom: "1rem" }}
-      >
-        ← Back to Dashboard
-      </button>
-      <h1>Profile Page</h1>
+    <div className="container">
+      <div className="profile-header">
+        <button 
+          className="back-button"
+          onClick={() => navigate("/")}
+        >
+          ← Back to Dashboard
+        </button>
+        <UserButton />
+      </div>
+      
+      <h1 className="profile-title">Profile Page</h1>
       
       {error && (
-        <div
-          style={{
-            color: "red",
-            padding: "1rem",
-            border: "1px solid red",
-            marginBottom: "1rem",
-            borderRadius: "4px",
-          }}
-        >
+        <div className="error-message">
           Error: {error}
         </div>
       )}
 
       {data && (
-        <div>
-          <pre>{JSON.stringify(data, null, 2)}</pre>
-          <button
-            style={{ 
-              padding: "0.75rem 1rem",
-              margin: "1rem",
-              cursor: "pointer",
-              backgroundColor: "#007bff",
-              color: "white",
-              border: "none",
-              borderRadius: "4px"
-            }}
-            onClick={() => navigate("/profile/avatar")}
-          >
-            View Avatar
-          </button>
+        <div className="profile-content">
+          <div className="profile-data">
+            <pre>{JSON.stringify(data, null, 2)}</pre>
+          </div>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/profile/avatar")}
+            >
+              View Avatar
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/profile/friends")}
+            >
+              Friends
+            </button>
+          </div>
         </div>
-
-        
       )}
     </div>
   );

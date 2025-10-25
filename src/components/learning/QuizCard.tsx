@@ -1,8 +1,8 @@
 import { useNavigate } from 'react-router-dom';
-import type { Quiz, CustomQuiz } from '../../types/learning';
+import type { Quiz, CustomQuiz, UserQuizAttempt } from '../../types/learning';
 
 interface QuizCardProps {
-  quiz: Quiz | CustomQuiz;
+  quiz: Quiz | CustomQuiz | UserQuizAttempt;
   index: number;
   type?: 'existing' | 'custom';
 }
@@ -10,19 +10,45 @@ interface QuizCardProps {
 export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardProps) {
   const navigate = useNavigate();
   
-  // Check if this is a CustomQuiz (template) or Quiz (completed attempt)
-  const isCustomQuiz = !('score' in quiz);
-  const isCompleted = !isCustomQuiz && quiz.completed;
-  const questionCount = quiz.questions?.length || 0;
-  const maxScore = questionCount * 5; 
-  const scoreValue = !isCustomQuiz && 'score' in quiz ? (quiz.score || 0) : 0;
+  // Check what type of quiz this is
+  const isUserQuizAttempt = 'customQuizId' in quiz; // UserQuizAttempt has customQuizId
+  const isCustomQuiz = !('score' in quiz) && !isUserQuizAttempt; // CustomQuiz template (not started)
+  const isExistingQuiz = 'score' in quiz && 'levelId' in quiz; // Completed existing quiz
+  
+  const isCompleted = isUserQuizAttempt ? quiz.completed : (isExistingQuiz && quiz.completed);
+  
+  // Get question count and score
+  let questionCount = 0;
+  let scoreValue = 0;
+  let maxScore = 0;
+  
+  if (isUserQuizAttempt) {
+    questionCount = quiz.totalQuestions;
+    scoreValue = quiz.pointsEarned;
+    maxScore = quiz.maxPossiblePoints;
+  } else if (isCustomQuiz) {
+    questionCount = quiz.questions?.length || 0;
+    maxScore = questionCount * 5;
+  } else if (isExistingQuiz) {
+    questionCount = quiz.questions?.length || 0;
+    maxScore = questionCount * 5;
+    scoreValue = quiz.score || 0;
+  }
+  
   const scorePercentage = maxScore > 0 ? (scoreValue / maxScore) * 100 : 0;
 
   const handleStartQuiz = () => {
-    if (type === 'custom') {
+    if (isUserQuizAttempt) {
+      // For user quiz attempts, navigate to results or retake
+      if (quiz.completed) {
+        navigate(`/learning/custom/quiz/${quiz.customQuizId}/results?attemptId=${quiz.id}`);
+      } else {
+        navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
+      }
+    } else if (type === 'custom' && isCustomQuiz) {
       // Pass the actual quiz ID to take the quiz
       navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`);
-    } else if ('level' in quiz) {
+    } else if (isExistingQuiz && 'level' in quiz) {
       navigate(`/learning/existing/levels/${quiz.level.id}/quiz/take`);
     }
   };
@@ -49,14 +75,19 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
           <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '0.25rem' }}>
             Quiz {index}
           </strong>
-          {type === 'existing' && 'level' in quiz && (
+          {type === 'existing' && isExistingQuiz && 'level' in quiz && (
             <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
               Level: {quiz.level.name}
             </span>
           )}
-          {type === 'custom' && 'document' in quiz && quiz.document && (
+          {type === 'custom' && isCustomQuiz && 'document' in quiz && quiz.document && (
             <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
               Document: {quiz.document.filename}
+            </span>
+          )}
+          {isUserQuizAttempt && quiz.customQuiz && (
+            <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+              Quiz: {quiz.customQuiz.name}
             </span>
           )}
         </div>

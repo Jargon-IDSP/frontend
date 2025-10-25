@@ -1,0 +1,105 @@
+@use 'variables' as *;
+@use 'mixins' as *;
+
+// Import organized styles
+@use 'layout/navbar';
+@use 'pages/homepage';
+@use 'pages/profile';
+@use 'pages/documents';
+@use 'components/buttons';
+@use 'components/rocky-speech-bubble';
+
+// Basic mobile-first styles
+* {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px; // Mobile base
+  
+  @include tablet-up {
+    font-size: 18px; // Tablet
+  }
+  
+  @include desktop-up {
+    font-size: 20px; // Desktop
+  }
+}
+
+body {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  line-height: 1.5;
+  color: $color-neutral;
+  background-color: $color-second-neutral-light;
+  margin: 0;
+  padding: 0;
+  min-height: 100vh;
+  padding-bottom: 80px; // Space for fixed bottom navbar
+}
+
+// Basic container
+.container {
+  @include container-mobile;
+  max-width: 480px; 
+  margin-left: auto;
+  margin-right: auto;
+}
+
+// Basic responsive utilities
+.mobile-only {
+  @include mobile-only {
+    display: block;
+  }
+  
+  @include tablet-up {
+    display: none;
+  }
+}
+
+.tablet-up {
+  display: none;
+  
+  @include tablet-up {
+    display: block;
+  }
+}
+
+.desktop-up {
+  display: none;
+  
+  @include desktop-up {
+    display: block;
+  }
+}
+
+// Basic spacing
+.p-2 { padding: $spacing-sm; }
+.p-3 { padding: $spacing-md; }
+.p-4 { padding: $spacing-lg; }
+
+.m-2 { margin: $spacing-sm; }
+.m-3 { margin: $spacing-md; }
+.m-4 { margin: $spacing-lg; }
+
+// Basic text
+.text-center { text-align: center; }
+.text-sm { font-size: $font-size-label; }
+.text-base { font-size: $font-size-body; }
+.text-lg { font-size: $font-size-h3; }
+
+// Basic display
+.hidden { display: none; }
+.block { display: block; }
+.flex { display: flex; }
+
+// Basic width
+.w-full { width: 100%; }
+.w-auto { width: auto; }
+
+// Basic utilities
+.cursor-pointer { cursor: pointer; }
+.font-bold { font-weight: bold; }
+.gap-2 { gap: 0.5rem; }
+.flex-wrap { flex-wrap: wrap; }
+.text-red-500 { color: #ef4444; }
+.border-red-500 { border-color: #ef4444; }

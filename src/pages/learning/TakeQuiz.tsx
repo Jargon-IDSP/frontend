@@ -4,6 +4,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { useUserPreferences } from '../../hooks/useUserPreferences';
 import { BACKEND_URL } from '../../lib/api';
 import TranslateButton from '../../components/TranslateButton';
+import type { UserQuizAttempt } from '../../types/learning';
 
 interface QuizQuestion {
   questionId: string;
@@ -46,10 +47,54 @@ export default function TakeQuiz() {
   const [chatReply, setChatReply] = useState('');
   const [chatLoading, setChatLoading] = useState(false);
   const chatReplyRef = useRef<HTMLDivElement>(null);
+  
+  // New state for quiz attempts
+  const [previousAttempts, setPreviousAttempts] = useState<UserQuizAttempt[]>([]);
+  const [showAttempts, setShowAttempts] = useState(true);
+  const [loadingAttempts, setLoadingAttempts] = useState(true);
 
   useEffect(() => {
+    if (quizId && type === 'custom') {
+      fetchPreviousAttempts();
+    } else {
+      setLoadingAttempts(false);
+      setShowAttempts(false);
+    }
+  }, [quizId]);
+
+  const fetchPreviousAttempts = async () => {
+    if (!quizId) return;
+    
+    try {
+      setLoadingAttempts(true);
+      const token = await getToken();
+      const response = await fetch(`${BACKEND_URL}/quiz/${quizId}/history`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        if (data && data.attempts) {
+          setPreviousAttempts(data.attempts);
+        }
+      }
+    } catch (err) {
+      console.error('Error fetching attempts:', err);
+    } finally {
+      setLoadingAttempts(false);
+    }
+  };
+
+  const handleStartNewAttempt = () => {
+    setShowAttempts(false);
     fetchQuiz();
-  }, []);
+  };
+
+  useEffect(() => {
+    if (!showAttempts) {
+      fetchQuiz();
+    }
+  }, [showAttempts]);
 
   useEffect(() => {
     if (chatReplyRef.current) {
@@ -382,6 +427,125 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   }
 
   const currentQuestion = questions[currentQuestionIndex];
+
+  // Show previous attempts screen if we have a quizId and haven't started yet
+  if (showAttempts && quizId && type === 'custom') {
+    return (
+      <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+        <button onClick={() => navigate(-1)} style={{ marginBottom: '1rem' }}>
+          ← Back
+        </button>
+        
+        <h1 style={{ marginBottom: '1.5rem' }}>Quiz Attempts</h1>
+
+        {loadingAttempts ? (
+          <div style={{ textAlign: 'center', padding: '3rem', color: '#666' }}>
+            Loading previous attempts...
+          </div>
+        ) : (
+          <>
+            {previousAttempts.length > 0 && (
+              <div style={{ marginBottom: '2rem' }}>
+                <h2 style={{ fontSize: '1.25rem', marginBottom: '1rem' }}>Previous Attempts</h2>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                  {previousAttempts.map((attempt, index) => (
+                    <div
+                      key={attempt.id}
+                      style={{
+                        border: '1px solid #e5e7eb',
+                        borderRadius: '8px',
+                        padding: '1.5rem',
+                        backgroundColor: '#fff',
+                      }}
+                    >
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
+                        <div>
+                          <h3 style={{ margin: '0 0 0.5rem 0', fontSize: '1.1rem' }}>
+                            Attempt {previousAttempts.length - index}
+                          </h3>
+                          <p style={{ margin: 0, color: '#6b7280', fontSize: '0.875rem' }}>
+                            {new Date(attempt.startedAt).toLocaleDateString()} at {new Date(attempt.startedAt).toLocaleTimeString()}
+                          </p>
+                        </div>
+                        <span
+                          style={{
+                            padding: '0.5rem 1rem',
+                            borderRadius: '12px',
+                            fontWeight: '600',
+                            fontSize: '0.875rem',
+                            backgroundColor: attempt.completed ? '#d1fae5' : '#fef3c7',
+                            color: attempt.completed ? '#065f46' : '#92400e',
+                          }}
+                        >
+                          {attempt.completed ? '✓ Completed' : 'In Progress'}
+                        </span>
+                      </div>
+
+                      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(2, 1fr)', gap: '1rem', marginTop: '1rem' }}>
+                        <div>
+                          <p style={{ margin: 0, fontSize: '0.875rem', color: '#6b7280' }}>Score</p>
+                          <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: '600' }}>
+                            {attempt.pointsEarned} / {attempt.maxPossiblePoints}
+                          </p>
+                        </div>
+                        <div>
+                          <p style={{ margin: 0, fontSize: '0.875rem', color: '#6b7280' }}>Accuracy</p>
+                          <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.5rem', fontWeight: '600' }}>
+                            {attempt.percentCorrect}%
+                          </p>
+                        </div>
+                        <div>
+                          <p style={{ margin: 0, fontSize: '0.875rem', color: '#6b7280' }}>Questions</p>
+                          <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.25rem', fontWeight: '600' }}>
+                            {attempt.questionsAnswered} / {attempt.totalQuestions}
+                          </p>
+                        </div>
+                        <div>
+                          <p style={{ margin: 0, fontSize: '0.875rem', color: '#6b7280' }}>Correct</p>
+                          <p style={{ margin: '0.25rem 0 0 0', fontSize: '1.25rem', fontWeight: '600' }}>
+                            {attempt.questionsCorrect}
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {previousAttempts.length === 0 && (
+              <div style={{ 
+                textAlign: 'center', 
+                padding: '3rem', 
+                backgroundColor: '#f9fafb', 
+                borderRadius: '8px',
+                marginBottom: '2rem'
+              }}>
+                <p style={{ color: '#6b7280', margin: 0 }}>No previous attempts found</p>
+              </div>
+            )}
+
+            <button
+              onClick={handleStartNewAttempt}
+              style={{
+                width: '100%',
+                padding: '1rem',
+                backgroundColor: '#3b82f6',
+                color: 'white',
+                border: 'none',
+                borderRadius: '8px',
+                fontSize: '1rem',
+                fontWeight: '600',
+                cursor: 'pointer',
+              }}
+            >
+              {previousAttempts.length > 0 ? 'Start New Attempt' : 'Start Quiz'}
+            </button>
+          </>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
