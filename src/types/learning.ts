@@ -1,3 +1,6 @@
+import type { Multilingual } from "./language";
+import type { Document, QuizCategory } from "./document";
+
 export interface Term {
   id: string;
   term: {
@@ -28,17 +31,60 @@ export interface Question {
   };
 }
 
-export interface CustomQuestion {
+export interface CustomQuestion extends Multilingual<'prompt'> {
   id: string;
-  prompt: string;
-  correctAnswer: {
-    id: string;
-    term: string;
-    definition: string;
-  };
+  userId: string;
+  customQuizId: string | null;
+  correctTermId: string;
+  pointsWorth: number;
   createdAt: string;
+  correctAnswer?: CustomFlashcard;
 }
 
+
+export interface CustomQuiz {
+  id: string;
+  userId: string;
+  documentId: string | null;
+  name: string;
+  category: QuizCategory | null;
+  pointsPerQuestion: number;
+  createdAt: string;
+  updatedAt: string;
+  questions?: CustomQuestion[];
+  document?: Document;
+}
+
+
+export interface UserQuizAttempt {
+  id: string;
+  userId: string;
+  customQuizId: string;
+  questionsAnswered: number;
+  questionsCorrect: number;
+  totalQuestions: number;
+  percentComplete: number;
+  percentCorrect: number;
+  pointsEarned: number;
+  maxPossiblePoints: number;
+  completed: boolean;
+  startedAt: string;
+  completedAt: string | null;
+  customQuiz?: CustomQuiz;
+  answers?: UserQuizAnswer[];
+}
+
+export interface UserQuizAnswer {
+  id: string;
+  attemptId: string;
+  questionId: string;
+  answerId: string;
+  isCorrect: boolean;
+  pointsEarned: number;
+  answeredAt: string;
+  question?: CustomQuestion;
+  answer?: CustomFlashcard;
+}
 
 export interface Quiz {
   id: string;
@@ -54,23 +100,6 @@ export interface Quiz {
   };
   questions: Question[];
 }
-
-export interface CustomQuiz {
-  id: string;
-  userId: string;
-  documentId?: string;
-  completed: boolean;
-  score: number;
-  createdAt: string;
-  completedAt?: string;
-  document?: {
-    id: string;
-    filename: string;
-    fileUrl: string;
-  };
-  questions: CustomQuestion[];
-}
-
 
 export interface Level {
   id: number;
@@ -95,4 +124,12 @@ export interface ApiResponse<T> {
   document_id?: string;
   industryCount?: number;
   generalCount?: number;
+}
+
+export interface CustomFlashcard extends Multilingual<'term'>, Multilingual<'definition'> {
+  id: string;
+  documentId: string | null;
+  userId: string;
+  createdAt: string;
+  updatedAt: string;
 }

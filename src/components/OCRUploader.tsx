@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import type { OCRResponse } from '../types/ocr';
 import { BACKEND_URL } from "../lib/api";
 
-const PDFOCRUploader: React.FC = () => {
+const OCRUploader: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [result, setResult] = useState<OCRResponse | null>(null);
@@ -292,4 +292,4 @@ const PDFOCRUploader: React.FC = () => {
   );
 };
 
-export default PDFOCRUploader;
+export default OCRUploader;
