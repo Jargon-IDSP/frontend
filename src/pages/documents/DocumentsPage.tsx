@@ -12,21 +12,21 @@ export default function DocumentsPage() {
   }
 
   return (
-    <div style={{ maxWidth: '48rem', margin: '0 auto', padding: '1.5rem' }}>
+    <div className="container">
       
       <button 
         onClick={() => navigate("/")}
-        style={{ marginBottom: "1rem" }}
+        className="back-button"
       >
         ← Back to Dashboard
       </button>
       
-      <h1 style={{ fontSize: '2rem', fontWeight: 'bold', marginBottom: '2rem' }}>
+      <h1 className="page-title">
         My Documents
       </h1>
 
-      <div style={{ border: '1px solid #ddd', borderRadius: '8px', padding: '1.5rem', marginBottom: '1.5rem' }}>
-        <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold', marginBottom: '1rem' }}>
+      <div className="upload-section">
+        <h2 className="section-title">
           Upload New Document
         </h2>
         <UploadDocumentForm onSuccess={handleUploadSuccess} />
