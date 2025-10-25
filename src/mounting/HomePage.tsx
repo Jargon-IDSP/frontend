@@ -1,6 +1,9 @@
 import { useNavigate } from 'react-router-dom';
 import { SignedIn, SignedOut, SignInButton, UserButton, useUser } from '@clerk/clerk-react';
 import HappyRocky from '../components/avatar/HappyRocky';
+import TopLeaderboard from '../components/TopLeaderboard';
+import UploadFileCard from '../components/UploadFileCard';
+import StartLearningCard from '../components/StartLearningCard';
 import rockyWhiteLogo from '/rockyWhite.svg';
 
 export default function HomePage() {
@@ -63,6 +66,10 @@ export default function HomePage() {
               ))}
             </div>
           </div>
+
+          <StartLearningCard />
+          <UploadFileCard />
+          <TopLeaderboard />
         </div>
       </SignedIn>
     </div>
