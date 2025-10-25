@@ -5,6 +5,7 @@ import HomePage from '../mounting/HomePage';
 import ChatPage from '../mounting/ChatPage';
 import ProfilePage from '../pages/users/ProfilePage';
 import AvatarPage from '../pages/users/avatar/AvatarPage';
+import FriendsPage from '../pages/users/FriendsPage';
 import RandomQuestionsStepper from '../mounting/RandomQuestionsStepper';
 import LeaderboardPage from '../mounting/LeaderboardPage';
 import LearningHub from '../pages/learning/LearnJargon';
@@ -37,6 +38,10 @@ export const routes: RouteObject[] = [
   {
     path: '/profile/avatar',
     element: protect(<AvatarPage />),
+  },
+  {
+    path: '/profile/friends',
+    element: protect(<FriendsPage />),
   },
   
   ...documentRoutes,

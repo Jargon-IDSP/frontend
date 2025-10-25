@@ -40,6 +40,9 @@ body {
 // Basic container
 .container {
   @include container-mobile;
+  max-width: 480px; 
+  margin-left: auto;
+  margin-right: auto;
 }
 
 // Basic responsive utilities

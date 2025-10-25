@@ -65,12 +65,20 @@ export default function ProfilePage() {
           <div className="profile-data">
             <pre>{JSON.stringify(data, null, 2)}</pre>
           </div>
-          <button
-            className="btn btn-primary"
-            onClick={() => navigate("/profile/avatar")}
-          >
-            View Avatar
-          </button>
+          <div style={{ display: 'flex', gap: '1rem' }}>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/profile/avatar")}
+            >
+              View Avatar
+            </button>
+            <button
+              className="btn btn-primary"
+              onClick={() => navigate("/profile/friends")}
+            >
+              Friends
+            </button>
+          </div>
         </div>
       )}
     </div>

@@ -14,7 +14,7 @@ const UploadFileCard: React.FC = () => {
       <h2 className="upload-title">AI Translate & Lesson</h2>
       <div className="upload-content">
         <RockySpeechBubble 
-          text="Hey there! Just upload your manuals — I’ll turn them into bite-sized lessons and flashcards for you to practice anytime!"
+          text="Upload your documents and I’ll turn them into bite-sized lessons!"
           className="upload-speech-bubble"
         />
         <button 
