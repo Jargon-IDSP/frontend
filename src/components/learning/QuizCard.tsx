@@ -5,9 +5,10 @@ interface QuizCardProps {
   quiz: Quiz | CustomQuiz | UserQuizAttempt;
   index: number;
   type?: 'existing' | 'custom';
+  hasAttempts?: boolean;
 }
 
-export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardProps) {
+export default function QuizCard({ quiz, index, type = 'existing', hasAttempts = false }: QuizCardProps) {
   const navigate = useNavigate();
   
   // Check what type of quiz this is
@@ -27,10 +28,10 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
     scoreValue = quiz.pointsEarned;
     maxScore = quiz.maxPossiblePoints;
   } else if (isCustomQuiz) {
-    questionCount = quiz.questions?.length || 0;
+    questionCount = (quiz as any)._count?.questions || quiz.questions?.length || 0;
     maxScore = questionCount * 5;
   } else if (isExistingQuiz) {
-    questionCount = quiz.questions?.length || 0;
+    questionCount = (quiz as any)._count?.questions || quiz.questions?.length || 0;
     maxScore = questionCount * 5;
     scoreValue = quiz.score || 0;
   }
@@ -39,12 +40,8 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
 
   const handleStartQuiz = () => {
     if (isUserQuizAttempt) {
-      // For user quiz attempts, navigate to results or retake
-      if (quiz.completed) {
-        navigate(`/learning/custom/quiz/${quiz.customQuizId}/results?attemptId=${quiz.id}`);
-      } else {
-        navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
-      }
+      // For user quiz attempts, always navigate to take the quiz (retake)
+      navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
     } else if (type === 'custom' && isCustomQuiz) {
       // Pass the actual quiz ID to take the quiz
       navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`);
@@ -52,6 +49,28 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
       navigate(`/learning/existing/levels/${quiz.level.id}/quiz/take`);
     }
   };
+
+  // If this is a custom quiz with attempts, just show the button
+  if (isCustomQuiz && hasAttempts) {
+    return (
+      <button
+        onClick={handleStartQuiz}
+        style={{
+          width: '100%',
+          padding: '0.75rem',
+          backgroundColor: '#3b82f6',
+          color: 'white',
+          border: 'none',
+          borderRadius: '6px',
+          fontWeight: '600',
+          cursor: 'pointer',
+          marginBottom: '1rem'
+        }}
+      >
+        New Attempt ({questionCount} questions)
+      </button>
+    );
+  }
 
   return (
     <div
@@ -73,7 +92,7 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
       }}>
         <div>
           <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '0.25rem' }}>
-            Quiz {index}
+            {isUserQuizAttempt ? `Attempt ${index}` : `Quiz ${index}`}
           </strong>
           {type === 'existing' && isExistingQuiz && 'level' in quiz && (
             <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
@@ -92,16 +111,19 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
           )}
         </div>
 
-        <span style={{
-          padding: '0.5rem 1rem',
-          backgroundColor: isCustomQuiz ? '#e0e7ff' : (isCompleted ? '#d1fae5' : '#fef3c7'),
-          color: isCustomQuiz ? '#3730a3' : (isCompleted ? '#065f46' : '#92400e'),
-          borderRadius: '12px',
-          fontWeight: '600',
-          fontSize: '0.875rem'
-        }}>
-          {isCustomQuiz ? 'Not Started' : (isCompleted ? '✓ Completed' : 'In Progress')}
-        </span>
+        {/* Only show status badge for first attempt or non-custom quizzes */}
+        {(!isCustomQuiz || !hasAttempts) && (
+          <span style={{
+            padding: '0.5rem 1rem',
+            backgroundColor: isCustomQuiz ? '#e0e7ff' : (isCompleted ? '#d1fae5' : '#fef3c7'),
+            color: isCustomQuiz ? '#3730a3' : (isCompleted ? '#065f46' : '#92400e'),
+            borderRadius: '12px',
+            fontWeight: '600',
+            fontSize: '0.875rem'
+          }}>
+            {isCustomQuiz ? 'Not Started' : (isCompleted ? '✓ Completed' : 'In Progress')}
+          </span>
+        )}
       </div>
 
       {/* Show Start Quiz button for unstarted quizzes */}
@@ -120,7 +142,7 @@ export default function QuizCard({ quiz, index, type = 'existing' }: QuizCardPro
             marginBottom: '1rem'
           }}
         >
-          Start Quiz ({questionCount} questions)
+          {hasAttempts ? 'New Attempt' : 'Start Quiz'} ({questionCount} questions)
         </button>
       )}
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import type { ApiResponse } from '../types/learning';
 import { BACKEND_URL } from '../lib/api';
@@ -24,6 +24,9 @@ export const useLearning = <T>({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const { getToken, isLoaded, isSignedIn } = useAuth();
+
+  // Memoize params to prevent unnecessary re-renders
+  const paramsString = useMemo(() => JSON.stringify(params || {}), [params?.language, params?.industry_id]);
 
   useEffect(() => {
     if (!enabled || !isLoaded || !isSignedIn) {
@@ -75,7 +78,7 @@ export const useLearning = <T>({
     };
 
     fetchData();
-  }, [type, endpoint, JSON.stringify(params), enabled, getToken, isLoaded, isSignedIn]); 
+  }, [type, endpoint, paramsString, enabled, getToken, isLoaded, isSignedIn]); 
 
   return { data, loading, error };
 };
