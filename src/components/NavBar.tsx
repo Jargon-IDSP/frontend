@@ -1,10 +1,9 @@
 import { useNavigate, useLocation } from 'react-router-dom';
 import AI from '../assets/icons/aiIcon.svg';
 import Course from '../assets/icons/courseIcon.svg';
-import Leaderboard from '../assets/icons/leaderboardIcon.svg';
+import Leaderboard from '../assets/icons/leaderBoardIcon.svg';
 import Profile from '../assets/icons/profileIcon.svg';
 import Home from '../assets/icons/homeIcon.svg';
-// import Chat from '../assets/icons/chatIcon.svg';
 
 
 export default function NavBar() {
