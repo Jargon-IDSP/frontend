@@ -26,14 +26,6 @@ export default function RockyAvatar({ config }: RockyAvatarProps) {
       {/* Smile */}
       <path d="M 70 120 Q 100 140 130 120" stroke="#000" fill="none" strokeWidth="2" />
       
-      {/* Outfit - Space Suit */}
-      {config.outfit === "space_suit" && (
-        <g>
-          <rect x="60" y="140" width="80" height="40" fill={config.colors.secondary} />
-          <circle cx="100" cy="160" r="5" fill={config.colors.accent} />
-        </g>
-      )}
-      
       {/* Accessories */}
       {config.accessories.includes("tophat") && <TopHat />}
       {config.accessories.includes("mustache") && <Mustache />}

@@ -11,7 +11,6 @@ export function SimpleFileUpload({ onSuccess }: SimpleFileUploadProps) {
   const [file, setFile] = useState<File | null>(null);
 
   const handleChooseFile = () => {
-    // Create a hidden file input
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = '.pdf,.jpg,.jpeg,.png';
@@ -19,7 +18,6 @@ export function SimpleFileUpload({ onSuccess }: SimpleFileUploadProps) {
       const target = e.target as HTMLInputElement;
       if (target.files && target.files[0]) {
         setFile(target.files[0]);
-        // Navigate to preview page with file info
         navigate('/documents/preview', { 
           state: { 
             fileName: target.files[0].name,

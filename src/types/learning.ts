@@ -1,8 +1,5 @@
 import type { Multilingual } from './language';
 
-// ============================================================
-// BASIC TYPES
-// ============================================================
 
 export interface Level {
   id: number;
@@ -13,9 +10,6 @@ export interface Level {
   total_general_terms?: number;
 }
 
-// ============================================================
-// FLASHCARDS / TERMS
-// ============================================================
 
 export interface Term {
   id: string;
@@ -42,9 +36,7 @@ export interface CustomFlashcard extends Multilingual<'term'>, Multilingual<'def
   updatedAt: string;
 }
 
-// ============================================================
-// QUESTIONS
-// ============================================================
+
 
 export interface Question {
   id: string;
@@ -94,9 +86,7 @@ export interface QuizQuestion {
   language?: string;
 }
 
-// ============================================================
-// QUIZZES
-// ============================================================
+
 
 export interface Quiz {
   id: string;
@@ -143,9 +133,6 @@ export interface CustomQuiz {
   }>;
 }
 
-// ============================================================
-// QUIZ ATTEMPTS
-// ============================================================
 
 export interface UserQuizAttempt {
   id: string;
@@ -178,9 +165,6 @@ export interface UserQuizAnswer {
   answer?: CustomFlashcard;
 }
 
-// ============================================================
-// SHARING
-// ============================================================
 
 export interface SharedQuiz {
   id: string;
@@ -203,9 +187,7 @@ export interface SharedQuiz {
   };
 }
 
-// ============================================================
-// API RESPONSES
-// ============================================================
+
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -221,3 +203,4 @@ export interface ApiResponse<T> {
   industryCount?: number;
   generalCount?: number;
 }
+

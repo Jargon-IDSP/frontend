@@ -41,14 +41,12 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
 
   const handleStartQuiz = () => {
     if (isUserQuizAttempt) {
-      // For user quiz attempts, check if we have a category context
       if (category) {
         navigate(`/learning/custom/categories/${category}/quiz/take?quizId=${quiz.customQuizId}`);
       } else {
         navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
       }
     } else if (type === 'custom' && isCustomQuiz) {
-      // For custom quizzes, check if we're in a category context
       if (category) {
         navigate(`/learning/custom/categories/${category}/quiz/take?quizId=${quiz.id}`);
       } else {
@@ -59,7 +57,6 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
     }
   };
 
-  // If this is a custom quiz with attempts, just show the button
   if (isCustomQuiz && hasAttempts) {
     return (
       <button
@@ -120,7 +117,6 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
           )}
         </div>
 
-        {/* Only show status badge for first attempt or non-custom quizzes */}
         {(!isCustomQuiz || !hasAttempts) && (
           <span style={{
             padding: '0.5rem 1rem',
@@ -135,7 +131,6 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
         )}
       </div>
 
-      {/* Show Start Quiz button for unstarted quizzes */}
       {isCustomQuiz && (
         <button
           onClick={handleStartQuiz}
@@ -155,7 +150,6 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
         </button>
       )}
 
-      {/* Show score for completed quizzes */}
       {!isCustomQuiz && (
         <div style={{ 
           display: 'grid',

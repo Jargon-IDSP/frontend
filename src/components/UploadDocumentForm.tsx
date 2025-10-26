@@ -35,7 +35,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     try {
       const token = await getToken();
 
-      // Step 1: Get signed upload URL
       const signRes = await fetch(`${BACKEND_URL}/documents/upload/sign`, {
         method: 'POST',
         headers: {
@@ -54,7 +53,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
       const { uploadUrl, key } = await signRes.json();
 
-      // Step 2: Upload file to S3
       const uploadRes = await fetch(uploadUrl, {
         method: 'PUT',
         headers: {
@@ -67,7 +65,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         throw new Error('Failed to upload file');
       }
 
-      // Step 3: Save document metadata
       const saveRes = await fetch(`${BACKEND_URL}/documents`, {
         method: 'POST',
         headers: {
@@ -88,12 +85,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
       const { redirectUrl, documentId } = await saveRes.json();
 
-      // Success! Reset form
       setFile(null);
       setUploading(false);
       onSuccess();
 
-      // Automatically redirect to user documents page with processing status
       if (redirectUrl) {
         console.log('🚀 Redirecting to:', redirectUrl);
         navigate(redirectUrl, {
