@@ -145,7 +145,7 @@ export default function DocumentsPage() {
       )}
 
       <div className="upload-section">
-        <SimpleFileUpload onSuccess={() => {}} />
+        <SimpleFileUpload />
       </div>
     </div>
   )
