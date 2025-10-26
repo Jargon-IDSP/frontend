@@ -38,3 +38,65 @@
     background-color: color.adjust($color-primary, $lightness: -10%);
   }
 }
+
+.choose-file-button {
+  @extend .btn;
+  background-color: $color-quaternary-dark;
+  border-color: $color-quaternary-dark;
+  width: 276px;
+  height: 48px;
+  padding: 10px 85px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 18px;
+  
+  &:hover {
+    background-color: color.adjust($color-quaternary-dark);
+  }
+}
+
+.back-to-choose-button-preview {
+  display: flex;
+  width: 276px;
+  height: 48px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  border-radius: 18px;
+  background-color: $color-quaternary-dark;
+  color: $color-quaternary-light;
+  border-color: $color-quaternary-dark;
+}
+
+.upload-button-preview {
+  display: flex;
+  width: 156px;
+  height: 44px;
+  padding: 14px 53px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+  font-size: $font-size-h3;
+
+  margin-bottom: $spacing-xl;
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  color: $color-quaternary-dark;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  
+  &:hover {
+    background-color: $color-secondary;
+  }
+}

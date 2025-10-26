@@ -9,9 +9,12 @@
 }
 
 .page-title {
+  display: flex;
+  align-items: center;
+  gap: $spacing-lg;
   font-size: $font-size-h1;
   font-weight: $font-weight-bold;
-  color: $color-neutral;
+  color: $color-quaternary-dark;
   margin-bottom: $spacing-lg;
   text-align: left;
 }
@@ -21,13 +24,11 @@
   align-items: center;
   gap: $spacing-xs;
   padding: $spacing-sm $spacing-md;
-  border: 1px solid $color-neutral;
-  border-radius: $spacing-sm;
   background: none;
-  color: $color-neutral;
+  color: $color-quaternary-dark;
   cursor: pointer;
   transition: all 0.2s ease;
-  margin-bottom: $spacing-lg;
+  padding-left: 0;
   
   &:hover {
     background-color: $color-secondary;
@@ -35,19 +36,25 @@
 }
 
 .section-title {
-  font-size: $font-size-h3;
-  font-weight: $font-weight-bold;
-  color: $color-neutral;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-dark;
   margin-bottom: $spacing-md;
   text-align: left;
 }
 
 .upload-section {
   background-color: $color-second-neutral-light;
-  border: 1px solid $color-neutral;
+  border: 2px dashed $color-quinary;
   border-radius: $spacing-sm;
   padding: $spacing-lg;
   margin-bottom: $spacing-lg;
+  align-items: center;
+  justify-content: center;
+  display: flex;
+  flex-direction: column;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .ocr-section {
@@ -69,4 +76,226 @@
 // Documents-specific Rocky speech bubble styling
 .documents-speech-bubble {
   margin-bottom: $spacing-lg;
+}
+
+// Simple Upload Component
+.simple-upload-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-xl;
+  text-align: center;
+}
+
+.upload-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  justify-content: center;
+}
+
+.upload-icon {
+  width: 24px;
+  height: 24px;
+}
+
+.upload-text {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-dark;
+}
+
+.upload-hint {
+  font-size: $font-size-label;
+  color: $color-tertiary;
+  margin: 0;
+}
+
+// File Preview Page
+.preview-section {
+  margin-bottom: $spacing-lg;
+}
+
+.preview-content {
+  background-color: $color-second-neutral-light;
+  border: 1px dashed $color-quinary;
+  border-radius: $spacing-sm;
+  padding: $spacing-lg;
+  text-align: center;
+}
+
+.file-info {
+  margin-bottom: $spacing-sm;
+}
+
+.file-name {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-sm;
+}
+
+.file-details {
+  font-size: $font-size-body;
+  color: $color-tertiary;
+  margin: 0;
+}
+
+.file-preview {
+  margin-bottom: $spacing-lg;
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.preview-image {
+  max-width: 100%;
+  max-height: 300px;
+  border-radius: $spacing-sm;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.preview-placeholder {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-lg;
+  border-radius: $spacing-sm;
+}
+
+.file-icon {
+  font-size: 3rem;
+}
+
+.file-name-preview {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin: 0;
+}
+
+.action-buttons {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.back-to-choose-button,
+.upload-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: $font-size-body;
+  padding: $spacing-md $spacing-lg;
+  font-weight: $font-weight-bold;
+}
+
+// Preview Page Upload Section
+.upload-section-preview {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+  text-align: center;
+}
+
+// Agreement Checkbox Styles
+.agreement-checkbox {
+  margin-top: $spacing-md;
+  text-align: left;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  cursor: pointer;
+  font-size: $font-size-body;
+  line-height: 1.4;
+}
+
+.checkbox-input {
+  margin: 0;
+  margin-top: 2px;
+  flex-shrink: 0;
+  width: 20px;
+  height: 20px;
+  accent-color: white;
+  background-color: white;
+  border: 2px solid $color-neutral;
+  border-radius: 3px;
+  
+  &:checked {
+    background-color: white;
+    border-color: $color-neutral;
+  }
+  
+  &:focus {
+    outline: 2px solid $color-primary;
+    outline-offset: 2px;
+  }
+}
+
+.checkbox-text {
+  color: $color-quaternary-light-dark;
+  // font-weight: $font-weight-regular;
+  font-size: $font-size-label;
+}
+
+.warning-messages {
+  display: flex;
+  flex-direction: column;
+  max-width: 400px;
+
+  .upload-hint-preview {
+    font-size: $font-size-tag;
+    color: $color-tertiary;
+  }
+}
+
+.upload-hint-preview {
+  font-size: $font-size-label;
+  color: $color-tertiary;
+  margin: 0;
+  text-align: center;
+}
+
+.error-message {
+  margin-top: $spacing-md;
+  text-align: center;
+}
+
+.error-text {
+  color: #dc2626;
+  font-size: $font-size-body;
+  margin: 0;
+  padding: $spacing-sm;
+  background-color: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: $spacing-sm;
+}
+
+.success-message {
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+.success-text {
+  color: #059669;
+  font-size: $font-size-body;
+  margin: 0;
+  padding: $spacing-sm;
+  background-color: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: $spacing-sm;
+}
+
+.checkbox-text-required {
+  color: $color-error;
+  font-size: $font-size-label;
+  font-weight: $font-weight-bold;
 }
