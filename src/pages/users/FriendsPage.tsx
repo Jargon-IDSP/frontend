@@ -2,38 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../lib/api";
-
-interface Friend {
-  friendshipId: string;
-  id: string;
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string;
-  score: number;
-}
-
-interface PendingRequest {
-  friendshipId: string;
-  id: string;
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string;
-  score: number;
-  createdAt: string;
-}
-
-interface SearchResult {
-  id: string;
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string;
-  score: number;
-  friendshipStatus: string;
-  friendshipId: string | null;
-}
+import type { Friend, PendingRequest, SearchResult } from "../../types/learning";
 
 export default function FriendsPage() {
   const [friends, setFriends] = useState<Friend[]>([]);

@@ -101,6 +101,9 @@ export default function CustomSelect() {
         <button onClick={() => navigate('/learning/custom/category/general')}>
           📝 General
         </button>
+        <button onClick={() => navigate('/learning/shared')}>
+          🤝 Shared with Me
+        </button>
       </div>
 
       <h2>Other Options</h2>

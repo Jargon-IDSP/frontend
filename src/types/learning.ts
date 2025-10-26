@@ -133,3 +133,63 @@ export interface CustomFlashcard extends Multilingual<'term'>, Multilingual<'def
   createdAt: string;
   updatedAt: string;
 }
+
+export interface SharedQuiz {
+  id: string;
+  sharedAt: string;
+  customQuiz: {
+    id: string;
+    name: string;
+    category: string | null;
+    createdAt: string;
+    user: {
+      id: string;
+      username: string | null;
+      firstName: string | null;
+      lastName: string | null;
+    };
+    _count: {
+      questions: number;
+    };
+  };
+}
+
+export interface Friend {
+  friendshipId: string;
+  id: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  score: number;
+}
+
+export interface QuizShareModalProps {
+  quizId: string;
+  quizName: string;
+  onClose: () => void;
+  onShared?: () => void;
+}
+
+
+export interface PendingRequest {
+  friendshipId: string;
+  id: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  score: number;
+  createdAt: string;
+}
+
+export interface SearchResult {
+  id: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  score: number;
+  friendshipStatus: string;
+  friendshipId: string | null;
+}

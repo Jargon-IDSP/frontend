@@ -32,6 +32,7 @@ export default function TakeQuiz() {
   
   const quizNumber = parseInt(searchParams.get('quiz') || '1');
   const quizId = searchParams.get('quizId'); // Get quiz ID if provided
+  const skipHistory = searchParams.get('skipHistory') === 'true'; // Skip history and start directly
   const queryIndustryId = searchParams.get('industry_id') || industryId?.toString();
 
   const [questions, setQuestions] = useState<QuizQuestion[]>([]);
@@ -54,13 +55,17 @@ export default function TakeQuiz() {
   const [loadingAttempts, setLoadingAttempts] = useState(true);
 
   useEffect(() => {
-    if (quizId && type === 'custom') {
+    if (skipHistory) {
+      // Skip history and go straight to quiz
+      setLoadingAttempts(false);
+      setShowAttempts(false);
+    } else if (quizId && type === 'custom') {
       fetchPreviousAttempts();
     } else {
       setLoadingAttempts(false);
       setShowAttempts(false);
     }
-  }, [quizId]);
+  }, [quizId, skipHistory]);
 
   const fetchPreviousAttempts = async () => {
     if (!quizId) return;
@@ -74,27 +79,36 @@ export default function TakeQuiz() {
 
       if (response.ok) {
         const data = await response.json();
-        if (data && data.attempts) {
+        if (data && data.attempts && data.attempts.length > 0) {
           setPreviousAttempts(data.attempts);
+          setLoadingAttempts(false);
+        } else {
+          // No previous attempts - skip the attempts screen and start quiz directly
+          setShowAttempts(false);
+          setLoadingAttempts(false);
         }
+      } else {
+        // If fetch fails, skip attempts screen
+        setShowAttempts(false);
+        setLoadingAttempts(false);
       }
     } catch (err) {
       console.error('Error fetching attempts:', err);
-    } finally {
+      // On error, skip attempts screen and go straight to quiz
+      setShowAttempts(false);
       setLoadingAttempts(false);
     }
   };
 
   const handleStartNewAttempt = () => {
     setShowAttempts(false);
-    fetchQuiz();
   };
 
   useEffect(() => {
-    if (!showAttempts) {
+    if (!showAttempts && !loadingAttempts) {
       fetchQuiz();
     }
-  }, [showAttempts]);
+  }, [showAttempts, loadingAttempts]);
 
   useEffect(() => {
     if (chatReplyRef.current) {
@@ -115,7 +129,7 @@ const fetchQuiz = async () => {
       }
     } else if (quizId) {
       // Fetch a specific custom quiz by ID
-      url = `${BACKEND_URL}/learning/custom/quiz/${quizId}?language=english`;
+      url = `${BACKEND_URL}/quiz/${quizId}/quiz?language=english`;
     } else {
       // Generate a new custom quiz
       url = `${BACKEND_URL}/learning/custom/quiz/generate?quiz_number=${quizNumber}&language=english`;
@@ -130,7 +144,15 @@ const fetchQuiz = async () => {
     }
 
     const data = await response.json();
-    setQuestions(data.data || []);
+    
+    // Handle different response formats
+    if (quizId) {
+      // Custom quiz by ID returns { quiz: {...}, language: "..." }
+      setQuestions(data.quiz?.questions || []);
+    } else {
+      // Generated quizzes return { data: [...] }
+      setQuestions(data.data || []);
+    }
   } catch (err: any) {
     setError(err.message);
   } finally {
