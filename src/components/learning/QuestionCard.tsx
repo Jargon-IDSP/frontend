@@ -8,6 +8,33 @@ interface QuestionCardProps {
 
 export default function QuestionCard({ question, index, type = 'existing' }: QuestionCardProps) {
   const isExisting = type === 'existing' && 'difficulty' in question;
+  
+  // Helper to get prompt text
+  const getPromptText = () => {
+    if (type === 'existing') {
+      return (question as Question).prompt;
+    } else {
+      const customQ = question as CustomQuestion;
+      return customQ.promptEnglish || '';
+    }
+  };
+
+  // Helper to get correct answer
+  const getCorrectAnswer = () => {
+    if (type === 'existing') {
+      return (question as Question).correctAnswer;
+    } else {
+      const customQ = question as CustomQuestion;
+      if (!customQ.correctAnswer) return null;
+      return {
+        term: customQ.correctAnswer.termEnglish || '',
+        definition: customQ.correctAnswer.definitionEnglish || ''
+      };
+    }
+  };
+
+  const promptText = getPromptText();
+  const correctAnswer = getCorrectAnswer();
 
   return (
     <div
@@ -62,30 +89,32 @@ export default function QuestionCard({ question, index, type = 'existing' }: Que
           lineHeight: '1.6',
           color: '#1f2937'
         }}>
-          {question.prompt}
+          {promptText}
         </p>
       </div>
 
-      <div style={{ 
-        backgroundColor: '#f0fdf4',
-        padding: '1rem',
-        borderRadius: '6px',
-        border: '1px solid #86efac'
-      }}>
-        <strong style={{ 
-          display: 'block', 
-          marginBottom: '0.5rem',
-          color: '#166534'
+      {correctAnswer && (
+        <div style={{ 
+          backgroundColor: '#f0fdf4',
+          padding: '1rem',
+          borderRadius: '6px',
+          border: '1px solid #86efac'
         }}>
-          ✓ Correct Answer:
-        </strong>
-        <div style={{ marginBottom: '0.5rem' }}>
-          <strong>Term:</strong> {question.correctAnswer.term}
+          <strong style={{ 
+            display: 'block', 
+            marginBottom: '0.5rem',
+            color: '#166534'
+          }}>
+            ✓ Correct Answer:
+          </strong>
+          <div style={{ marginBottom: '0.5rem' }}>
+            <strong>Term:</strong> {correctAnswer.term}
+          </div>
+          <div>
+            <strong>Definition:</strong> {correctAnswer.definition}
+          </div>
         </div>
-        <div>
-          <strong>Definition:</strong> {question.correctAnswer.definition}
-        </div>
-      </div>
+      )}
 
       {isExisting && question.tags && question.tags.length > 0 && (
         <div style={{ marginTop: '1rem' }}>

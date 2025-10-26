@@ -1,14 +1,8 @@
-import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import uploadIcon from '../assets/icons/uploadIcon.svg';
 
-interface SimpleFileUploadProps {
-  onSuccess: () => void;
-}
-
-export function SimpleFileUpload({ onSuccess }: SimpleFileUploadProps) {
+export function SimpleFileUpload() {
   const navigate = useNavigate();
-  const [file, setFile] = useState<File | null>(null);
 
   const handleChooseFile = () => {
     const input = document.createElement('input');
@@ -17,7 +11,6 @@ export function SimpleFileUpload({ onSuccess }: SimpleFileUploadProps) {
     input.onchange = (e) => {
       const target = e.target as HTMLInputElement;
       if (target.files && target.files[0]) {
-        setFile(target.files[0]);
         navigate('/documents/preview', { 
           state: { 
             fileName: target.files[0].name,

@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../lib/api";
-import type { Friend, PendingRequest, SearchResult } from "../../types/learning";
+import type { Friend, PendingRequest, SearchResult } from "../../types/friend";
 
 export default function FriendsPage() {
   const [friends, setFriends] = useState<Friend[]>([]);
@@ -290,7 +290,7 @@ export default function FriendsPage() {
               </div>
               <div style={{ display: "flex", gap: "0.5rem" }}>
                 <button
-                  onClick={() => acceptRequest(request.friendshipId)}
+                  onClick={() => request.friendshipId && acceptRequest(request.friendshipId)}
                   style={{
                     padding: "0.5rem 1rem",
                     backgroundColor: "#10b981",
@@ -304,7 +304,7 @@ export default function FriendsPage() {
                   Accept
                 </button>
                 <button
-                  onClick={() => rejectRequest(request.friendshipId)}
+                  onClick={() => request.friendshipId && rejectRequest(request.friendshipId)}
                   style={{
                     padding: "0.5rem 1rem",
                     backgroundColor: "#ef4444",
@@ -349,7 +349,7 @@ export default function FriendsPage() {
                 </p>
               </div>
               <button
-                onClick={() => removeFriend(friend.friendshipId)}
+                onClick={() => friend.friendshipId && removeFriend(friend.friendshipId)}
                 style={{
                   padding: "0.5rem 1rem",
                   backgroundColor: "#ef4444",
