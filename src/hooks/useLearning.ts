@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useAuth } from '@clerk/clerk-react';
 import type { ApiResponse } from '../types/learning';
 import { BACKEND_URL } from '../lib/api';
@@ -25,6 +25,9 @@ export const useLearning = <T>({
   const [error, setError] = useState<string | null>(null);
   const { getToken, isLoaded, isSignedIn } = useAuth();
 
+  // Memoize params to prevent unnecessary re-renders
+  const paramsString = useMemo(() => JSON.stringify(params || {}), [params?.language, params?.industry_id]);
+
   useEffect(() => {
     if (!enabled || !isLoaded || !isSignedIn) {
       console.log('Not ready:', { enabled, isLoaded, isSignedIn });
@@ -40,7 +43,17 @@ export const useLearning = <T>({
           ? '?' + new URLSearchParams(params).toString() 
           : '';
         
-        const url = `${BACKEND_URL}/learning/${type}/${endpoint}${queryString}`;
+        // Special handling for document routes - they go directly under /learning/documents
+        // not /learning/custom/documents
+        let url: string;
+        if (endpoint.startsWith('documents/')) {
+          // Document routes: /learning/documents/:documentId/terms
+          url = `${BACKEND_URL}/learning/${endpoint}${queryString}`;
+        } else {
+          // Regular routes: /learning/existing/... or /learning/custom/...
+          url = `${BACKEND_URL}/learning/${type}/${endpoint}${queryString}`;
+        }
+        
         console.log('Fetching from:', url);
 
         const token = await getToken();
@@ -75,7 +88,7 @@ export const useLearning = <T>({
     };
 
     fetchData();
-  }, [type, endpoint, JSON.stringify(params), enabled, getToken, isLoaded, isSignedIn]); 
+  }, [type, endpoint, paramsString, enabled, getToken, isLoaded, isSignedIn]); 
 
   return { data, loading, error };
 };

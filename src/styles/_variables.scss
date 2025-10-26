@@ -1,0 +1,44 @@
+// Mobile-first breakpoints
+$mobile-max: 767px;
+$tablet-min: 768px;
+$desktop-min: 1024px;
+
+// Basic spacing
+$spacing-xs: 0.25rem;
+$spacing-sm: 0.5rem;
+$spacing-md: 1rem;
+$spacing-lg: 1.5rem;
+$spacing-xl: 2.5rem;
+
+
+
+// Font sizes Regular
+$font-size-h1: 28px;
+$font-size-h2: 24px;
+$font-size-h3: 20px;
+$font-size-body: 16px;
+$font-size-label: 13px;
+$font-size-tag: 10px;
+// Font weight
+$font-weight-regular: 500;
+$font-weight-light: 300;
+$font-weight-bold: 700;
+
+
+
+
+// Basic colors
+$color-primary: #fe4d13;
+$color-secondary: #ffba0a;
+$color-tertiary: #b2af97;
+$color-quaternary: #6f2e17;
+$color-quaternary-dark: #652a15;
+$color-quaternary-light: #f1eae8;
+$color-quaternary-light-dark: #9F7364;
+$color-quinary: #0828c0;
+$color-neutral: #393939;
+$color-second-neutral: #fff8dd;
+$color-second-neutral-light: #fffdf4;
+$color-error: #c40000;
+$color-warning: #d86500;
+$color-success: #005606;

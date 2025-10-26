@@ -1,5 +1,6 @@
 import { useNavigate, useParams } from 'react-router-dom';
-import PracticeType from '../../components/learning/PracticeType';
+import { NavigationCard } from '../../components/learning/ui/Card'
+import Button from '../../components/learning/ui/Button';
 
 export default function ExistingSelect() {
   const navigate = useNavigate();
@@ -15,32 +16,27 @@ export default function ExistingSelect() {
   };
 
   return (
-    <div style={{ padding: '2rem' }}>
-      <button 
+    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
+      <Button 
         onClick={() => navigate('/learning/existing/levels')} 
+        variant="secondary"
         style={{ marginBottom: '1rem' }}
       >
         ← Back to Levels
-      </button>
+      </Button>
 
       <h1>{getLevelName(levelId || '')} Level</h1>
-      <p>Choose how you'd like to study:</p>
+      <p style={{ color: '#6b7280', marginBottom: '2rem' }}>Choose how you'd like to study:</p>
 
-      <div style={{ 
-        display: 'flex', 
-        flexDirection: 'column', 
-        gap: '1rem', 
-        marginTop: '2rem',
-        maxWidth: '600px'
-      }}>
-        <PracticeType
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+        <NavigationCard
           icon="📝"
           title="Study Terms"
           description="Review flashcards and practice terminology"
           onClick={() => navigate(`/learning/existing/levels/${levelId}/terms`)}
         />
 
-        <PracticeType
+        <NavigationCard
           icon="🎯"
           title="Take Quiz"
           description="Test your knowledge with a quiz"

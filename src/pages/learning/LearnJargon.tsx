@@ -16,7 +16,7 @@ export default function LearningHub() {
       </button>
 
       <button style={{ margin: "1rem" }} onClick={() => navigate("/learning/custom")}>
-        Create Your Own Content
+        Study Custom Content
       </button>
     </div>
   );

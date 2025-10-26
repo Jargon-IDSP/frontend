@@ -1,0 +1,469 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Home Page Specific Styles
+.home-page {
+  @include container-mobile;
+  padding-bottom: 80px; // Ensure space for fixed bottom navbar
+}
+
+// Top Header Section - Welcome text and Rocky logo at same level
+.top-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  padding-left: 0;
+  margin-bottom: $spacing-lg;
+
+  @include tablet-up {
+    padding: $spacing-lg;
+  }
+}
+
+.welcome-text-section {
+  flex: 1;
+  
+  .welcome-title {
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    color: $color-neutral;
+    margin: 0;
+    
+    @include tablet-up {
+      font-size: $font-size-h1;
+    }
+  }
+}
+
+.rocky-logo-section {
+  background-color: $color-secondary;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  @include tablet-up {
+    width: 60px;
+    height: 60px;
+  }
+
+  .rocky-logo {
+    width: 80%;
+    height: 80%;
+  }
+}
+
+// Welcome Section
+.welcome-section {
+  text-align: center;
+  margin-bottom: $spacing-lg;
+}
+
+.welcome-subtitle {
+  font-size: $font-size-body;
+  color: $color-tertiary;
+  margin-bottom: $spacing-lg;
+}
+
+// Quick Actions
+.quick-actions {
+  margin-bottom: $spacing-lg;
+}
+
+.quick-actions-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-md;
+  text-align: left;
+}
+
+.quick-actions-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $spacing-sm;
+}
+
+// Top Leaderboard Section
+.top-leaderboard {
+  margin-bottom: $spacing-lg;
+}
+
+.leaderboard-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-xs;
+  text-align: left;
+}
+
+.leaderboard-content {
+  background-color: $color-quaternary-light;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  
+  p {
+    font-size: $font-size-body;
+    color: $color-tertiary;
+    margin-bottom: $spacing-md;
+  }
+  
+  .error-text {
+    color: $color-error;
+    margin-bottom: $spacing-md;
+  }
+}
+
+// Podium Container
+.podium-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+  min-height: 200px;
+  
+  @include tablet-up {
+    gap: $spacing-lg;
+    min-height: 250px;
+  }
+}
+
+
+
+// Podium Item
+.podium-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  
+  &:hover {
+    transform: translateY(-5px);
+  }
+  
+  // Different heights for each rank
+  &.rank-1 {
+    order: 2; // Center position
+  }
+  
+  &.rank-2 {
+    order: 1; // Left position
+  }
+  
+  &.rank-3 {
+    order: 3; // Right position
+  }
+}
+
+// Rocky Avatar
+.rocky-avatar {
+  position: relative;
+  z-index: 2;
+  margin-bottom: $spacing-xs;
+  margin-top: $spacing-sm;
+  background-color: $color-second-neutral-light;
+  border-radius: 50%;
+  padding: $spacing-sm;
+
+  .rocky-logo {
+    
+    &.rank-1 {
+      width: 60px;
+      height: 60px;
+      
+      @include tablet-up {
+        width: 80px;
+        height: 80px;
+      }
+    }
+    
+    &.rank-2,
+    &.rank-3 {
+      width: 45px;
+      height: 45px;
+      
+      @include tablet-up {
+        width: 60px;
+        height: 60px;
+      }
+    }
+  }
+}
+
+
+
+
+// User Name (positioned under Rocky logo)
+.user-name {
+  font-weight: $font-weight-bold;
+  font-size: $font-size-label;
+  color: $color-neutral;
+  text-align: center;
+  margin-bottom: $spacing-xs;
+  line-height: 1.2;
+  
+  @include tablet-up {
+    font-size: $font-size-body;
+  }
+}
+
+
+
+
+// Podium Block
+.podium-block {
+  background-color: $color-primary; // Orange color
+  border-radius: $spacing-sm;
+  padding: $spacing-md;
+  text-align: center;
+  color: white;
+  position: relative;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: flex-end; // Align content to bottom
+  
+  // Different heights for each rank
+  .rank-1 & {
+    height: 100px;
+    width: 80px;
+    
+    @include tablet-up {
+      height: 150px;
+      width: 100px;
+    }
+  }
+  
+  .rank-2 &,
+  .rank-3 & {
+    height: 60px;
+    width: 70px;
+    
+    @include tablet-up {
+      height: 100px;
+      width: 90px;
+    }
+  }
+  
+  .rank-label {
+    font-weight: $font-weight-bold;
+    font-size: $font-size-body;
+    width: 100%; // Take full width
+    text-align: center; // Center the text
+    
+    @include tablet-up {
+      font-size: $font-size-h3;
+    }
+  }
+}
+
+
+
+
+// API Testing Section
+.api-testing-section {
+  margin-top: $spacing-lg;
+}
+
+.api-testing-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-md;
+  cursor: pointer;
+  text-align: left;
+}
+
+.api-response {
+  background-color: $color-second-neutral;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  padding: $spacing-md;
+  margin-top: $spacing-md;
+  overflow: auto;
+  max-height: 400px;
+  
+  pre {
+    margin: 0;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: $font-size-label;
+    line-height: 1.4;
+  }
+}
+
+
+
+// Upload File Card Section
+.upload-file-card {
+  margin-bottom: $spacing-lg;
+}
+
+.upload-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-xs;
+  text-align: left;
+}
+
+.upload-content {
+  background-color: $color-quaternary-light; // Light background
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  padding: $spacing-sm;
+  text-align: center;
+  position: relative;
+  min-height: 150px; // Reduced height
+  
+  @include tablet-up {
+    min-height: 180px;
+  }
+}
+
+// Word of the Day Section
+.word-of-the-day-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-md;
+  text-align: left;
+}
+
+.word-of-the-day-card {
+  margin-bottom: $spacing-lg;
+  border-radius: $spacing-sm;
+  padding: $spacing-lg;
+  position: relative;
+  overflow: hidden;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.today-term-card-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  // object-fit: cover;
+  z-index: 1;
+}
+
+.word-card-content {
+  position: relative;
+  z-index: 2;
+  text-align: center;
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  
+  h3 {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $color-neutral;
+    margin: 0 0 $spacing-sm 0;
+  }
+  
+  .word-term {
+    font-size: 36px;
+    font-weight: $font-weight-bold;
+    color: $color-second-neutral-light;
+    margin-bottom: $spacing-sm;
+    text-transform: capitalize;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+
+  .word-term-translated {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $color-second-neutral;
+    margin-bottom: $spacing-sm;
+    text-transform: capitalize;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+  
+  .word-definition {
+    font-size: $font-size-body;
+    color: $color-neutral;
+    line-height: 1.5;
+    margin-bottom: $spacing-sm;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    max-width: 100%;
+  }
+  
+  .word-meta {
+    display: flex;
+    justify-content: center;
+    gap: $spacing-sm;
+    flex-wrap: wrap;
+    
+    .word-industry,
+    .word-level {
+      background-color: $color-quaternary-light;
+      color: $color-quaternary-light-dark;
+      padding: $spacing-xs $spacing-sm;
+      border-radius: $spacing-xs;
+      font-size: $font-size-label;
+      font-weight: $font-weight-regular;
+    }
+  }
+  
+  .loading-placeholder,
+  .error-message {
+    font-size: $font-size-body;
+    color: $color-tertiary;
+    font-style: italic;
+  }
+  
+  .error-message {
+    color: $color-error;
+  }
+}
+
+// Start Learning Card Section
+.start-learning-card {
+  margin-bottom: $spacing-lg;
+}
+
+.learning-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.learning-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-xs;
+  text-align: left;
+}
+
+.learning-content {
+  background-color: $color-quaternary-light;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  padding: $spacing-sm;
+  text-align: center;
+  
+  .learning-description {
+    font-size: $font-size-body;
+    color: $color-tertiary;
+    margin-bottom: $spacing-lg;
+  }
+  .learning-button {
+    margin-top: $spacing-xs;
+  }
+}

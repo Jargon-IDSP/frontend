@@ -1,10 +1,9 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-/* dark mode = class strategy (matches your setup) */
 @custom-variant dark (&:is(.dark *));
 
-/* ------- Theme variables you already had ------- */
+
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -51,10 +50,8 @@
 
 /* -------- Light variables -------- */
 :root {
-  /* keep Vite’s color-scheme hint (lets UA pick correct form controls, etc.) */
   color-scheme: light dark;
 
-  /* Your radii + palette */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.145 0 0);
@@ -89,7 +86,6 @@
   --sidebar-ring: oklch(0.708 0 0);
 }
 
-/* -------- Dark variables via `.dark` class (preferred over media for control) -------- */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -124,14 +120,11 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
-/* -------- Global base styles (merged from Vite CSS, Tailwindified) -------- */
 @layer base {
-  /* Normalize borders + outlines with your tokens */
   * {
     @apply border-border outline-ring/50;
   }
 
-  /* Typography & smoothing (Vite’s font stack + smoothing) */
   :root {
     font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
     line-height: 1.5;
@@ -141,14 +134,11 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
-  /* Page background + text from your CSS variables */
   body {
     @apply bg-background text-foreground;
-    /* Vite layout bits */
     @apply m-0 min-h-screen min-w-[320px] grid place-items-center;
   }
 
-  /* Links (from Vite CSS) */
   a {
     @apply font-medium text-[--tw-link];
     text-decoration: inherit;
@@ -157,31 +147,26 @@
     @apply text-[--tw-link-hover];
   }
 
-  /* Heading (from Vite CSS) */
   h1 {
     @apply text-[3.2em] leading-[1.1];
   }
 
-  /* Buttons (from Vite CSS) */
   button {
     @apply rounded-lg border border-transparent px-5 py-2.5 text-base font-medium bg-neutral-900 cursor-pointer transition-[border-color] duration-200;
   }
   button:hover {
     @apply border-[#646cff];
   }
-  /* Use focus-visible + ring to emulate -webkit-focus-ring-color */
   button:focus-visible {
     @apply outline-none ring-2 ring-offset-2;
   }
 
-  /* Light/Dark link + button color tokens (keeps your .dark class control) */
   :root {
     --tw-link: #646cff;
     --tw-link-hover: #535bf2;
     --tw-button-bg: #1a1a1a;
     --tw-button-bg-light: #f9f9f9;
   }
-  /* In light mode (no .dark class), tweak hover + button bg like Vite */
   :root:not(.dark) button {
     background-color: var(--tw-button-bg-light);
   }

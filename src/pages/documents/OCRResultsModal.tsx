@@ -17,12 +17,12 @@ export default function OCRResultsModal({ document, onClose }: OCRModalProps) {
     const fetchFlashcards = async () => {
       try {
         const token = await getToken();
-        const res = await fetch(
-          `${BACKEND_URL}/custom-flashcards?documentId=${document.id}`,
+        const response = await fetch(
+          `${BACKEND_URL}/learning/custom/documents/${document.id}/terms`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
-        if (res.ok) {
-          const data = await res.json();
+        if (response.ok) {
+          const data = await response.json();
           setFlashcards(data.flashcards || []);
         }
       } catch (err) {

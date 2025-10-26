@@ -1,22 +1,33 @@
 import type { RouteObject } from 'react-router-dom';
 import type { ReactElement } from 'react';
 import ProtectedRoute from '../components/ProtectedRoute';
-import HomePage from '../pages/HomePage';
-import ChatPage from '../pages/ChatPage';
+import HomePage from '../mounting/HomePage';
+import ChatPage from '../mounting/ChatPage';
 import ProfilePage from '../pages/users/ProfilePage';
 import AvatarPage from '../pages/users/avatar/AvatarPage';
-import DocumentsPage from '../pages/documents/DocumentsPage';
-import RandomQuestionsStepper from '../pages/RandomQuestionsStepper';
-import LeaderboardPage from '../pages/LeaderboardPage';
+import FriendsPage from '../pages/users/FriendsPage';
+import RandomQuestionsStepper from '../mounting/RandomQuestionsStepper';
+import LeaderboardPage from '../mounting/LeaderboardPage';
 import LearningHub from '../pages/learning/LearnJargon';
 import Levels from '../pages/learning/Levels';
 import ExistingSelect from '../pages/learning/ExistingSelect';
 import CustomSelect from '../pages/learning/CustomSelect';
+import CategoryStudy from '../pages/learning/CategoryStudy';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
 import Quizzes from '../pages/learning/Quizzes';
-import TakeQuiz from '../pages/learning/TakeQuiz';
+import TakeCustomQuiz from '../pages/learning/TakeCustomQuiz';
+import TakeExistingQuiz from '../pages/learning/TakeExistingQuiz';
+import TakeCategoryQuiz from '../pages/learning/TakeCategoryQuiz';
 import QuizSelection from '../pages/learning/QuizSelection';
+import SharedQuizzes from '../pages/learning/SharedQuizzes';
+import MyQuizzes from '../pages/learning/MyQuizzes';
+import DocumentsPage from '../pages/documents/DocumentsPage';
+import AddDocumentPage from '../pages/documents/AddDocumentPage';
+import FullTranslationView from '../pages/documents/FullTranslationView';
+import DocumentStudy from '../pages/learning/DocumentStudy';
+import FilePreviewPage from '../pages/documents/FilePreviewPage';
+import UserDocumentsPage from '../pages/documents/UserDocumentsPage';
 
 const protect = (element: ReactElement) => <ProtectedRoute>{element}</ProtectedRoute>;
 
@@ -38,9 +49,36 @@ export const routes: RouteObject[] = [
     element: protect(<AvatarPage />),
   },
   {
+    path: '/profile/friends',
+    element: protect(<FriendsPage />),
+  },
+  
+  // Documents
+  {
     path: '/documents',
     element: protect(<DocumentsPage />),
   },
+  {
+    path: '/documents/user',
+    element: protect(<UserDocumentsPage />),
+  },
+  {
+    path: '/documents/preview',
+    element: protect(<FilePreviewPage />),
+  },
+  {
+    path: '/documents/add',
+    element: protect(<AddDocumentPage />),
+  },
+  {
+    path: '/documents/:id/translation',
+    element: protect(<FullTranslationView />),
+  },
+  {
+    path: '/documents/:id/status',
+    element: protect(<FullTranslationView />),
+  },
+  
   {
     path: '/random-questions',
     element: protect(<RandomQuestionsStepper />),
@@ -50,10 +88,18 @@ export const routes: RouteObject[] = [
     element: protect(<LeaderboardPage />),
   },
   
-  // Learning routes
+  // Learning
   {
     path: '/learning',
     element: protect(<LearningHub />),
+  },
+  {
+    path: '/learning/shared',
+    element: protect(<SharedQuizzes />),
+  },
+  {
+    path: '/learning/my-quizzes',
+    element: protect(<MyQuizzes />),
   },
   {
     path: '/learning/:type/levels',
@@ -67,14 +113,34 @@ export const routes: RouteObject[] = [
     path: '/learning/custom',
     element: protect(<CustomSelect />),
   },
+  {
+    path: '/learning/custom/categories/:category',
+    element: protect(<CategoryStudy />),
+  },
   
-  // Terms routes
+  // Document Study (NEW - without "custom")
+  {
+    path: '/learning/documents/:documentId',
+    element: protect(<DocumentStudy />),
+  },
+  
+  // Legacy route for backwards compatibility
+  {
+    path: '/study/:documentId',
+    element: protect(<DocumentStudy />),
+  },
+  
+  // Terms
   {
     path: '/learning/existing/levels/:levelId/terms',
     element: protect(<Terms />),
   },
   {
-    path: '/learning/custom/documents/:documentId/terms',
+    path: '/learning/documents/:documentId/terms',
+    element: protect(<Terms />),
+  },
+  {
+    path: '/learning/custom/categories/:category/terms',
     element: protect(<Terms />),
   },
   {
@@ -82,13 +148,13 @@ export const routes: RouteObject[] = [
     element: protect(<Terms />),
   },
   
-  // Questions routes
+  // Questions
   {
     path: '/learning/existing/levels/:levelId/questions',
     element: protect(<Questions />),
   },
   {
-    path: '/learning/custom/documents/:documentId/questions',
+    path: '/learning/documents/:documentId/questions',
     element: protect(<Questions />),
   },
   {
@@ -96,13 +162,17 @@ export const routes: RouteObject[] = [
     element: protect(<Questions />),
   },
   
-  // Quizzes routes
+  // Quizzes
   {
     path: '/learning/existing/levels/:levelId/quizzes',
     element: protect(<Quizzes />),
   },
   {
-    path: '/learning/custom/documents/:documentId/quizzes',
+    path: '/learning/documents/:documentId/quizzes',
+    element: protect(<Quizzes />),
+  },
+  {
+    path: '/learning/custom/categories/:category/quizzes',
     element: protect(<Quizzes />),
   },
   {
@@ -110,6 +180,7 @@ export const routes: RouteObject[] = [
     element: protect(<Quizzes />),
   },
   
+  // Quiz Selection
   {
     path: '/learning/existing/levels/:levelId/quiz',
     element: protect(<QuizSelection />),
@@ -123,13 +194,17 @@ export const routes: RouteObject[] = [
     element: protect(<QuizSelection />),
   },
   
-  // Take quiz routes
+  // Take Quiz
   {
     path: '/learning/existing/levels/:levelId/quiz/take',
-    element: protect(<TakeQuiz />),
+    element: protect(<TakeExistingQuiz />),
   },
   {
     path: '/learning/custom/quiz/take',
-    element: protect(<TakeQuiz />),
+    element: protect(<TakeCustomQuiz />),
+  },
+  {
+    path: '/learning/custom/categories/:category/quiz/take',
+    element: protect(<TakeCategoryQuiz />),
   },
 ];

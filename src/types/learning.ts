@@ -1,3 +1,22 @@
+import type { Multilingual } from './language';
+
+// ============================================================
+// BASIC TYPES
+// ============================================================
+
+export interface Level {
+  id: number;
+  name: string;
+  available_terms?: number;
+  industry_terms?: number;
+  general_terms?: number;
+  total_general_terms?: number;
+}
+
+// ============================================================
+// FLASHCARDS / TERMS
+// ============================================================
+
 export interface Term {
   id: string;
   term: {
@@ -14,6 +33,18 @@ export interface Term {
   level_id?: number;
 }
 
+export interface CustomFlashcard extends Multilingual<'term'>, Multilingual<'definition'> {
+  id: string;
+  documentId: string | null;
+  userId: string;
+  category?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// ============================================================
+// QUESTIONS
+// ============================================================
 
 export interface Question {
   id: string;
@@ -28,17 +59,44 @@ export interface Question {
   };
 }
 
-export interface CustomQuestion {
+export interface CustomQuestion extends Multilingual<'prompt'> {
   id: string;
-  prompt: string;
-  correctAnswer: {
-    id: string;
-    term: string;
-    definition: string;
-  };
+  userId: string;
+  customQuizId: string | null;
+  correctTermId: string;
+  category?: string;
+  pointsWorth: number;
   createdAt: string;
+  correctAnswer?: CustomFlashcard;
 }
 
+export interface QuizQuestion {
+  questionId: string;
+  prompt: string;
+  prompts?: {
+    english: string;
+    french: string;
+    chinese: string;
+    spanish: string;
+    tagalog: string;
+    punjabi: string;
+    korean: string;
+  };
+  choices: {
+    id: string;
+    term: string;
+    isCorrect: boolean;
+    termId: string;
+  }[];
+  difficulty?: number;
+  tags?: string[];
+  correctAnswerId: string;
+  language?: string;
+}
+
+// ============================================================
+// QUIZZES
+// ============================================================
 
 export interface Quiz {
   id: string;
@@ -58,29 +116,96 @@ export interface Quiz {
 export interface CustomQuiz {
   id: string;
   userId: string;
-  documentId?: string;
-  completed: boolean;
-  score: number;
+  documentId: string | null;
+  name: string;
+  category: string | null;
+  pointsPerQuestion: number;
   createdAt: string;
-  completedAt?: string;
+  updatedAt: string;
+  questions?: CustomQuestion[];
   document?: {
     id: string;
     filename: string;
-    fileUrl: string;
   };
-  questions: CustomQuestion[];
+  _count?: {
+    questions: number;
+    sharedWith: number;
+  };
+  sharedWith?: Array<{
+    id: string;
+    sharedAt: string;
+    sharedWith: {
+      id: string;
+      username: string | null;
+      firstName: string | null;
+      lastName: string | null;
+    };
+  }>;
 }
 
+// ============================================================
+// QUIZ ATTEMPTS
+// ============================================================
 
-export interface Level {
-  id: number;
-  name: string;
-  available_terms?: number;
-  industry_terms?: number;
-  general_terms?: number;
-  total_general_terms?: number;
+export interface UserQuizAttempt {
+  id: string;
+  userId: string;
+  customQuizId: string | null;
+  levelId: number | null;
+  questionsAnswered: number;
+  questionsCorrect: number;
+  totalQuestions: number;
+  percentComplete: number;
+  percentCorrect: number;
+  pointsEarned: number;
+  maxPossiblePoints: number;
+  completed: boolean;
+  startedAt: string;
+  completedAt: string | null;
+  customQuiz?: CustomQuiz;
+  answers?: UserQuizAnswer[];
 }
 
+export interface UserQuizAnswer {
+  id: string;
+  attemptId: string;
+  questionId: string;
+  answerId: string;
+  isCorrect: boolean;
+  pointsEarned: number;
+  answeredAt: string;
+  question?: CustomQuestion;
+  answer?: CustomFlashcard;
+}
+
+// ============================================================
+// SHARING
+// ============================================================
+
+export interface SharedQuiz {
+  id: string;
+  sharedAt: string;
+  customQuiz: {
+    id: string;
+    name: string;
+    category: string | null;
+    createdAt: string;
+    documentId?: string | null;
+    user: {
+      id: string;
+      username: string | null;
+      firstName: string | null;
+      lastName: string | null;
+    };
+    _count: {
+      questions: number;
+    };
+  };
+}
+
+// ============================================================
+// API RESPONSES
+// ============================================================
 
 export interface ApiResponse<T> {
   success: boolean;

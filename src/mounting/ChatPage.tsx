@@ -132,7 +132,7 @@ export default function ChatPage() {
       <h1 style={{ marginBottom: 4 }}>Chat Page</h1>
       {model && (
         <div style={{ fontSize: 12, color: "#666", marginBottom: "0.75rem" }}>
-          Backend ready · Model: {model}
+          What would you like to know?
         </div>
       )}
 

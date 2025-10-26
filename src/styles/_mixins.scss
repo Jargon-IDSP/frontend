@@ -1,0 +1,38 @@
+@use 'variables' as *;
+
+// Mobile-first mixins
+@mixin mobile-only {
+  @media (max-width: $mobile-max) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: $tablet-min) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (min-width: $desktop-min) {
+    @content;
+  }
+}
+
+// Basic container mixin
+@mixin container-mobile {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 0 $spacing-md;
+  
+  @include tablet-up {
+    max-width: 768px;
+    padding: 0 $spacing-lg;
+  }
+  
+  @include desktop-up {
+    max-width: 1024px;
+    padding: 0 $spacing-lg;
+  }
+}
