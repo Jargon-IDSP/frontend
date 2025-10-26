@@ -2,6 +2,9 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../lib/api";
+import Button from "../../components/learning/ui/Button";
+import Card from "../../components/learning/ui/Card";
+import { getUserDisplayName } from "../../types/friend";
 import type { SharedQuiz } from "../../types/learning";
 
 export default function SharedQuizzesPage() {
@@ -17,7 +20,7 @@ export default function SharedQuizzesPage() {
   const fetchSharedQuizzes = async () => {
     try {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/quiz-shares/shared-with-me`, {
+      const res = await fetch(`${BACKEND_URL}/learning/sharing/shared-with-me`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -32,18 +35,10 @@ export default function SharedQuizzesPage() {
     }
   };
 
-  const getUserDisplayName = (user: SharedQuiz["customQuiz"]["user"]) => {
-    if (user.username) return user.username;
-    if (user.firstName || user.lastName) {
-      return `${user.firstName || ""} ${user.lastName || ""}`.trim();
-    }
-    return "Unknown User";
-  };
-
   const handleTakeQuiz = (quiz: SharedQuiz['customQuiz']) => {
     // Check if quiz has a documentId to determine the correct route
     if ('documentId' in quiz && quiz.documentId) {
-      navigate(`/learning/custom/documents/${quiz.documentId}/quizzes`);
+      navigate(`/learning/documents/${quiz.documentId}/quizzes`);
     } else {
       // For general custom quizzes, go to the custom quiz page
       navigate(`/learning/custom/quiz/take?quizId=${quiz.id}&skipHistory=true`);
@@ -52,9 +47,9 @@ export default function SharedQuizzesPage() {
 
   return (
     <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <button onClick={() => navigate("/learning")} style={{ marginBottom: "1rem" }}>
+      <Button onClick={() => navigate("/learning")} variant="secondary" style={{ marginBottom: "1rem" }}>
         ← Back to Learning
-      </button>
+      </Button>
 
       <h1 style={{ marginBottom: "2rem" }}>Quizzes Shared With Me</h1>
 
@@ -70,16 +65,7 @@ export default function SharedQuizzesPage() {
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(300px, 1fr))", gap: "1.5rem" }}>
           {sharedQuizzes.map((share) => (
-            <div
-              key={share.id}
-              style={{
-                backgroundColor: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-              }}
-            >
+            <Card key={share.id} hoverable={false}>
               <div style={{ marginBottom: "1rem" }}>
                 <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "1.25rem" }}>
                   {share.customQuiz.name}
@@ -103,23 +89,14 @@ export default function SharedQuizzesPage() {
                 </p>
               </div>
 
-              <button
+              <Button
                 onClick={() => handleTakeQuiz(share.customQuiz)}
-                style={{
-                  width: "100%",
-                  padding: "0.75rem",
-                  backgroundColor: "#3b82f6",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: "pointer",
-                  fontWeight: "600",
-                  fontSize: "1rem",
-                }}
+                variant="primary"
+                fullWidth
               >
                 View Quiz
-              </button>
-            </div>
+              </Button>
+            </Card>
           ))}
         </div>
       )}

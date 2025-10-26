@@ -43,7 +43,17 @@ export const useLearning = <T>({
           ? '?' + new URLSearchParams(params).toString() 
           : '';
         
-        const url = `${BACKEND_URL}/learning/${type}/${endpoint}${queryString}`;
+        // Special handling for document routes - they go directly under /learning/documents
+        // not /learning/custom/documents
+        let url: string;
+        if (endpoint.startsWith('documents/')) {
+          // Document routes: /learning/documents/:documentId/terms
+          url = `${BACKEND_URL}/learning/${endpoint}${queryString}`;
+        } else {
+          // Regular routes: /learning/existing/... or /learning/custom/...
+          url = `${BACKEND_URL}/learning/${type}/${endpoint}${queryString}`;
+        }
+        
         console.log('Fetching from:', url);
 
         const token = await getToken();

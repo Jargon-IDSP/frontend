@@ -30,7 +30,7 @@ export default function TakeCategoryQuiz() {
       const token = await getToken();
       
       // Fetch all questions from this category for the current user
-      const url = `${BACKEND_URL}/learning/custom/category/${category}/questions?language=english`;
+      const url = `${BACKEND_URL}/learning/custom/categories/${category}/questions?language=english`;
 
       const response = await fetch(url, {
         headers: { Authorization: `Bearer ${token}` },
@@ -84,7 +84,7 @@ export default function TakeCategoryQuiz() {
   if (error) {
     return (
       <div style={{ padding: '2rem' }}>
-        <button onClick={() => navigate(`/learning/custom/category/${category}`)} style={{ marginBottom: '1rem' }}>
+        <button onClick={() => navigate(`/learning/custom/categories/${category}`)} style={{ marginBottom: '1rem' }}>
           ← Back
         </button>
         <div style={{ backgroundColor: '#fee', padding: '1rem', borderRadius: '6px' }}>
@@ -99,7 +99,7 @@ export default function TakeCategoryQuiz() {
       questions={questions}
       quizNumber={quizNumber}
       onComplete={handleQuizComplete}
-      onBack={() => navigate(`/learning/custom/category/${category}`)}
+      onBack={() => navigate(`/learning/custom/categories/${category}`)}
       preferredLanguage={language}
     />
   );

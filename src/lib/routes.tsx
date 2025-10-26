@@ -25,7 +25,7 @@ import MyQuizzes from '../pages/learning/MyQuizzes';
 import DocumentsPage from '../pages/documents/DocumentsPage';
 import AddDocumentPage from '../pages/documents/AddDocumentPage';
 import FullTranslationView from '../pages/documents/FullTranslationView';
-import DocumentStudy from '../pages/documents/DocumentStudy';
+import DocumentStudy from '../pages/learning/DocumentStudy';
 import FilePreviewPage from '../pages/documents/FilePreviewPage';
 import UserDocumentsPage from '../pages/documents/UserDocumentsPage';
 
@@ -63,9 +63,9 @@ export const routes: RouteObject[] = [
     element: protect(<UserDocumentsPage />),
   },
   {
-  path: '/documents/preview',
-  element: protect(<FilePreviewPage />),
-},
+    path: '/documents/preview',
+    element: protect(<FilePreviewPage />),
+  },
   {
     path: '/documents/add',
     element: protect(<AddDocumentPage />),
@@ -77,10 +77,6 @@ export const routes: RouteObject[] = [
   {
     path: '/documents/:id/status',
     element: protect(<FullTranslationView />),
-  },
-  {
-    path: '/study/:documentId',
-    element: protect(<DocumentStudy />),
   },
   
   {
@@ -118,8 +114,20 @@ export const routes: RouteObject[] = [
     element: protect(<CustomSelect />),
   },
   {
-    path: '/learning/custom/category/:category',
+    path: '/learning/custom/categories/:category',
     element: protect(<CategoryStudy />),
+  },
+  
+  // Document Study (NEW - without "custom")
+  {
+    path: '/learning/documents/:documentId',
+    element: protect(<DocumentStudy />),
+  },
+  
+  // Legacy route for backwards compatibility
+  {
+    path: '/study/:documentId',
+    element: protect(<DocumentStudy />),
   },
   
   // Terms
@@ -128,11 +136,11 @@ export const routes: RouteObject[] = [
     element: protect(<Terms />),
   },
   {
-    path: '/learning/custom/documents/:documentId/terms',
+    path: '/learning/documents/:documentId/terms',
     element: protect(<Terms />),
   },
   {
-    path: '/learning/custom/category/:category/terms',
+    path: '/learning/custom/categories/:category/terms',
     element: protect(<Terms />),
   },
   {
@@ -146,7 +154,7 @@ export const routes: RouteObject[] = [
     element: protect(<Questions />),
   },
   {
-    path: '/learning/custom/documents/:documentId/questions',
+    path: '/learning/documents/:documentId/questions',
     element: protect(<Questions />),
   },
   {
@@ -160,11 +168,11 @@ export const routes: RouteObject[] = [
     element: protect(<Quizzes />),
   },
   {
-    path: '/learning/custom/documents/:documentId/quizzes',
+    path: '/learning/documents/:documentId/quizzes',
     element: protect(<Quizzes />),
   },
   {
-    path: '/learning/custom/category/:category/quizzes',
+    path: '/learning/custom/categories/:category/quizzes',
     element: protect(<Quizzes />),
   },
   {
@@ -196,7 +204,7 @@ export const routes: RouteObject[] = [
     element: protect(<TakeCustomQuiz />),
   },
   {
-    path: '/learning/custom/category/:category/quiz/take',
+    path: '/learning/custom/categories/:category/quiz/take',
     element: protect(<TakeCategoryQuiz />),
   },
 ];

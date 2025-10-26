@@ -11,7 +11,7 @@ import { BACKEND_URL } from '../../lib/api';
 export default function Quizzes() { 
   const navigate = useNavigate();
   const location = window.location;
-  const { getToken } = useAuth();
+  const { getToken, userId } = useAuth();
   const { type, levelId, documentId, category } = useParams<{ 
     type?: 'existing' | 'custom'; 
     levelId?: string;
@@ -20,6 +20,7 @@ export default function Quizzes() {
   }>();
   const [searchParams] = useSearchParams();
   const [attempts, setAttempts] = useState<UserQuizAttempt[]>([]);
+  const [documentOwnerId, setDocumentOwnerId] = useState<string | null>(null);
   
   const { language, industryId, loading: preferencesLoading } = useUserPreferences();
   
@@ -32,7 +33,7 @@ export default function Quizzes() {
   if (documentId) {
     endpoint = `documents/${documentId}/quizzes`;  
   } else if (category) {
-    endpoint = `category/${category}/quizzes`;
+    endpoint = `categories/${category}/quizzes`;  // Fixed: categories (plural)
   } else if (levelId && actualType === 'existing') {
     endpoint = `levels/${levelId}/quizzes`;  
   } else {
@@ -56,6 +57,66 @@ const isEmpty = quizzes.length === 0;
   const documentName = documentId && quizzes.length > 0 && 'document' in quizzes[0] && quizzes[0].document 
     ? quizzes[0].document.filename 
     : null;
+
+  // Check document ownership and shared access
+  useEffect(() => {
+    const checkDocumentOwnership = async () => {
+      if (!documentId || !userId) return;
+      
+      try {
+        const token = await getToken();
+        const response = await fetch(`${BACKEND_URL}/documents/${documentId}`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+
+        if (response.ok) {
+          const docData = await response.json();
+          const ownerId = docData.document?.userId || docData.userId;
+          setDocumentOwnerId(ownerId);
+          
+          console.log('Quizzes ownership check:', { ownerId, userId, isOwner: ownerId === userId });
+          
+          // If user IS the owner, allow access
+          if (ownerId === userId) {
+            console.log('User is owner, allowing access');
+            return;
+          }
+          
+          // User is NOT the owner - check if they have shared access
+          console.log('User is not owner, checking shared access...');
+          const sharedResponse = await fetch(`${BACKEND_URL}/learning/sharing/shared-with-me`, {
+            headers: { Authorization: `Bearer ${token}` },
+          });
+
+          if (sharedResponse.ok) {
+            const sharedData = await sharedResponse.json();
+            const hasSharedAccess = sharedData.data?.some(
+              (quiz: any) => quiz.documentId === documentId
+            );
+
+            console.log('Has shared access:', hasSharedAccess);
+
+            if (hasSharedAccess) {
+              // User has shared access - allow them to stay
+              console.log('User has shared access, allowing access');
+            } else {
+              // User has NO access - redirect to their own learning
+              console.log('User has no access, redirecting to /learning/custom');
+              navigate('/learning/custom', { replace: true });
+            }
+          } else {
+            // Couldn't check shared access - redirect to custom learning
+            console.log('Could not check shared access, redirecting to /learning/custom');
+            navigate('/learning/custom', { replace: true });
+          }
+        }
+      } catch (err) {
+        console.error('Error checking document ownership:', err);
+      }
+    };
+    
+    checkDocumentOwnership();
+  }, [documentId, userId, getToken, navigate]);
 
   useEffect(() => {
     const fetchAttempts = async () => {
@@ -89,9 +150,16 @@ const isEmpty = quizzes.length === 0;
 
   const handleBack = () => {
     if (documentId) {
-      navigate(`/study/${documentId}`);
+      // Smart back navigation based on document ownership
+      if (documentOwnerId && userId && documentOwnerId !== userId) {
+        // User is NOT the owner (shared user) - go to shared quizzes
+        navigate('/learning/shared');
+        return;
+      }
+      // User IS the owner - go to document study page
+      navigate(`/learning/documents/${documentId}`);
     } else if (category) {
-      navigate(`/learning/custom/category/${category}`);
+      navigate(`/learning/custom/categories/${category}`);
     } else {
       navigate(-1);
     }

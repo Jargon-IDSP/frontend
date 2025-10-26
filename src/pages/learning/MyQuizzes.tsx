@@ -3,6 +3,9 @@ import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../lib/api";
 import QuizShareModal from "../../components/learning/QuizShareModal";
+import Button from "../../components/learning/ui/Button";
+import Card from "../../components/learning/ui/Card";
+import { getUserDisplayName } from "../../types/friend";
 
 interface CustomQuiz {
   id: string;
@@ -39,7 +42,7 @@ export default function MyQuizzesPage() {
   const fetchQuizzes = async () => {
     try {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/quiz-shares/my-shared-quizzes`, {
+      const res = await fetch(`${BACKEND_URL}/learning/sharing/my-shared-quizzes`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -54,40 +57,21 @@ export default function MyQuizzesPage() {
     }
   };
 
-  const getUserDisplayName = (user: CustomQuiz["sharedWith"][0]["sharedWith"]) => {
-    if (user.username) return user.username;
-    if (user.firstName || user.lastName) {
-      return `${user.firstName || ""} ${user.lastName || ""}`.trim();
-    }
-    return "Unknown User";
-  };
-
   const handleTakeQuiz = (quizId: string) => {
     navigate(`/learning/custom/quiz/take?quizId=${quizId}`);
   };
 
   return (
     <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <button onClick={() => navigate("/learning/custom")} style={{ marginBottom: "1rem" }}>
+      <Button onClick={() => navigate("/learning/custom")} variant="secondary" style={{ marginBottom: "1rem" }}>
         ← Back to Custom Learning
-      </button>
+      </Button>
 
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "2rem" }}>
         <h1 style={{ margin: 0 }}>My Custom Quizzes</h1>
-        <button
-          onClick={() => navigate("/learning/shared")}
-          style={{
-            padding: "0.75rem 1.5rem",
-            backgroundColor: "#10b981",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
+        <Button onClick={() => navigate("/learning/shared")} variant="success">
           View Shared Quizzes
-        </button>
+        </Button>
       </div>
 
       {loading ? (
@@ -102,16 +86,7 @@ export default function MyQuizzesPage() {
       ) : (
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fill, minmax(350px, 1fr))", gap: "1.5rem" }}>
           {quizzes.map((quiz) => (
-            <div
-              key={quiz.id}
-              style={{
-                backgroundColor: "white",
-                border: "1px solid #e5e7eb",
-                borderRadius: "8px",
-                padding: "1.5rem",
-                boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
-              }}
-            >
+            <Card key={quiz.id} hoverable={false}>
               <div style={{ marginBottom: "1rem" }}>
                 <h3 style={{ margin: "0 0 0.5rem 0", fontSize: "1.25rem" }}>
                   {quiz.name}
@@ -154,42 +129,26 @@ export default function MyQuizzesPage() {
               )}
 
               <div style={{ display: "flex", gap: "0.5rem" }}>
-                <button
+                <Button
                   onClick={() => handleTakeQuiz(quiz.id)}
-                  style={{
-                    flex: 1,
-                    padding: "0.75rem",
-                    backgroundColor: "#3b82f6",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontWeight: "600",
-                  }}
+                  variant="primary"
+                  fullWidth
                 >
                   Take Quiz
-                </button>
-                <button
+                </Button>
+                <Button
                   onClick={() => setShareModalQuiz({ id: quiz.id, name: quiz.name })}
-                  style={{
-                    flex: 1,
-                    padding: "0.75rem",
-                    backgroundColor: "#10b981",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: "pointer",
-                    fontWeight: "600",
-                  }}
+                  variant="success"
+                  fullWidth
                 >
                   Share
-                </button>
+                </Button>
               </div>
 
               <p style={{ margin: "0.75rem 0 0 0", fontSize: "0.75rem", color: "#9ca3af", textAlign: "center" }}>
                 Created {new Date(quiz.createdAt).toLocaleDateString()}
               </p>
-            </div>
+            </Card>
           ))}
         </div>
       )}
