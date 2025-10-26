@@ -6,6 +6,7 @@ import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
 import WordOfTheDay from '../components/WordOfTheDay';
 import rockyWhiteLogo from '/rockyWhite.svg';
+import Jargon_Wordmark from '/Jargon_Wordmark.png';
 
 export default function HomePage() {
   const { user } = useUser();
@@ -37,8 +38,8 @@ export default function HomePage() {
       <SignedIn>
         <div className="welcome-section">
           <UserButton />
-          
-          <img src="../../public/Jargon_Wordmark.png" alt="Jargon Word Mark" style={{ borderRadius: '50%', width: '20rem' }} />
+
+          <img src={Jargon_Wordmark} alt="Jargon Word Mark" style={{ borderRadius: '50%', width: '20rem' }} />
 
           <WordOfTheDay />
           <DailyCheckIn />
