@@ -172,8 +172,8 @@ export default function DocumentTranslationView() {
     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
       <div style={{ marginBottom: '2rem' }}>
         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
-          <button onClick={() => navigate('/documents')}>
-            ← Back to Documents
+          <button onClick={() => navigate(`/study/${id}`)}>
+            ← Back to Study Materials
           </button>
           <button onClick={() => navigate('/learning/custom')}>
             Study All Custom Content
@@ -188,11 +188,6 @@ export default function DocumentTranslationView() {
         
         <div style={{ marginTop: '1rem' }}>
           <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Study from this document:</h3>
-          <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-            <button onClick={() => navigate(`/documents/${id}/study`)}>
-              📖 View All Study Materials
-            </button>
-          </div>
         </div>
       </div>
 

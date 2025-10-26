@@ -45,6 +45,7 @@ export default function CategoryStudy() {
         <button onClick={() => navigate(`/learning/custom/category/${category}/quizzes`)}>
           🎯 Take Quiz
         </button>
+        
       </div>
     </div>
   );

@@ -3,15 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@clerk/clerk-react';
 import { BACKEND_URL } from "../../lib/api";
 import PracticeType from '../../components/learning/PracticeType';
+import type { Document } from '../../types/document';
 
-
-interface Document {
-  id: string;
-  filename: string;
-  fileType: string;
-  fileSize: number;
-  ocrProcessed: boolean;
-}
 
 export default function CustomSelect() {
   const navigate = useNavigate();
@@ -57,16 +50,19 @@ export default function CustomSelect() {
       {ocrProcessedDocs.length === 0 ? (
         <div>
           <p>No processed documents yet.</p>
-          <button onClick={() => navigate('/documents')}>
-            Go to Documents
+          <button onClick={() => navigate('/documents/user')}>
+            Go to My Documents
+          </button>
+          <button onClick={() => navigate('/learning/shared')}>
+            Documents Shared with Me
           </button>
         </div>
       ) : (
         <div style={{ marginBottom: '2rem' }}>
-          {ocrProcessedDocs.map((doc) => (
+          {ocrProcessedDocs.map((doc) => (    
             <button
               key={doc.id}
-              onClick={() => navigate(`/documents/${doc.id}/study`)}
+              onClick={() => navigate(`/study/${doc.id}`)}
               style={{ 
                 display: 'block',
                 width: '100%',
@@ -101,9 +97,6 @@ export default function CustomSelect() {
         <button onClick={() => navigate('/learning/custom/category/general')}>
           📝 General
         </button>
-        <button onClick={() => navigate('/learning/shared')}>
-          🤝 Shared with Me
-        </button>
       </div>
 
       <h2>Other Options</h2>
@@ -115,12 +108,12 @@ export default function CustomSelect() {
       />
 
 
-      <PracticeType
+      {/* <PracticeType
         icon="🎯"
         title="Take Custom Quiz"
         description="Test your knowledge with a quiz on your custom terms"
         onClick={() => navigate('/learning/custom/quiz')}
-      />
+      /> */}
     </div>
   );
 }
