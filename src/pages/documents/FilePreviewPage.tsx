@@ -105,23 +105,15 @@ export default function FilePreviewPage() {
 
       const { document } = await saveRes.json();
 
-      // Step 4: Trigger OCR processing
-      const ocrRes = await fetch(`${BACKEND_URL}/documents/${document.id}/ocr`, {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-        },
-      });
-
-      if (!ocrRes.ok) {
-        // OCR trigger failed, but document was saved successfully
-      }
+      // Success! Background processing (OCR, translation, flashcard generation) 
+      // has already been triggered by the backend
       
       // Navigate back to documents page with success message
       navigate('/documents', { 
         state: { 
-          message: 'File uploaded successfully! OCR processing has started.',
-          documentId: document.id
+          message: "Your upload is being processed - in the meantime, why not check out some of Red Seal's terminology?",
+          documentId: document.id,
+          showPrebuiltLink: true
         } 
       });
     } catch (error) {
