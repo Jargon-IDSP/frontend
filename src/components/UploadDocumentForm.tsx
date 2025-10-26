@@ -154,7 +154,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
           cursor: uploading || !file ? 'not-allowed' : 'pointer',
         }}
       >
-        {uploading ? 'Uploading...' : 'Upload Document'}
+        {uploading ? 'Uploading...' : 'Choose File'}
       </button>
 
       {uploading && (

@@ -24,6 +24,7 @@ import DocumentsPage from '../pages/documents/DocumentsPage';
 import AddDocumentPage from '../pages/documents/AddDocumentPage';
 import FullTranslationView from '../pages/documents/FullTranslationView';
 import DocumentStudy from '../pages/documents/DocumentStudy';
+import FilePreviewPage from '../pages/documents/FilePreviewPage';
 
 const protect = (element: ReactElement) => <ProtectedRoute>{element}</ProtectedRoute>;
 
@@ -54,6 +55,10 @@ export const routes: RouteObject[] = [
     path: '/documents',
     element: protect(<DocumentsPage />),
   },
+  {
+  path: '/documents/preview',
+  element: protect(<FilePreviewPage />),
+},
   {
     path: '/documents/add',
     element: protect(<AddDocumentPage />),
