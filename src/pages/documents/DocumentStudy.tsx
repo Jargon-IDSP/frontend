@@ -7,6 +7,7 @@ import QuizShareModal from '../../components/learning/QuizShareModal';
 interface Document {
   id: string;
   filename: string;
+  userId: string;
 }
 
 interface CustomQuiz {
@@ -18,11 +19,12 @@ interface CustomQuiz {
 export default function DocumentStudy() {
   const navigate = useNavigate();
   const { documentId } = useParams<{ documentId: string }>();
-  const { getToken } = useAuth();
+  const { getToken, userId } = useAuth();
   const [document, setDocument] = useState<Document | null>(null);
   const [quizzes, setQuizzes] = useState<CustomQuiz[]>([]);
   const [loading, setLoading] = useState(true);
   const [shareModalQuiz, setShareModalQuiz] = useState<{ id: string; name: string } | null>(null);
+  const [isOwner, setIsOwner] = useState<boolean>(false);
 
   const handleDelete = async () => {
     if (!confirm('Are you sure you want to delete this document? This will also delete all associated flashcards and quizzes.')) {
@@ -63,6 +65,8 @@ export default function DocumentStudy() {
         if (docRes.ok) {
           const docData = await docRes.json();
           setDocument(docData.document);
+          // Check if current user is the owner
+          setIsOwner(docData.document.userId === userId);
         }
 
         // Fetch quizzes for this document
@@ -111,7 +115,11 @@ export default function DocumentStudy() {
           🎯 Take Quiz
         </button>
 
-        {quizzes.length > 0 && (
+        <button onClick={() => navigate(`/documents/${documentId}/translation`)}>
+          🌐 View Translation
+        </button>
+
+        {isOwner && quizzes.length > 0 && (
           <button 
             onClick={() => setShareModalQuiz({ id: quizzes[0].id, name: quizzes[0].name })}
             style={{ backgroundColor: '#10b981' }}
@@ -132,21 +140,23 @@ export default function DocumentStudy() {
         />
       )}
 
-      <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
-        <button 
-          onClick={handleDelete}
-          style={{ 
-            backgroundColor: '#ef4444', 
-            color: 'white',
-            padding: '0.5rem 1rem',
-            border: 'none',
-            borderRadius: '4px',
-            cursor: 'pointer'
-          }}
-        >
-          🗑️ Delete Document
-        </button>
-      </div>
+      {isOwner && (
+        <div style={{ marginTop: '3rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
+          <button 
+            onClick={handleDelete}
+            style={{ 
+              backgroundColor: '#ef4444', 
+              color: 'white',
+              padding: '0.5rem 1rem',
+              border: 'none',
+              borderRadius: '4px',
+              cursor: 'pointer'
+            }}
+          >
+            🗑️ Delete Document
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -40,8 +40,14 @@ export default function SharedQuizzesPage() {
     return "Unknown User";
   };
 
-  const handleTakeQuiz = (quizId: string) => {
-    navigate(`/learning/custom/quiz/take?quizId=${quizId}&skipHistory=true`);
+  const handleTakeQuiz = (quiz: SharedQuiz['customQuiz']) => {
+    // Check if quiz has a documentId to determine the correct route
+    if ('documentId' in quiz && quiz.documentId) {
+      navigate(`/learning/custom/documents/${quiz.documentId}/quizzes`);
+    } else {
+      // For general custom quizzes, go to the custom quiz page
+      navigate(`/learning/custom/quiz/take?quizId=${quiz.id}&skipHistory=true`);
+    }
   };
 
   return (
@@ -98,7 +104,7 @@ export default function SharedQuizzesPage() {
               </div>
 
               <button
-                onClick={() => handleTakeQuiz(share.customQuiz.id)}
+                onClick={() => handleTakeQuiz(share.customQuiz)}
                 style={{
                   width: "100%",
                   padding: "0.75rem",
@@ -111,7 +117,7 @@ export default function SharedQuizzesPage() {
                   fontSize: "1rem",
                 }}
               >
-                Take Quiz
+                View Quiz
               </button>
             </div>
           ))}

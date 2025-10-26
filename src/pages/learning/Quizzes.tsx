@@ -20,7 +20,6 @@ export default function Quizzes() {
   }>();
   const [searchParams] = useSearchParams();
   const [attempts, setAttempts] = useState<UserQuizAttempt[]>([]);
-  const [loadingAttempts, setLoadingAttempts] = useState(false);
   
   const { language, industryId, loading: preferencesLoading } = useUserPreferences();
   
@@ -62,7 +61,6 @@ const isEmpty = quizzes.length === 0;
     const fetchAttempts = async () => {
       if (actualType !== 'custom' || quizzes.length === 0) return;
       
-      setLoadingAttempts(true);
       try {
         const token = await getToken();
         const quizId = quizzes[0]?.id; 
@@ -81,8 +79,6 @@ const isEmpty = quizzes.length === 0;
         }
       } catch (err) {
         console.error('Error fetching attempts:', err);
-      } finally {
-        setLoadingAttempts(false);
       }
     };
     
@@ -93,13 +89,27 @@ const isEmpty = quizzes.length === 0;
 
   const handleBack = () => {
     if (documentId) {
-      navigate(`/documents/${documentId}/study`);
+      navigate(`/study/${documentId}`);
     } else if (category) {
       navigate(`/learning/custom/category/${category}`);
     } else {
       navigate(-1);
     }
   };
+
+  if (showLoading) {
+    return (
+      <div style={{ padding: '2rem' }}>
+        <div style={{ 
+          padding: '3rem 2rem', 
+          textAlign: 'center',
+          color: '#666'
+        }}>
+          <p style={{ margin: 0, fontSize: '1rem' }}>Loading...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: '2rem' }}>
@@ -119,16 +129,6 @@ const isEmpty = quizzes.length === 0;
         }}>
           <strong>Error loading quizzes</strong>
           <p style={{ margin: '0.5rem 0 0 0' }}>{error}</p>
-        </div>
-      )}
-
-      {showLoading && (
-        <div style={{ 
-          padding: '3rem 2rem', 
-          textAlign: 'center',
-          color: '#666'
-        }}>
-          <p style={{ margin: 0, fontSize: '1rem' }}>Loading quizzes...</p>
         </div>
       )}
 
@@ -155,14 +155,9 @@ const isEmpty = quizzes.length === 0;
           ) : (
             <>
               <div style={{ marginTop: '2rem' }}>
-                {documentId && attempts.length === 0 && (
-                  <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>
-                    New Attempt
-                  </h2>
-                )}
-                {!documentId && (
-                  <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>Available Quizzes</h2>
-                )}
+                <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem' }}>
+                  {documentId ? 'Take Quiz' : 'Available Quizzes'}
+                </h2>
                 {quizzes.slice(0, documentId ? 1 : quizzes.length).map((quiz, index) => (
                   <QuizCard
                     key={quiz.id}
@@ -170,20 +165,17 @@ const isEmpty = quizzes.length === 0;
                     index={index + 1}
                     type={actualType}
                     hasAttempts={attempts.length > 0}
+                    category={category}
                   />
                 ))}
               </div>
 
-              {actualType === 'custom' && documentId && (attempts.length > 0 || loadingAttempts) && (
+              {actualType === 'custom' && documentId && (
                 <div style={{ marginTop: '3rem' }}>
                   <h2 style={{ marginBottom: '1rem', fontSize: '1.25rem', paddingTop: '2rem', borderTop: '1px solid #e5e7eb' }}>
-                    Your Attempts
+                    Your Attempts {attempts.length > 0 ? `(${attempts.length})` : ''}
                   </h2>
-                  {loadingAttempts ? (
-                    <div style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
-                      <p>Loading attempt history...</p>
-                    </div>
-                  ) : (
+                  {attempts.length > 0 ? (
                     attempts.map((attempt, index) => (
                       <QuizCard
                         key={attempt.id}
@@ -192,6 +184,10 @@ const isEmpty = quizzes.length === 0;
                         type={actualType}
                       />
                     ))
+                  ) : (
+                    <p style={{ color: '#666', fontStyle: 'italic' }}>
+                      No attempts yet. Take the quiz above to see your history here.
+                    </p>
                   )}
                 </div>
               )}

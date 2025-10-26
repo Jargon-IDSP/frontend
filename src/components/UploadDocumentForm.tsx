@@ -86,17 +86,21 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         throw new Error('Failed to save document');
       }
 
-      const { redirectUrl } = await saveRes.json();
+      const { redirectUrl, documentId } = await saveRes.json();
 
       // Success! Reset form
       setFile(null);
       setUploading(false);
       onSuccess();
 
-      // Automatically redirect to translation view
+      // Automatically redirect to user documents page with processing status
       if (redirectUrl) {
         console.log('🚀 Redirecting to:', redirectUrl);
-        navigate(redirectUrl);
+        navigate(redirectUrl, {
+          state: {
+            documentId: documentId
+          }
+        });
       }
 
     } catch (err) {

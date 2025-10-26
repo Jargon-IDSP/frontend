@@ -16,7 +16,9 @@ import CategoryStudy from '../pages/learning/CategoryStudy';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
 import Quizzes from '../pages/learning/Quizzes';
-import TakeQuiz from '../pages/learning/TakeQuiz';
+import TakeCustomQuiz from '../pages/learning/TakeCustomQuiz';
+import TakeExistingQuiz from '../pages/learning/TakeExistingQuiz';
+import TakeCategoryQuiz from '../pages/learning/TakeCategoryQuiz';
 import QuizSelection from '../pages/learning/QuizSelection';
 import SharedQuizzes from '../pages/learning/SharedQuizzes';
 import MyQuizzes from '../pages/learning/MyQuizzes';
@@ -25,6 +27,7 @@ import AddDocumentPage from '../pages/documents/AddDocumentPage';
 import FullTranslationView from '../pages/documents/FullTranslationView';
 import DocumentStudy from '../pages/documents/DocumentStudy';
 import FilePreviewPage from '../pages/documents/FilePreviewPage';
+import UserDocumentsPage from '../pages/documents/UserDocumentsPage';
 
 const protect = (element: ReactElement) => <ProtectedRoute>{element}</ProtectedRoute>;
 
@@ -56,6 +59,10 @@ export const routes: RouteObject[] = [
     element: protect(<DocumentsPage />),
   },
   {
+    path: '/documents/user',
+    element: protect(<UserDocumentsPage />),
+  },
+  {
   path: '/documents/preview',
   element: protect(<FilePreviewPage />),
 },
@@ -72,7 +79,7 @@ export const routes: RouteObject[] = [
     element: protect(<FullTranslationView />),
   },
   {
-    path: '/documents/:documentId/study',
+    path: '/study/:documentId',
     element: protect(<DocumentStudy />),
   },
   
@@ -182,10 +189,14 @@ export const routes: RouteObject[] = [
   // Take Quiz
   {
     path: '/learning/existing/levels/:levelId/quiz/take',
-    element: protect(<TakeQuiz />),
+    element: protect(<TakeExistingQuiz />),
   },
   {
     path: '/learning/custom/quiz/take',
-    element: protect(<TakeQuiz />),
+    element: protect(<TakeCustomQuiz />),
+  },
+  {
+    path: '/learning/custom/category/:category/quiz/take',
+    element: protect(<TakeCategoryQuiz />),
   },
 ];

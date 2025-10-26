@@ -6,9 +6,10 @@ interface QuizCardProps {
   index: number;
   type?: 'existing' | 'custom';
   hasAttempts?: boolean;
+  category?: string;
 }
 
-export default function QuizCard({ quiz, index, type = 'existing', hasAttempts = false }: QuizCardProps) {
+export default function QuizCard({ quiz, index, type = 'existing', hasAttempts = false, category }: QuizCardProps) {
   const navigate = useNavigate();
   
   // Check what type of quiz this is
@@ -40,11 +41,19 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
 
   const handleStartQuiz = () => {
     if (isUserQuizAttempt) {
-      // For user quiz attempts, always navigate to take the quiz (retake)
-      navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
+      // For user quiz attempts, check if we have a category context
+      if (category) {
+        navigate(`/learning/custom/category/${category}/quiz/take?quizId=${quiz.customQuizId}`);
+      } else {
+        navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
+      }
     } else if (type === 'custom' && isCustomQuiz) {
-      // Pass the actual quiz ID to take the quiz
-      navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`);
+      // For custom quizzes, check if we're in a category context
+      if (category) {
+        navigate(`/learning/custom/category/${category}/quiz/take?quizId=${quiz.id}`);
+      } else {
+        navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`);
+      }
     } else if (isExistingQuiz && 'level' in quiz) {
       navigate(`/learning/existing/levels/${quiz.level.id}/quiz/take`);
     }

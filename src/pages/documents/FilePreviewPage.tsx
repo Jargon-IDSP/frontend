@@ -13,7 +13,6 @@ export default function FilePreviewPage() {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadError, setUploadError] = useState<string>('');
   
-  // Get file info from navigation state
   const fileInfo = location.state as {
     fileName: string;
     fileSize: number;
@@ -22,7 +21,6 @@ export default function FilePreviewPage() {
   } | null;
 
   if (!fileInfo) {
-    // If no file info, redirect back to documents
     navigate('/documents');
     return null;
   }
@@ -52,7 +50,6 @@ export default function FilePreviewPage() {
     try {
       const token = await getToken();
 
-      // Step 1: Get signed upload URL
       const signRes = await fetch(`${BACKEND_URL}/documents/upload/sign`, {
         method: 'POST',
         headers: {
@@ -71,7 +68,6 @@ export default function FilePreviewPage() {
 
       const { uploadUrl, key } = await signRes.json();
 
-      // Step 2: Upload file to S3
       const uploadRes = await fetch(uploadUrl, {
         method: 'PUT',
         body: fileInfo.file,
@@ -84,7 +80,6 @@ export default function FilePreviewPage() {
         throw new Error('Failed to upload file');
       }
 
-      // Step 3: Save document record to database
       const saveRes = await fetch(`${BACKEND_URL}/documents`, {
         method: 'POST',
         headers: {
@@ -105,15 +100,11 @@ export default function FilePreviewPage() {
 
       const { document } = await saveRes.json();
 
-      // Success! Background processing (OCR, translation, flashcard generation) 
-      // has already been triggered by the backend
-      
-      // Navigate back to documents page with success message
-      navigate('/documents', { 
+      // Redirect immediately with uploading message
+      navigate('/documents/user', { 
         state: { 
-          message: "Your upload is being processed - in the meantime, why not check out some of Red Seal's terminology?",
-          documentId: document.id,
-          showPrebuiltLink: true
+          message: "Uploading document...",
+          documentId: document.id
         } 
       });
     } catch (error) {

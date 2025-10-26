@@ -158,90 +158,53 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
                     </>
                   )}
                 </div>
-
-                {doc.status === 'completed' && (
-                  <div style={{ 
-                    marginTop: '0.75rem',
-                    display: 'flex',
-                    gap: '1rem',
-                    fontSize: '0.875rem',
-                  }}>
-                    <span>
-                      📚 <strong>{doc.flashcardCount}</strong> flashcards
-                    </span>
-                    <span>
-                      📝 <strong>{doc.questionCount}</strong> questions
-                    </span>
-                  </div>
-                )}
               </div>
 
-              <div style={{ display: 'flex', gap: '0.5rem' }}>
-                <button
-                  onClick={() => navigate(`/documents/${doc.id}/translation`)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: '#3b82f6',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  View
-                </button>
-                
-                <button
-                  onClick={() => handleDelete(doc.id)}
-                  style={{
-                    padding: '0.5rem 1rem',
-                    backgroundColor: '#ef4444',
-                    color: 'white',
-                    border: 'none',
-                    borderRadius: '6px',
-                    cursor: 'pointer',
-                  }}
-                >
-                  Delete
-                </button>
-              </div>
+              {doc.ocrProcessed ? (
+                <div style={{ display: 'flex', gap: '0.5rem' }}>
+                  <button
+                    onClick={() => navigate(`/study/${doc.id}`)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      backgroundColor: '#3b82f6',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                      fontWeight: '600',
+                    }}
+                  >
+                    Study
+                  </button>
+                  
+                  <button
+                    onClick={() => handleDelete(doc.id)}
+                    style={{
+                      padding: '0.5rem 1rem',
+                      backgroundColor: '#ef4444',
+                      color: 'white',
+                      border: 'none',
+                      borderRadius: '6px',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Delete
+                  </button>
+                </div>
+              ) : (
+                <div style={{
+                  padding: '0.75rem 1.5rem',
+                  backgroundColor: '#fef3c7',
+                  color: '#92400e',
+                  border: '1px solid #fbbf24',
+                  borderRadius: '6px',
+                  fontSize: '0.875rem',
+                  fontWeight: '600',
+                }}>
+                  ⏳ Processing...
+                </div>
+              )}
             </div>
-
-            {doc.status === 'processing' && (
-              <div style={{
-                marginTop: '1rem',
-                padding: '0.75rem',
-                backgroundColor: '#eff6ff',
-                borderRadius: '6px',
-                fontSize: '0.875rem',
-              }}>
-                <p style={{ margin: 0 }}>
-                  ⏳ Processing automatically... This page will update when ready.
-                </p>
-              </div>
-            )}
-
-            {/* Manual trigger buttons hidden but kept commented for testing
-            <details style={{ marginTop: '1rem' }}>
-              <summary style={{ cursor: 'pointer', fontSize: '0.875rem', color: '#6b7280' }}>
-                Manual Controls (Testing Only)
-              </summary>
-              <div style={{ display: 'flex', gap: '0.5rem', marginTop: '0.5rem' }}>
-                <button
-                  onClick={() => triggerOCR(doc.id)}
-                  style={{ padding: '0.5rem', fontSize: '0.75rem' }}
-                >
-                  Extract Text
-                </button>
-                <button
-                  onClick={() => generateFlashcards(doc.id)}
-                  style={{ padding: '0.5rem', fontSize: '0.75rem' }}
-                >
-                  Generate Flashcards
-                </button>
-              </div>
-            </details>
-            */}
           </div>
         ))}
       </div>

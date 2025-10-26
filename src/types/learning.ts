@@ -31,6 +31,29 @@ export interface Question {
   };
 }
 
+export interface QuizQuestion {
+  questionId: string;
+  prompt: string;
+  prompts?: {
+    english: string;
+    french: string;
+    chinese: string;
+    spanish: string;
+    tagalog: string;
+    punjabi: string;
+    korean: string;
+  };
+  choices: {
+    id: string;
+    term: string;
+    isCorrect: boolean;
+    termId: string;
+  }[];
+  difficulty: number;
+  tags: string[];
+  correctAnswerId: string;
+}
+
 export interface CustomQuestion extends Multilingual<'prompt'> {
   id: string;
   userId: string;
