@@ -4,6 +4,7 @@ import TopLeaderboard from '../components/TopLeaderboard';
 import UploadFileCard from '../components/UploadFileCard';
 import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
+import WordOfTheDay from '../components/WordOfTheDay';
 import rockyWhiteLogo from '/rockyWhite.svg';
 
 export default function HomePage() {
@@ -39,6 +40,7 @@ export default function HomePage() {
           
           <img src="../../public/Jargon_Wordmark.png" alt="Jargon Word Mark" style={{ borderRadius: '50%', width: '20rem' }} />
 
+          <WordOfTheDay />
           <DailyCheckIn />
 
           <StartLearningCard />

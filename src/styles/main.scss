@@ -45,6 +45,25 @@ body {
   margin-right: auto;
 }
 
+// Global page width constraint to prevent horizontal stretching
+.home-page,
+.documents-page,
+.page-title,
+.back-button {
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+// Prevent cards from stretching too wide
+.word-of-the-day-card,
+.welcome-section,
+.documents-section,
+.ocr-section {
+  max-width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+}
+
 // Basic responsive utilities
 .mobile-only {
   @include mobile-only {
