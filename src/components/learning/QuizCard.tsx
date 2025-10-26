@@ -43,14 +43,14 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
     if (isUserQuizAttempt) {
       // For user quiz attempts, check if we have a category context
       if (category) {
-        navigate(`/learning/custom/category/${category}/quiz/take?quizId=${quiz.customQuizId}`);
+        navigate(`/learning/custom/categories/${category}/quiz/take?quizId=${quiz.customQuizId}`);
       } else {
         navigate(`/learning/custom/quiz/take?quizId=${quiz.customQuizId}`);
       }
     } else if (type === 'custom' && isCustomQuiz) {
       // For custom quizzes, check if we're in a category context
       if (category) {
-        navigate(`/learning/custom/category/${category}/quiz/take?quizId=${quiz.id}`);
+        navigate(`/learning/custom/categories/${category}/quiz/take?quizId=${quiz.id}`);
       } else {
         navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`);
       }

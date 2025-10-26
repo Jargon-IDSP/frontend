@@ -15,30 +15,35 @@ export default function Terms() {
   }>();
   const [searchParams] = useSearchParams();
   
-  const type = location.pathname.includes('/custom') ? 'custom' : 'existing';
-  
   const { language, industryId, loading: preferencesLoading } = useUserPreferences();
   
   const queryLanguage = searchParams.get('language') || language;
   const queryIndustryId = searchParams.get('industry_id') || industryId?.toString();
 
+  // Determine type and endpoint
+  let type: 'existing' | 'custom' = 'custom';
   let endpoint = '';
-  if (documentId) {
+  
+  if (location.pathname.includes('/existing/')) {
+    type = 'existing';
+    endpoint = `levels/${levelId}/terms`;
+  } else if (location.pathname.includes('/learning/documents/')) {
+    type = 'custom';
     endpoint = `documents/${documentId}/terms`;
   } else if (category) {
-    endpoint = `category/${category}/terms`;
-  } else if (levelId && type === 'existing') {
-    endpoint = `levels/${levelId}/terms`;
+    type = 'custom';
+    endpoint = `categories/${category}/terms`;
   } else {
-    endpoint = 'terms'; 
+    type = 'custom';
+    endpoint = 'terms';
   }
 
   const { data, error } = useLearning<Term[]>({
     type, 
     endpoint,
     params: { 
-      language: queryLanguage,
-      ...(queryIndustryId && { industry_id: queryIndustryId })
+      // Always fetch in English, translation happens client-side
+      ...(queryIndustryId && type === 'existing' && { industry_id: queryIndustryId })
     },
     enabled: !preferencesLoading
   });
@@ -46,7 +51,6 @@ export default function Terms() {
   const terms = data?.data || [];
   const count = data?.count || 0;
   const isEmpty = terms.length === 0;
-
   const showLoading = !data && !error;
 
   return (
@@ -82,7 +86,6 @@ export default function Terms() {
 
       {!error && data && (
         <>
-
           {type === 'existing' && data?.industryCount !== undefined && data?.generalCount !== undefined && (
             <p style={{ color: '#666', marginBottom: '1rem' }}>
               Total: {count} terms
@@ -90,14 +93,14 @@ export default function Terms() {
             </p>
           )}
 
-          {type === 'custom' && count > 0 && (
+          {type !== 'existing' && count > 0 && (
             <p style={{ color: '#666', marginBottom: '1rem' }}>
-              Total: {count} custom terms
+              Total: {count} terms
             </p>
           )}
 
           {isEmpty ? (
-            type === 'custom' ? (
+            type !== 'existing' ? (
               <EmptyState type="terms" />
             ) : (
               <div>
@@ -112,7 +115,7 @@ export default function Terms() {
                   term={term}
                   index={index + 1}
                   language={queryLanguage}
-                  type={type}
+                  type={type === 'existing' ? 'existing' : 'custom'}
                 />
               ))}
             </div>
