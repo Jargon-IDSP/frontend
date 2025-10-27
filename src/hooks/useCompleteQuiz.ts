@@ -33,7 +33,8 @@ export function useCompleteQuiz() {
 
       return await response.json();
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_, variables) => {
+      // Changed 'data' to '_'
       // Invalidate quiz attempts cache
       if (variables.quizId) {
         queryClient.invalidateQueries({
