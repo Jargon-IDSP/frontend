@@ -1,5 +1,4 @@
-import type { Multilingual } from './language';
-
+import type { Multilingual } from "./language";
 
 export interface Level {
   id: number;
@@ -9,7 +8,6 @@ export interface Level {
   general_terms?: number;
   total_general_terms?: number;
 }
-
 
 export interface Term {
   id: string;
@@ -27,7 +25,9 @@ export interface Term {
   level_id?: number;
 }
 
-export interface CustomFlashcard extends Multilingual<'term'>, Multilingual<'definition'> {
+export interface CustomFlashcard
+  extends Multilingual<"term">,
+    Multilingual<"definition"> {
   id: string;
   documentId: string | null;
   userId: string;
@@ -35,8 +35,6 @@ export interface CustomFlashcard extends Multilingual<'term'>, Multilingual<'def
   createdAt: string;
   updatedAt: string;
 }
-
-
 
 export interface Question {
   id: string;
@@ -51,7 +49,7 @@ export interface Question {
   };
 }
 
-export interface CustomQuestion extends Multilingual<'prompt'> {
+export interface CustomQuestion extends Multilingual<"prompt"> {
   id: string;
   userId: string;
   customQuizId: string | null;
@@ -85,8 +83,6 @@ export interface QuizQuestion {
   correctAnswerId: string;
   language?: string;
 }
-
-
 
 export interface Quiz {
   id: string;
@@ -133,7 +129,6 @@ export interface CustomQuiz {
   }>;
 }
 
-
 export interface UserQuizAttempt {
   id: string;
   userId: string;
@@ -165,9 +160,9 @@ export interface UserQuizAnswer {
   answer?: CustomFlashcard;
 }
 
-
 export interface SharedQuiz {
   id: string;
+  documentId?: string | null;
   sharedAt: string;
   customQuiz: {
     id: string;
@@ -187,8 +182,6 @@ export interface SharedQuiz {
   };
 }
 
-
-
 export interface ApiResponse<T> {
   success: boolean;
   count: number;
@@ -203,4 +196,3 @@ export interface ApiResponse<T> {
   industryCount?: number;
   generalCount?: number;
 }
-

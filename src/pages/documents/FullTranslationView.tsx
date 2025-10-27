@@ -1,155 +1,150 @@
-import { useState, useEffect, useRef } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useAuth } from '@clerk/clerk-react';
-import { BACKEND_URL } from '../../lib/api';
-import type { Translation } from '../../types/document';
-import { useUserPreferences } from '../../hooks/useUserPreferences';
+import { useParams, useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
+import { BACKEND_URL } from "../../lib/api";
+import type { Translation } from "../../types/document";
+import { useUserPreferences } from "../../hooks/useUserPreferences";
 
-export default function DocumentTranslationView() {
+interface TranslationResponse {
+  processing?: boolean;
+  translation?: Translation;
+  error?: string;
+}
+
+export default function FullTranslationView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const { language: userLanguage } = useUserPreferences();
-  
-  const [translation, setTranslation] = useState<Translation | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [processing, setProcessing] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
 
-  useEffect(() => {
-    fetchData();
-    
-    return () => {
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-      }
-    };
-  }, [id]);
-
-  const fetchData = async () => {
-    try {
+  // Fetch translation with smart polling
+  const {
+    data,
+    isLoading: loading,
+    error,
+  } = useQuery({
+    queryKey: ["documentTranslation", id],
+    queryFn: async (): Promise<TranslationResponse> => {
       const token = await getToken();
-      
-      const translationRes = await fetch(`${BACKEND_URL}/documents/${id}/translation`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      
-      if (translationRes.ok) {
-        const data = await translationRes.json();
-        
-        if (data.processing) {
-          if (!pollIntervalRef.current) {
-            setProcessing(true);
-            setLoading(false);
-            startPolling();
-          }
-        } else {
-          setTranslation(data.translation);
-          setProcessing(false);
-          setLoading(false);
-          
-          if (pollIntervalRef.current) {
-            clearInterval(pollIntervalRef.current);
-            pollIntervalRef.current = null;
-          }
-        }
-      } else {
-        const errorData = await translationRes.json();
-        setError(errorData.error || 'Translation not found');
-        setLoading(false);
-        setProcessing(false);
-        
-        if (pollIntervalRef.current) {
-          clearInterval(pollIntervalRef.current);
-          pollIntervalRef.current = null;
-        }
-      }
-    } catch (err) {
-      console.error('Error fetching data:', err);
-      setError('Failed to load document data');
-      setLoading(false);
-      setProcessing(false);
-      
-      if (pollIntervalRef.current) {
-        clearInterval(pollIntervalRef.current);
-        pollIntervalRef.current = null;
-      }
-    }
-  };
 
-  const startPolling = () => {
-    if (!pollIntervalRef.current) {
-      pollIntervalRef.current = setInterval(() => {
-        fetchData();
-      }, 3000);
-    }
-  };
+      const translationRes = await fetch(
+        `${BACKEND_URL}/documents/${id}/translation`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (!translationRes.ok) {
+        const errorData = await translationRes.json();
+        throw new Error(errorData.error || "Translation not found");
+      }
+
+      return await translationRes.json();
+    },
+    enabled: !!id,
+    refetchInterval: (query) => {
+      // Poll every 3 seconds if processing, otherwise don't poll
+      return query.state.data?.processing ? 3000 : false;
+    },
+    refetchIntervalInBackground: false,
+    retry: false,
+  });
+
+  const translation = data?.translation;
+  const processing = data?.processing;
 
   const getTranslatedText = () => {
-    if (!translation) return '';
-    
-    const languageKey = `text${userLanguage.charAt(0).toUpperCase() + userLanguage.slice(1)}` as keyof Translation;
-    return translation[languageKey] as string || translation.textEnglish;
+    if (!translation) return "";
+
+    const languageKey = `text${
+      userLanguage.charAt(0).toUpperCase() + userLanguage.slice(1)
+    }` as keyof Translation;
+    return (translation[languageKey] as string) || translation.textEnglish;
   };
 
   if (loading) {
     return (
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Loading...</h2>
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "2rem",
+          textAlign: "center",
+        }}
+      >
+        <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>Loading...</h2>
       </div>
     );
   }
 
   if (processing) {
     return (
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
-        <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Loading...</h2>
-        <p style={{ color: '#666', marginBottom: '0.5rem' }}>
+      <div
+        style={{
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "2rem",
+          textAlign: "center",
+        }}
+      >
+        <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>Loading...</h2>
+        <p style={{ color: "#666", marginBottom: "0.5rem" }}>
           Your document is being translated.
         </p>
-        <p style={{ color: '#666', marginBottom: '1rem', fontSize: '0.9rem' }}>
-          Feel free to navigate away - translation will continue in the background and flashcards/quizzes will be generated automatically.
+        <p style={{ color: "#666", marginBottom: "1rem", fontSize: "0.9rem" }}>
+          Feel free to navigate away - translation will continue in the
+          background and flashcards/quizzes will be generated automatically.
         </p>
-        <div style={{ 
-          display: 'inline-block',
-          width: '40px',
-          height: '40px',
-          border: '4px solid #f3f3f3',
-          borderTop: '4px solid #3498db',
-          borderRadius: '50%',
-          animation: 'spin 1s linear infinite',
-          marginBottom: '1rem'
-        }} />
+        <div
+          style={{
+            display: "inline-block",
+            width: "40px",
+            height: "40px",
+            border: "4px solid #f3f3f3",
+            borderTop: "4px solid #3498db",
+            borderRadius: "50%",
+            animation: "spin 1s linear infinite",
+            marginBottom: "1rem",
+          }}
+        />
         <div>
-          <button onClick={() => navigate('/documents')} style={{ marginRight: '0.5rem' }}>
+          <button
+            onClick={() => navigate("/documents")}
+            style={{ marginRight: "0.5rem" }}
+          >
             ← Back to Documents
           </button>
-          <button onClick={() => navigate('/learning/custom')}>
+          <button onClick={() => navigate("/learning/custom")}>
             Go to Learning Hub
           </button>
         </div>
       </div>
     );
   }
+
   if (error || !translation) {
     return (
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-        <button onClick={() => navigate('/documents')} style={{ marginBottom: '1rem' }}>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+        <button
+          onClick={() => navigate("/documents")}
+          style={{ marginBottom: "1rem" }}
+        >
           ← Back to Documents
         </button>
-        <h2 style={{ color: '#ef4444' }}>Error</h2>
-        <p>{error || 'Translation not found.'}</p>
+        <h2 style={{ color: "#ef4444" }}>Error</h2>
+        <p>
+          {error instanceof Error ? error.message : "Translation not found."}
+        </p>
         <button
           onClick={() => window.location.reload()}
           style={{
-            marginTop: '1rem',
-            padding: '0.75rem 1.5rem',
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: 'pointer',
+            marginTop: "1rem",
+            padding: "0.75rem 1.5rem",
+            backgroundColor: "#3b82f6",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
           }}
         >
           Refresh Page
@@ -159,70 +154,88 @@ export default function DocumentTranslationView() {
   }
 
   const languageNames: Record<string, string> = {
-    english: 'English',
-    french: 'French',
-    chinese: 'Chinese',
-    spanish: 'Spanish',
-    tagalog: 'Tagalog',
-    punjabi: 'Punjabi',
-    korean: 'Korean',
+    english: "English",
+    french: "French",
+    chinese: "Chinese",
+    spanish: "Spanish",
+    tagalog: "Tagalog",
+    punjabi: "Punjabi",
+    korean: "Korean",
   };
 
   return (
-    <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
-      <div style={{ marginBottom: '2rem' }}>
-        <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+      <div style={{ marginBottom: "2rem" }}>
+        <div
+          style={{
+            display: "flex",
+            gap: "1rem",
+            marginBottom: "1rem",
+            flexWrap: "wrap",
+          }}
+        >
           <button onClick={() => navigate(`/study/${id}`)}>
             ← Back to Study Materials
           </button>
-          <button onClick={() => navigate('/learning/custom')}>
+          <button onClick={() => navigate("/learning/custom")}>
             Study All Custom Content
           </button>
         </div>
-        <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+        <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
           {translation.document.filename}
         </h1>
-        <p style={{ color: '#6b7280' }}>
-          Uploaded on {new Date(translation.document.createdAt).toLocaleDateString()}
+        <p style={{ color: "#6b7280" }}>
+          Uploaded on{" "}
+          {new Date(translation.document.createdAt).toLocaleDateString()}
         </p>
-        
-        <div style={{ marginTop: '1rem' }}>
-          <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Study from this document:</h3>
+
+        <div style={{ marginTop: "1rem" }}>
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+            Study from this document:
+          </h3>
         </div>
       </div>
 
-      <div style={{ 
-        border: '2px solid #e5e7eb', 
-        borderRadius: '8px', 
-        overflow: 'hidden' 
-      }}>
-        <div style={{ 
-          padding: '1rem', 
-          backgroundColor: '#f9fafb',
-          borderBottom: '2px solid #e5e7eb'
-        }}>
-          <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
-            {languageNames[userLanguage] || 'English'} Translation
+      <div
+        style={{
+          border: "2px solid #e5e7eb",
+          borderRadius: "8px",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            padding: "1rem",
+            backgroundColor: "#f9fafb",
+            borderBottom: "2px solid #e5e7eb",
+          }}
+        >
+          <h2 style={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+            {languageNames[userLanguage] || "English"} Translation
           </h2>
         </div>
 
-        <div style={{ 
-          padding: '1.5rem',
-          backgroundColor: 'white'
-        }}>
-          <pre style={{ 
-            whiteSpace: 'pre-wrap',
-            wordWrap: 'break-word',
-            margin: 0,
-            fontFamily: 'inherit',
-            lineHeight: '1.6',
-            fontSize: '1rem',
-          }}>
+        <div
+          style={{
+            padding: "1.5rem",
+            backgroundColor: "white",
+          }}
+        >
+          <pre
+            style={{
+              whiteSpace: "pre-wrap",
+              wordWrap: "break-word",
+              margin: 0,
+              fontFamily: "inherit",
+              lineHeight: "1.6",
+              fontSize: "1rem",
+            }}
+          >
             {getTranslatedText()}
           </pre>
         </div>
       </div>
-      
+
       <style>{`
         @keyframes spin {
           0% { transform: rotate(0deg); }
@@ -232,3 +245,238 @@ export default function DocumentTranslationView() {
     </div>
   );
 }
+
+// import { useState, useEffect, useRef } from 'react';
+// import { useParams, useNavigate } from 'react-router-dom';
+// import { useAuth } from '@clerk/clerk-react';
+// import { BACKEND_URL } from '../../lib/api';
+// import type { Translation } from '../../types/document';
+// import { useUserPreferences } from '../../hooks/useUserPreferences';
+
+// export default function DocumentTranslationView() {
+//   const { id } = useParams<{ id: string }>();
+//   const navigate = useNavigate();
+//   const { getToken } = useAuth();
+//   const { language: userLanguage } = useUserPreferences();
+
+//   const [translation, setTranslation] = useState<Translation | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [processing, setProcessing] = useState(false);
+//   const [error, setError] = useState<string | null>(null);
+//   const pollIntervalRef = useRef<NodeJS.Timeout | null>(null);
+
+//   useEffect(() => {
+//     fetchData();
+
+//     return () => {
+//       if (pollIntervalRef.current) {
+//         clearInterval(pollIntervalRef.current);
+//       }
+//     };
+//   }, [id]);
+
+//   const fetchData = async () => {
+//     try {
+//       const token = await getToken();
+
+//       const translationRes = await fetch(`${BACKEND_URL}/documents/${id}/translation`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+
+//       if (translationRes.ok) {
+//         const data = await translationRes.json();
+
+//         if (data.processing) {
+//           if (!pollIntervalRef.current) {
+//             setProcessing(true);
+//             setLoading(false);
+//             startPolling();
+//           }
+//         } else {
+//           setTranslation(data.translation);
+//           setProcessing(false);
+//           setLoading(false);
+
+//           if (pollIntervalRef.current) {
+//             clearInterval(pollIntervalRef.current);
+//             pollIntervalRef.current = null;
+//           }
+//         }
+//       } else {
+//         const errorData = await translationRes.json();
+//         setError(errorData.error || 'Translation not found');
+//         setLoading(false);
+//         setProcessing(false);
+
+//         if (pollIntervalRef.current) {
+//           clearInterval(pollIntervalRef.current);
+//           pollIntervalRef.current = null;
+//         }
+//       }
+//     } catch (err) {
+//       console.error('Error fetching data:', err);
+//       setError('Failed to load document data');
+//       setLoading(false);
+//       setProcessing(false);
+
+//       if (pollIntervalRef.current) {
+//         clearInterval(pollIntervalRef.current);
+//         pollIntervalRef.current = null;
+//       }
+//     }
+//   };
+
+//   const startPolling = () => {
+//     if (!pollIntervalRef.current) {
+//       pollIntervalRef.current = setInterval(() => {
+//         fetchData();
+//       }, 3000);
+//     }
+//   };
+
+//   const getTranslatedText = () => {
+//     if (!translation) return '';
+
+//     const languageKey = `text${userLanguage.charAt(0).toUpperCase() + userLanguage.slice(1)}` as keyof Translation;
+//     return translation[languageKey] as string || translation.textEnglish;
+//   };
+
+//   if (loading) {
+//     return (
+//       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
+//         <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Loading...</h2>
+//       </div>
+//     );
+//   }
+
+//   if (processing) {
+//     return (
+//       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem', textAlign: 'center' }}>
+//         <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem' }}>Loading...</h2>
+//         <p style={{ color: '#666', marginBottom: '0.5rem' }}>
+//           Your document is being translated.
+//         </p>
+//         <p style={{ color: '#666', marginBottom: '1rem', fontSize: '0.9rem' }}>
+//           Feel free to navigate away - translation will continue in the background and flashcards/quizzes will be generated automatically.
+//         </p>
+//         <div style={{
+//           display: 'inline-block',
+//           width: '40px',
+//           height: '40px',
+//           border: '4px solid #f3f3f3',
+//           borderTop: '4px solid #3498db',
+//           borderRadius: '50%',
+//           animation: 'spin 1s linear infinite',
+//           marginBottom: '1rem'
+//         }} />
+//         <div>
+//           <button onClick={() => navigate('/documents')} style={{ marginRight: '0.5rem' }}>
+//             ← Back to Documents
+//           </button>
+//           <button onClick={() => navigate('/learning/custom')}>
+//             Go to Learning Hub
+//           </button>
+//         </div>
+//       </div>
+//     );
+//   }
+//   if (error || !translation) {
+//     return (
+//       <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+//         <button onClick={() => navigate('/documents')} style={{ marginBottom: '1rem' }}>
+//           ← Back to Documents
+//         </button>
+//         <h2 style={{ color: '#ef4444' }}>Error</h2>
+//         <p>{error || 'Translation not found.'}</p>
+//         <button
+//           onClick={() => window.location.reload()}
+//           style={{
+//             marginTop: '1rem',
+//             padding: '0.75rem 1.5rem',
+//             backgroundColor: '#3b82f6',
+//             color: 'white',
+//             border: 'none',
+//             borderRadius: '6px',
+//             cursor: 'pointer',
+//           }}
+//         >
+//           Refresh Page
+//         </button>
+//       </div>
+//     );
+//   }
+
+//   const languageNames: Record<string, string> = {
+//     english: 'English',
+//     french: 'French',
+//     chinese: 'Chinese',
+//     spanish: 'Spanish',
+//     tagalog: 'Tagalog',
+//     punjabi: 'Punjabi',
+//     korean: 'Korean',
+//   };
+
+//   return (
+//     <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '2rem' }}>
+//       <div style={{ marginBottom: '2rem' }}>
+//         <div style={{ display: 'flex', gap: '1rem', marginBottom: '1rem', flexWrap: 'wrap' }}>
+//           <button onClick={() => navigate(`/study/${id}`)}>
+//             ← Back to Study Materials
+//           </button>
+//           <button onClick={() => navigate('/learning/custom')}>
+//             Study All Custom Content
+//           </button>
+//         </div>
+//         <h1 style={{ fontSize: '2rem', fontWeight: 'bold' }}>
+//           {translation.document.filename}
+//         </h1>
+//         <p style={{ color: '#6b7280' }}>
+//           Uploaded on {new Date(translation.document.createdAt).toLocaleDateString()}
+//         </p>
+
+//         <div style={{ marginTop: '1rem' }}>
+//           <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem' }}>Study from this document:</h3>
+//         </div>
+//       </div>
+
+//       <div style={{
+//         border: '2px solid #e5e7eb',
+//         borderRadius: '8px',
+//         overflow: 'hidden'
+//       }}>
+//         <div style={{
+//           padding: '1rem',
+//           backgroundColor: '#f9fafb',
+//           borderBottom: '2px solid #e5e7eb'
+//         }}>
+//           <h2 style={{ fontSize: '1.25rem', fontWeight: 'bold' }}>
+//             {languageNames[userLanguage] || 'English'} Translation
+//           </h2>
+//         </div>
+
+//         <div style={{
+//           padding: '1.5rem',
+//           backgroundColor: 'white'
+//         }}>
+//           <pre style={{
+//             whiteSpace: 'pre-wrap',
+//             wordWrap: 'break-word',
+//             margin: 0,
+//             fontFamily: 'inherit',
+//             lineHeight: '1.6',
+//             fontSize: '1rem',
+//           }}>
+//             {getTranslatedText()}
+//           </pre>
+//         </div>
+//       </div>
+
+//       <style>{`
+//         @keyframes spin {
+//           0% { transform: rotate(0deg); }
+//           100% { transform: rotate(360deg); }
+//         }
+//       `}</style>
+//     </div>
+//   );
+// }

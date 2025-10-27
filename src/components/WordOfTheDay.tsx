@@ -1,40 +1,24 @@
-import { useState, useEffect } from 'react';
-import { useAuth } from '@clerk/clerk-react';
-import { BACKEND_URL } from '../lib/api';
-import { useUserPreferences } from '../hooks/useUserPreferences';
-import todayTermCard from '../assets/todayTermCard.png';
-
-interface WordOfTheDayData {
-  term: string;
-  definition: string;
-  termTranslated?: string;
-  industry?: string;
-  level?: string;
-}
+import { useAuth } from "@clerk/clerk-react";
+import { useQuery } from "@tanstack/react-query";
+import { BACKEND_URL } from "../lib/api";
+import { useUserPreferences } from "../hooks/useUserPreferences";
+import todayTermCard from "../assets/todayTermCard.png";
+import type { WordOfTheDayData, FlashcardResponse } from "@/types/wordOfTheDay";
 
 export default function WordOfTheDay() {
   const { getToken } = useAuth();
-  const { language: userLanguage, loading: preferencesLoading } = useUserPreferences();
-  const [wordData, setWordData] = useState<WordOfTheDayData | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string>('');
-
-  useEffect(() => {
-    // Wait for preferences to load before fetching
-    if (!preferencesLoading) {
-      fetchWordOfTheDay();
-    }
-  }, [preferencesLoading, userLanguage]);
+  const { language: userLanguage, loading: preferencesLoading } =
+    useUserPreferences();
 
   const getTodayString = () => {
     const today = new Date();
-    return today.toISOString().split('T')[0]; // YYYY-MM-DD format
+    return today.toISOString().split("T")[0]; // YYYY-MM-DD format
   };
 
   const getStoredWordForToday = (): WordOfTheDayData | null => {
     const today = getTodayString();
-    const stored = localStorage.getItem('wordOfTheDay');
-    
+    const stored = localStorage.getItem("wordOfTheDay");
+
     if (stored) {
       try {
         const data = JSON.parse(stored);
@@ -52,66 +36,78 @@ export default function WordOfTheDay() {
     const today = getTodayString();
     const data = {
       date: today,
-      word: word
+      word: word,
     };
-    localStorage.setItem('wordOfTheDay', JSON.stringify(data));
+    localStorage.setItem("wordOfTheDay", JSON.stringify(data));
   };
 
-  const fetchWordOfTheDay = async () => {
-    try {
-      // Check if we already have a word for today
-      const storedWord = getStoredWordForToday();
-      if (storedWord) {
-        setWordData(storedWord);
-        setLoading(false);
-        return;
-      }
-
-      // Fetch new word from existing endpoint - fetch in user's language
-      const token = await getToken();
-      const response = await fetch(`${BACKEND_URL}/learning/existing/random/flashcard?language=${userLanguage}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (response.ok) {
-        const result = await response.json();
-        const flashcard = result.data;
-        
-        // The API returns the flashcard in the user's language
-        // We need to show both English and the user's language
-        const englishTerm = flashcard.term.english;
-        const translatedTerm = userLanguage !== 'english' && flashcard.term[userLanguage] 
-          ? flashcard.term[userLanguage] 
-          : undefined;
-
-        const wordData: WordOfTheDayData = {
-          term: englishTerm,
-          definition: flashcard.definition.english,
-          termTranslated: translatedTerm,
-          industry: flashcard.industry?.name,
-          level: flashcard.level?.name
-        };
-
-        // Store the word for today
-        storeWordForToday(wordData);
-        setWordData(wordData);
-      } else {
-        setError('Failed to load word of the day');
-      }
-    } catch (err) {
-      console.error('Error fetching word of the day:', err);
-      setError('Failed to load word of the day');
-    } finally {
-      setLoading(false);
+  const fetchWordOfTheDay = async (): Promise<WordOfTheDayData> => {
+    // Check if we already have a word for today
+    const storedWord = getStoredWordForToday();
+    if (storedWord) {
+      return storedWord;
     }
+
+    // Fetch new word from existing endpoint - fetch in user's language
+    const token = await getToken();
+    const response = await fetch(
+      `${BACKEND_URL}/learning/existing/random/flashcard?language=${userLanguage}`,
+      {
+        headers: { Authorization: `Bearer ${token}` },
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Failed to load word of the day");
+    }
+
+    const result: FlashcardResponse = await response.json();
+    const flashcard = result.data;
+
+    // The API returns the flashcard in the user's language
+    // We need to show both English and the user's language
+    const englishTerm = flashcard.term.english;
+    const translatedTerm =
+      userLanguage !== "english" && flashcard.term[userLanguage]
+        ? flashcard.term[userLanguage]
+        : undefined;
+
+    const wordData: WordOfTheDayData = {
+      term: englishTerm,
+      definition: flashcard.definition.english,
+      termTranslated: translatedTerm,
+      industry: flashcard.industry?.name,
+      level: flashcard.level?.name,
+    };
+
+    // Store the word for today
+    storeWordForToday(wordData);
+    return wordData;
   };
 
-  if (loading) {
+  // Use TanStack Query
+  const {
+    data: wordData,
+    isLoading,
+    error,
+  } = useQuery({
+    queryKey: ["wordOfTheDay", getTodayString(), userLanguage],
+    queryFn: fetchWordOfTheDay,
+    enabled: !preferencesLoading && !!userLanguage, // Only fetch when preferences are loaded
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours - word doesn't change during the day
+    gcTime: 24 * 60 * 60 * 1000, // Keep in cache for 24 hours
+  });
+
+  if (preferencesLoading || isLoading) {
     return (
       <>
         <h3 className="word-of-the-day-title">Today's Trade Term</h3>
         <div className="word-of-the-day-card">
-          <img src={todayTermCard} alt="Today's Trade Term" className="today-term-card-image" />
+          <img
+            src={todayTermCard}
+            alt="Today's Trade Term"
+            className="today-term-card-image"
+          />
           <div className="word-card-content">
             <div className="loading-placeholder">Loading...</div>
           </div>
@@ -125,9 +121,17 @@ export default function WordOfTheDay() {
       <>
         <h3 className="word-of-the-day-title">Today's Trade Term</h3>
         <div className="word-of-the-day-card">
-          <img src={todayTermCard} alt="Today's Trade Term" className="today-term-card-image" />
+          <img
+            src={todayTermCard}
+            alt="Today's Trade Term"
+            className="today-term-card-image"
+          />
           <div className="word-card-content">
-            <div className="error-message">Unable to load today's word</div>
+            <div className="error-message">
+              {error instanceof Error
+                ? error.message
+                : "Unable to load today's word"}
+            </div>
           </div>
         </div>
       </>
@@ -138,17 +142,27 @@ export default function WordOfTheDay() {
     <>
       <h3 className="word-of-the-day-title">Today's Trade Term</h3>
       <div className="word-of-the-day-card">
-        <img src={todayTermCard} alt="Today's Trade Term" className="today-term-card-image" />
+        <img
+          src={todayTermCard}
+          alt="Today's Trade Term"
+          className="today-term-card-image"
+        />
         <div className="word-card-content">
           <div className="word-term">{wordData.term}</div>
           {wordData.termTranslated && (
-            <div className="word-term-translated">{wordData.termTranslated}</div>
+            <div className="word-term-translated">
+              {wordData.termTranslated}
+            </div>
           )}
           <div className="word-definition">{wordData.definition}</div>
           {(wordData.industry || wordData.level) && (
             <div className="word-meta">
-              {wordData.industry && <span className="word-industry">{wordData.industry}</span>}
-              {wordData.level && <span className="word-level">{wordData.level}</span>}
+              {wordData.industry && (
+                <span className="word-industry">{wordData.industry}</span>
+              )}
+              {wordData.level && (
+                <span className="word-level">{wordData.level}</span>
+              )}
             </div>
           )}
         </div>
@@ -156,3 +170,162 @@ export default function WordOfTheDay() {
     </>
   );
 }
+
+// import { useState, useEffect } from 'react';
+// import { useAuth } from '@clerk/clerk-react';
+// import { BACKEND_URL } from '../lib/api';
+// import { useUserPreferences } from '../hooks/useUserPreferences';
+// import todayTermCard from '../assets/todayTermCard.png';
+
+// interface WordOfTheDayData {
+//   term: string;
+//   definition: string;
+//   termTranslated?: string;
+//   industry?: string;
+//   level?: string;
+// }
+
+// export default function WordOfTheDay() {
+//   const { getToken } = useAuth();
+//   const { language: userLanguage, loading: preferencesLoading } = useUserPreferences();
+//   const [wordData, setWordData] = useState<WordOfTheDayData | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string>('');
+
+//   useEffect(() => {
+//     // Wait for preferences to load before fetching
+//     if (!preferencesLoading) {
+//       fetchWordOfTheDay();
+//     }
+//   }, [preferencesLoading, userLanguage]);
+
+//   const getTodayString = () => {
+//     const today = new Date();
+//     return today.toISOString().split('T')[0]; // YYYY-MM-DD format
+//   };
+
+//   const getStoredWordForToday = (): WordOfTheDayData | null => {
+//     const today = getTodayString();
+//     const stored = localStorage.getItem('wordOfTheDay');
+
+//     if (stored) {
+//       try {
+//         const data = JSON.parse(stored);
+//         if (data.date === today) {
+//           return data.word;
+//         }
+//       } catch (e) {
+//         // Invalid stored data, ignore
+//       }
+//     }
+//     return null;
+//   };
+
+//   const storeWordForToday = (word: WordOfTheDayData) => {
+//     const today = getTodayString();
+//     const data = {
+//       date: today,
+//       word: word
+//     };
+//     localStorage.setItem('wordOfTheDay', JSON.stringify(data));
+//   };
+
+//   const fetchWordOfTheDay = async () => {
+//     try {
+//       // Check if we already have a word for today
+//       const storedWord = getStoredWordForToday();
+//       if (storedWord) {
+//         setWordData(storedWord);
+//         setLoading(false);
+//         return;
+//       }
+
+//       // Fetch new word from existing endpoint - fetch in user's language
+//       const token = await getToken();
+//       const response = await fetch(`${BACKEND_URL}/learning/existing/random/flashcard?language=${userLanguage}`, {
+//         headers: { Authorization: `Bearer ${token}` },
+//       });
+
+//       if (response.ok) {
+//         const result = await response.json();
+//         const flashcard = result.data;
+
+//         // The API returns the flashcard in the user's language
+//         // We need to show both English and the user's language
+//         const englishTerm = flashcard.term.english;
+//         const translatedTerm = userLanguage !== 'english' && flashcard.term[userLanguage]
+//           ? flashcard.term[userLanguage]
+//           : undefined;
+
+//         const wordData: WordOfTheDayData = {
+//           term: englishTerm,
+//           definition: flashcard.definition.english,
+//           termTranslated: translatedTerm,
+//           industry: flashcard.industry?.name,
+//           level: flashcard.level?.name
+//         };
+
+//         // Store the word for today
+//         storeWordForToday(wordData);
+//         setWordData(wordData);
+//       } else {
+//         setError('Failed to load word of the day');
+//       }
+//     } catch (err) {
+//       console.error('Error fetching word of the day:', err);
+//       setError('Failed to load word of the day');
+//     } finally {
+//       setLoading(false);
+//     }
+//   };
+
+//   if (loading) {
+//     return (
+//       <>
+//         <h3 className="word-of-the-day-title">Today's Trade Term</h3>
+//         <div className="word-of-the-day-card">
+//           <img src={todayTermCard} alt="Today's Trade Term" className="today-term-card-image" />
+//           <div className="word-card-content">
+//             <div className="loading-placeholder">Loading...</div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   if (error || !wordData) {
+//     return (
+//       <>
+//         <h3 className="word-of-the-day-title">Today's Trade Term</h3>
+//         <div className="word-of-the-day-card">
+//           <img src={todayTermCard} alt="Today's Trade Term" className="today-term-card-image" />
+//           <div className="word-card-content">
+//             <div className="error-message">Unable to load today's word</div>
+//           </div>
+//         </div>
+//       </>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <h3 className="word-of-the-day-title">Today's Trade Term</h3>
+//       <div className="word-of-the-day-card">
+//         <img src={todayTermCard} alt="Today's Trade Term" className="today-term-card-image" />
+//         <div className="word-card-content">
+//           <div className="word-term">{wordData.term}</div>
+//           {wordData.termTranslated && (
+//             <div className="word-term-translated">{wordData.termTranslated}</div>
+//           )}
+//           <div className="word-definition">{wordData.definition}</div>
+//           {(wordData.industry || wordData.level) && (
+//             <div className="word-meta">
+//               {wordData.industry && <span className="word-industry">{wordData.industry}</span>}
+//               {wordData.level && <span className="word-level">{wordData.level}</span>}
+//             </div>
+//           )}
+//         </div>
+//       </div>
+//     </>
+//   );
+// }
