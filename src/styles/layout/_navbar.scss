@@ -19,7 +19,7 @@
     grid-template-columns: repeat(5, 1fr);
     height: 100%;
     max-width: min(480px, 100vw);
-    margin: 0 auto;
+    margin: 0.8rem auto;
     align-items: center;
     padding: 0 $spacing-xs; 
 
@@ -34,6 +34,7 @@
       border: none;
       background: none;
       cursor: pointer;
+      border-radius: $spacing-sm;
       transition: all 0.2s ease;
       color: $color-neutral;
       
@@ -41,10 +42,6 @@
         background-color: rgba($color-secondary, 0.5);
       }
       
-      &.active {
-        background-color: $color-primary;
-        color: white;
-      }
 
       .nav-icon {
         font-size: clamp(20px, 5vw, 24px); 
@@ -58,12 +55,7 @@
         border-radius: $spacing-sm;
 
         &:hover {
-          border: 2px solid $color-primary;
-        }
-
-        &.active {
-          background-color: $color-primary;
-          color: $color-secondary;
+        background-color: rgba($color-secondary, 0.5);
         }
       }
     }
