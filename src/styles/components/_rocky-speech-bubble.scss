@@ -21,10 +21,10 @@
     height: 60px;
     margin-left: $spacing-xl;
     
-    @include tablet-up {
-      width: 70px;
-      height: 70px;
-    }
+    // @include tablet-up {
+    //   width: 70px;
+    //   height: 70px;
+    // }
   }
 }
 
@@ -34,9 +34,9 @@
   max-width: 200px; // Smaller bubble
   
   margin-left: $spacing-lg;
-  @include tablet-up {
-    max-width: 250px;
-  }
+  // @include tablet-up {
+  //   max-width: 250px;
+  // }
   
   .speech-bubble {
     width: 100%;
@@ -59,14 +59,14 @@
     max-width: 85%;
     padding-bottom: $spacing-xl;
     
-    @include tablet-up {
-      font-size: $font-size-body;
-      padding: $spacing-sm;
-    }
+    // @include tablet-up {
+    //   font-size: $font-size-body;
+    //   padding: $spacing-sm;
+    // }
   }
 }
 
 // Upload-specific styling
-.upload-speech-bubble {
-  // Any upload-specific overrides can go here
-}
+// .upload-speech-bubble {
+//   // Any upload-specific overrides can go here
+// }

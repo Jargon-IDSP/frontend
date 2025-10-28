@@ -1,5 +1,6 @@
 import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { SignedIn } from "@clerk/clerk-react";
 import { routes } from "./lib/routes";
 import NavBar from "./components/NavBar";
 
@@ -21,8 +22,12 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <NavBar />
-        <AppRoutes />
+        <main>
+          <AppRoutes />
+        </main>
+        <SignedIn>
+          <NavBar />
+        </SignedIn>
       </Router>
     </QueryClientProvider>
   );

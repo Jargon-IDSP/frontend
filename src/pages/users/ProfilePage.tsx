@@ -1,6 +1,7 @@
 import { UserButton } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "../../hooks/useProfile";
+import rockyWhiteLogo from '/rockyWhite.svg';
 
 export default function ProfilePage() {
   const navigate = useNavigate();
@@ -10,12 +11,20 @@ export default function ProfilePage() {
 
   return (
     <div className="container">
-      <div className="profile-header">
-        <button className="back-button" onClick={() => navigate("/")}>
-          ← Back to Dashboard
-        </button>
-        <UserButton />
+      <div className="header">
+        <div className="rocky-logo-section">
+        <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+        <UserButton 
+          appearance={{
+            elements: {
+              userButtonAvatarBox: 'user-button-avatar-box',
+              userButtonTrigger: 'user-button-trigger',
+              userButtonAvatarImage: 'user-button-avatar-image'
+            }
+          }}
+        />
       </div>
+    </div>
 
       <h1 className="profile-title">Profile Page</h1>
 

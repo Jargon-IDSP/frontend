@@ -226,13 +226,13 @@ export default function RandomQuestionsStepper({
 
   return (
     <div className="mx-auto w-full max-w-2xl p-4">
-      <button
+      {/* <button
         onClick={() => navigate("/")}
         style={{ marginBottom: "1rem" }}
         className="text-sm text-zinc-600 hover:text-zinc-900"
       >
         ← Back to Dashboard
-      </button>
+      </button> */}
       <div className="mb-4 flex items-center justify-between">
         <h1 className="text-xl font-bold text-zinc-900">
           Random Questions {type === "custom" ? "(Custom)" : "(Red Seal)"}

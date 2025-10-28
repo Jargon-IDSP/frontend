@@ -1,13 +1,12 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Documents Page Specific Styles
+// Documents Page
 .documents-page {
-  @include container-mobile;
   padding-top: $spacing-lg;
-  padding-bottom: $spacing-lg;
 }
 
+// Page Header
 .page-title {
   display: flex;
   align-items: center;
@@ -24,11 +23,11 @@
   align-items: center;
   gap: $spacing-xs;
   padding: $spacing-sm $spacing-md;
+  padding-left: 0;
   background: none;
   color: $color-quaternary-dark;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding-left: 0;
   
   &:hover {
     background-color: $color-secondary;
@@ -43,42 +42,86 @@
   text-align: left;
 }
 
-.upload-section {
-  background-color: $color-second-neutral-light;
-  border: 2px dashed $color-quinary;
-  border-radius: $spacing-sm;
-  padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
-  align-items: center;
-  justify-content: center;
-  display: flex;
-  flex-direction: column;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+// Upload Section
+.upload {
+  &-section {
+    background-color: $color-second-neutral-light;
+    border: 2px dashed $color-quinary;
+    border-radius: $spacing-sm;
+    padding: $spacing-lg;
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    margin-bottom: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-back {
+    background-color: $color-second-neutral-light;
+    margin-bottom: $spacing-sm;
+
+    h1 {
+      margin: 0;
+      padding-bottom: 0.2rem;
+    }
+
+    &:hover {
+      border: 1px solid $color-quaternary-light-dark;
+    }
+  }
+
+  &-section-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: $spacing-lg auto;
+    text-align: center;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    justify-content: center;
+  }
+
+  &-icon {
+    width: 24px;
+    height: 24px;
+  }
+
+  &-text {
+    font-size: $font-size-body;
+    font-weight: $font-weight-regular;
+    color: $color-quaternary-dark;
+  }
+
+  &-hint {
+    font-size: $font-size-label;
+    color: $color-tertiary;
+    margin: 0;
+
+    &-preview {
+      font-size: $font-size-label;
+      color: $color-tertiary;
+      margin: 0;
+      text-align: center;
+    }
+  }
+
+  &-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: $font-size-body;
+    padding: $spacing-md $spacing-lg;
+    font-weight: $font-weight-bold;
+  }
 }
 
-.ocr-section {
-  background-color: $color-second-neutral-light;
-  border: 1px solid $color-neutral;
-  border-radius: $spacing-sm;
-  padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
-}
-
-.documents-section {
-  background-color: $color-second-neutral-light;
-  border: 1px solid $color-neutral;
-  border-radius: $spacing-sm;
-  padding: $spacing-lg;
-  margin-bottom: $spacing-lg;
-}
-
-// Documents-specific Rocky speech bubble styling
-.documents-speech-bubble {
-  margin-bottom: $spacing-lg;
-}
-
-// Simple Upload Component
+// Simple Upload Container
 .simple-upload-container {
   display: flex;
   flex-direction: column;
@@ -87,95 +130,87 @@
   text-align: center;
 }
 
-.upload-header {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  justify-content: center;
-}
-
-.upload-icon {
-  width: 24px;
-  height: 24px;
-}
-
-.upload-text {
-  font-size: $font-size-body;
-  font-weight: $font-weight-regular;
-  color: $color-quaternary-dark;
-}
-
-.upload-hint {
-  font-size: $font-size-label;
-  color: $color-tertiary;
-  margin: 0;
-}
-
-// File Preview Page
-.preview-section {
-  margin-bottom: $spacing-lg;
-}
-
-.preview-content {
+// Document Sections
+.ocr-section,
+.documents-section {
   background-color: $color-second-neutral-light;
-  border: 1px dashed $color-quinary;
+  border: 1px solid $color-neutral;
   border-radius: $spacing-sm;
   padding: $spacing-lg;
-  text-align: center;
-}
-
-.file-info {
-  margin-bottom: $spacing-sm;
-}
-
-.file-name {
-  font-size: $font-size-h2;
-  font-weight: $font-weight-bold;
-  color: $color-neutral;
-  margin-bottom: $spacing-sm;
-}
-
-.file-details {
-  font-size: $font-size-body;
-  color: $color-tertiary;
-  margin: 0;
-}
-
-.file-preview {
   margin-bottom: $spacing-lg;
-  min-height: 200px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
 }
 
-.preview-image {
-  max-width: 100%;
-  max-height: 300px;
-  border-radius: $spacing-sm;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+.documents-speech-bubble {
+  margin-bottom: $spacing-lg;
 }
 
-.preview-placeholder {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $spacing-sm;
-  padding: $spacing-lg;
-  border-radius: $spacing-sm;
+// File Preview
+.preview {
+  &-content {
+    background-color: $color-second-neutral-light;
+    border: 1px dashed $color-quinary;
+    border-radius: $spacing-sm;
+    padding: $spacing-lg;
+    text-align: center;
+  }
+
+  &-image {
+    max-width: 100%;
+    max-height: 300px;
+    border-radius: $spacing-sm;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &-placeholder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-sm;
+    padding: $spacing-lg;
+    border-radius: $spacing-sm;
+  }
 }
 
-.file-icon {
-  font-size: 3rem;
+// File Info
+.file {
+  &-preview {
+    margin-bottom: $spacing-lg;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  &-info {
+    margin-bottom: $spacing-sm;
+  }
+
+  &-name {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    color: $color-neutral;
+    margin-bottom: $spacing-sm;
+
+    &-preview {
+      font-size: $font-size-h2;
+      font-weight: $font-weight-bold;
+      color: $color-neutral;
+      margin: 0;
+    }
+  }
+
+  &-details {
+    font-size: $font-size-body;
+    color: $color-tertiary;
+    margin: 0;
+  }
+
+  &-icon {
+    font-size: 3rem;
+  }
 }
 
-.file-name-preview {
-  font-size: $font-size-h2;
-  font-weight: $font-weight-bold;
-  color: $color-neutral;
-  margin: 0;
-}
-
+// Action Buttons
 .action-buttons {
   display: flex;
   gap: $spacing-md;
@@ -183,8 +218,7 @@
   flex-wrap: wrap;
 }
 
-.back-to-choose-button,
-.upload-button {
+.back-to-choose-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -193,59 +227,57 @@
   font-weight: $font-weight-bold;
 }
 
-// Preview Page Upload Section
-.upload-section-preview {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: $spacing-md;
-  margin-top: $spacing-lg;
-  text-align: center;
-}
-
-// Agreement Checkbox Styles
+// Agreement Checkbox
 .agreement-checkbox {
   margin-top: $spacing-md;
   text-align: left;
 }
 
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: $spacing-sm;
-  cursor: pointer;
-  font-size: $font-size-body;
-  line-height: 1.4;
-}
+.checkbox {
+  &-label {
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+    cursor: pointer;
+    font-size: $font-size-body;
+    line-height: 1.4;
+  }
 
-.checkbox-input {
-  margin: 0;
-  margin-top: 2px;
-  flex-shrink: 0;
-  width: 20px;
-  height: 20px;
-  accent-color: white;
-  background-color: white;
-  border: 2px solid $color-neutral;
-  border-radius: 3px;
-  
-  &:checked {
+  &-input {
+    margin: 0;
+    margin-top: 2px;
+    flex-shrink: 0;
+    width: 20px;
+    height: 20px;
+    accent-color: white;
     background-color: white;
-    border-color: $color-neutral;
+    border: 2px solid $color-neutral;
+    border-radius: 3px;
+    
+    &:checked {
+      background-color: white;
+      border-color: $color-neutral;
+    }
+    
+    &:focus {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
   }
-  
-  &:focus {
-    outline: 2px solid $color-primary;
-    outline-offset: 2px;
+
+  &-text {
+    color: $color-quaternary-light-dark;
+    font-size: $font-size-label;
+
+    &-required {
+      color: $color-error;
+      font-size: $font-size-label;
+      font-weight: $font-weight-bold;
+    }
   }
 }
 
-.checkbox-text {
-  color: $color-quaternary-light-dark;
-  // font-weight: $font-weight-regular;
-  font-size: $font-size-label;
-}
-
+// Warning Messages
 .warning-messages {
   display: flex;
   flex-direction: column;
@@ -257,13 +289,7 @@
   }
 }
 
-.upload-hint-preview {
-  font-size: $font-size-label;
-  color: $color-tertiary;
-  margin: 0;
-  text-align: center;
-}
-
+// Status Messages
 .error-message {
   margin-top: $spacing-md;
   text-align: center;
@@ -292,10 +318,4 @@
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
   border-radius: $spacing-sm;
-}
-
-.checkbox-text-required {
-  color: $color-error;
-  font-size: $font-size-label;
-  font-weight: $font-weight-bold;
 }
