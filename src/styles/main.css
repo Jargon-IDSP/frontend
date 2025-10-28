@@ -11,6 +11,7 @@
 
 html {
   font-size: 16px;
+  height: 100%;
 }
 
 body {
@@ -19,10 +20,10 @@ body {
   color: #393939;
   background-color: #fffdf4;
   margin: 0;
-  max-width: 100vw;
-  padding: 0.5rem;
+  padding: 0;
   min-height: 100vh;
-  overflow-y: scroll;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #root {
@@ -30,17 +31,10 @@ body {
   background-color: #fffdf4;
   min-height: 100vh;
   position: relative;
-  display: grid;
-  grid-template-rows: auto 1fr;
-}
-@media (min-width: 768px) {
-  #root {
-    padding: 0 1rem;
-    border-radius: 12px;
-  }
 }
 #root main {
-  height: 100vh;
+  min-height: 100vh;
+  padding-bottom: 70px;
 }
 
 .text-center {
@@ -67,9 +61,13 @@ body {
 }
 
 .container {
+  width: 100%;
   max-width: 480px;
-  margin-left: auto;
-  margin-right: auto;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: calc(70px + 1rem);
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
 }
 
 .p-2 {
@@ -134,44 +132,35 @@ body {
   border-color: #ef4444;
 }
 
-.home-page,
-.documents-page,
-.page-title,
-.back-button {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-.word-of-the-day-card,
-.welcome-section,
-.documents-section,
-.ocr-section {
-  max-width: 100%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}
-
 .navbar {
   background-color: #fffdf4;
-  position: sticky;
+  position: fixed;
   bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%;
+  height: 70px;
   z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
 }
 .navbar .nav-items {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr 1fr;
-  position: sticky;
+  grid-template-columns: repeat(5, 1fr);
+  height: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  align-items: center;
 }
 .navbar .nav-items .nav-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin: 0.5rem;
+  justify-content: center;
+  height: 100%;
+  padding: 0.25rem;
   border: none;
   background: none;
   cursor: pointer;
-  border-radius: 0.5rem;
   transition: all 0.2s ease;
   color: #393939;
 }
@@ -183,14 +172,12 @@ body {
   color: white;
 }
 .navbar .nav-items .nav-item .nav-icon {
-  font-size: 20px;
-  margin: auto;
-  align-items: center;
-  justify-content: center;
+  font-size: clamp(20px, 5vw, 24px);
+  margin-bottom: 0.25rem;
 }
 .navbar .nav-items .nav-item.nav-item-ai {
   background-color: #ffba0a;
-  padding: 0.5rem;
+  margin: 0.25rem;
   border-radius: 0.5rem;
 }
 .navbar .nav-items .nav-item.nav-item-ai:hover {
@@ -202,16 +189,21 @@ body {
 }
 
 .home-page {
-  height: 100%;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: calc(70px + 1rem);
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
 }
 
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 1rem;
-  padding-left: 0;
   margin-bottom: 1.5rem;
+  gap: 1rem;
 }
 
 .welcome-text-section {
@@ -229,14 +221,20 @@ body {
   margin: 0;
 }
 
-.welcome-section {
-  text-align: center;
-  margin-bottom: 1.5rem;
+.rocky-logo-section {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
-.welcome-section .welcome-subtitle {
-  font-size: 16px;
-  color: #b2af97;
-  margin-bottom: 1.5rem;
+.rocky-logo-section .rocky-logo {
+  width: 50px;
+  height: 50px;
+}
+
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
 }
 
 .quick-actions {
@@ -256,8 +254,8 @@ body {
   gap: 0.5rem;
 }
 
-.daily-checkin-card {
-  width: 100%;
+.daily-checkin {
+  margin-bottom: 1.5rem;
 }
 .daily-checkin-title {
   font-size: 20px;
@@ -317,27 +315,26 @@ body {
 .top-leaderboard {
   margin-bottom: 1.5rem;
 }
-
-.leaderboard-title {
+.top-leaderboard .leaderboard-title {
   font-size: 20px;
   font-weight: 700;
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
 }
-.leaderboard-content {
+.top-leaderboard .leaderboard-content {
   background-color: #f1eae8;
   border: 1px solid #393939;
   border-radius: 0.5rem;
   padding: 0.5rem;
   text-align: center;
 }
-.leaderboard-content p {
+.top-leaderboard .leaderboard-content p {
   font-size: 16px;
   color: #b2af97;
   margin-bottom: 1rem;
 }
-.leaderboard-content .error-text {
+.top-leaderboard .leaderboard-content .error-text {
   color: #c40000;
   margin-bottom: 1rem;
 }
@@ -425,15 +422,14 @@ body {
 .upload-file-card {
   margin-bottom: 1.5rem;
 }
-
-.upload-title {
+.upload-file-card .upload-title {
   font-size: 20px;
   font-weight: 700;
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
 }
-.upload-content {
+.upload-file-card .upload-content {
   background-color: #f1eae8;
   border: 1px solid #393939;
   border-radius: 0.5rem;
@@ -443,6 +439,9 @@ body {
   min-height: 150px;
 }
 
+.word-of-the-day {
+  margin-bottom: 1.5rem;
+}
 .word-of-the-day-title {
   font-size: 20px;
   font-weight: 700;
@@ -452,15 +451,13 @@ body {
   margin-bottom: 1rem;
 }
 .word-of-the-day-card {
-  margin-bottom: 1.5rem;
   border-radius: 0.5rem;
   padding: 1.5rem;
   position: relative;
   overflow: hidden;
   box-sizing: border-box;
 }
-
-.today-term-card-image {
+.word-of-the-day-card .today-term-card-image {
   position: absolute;
   top: 0;
   left: 0;
@@ -468,14 +465,13 @@ body {
   height: 100%;
   z-index: 1;
 }
-
-.word-card-content {
+.word-of-the-day-card .word-card-content {
   position: relative;
   z-index: 2;
   text-align: center;
   box-sizing: border-box;
 }
-.word-card-content h3 {
+.word-of-the-day-card .word-card-content h3 {
   font-size: 20px;
   font-weight: 700;
   color: #393939;
@@ -529,34 +525,33 @@ body {
 .start-learning-card {
   margin-bottom: 1.5rem;
 }
-
-.learning-image {
-  width: 100%;
-  height: 100%;
-  -o-object-fit: cover;
-     object-fit: cover;
-}
-.learning-title {
+.start-learning-card .learning-title {
   font-size: 20px;
   font-weight: 700;
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
 }
-.learning-content {
+.start-learning-card .learning-content {
   background-color: #f1eae8;
   border: 1px solid #393939;
   border-radius: 0.5rem;
   padding: 0.5rem;
   text-align: center;
 }
-.learning-description {
+.start-learning-card .learning-description {
   font-size: 16px;
   color: #b2af97;
   margin-bottom: 1.5rem;
 }
-.learning-button {
+.start-learning-card .learning-button {
   margin-top: 0.25rem;
+}
+.start-learning-card .learning-image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: cover;
+     object-fit: cover;
 }
 
 .loading-placeholder,
@@ -616,10 +611,15 @@ body {
 }
 
 .profile-page {
-  height: 100%;
-  padding-top: 1.5rem;
-  padding-bottom: 1.5rem;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: calc(70px + 1rem);
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
 }
+
 .profile-title {
   font-size: 28px;
   font-weight: 700;
@@ -656,7 +656,7 @@ body {
   justify-content: flex-end;
   align-items: center;
   gap: 1rem;
-  margin: 0.5rem;
+  margin-bottom: 1.5rem;
 }
 .header-trigger {
   cursor: pointer;
@@ -673,7 +673,13 @@ body {
 }
 
 .documents-page {
-  padding-top: 1.5rem;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: 1rem;
+  padding-bottom: calc(70px + 1rem);
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
 }
 
 .page-title {
@@ -870,8 +876,7 @@ body {
   margin-top: 1rem;
   text-align: left;
 }
-
-.checkbox-label {
+.agreement-checkbox .checkbox-label {
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -879,7 +884,7 @@ body {
   font-size: 16px;
   line-height: 1.4;
 }
-.checkbox-input {
+.agreement-checkbox .checkbox-input {
   margin: 0;
   margin-top: 2px;
   flex-shrink: 0;
@@ -890,19 +895,19 @@ body {
   border: 2px solid #393939;
   border-radius: 3px;
 }
-.checkbox-input:checked {
+.agreement-checkbox .checkbox-input:checked {
   background-color: white;
   border-color: #393939;
 }
-.checkbox-input:focus {
+.agreement-checkbox .checkbox-input:focus {
   outline: 2px solid #fe4d13;
   outline-offset: 2px;
 }
-.checkbox-text {
+.agreement-checkbox .checkbox-text {
   color: #9F7364;
   font-size: 13px;
 }
-.checkbox-text-required {
+.agreement-checkbox .checkbox-text-required {
   color: #c40000;
   font-size: 13px;
   font-weight: 700;
@@ -922,8 +927,7 @@ body {
   margin-top: 1rem;
   text-align: center;
 }
-
-.error-text {
+.error-message .error-text {
   color: #dc2626;
   font-size: 16px;
   margin: 0;
@@ -937,8 +941,7 @@ body {
   margin-bottom: 1.5rem;
   text-align: center;
 }
-
-.success-text {
+.success-message .success-text {
   color: #059669;
   font-size: 16px;
   margin: 0;

@@ -1,13 +1,22 @@
 @use 'variables' as *;
 
-@mixin container-mobile-app {
+// Page Layout Mixin - Consistent across all pages
+@mixin page-layout {
   width: 100%;
-  max-width: 430px;
+  max-width: 480px;
   margin: 0 auto;
-  padding: 0 $spacing-md;
+  padding: $spacing-md;
+  padding-bottom: calc(70px + #{$spacing-md}); // Navbar height + spacing
+  min-height: calc(100vh - 70px); // Full viewport minus navbar
+  box-sizing: border-box;
 }
 
-// Shared Mixins
+// Container for mobile app view
+@mixin container-mobile-app {
+  @include page-layout;
+}
+
+// Shared Card Mixins
 @mixin card-base {
   margin-bottom: $spacing-lg;
 }

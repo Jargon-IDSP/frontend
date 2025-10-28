@@ -1,9 +1,9 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Documents Page
+// Documents Page - Apply consistent layout
 .documents-page {
-  padding-top: $spacing-lg;
+  @include page-layout;
 }
 
 // Page Header
@@ -231,10 +231,8 @@
 .agreement-checkbox {
   margin-top: $spacing-md;
   text-align: left;
-}
 
-.checkbox {
-  &-label {
+  .checkbox-label {
     display: flex;
     align-items: center;
     gap: $spacing-sm;
@@ -243,7 +241,7 @@
     line-height: 1.4;
   }
 
-  &-input {
+  .checkbox-input {
     margin: 0;
     margin-top: 2px;
     flex-shrink: 0;
@@ -265,7 +263,7 @@
     }
   }
 
-  &-text {
+  .checkbox-text {
     color: $color-quaternary-light-dark;
     font-size: $font-size-label;
 
@@ -293,29 +291,29 @@
 .error-message {
   margin-top: $spacing-md;
   text-align: center;
-}
 
-.error-text {
-  color: #dc2626;
-  font-size: $font-size-body;
-  margin: 0;
-  padding: $spacing-sm;
-  background-color: #fef2f2;
-  border: 1px solid #fecaca;
-  border-radius: $spacing-sm;
+  .error-text {
+    color: #dc2626;
+    font-size: $font-size-body;
+    margin: 0;
+    padding: $spacing-sm;
+    background-color: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: $spacing-sm;
+  }
 }
 
 .success-message {
   margin-bottom: $spacing-lg;
   text-align: center;
-}
 
-.success-text {
-  color: #059669;
-  font-size: $font-size-body;
-  margin: 0;
-  padding: $spacing-sm;
-  background-color: #f0fdf4;
-  border: 1px solid #bbf7d0;
-  border-radius: $spacing-sm;
+  .success-text {
+    color: #059669;
+    font-size: $font-size-body;
+    margin: 0;
+    padding: $spacing-sm;
+    background-color: #f0fdf4;
+    border: 1px solid #bbf7d0;
+    border-radius: $spacing-sm;
+  }
 }

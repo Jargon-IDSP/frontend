@@ -1,16 +1,12 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Profile Page Specific Styles
+// Profile Page - Apply consistent layout
+.profile-page {
+  @include page-layout;
+}
+
 .profile {
-  &-page {
-    height: 100%;
-    padding-top: $spacing-lg;
-    padding-bottom: $spacing-lg;
-  }
-
-  
-
   &-title {
     font-size: $font-size-h1;
     font-weight: $font-weight-bold;
@@ -52,12 +48,11 @@
   justify-content: flex-end;
   align-items: center;
   gap: $spacing-md;
-  margin: $spacing-sm;
+  margin-bottom: $spacing-lg;
 
   &-trigger {
     cursor: pointer;
   }
-
 }
 
 .error-message {
