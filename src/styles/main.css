@@ -141,6 +141,7 @@ body {
   width: 100vw;
   height: 70px;
   z-index: 100;
+  margin: auto;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
 }
 .navbar .nav-items {
@@ -691,19 +692,16 @@ body {
   text-align: left;
 }
 
-.back-button {
+button.back-button {
   display: flex;
   align-items: center;
   gap: 0.25rem;
   padding: 0.5rem 1rem;
   padding-left: 0;
   background: none;
-  color: #652a15;
+  background-color: transparent;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-.back-button:hover {
-  background-color: #ffba0a;
 }
 
 .section-title {
@@ -734,9 +732,6 @@ body {
 .upload-back h1 {
   margin: 0;
   padding-bottom: 0.2rem;
-}
-.upload-back:hover {
-  border: 1px solid #9F7364;
 }
 .upload-section-preview {
   display: flex;
@@ -964,9 +959,6 @@ body {
   color: #393939;
   text-decoration: none;
 }
-.btn:hover, .choose-file-button:hover, .btn-primary:hover {
-  background-color: #ffba0a;
-}
 .btn:disabled, .choose-file-button:disabled, .btn-primary:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -976,9 +968,6 @@ body {
   background-color: #fe4d13;
   color: white;
   border-color: #fe4d13;
-}
-.btn-primary:hover {
-  background-color: rgb(221.0632911392, 55.2658227848, 0.9367088608);
 }
 
 .choose-file-button {
@@ -992,9 +981,6 @@ body {
   gap: 10px;
   flex-shrink: 0;
   border-radius: 18px;
-}
-.choose-file-button:hover {
-  background-color: #652a15;
 }
 
 .back-to-choose-button-preview {
@@ -1034,9 +1020,6 @@ body {
   cursor: pointer;
   transition: all 0.2s ease;
   padding-left: 0;
-}
-.back-button:hover {
-  background-color: #ffba0a;
 }
 
 .rocky-speech-container {

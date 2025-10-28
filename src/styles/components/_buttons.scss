@@ -18,9 +18,9 @@
   color: $color-neutral;
   text-decoration: none;
   
-  &:hover {
-    background-color: $color-secondary;
-  }
+  // &:hover {
+  //   background-color: $color-secondary;
+  // }
   
   &:disabled {
     opacity: 0.5;
@@ -34,9 +34,9 @@
   color: white;
   border-color: $color-primary;
   
-  &:hover {
-    background-color: color.adjust($color-primary, $lightness: -10%);
-  }
+  // &:hover {
+  //   background-color: color.adjust($color-primary, $lightness: -10%);
+  // }
 }
 
 .choose-file-button {
@@ -52,9 +52,9 @@
   flex-shrink: 0;
   border-radius: 18px;
   
-  &:hover {
-    background-color: color.adjust($color-quaternary-dark);
-  }
+  // &:hover {
+  //   background-color: color.adjust($color-quaternary-dark);
+  // }
 }
 
 .back-to-choose-button-preview {
@@ -96,7 +96,7 @@
   transition: all 0.2s ease;
   padding-left: 0;
   
-  &:hover {
-    background-color: $color-secondary;
-  }
+  // &:hover {
+  //   background-color: $color-secondary;
+  // }
 }
