@@ -2,7 +2,7 @@ import { useMemo, useState, useCallback, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import Stepper, { Step } from "../components/Stepper";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../lib/api";
 import type {
   Choice,
@@ -113,7 +113,7 @@ export default function RandomQuestionsStepper({
   nextButtonText = "Next",
   type = "existing",
 }: RandomQuestionsStepperProps) {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { getToken } = useAuth();
   const [question, setQuestion] = useState<QuestionData | null>(null);
   const [selected, setSelected] = useState<string | null>(null);
