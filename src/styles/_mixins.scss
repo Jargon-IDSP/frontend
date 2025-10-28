@@ -2,12 +2,12 @@
 
 // Page Layout Mixin - Consistent across all pages
 @mixin page-layout {
-  width: 100%;
-  max-width: 480px;
+  width: 100vw;
+  max-width: min(480px, 100vw);
   margin: 0 auto;
-  padding: $spacing-md;
-  padding-bottom: calc(70px + #{$spacing-md}); // Navbar height + spacing
-  min-height: calc(100vh - 70px); // Full viewport minus navbar
+  padding: 0 $spacing-md; 
+  padding-bottom: calc(70px + #{$spacing-md}); 
+  min-height: calc(100vh - 70px); 
   box-sizing: border-box;
 }
 
