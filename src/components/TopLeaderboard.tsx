@@ -1,78 +1,55 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useLeaderboard } from "../hooks/useLeaderboard";
-import { getUserDisplayName } from "../utils/userHelpers";
 import rockyYellowLogo from "/rockyYellow.svg";
 
 const TopLeaderboard: React.FC = () => {
   const navigate = useNavigate();
 
-  // Use shared leaderboard hook
-  const { data: users = [], isLoading, error, refetch } = useLeaderboard();
-
-  // Get only top 3 users
-  const topUsers = users.slice(0, 3);
-
-  if (isLoading) {
-    return (
-      <div className="top-leaderboard">
-        <h2 className="leaderboard-title">Leaderboard</h2>
-        <div className="leaderboard-content">
-          <p>Loading leaderboard...</p>
-        </div>
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="top-leaderboard">
-        <h2 className="leaderboard-title">Leaderboard</h2>
-        <div className="leaderboard-content">
-          <p className="error-text">
-            {error instanceof Error
-              ? error.message
-              : "Unable to load leaderboard"}
-          </p>
-          <button className="btn btn-primary" onClick={() => refetch()}>
-            Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="top-leaderboard">
-      <h2 className="leaderboard-title">Leaderboard</h2>
-      <div className="leaderboard-content">
-        {topUsers.length > 0 ? (
-          <div className="podium-container">
-            {topUsers.map((user, index) => (
-              <div
-                key={user.id}
-                className={`podium-item rank-${index + 1} clickable-card`}
-                onClick={() => navigate("/leaderboard")}
-              >
-                <div className="rocky-avatar">
-                  <img
-                    src={rockyYellowLogo}
-                    alt="Rocky"
-                    className={`rocky-logo rank-${index + 1}`}
-                  />
-                </div>
-                <div className="user-name">{getUserDisplayName(user)}</div>
-                <div className="podium-block">
-                  <div className="rank-label">
-                    {index === 0 ? "1st" : index === 1 ? "2nd" : "3rd"}
-                  </div>
-                </div>
-              </div>
-            ))}
+      <h2 className="leaderboard-title">Leaderboards</h2>
+      <div className="leaderboard-content-new">
+        <div className="left-section">
+          <div className="rocky-character-section">
+            <img
+              src={rockyYellowLogo}
+              alt="Rocky"
+              className="rocky-character-image"
+            />
           </div>
-        ) : (
-          <p>No users found</p>
-        )}
+          
+          <div className="podium-section">
+            <div className="first-place-podium">
+              <div className="podium-label">1st</div>
+            </div>
+          </div>
+        </div>
+        
+        <div className="message-buttons-section">
+          <div className="motivational-message">
+            <p className="message-text">
+              Rocky wants you to be number 1!
+            </p>
+            <p className="message-text-2">
+              Stay on top of your learning and be top the leaderboard next week!
+            </p>
+          </div>
+          
+          <div className="action-buttons">
+            <button
+              className="btn btn-leaderboard"
+              onClick={() => navigate("/leaderboard")}
+            >
+              Check Leaderboard
+            </button>
+            <button
+              className="btn btn-continue-learning"
+              onClick={() => navigate("/learning")}
+            >
+              Continue Learning
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );
