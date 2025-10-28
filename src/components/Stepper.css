@@ -1,8 +1,8 @@
-/* Layout */
+Layout
 .rb-stepper { display: flex; flex-direction: column; gap: 1rem; }
 
-/* Pills row */
-.rb-stepper-header { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+Pills row */
+/* .rb-stepper-header { display: flex; gap: 0.5rem; flex-wrap: wrap; }
 .rb-pill {
   padding: 0.25rem 0.6rem;
   border-radius: 999px;
