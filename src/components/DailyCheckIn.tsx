@@ -7,7 +7,7 @@ function TickBox({ isChecked, label }: { isChecked: boolean; label: string }) {
   return (
     <div className="tick-box">
       <span className="tick-box-label">{label}</span>
-      <div className={`tick-box-circle ${isChecked ? 'checked' : ''}`}>
+      <div className={`tick-box-circle ${isChecked ? "checked" : ""}`}>
         {isChecked && <span className="tick-box-checkmark">✓</span>}
       </div>
     </div>
@@ -32,7 +32,11 @@ export default function DailyCheckIn() {
     return result.data?.daysActive || [];
   };
 
-  const { data: daysActive = [], isLoading, error } = useQuery({
+  const {
+    data: daysActive = [],
+    isLoading,
+    error,
+  } = useQuery({
     queryKey: ["weeklyStats"],
     queryFn: fetchWeeklyStats,
     staleTime: 5 * 60 * 1000,

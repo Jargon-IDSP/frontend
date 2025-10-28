@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   useParams,
   useSearchParams,
@@ -19,6 +20,7 @@ export default function Terms() {
     category?: string;
   }>();
   const [searchParams] = useSearchParams();
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   const {
     language,
@@ -64,6 +66,23 @@ export default function Terms() {
   const isEmpty = terms.length === 0;
   const showLoading = !data && !error;
 
+  // Simulate progress while loading
+  useEffect(() => {
+    if (showLoading) {
+      setLoadingProgress(0);
+      const interval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          return prev + 10;
+        });
+      }, 200);
+
+      return () => clearInterval(interval);
+    } else if (data) {
+      setLoadingProgress(100);
+    }
+  }, [showLoading, data]);
+
   return (
     <div style={{ padding: "2rem" }}>
       <button onClick={() => navigate(-1)} style={{ marginBottom: "1rem" }}>
@@ -71,6 +90,41 @@ export default function Terms() {
       </button>
 
       <h1>{type === "existing" ? "Red Seal" : "Custom"} Terms</h1>
+
+      {/* Progress Bar */}
+      {showLoading && (
+        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              backgroundColor: "#e5e7eb",
+              borderRadius: "9999px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${loadingProgress}%`,
+                backgroundColor: "#fe4d13",
+                transition: "width 0.3s ease-in-out",
+                borderRadius: "9999px",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: "0.5rem",
+              textAlign: "center",
+              fontSize: "0.875rem",
+              color: "#666",
+            }}
+          >
+            Loading terms... {loadingProgress}%
+          </div>
+        </div>
+      )}
 
       {error && (
         <div
@@ -84,18 +138,6 @@ export default function Terms() {
         >
           <strong>Error loading terms</strong>
           <p style={{ margin: "0.5rem 0 0 0" }}>{error}</p>
-        </div>
-      )}
-
-      {showLoading && (
-        <div
-          style={{
-            padding: "3rem 2rem",
-            textAlign: "center",
-            color: "#666",
-          }}
-        >
-          <p style={{ margin: 0, fontSize: "1rem" }}>Loading terms...</p>
         </div>
       )}
 

@@ -42,7 +42,7 @@ export default function TermCard({
         </div>
         {!isEnglish && term.nativeTerm && (
           <div
-            style={{ color: "#0066cc", fontWeight: "500", fontSize: "1.1rem" }}
+            style={{ color: "#fe4d13", fontWeight: "500", fontSize: "1.1rem" }}
           >
             <strong style={{ textTransform: "capitalize" }}>{language}:</strong>{" "}
             {term.nativeTerm}
@@ -55,7 +55,7 @@ export default function TermCard({
           <strong>Definition (English):</strong> {term.definition}
         </div>
         {!isEnglish && term.nativeDefinition && (
-          <div style={{ color: "#0066cc" }}>
+          <div style={{ color: "#fe4d13" }}>
             <strong style={{ textTransform: "capitalize" }}>
               Definition ({language}):
             </strong>{" "}
