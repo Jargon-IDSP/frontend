@@ -8,7 +8,7 @@ import Profile from '../assets/icons/navbar/standard/profileIcon.svg';
 import Home from '../assets/icons/navbar/standard/homeIcon.svg';
 
 // Bold icons
-import AIB from '../assets/icons/navbar/bold/aiIconB.svg';
+// import AIB from '../assets/icons/navbar/bold/aiIconB.svg';
 import CourseB from '../assets/icons/navbar/bold/courseIconB.svg';
 import LeaderboardB from '../assets/icons/navbar/bold/leaderBoardIconB.svg';
 import ProfileB from '../assets/icons/navbar/bold/profileIconB.svg';
@@ -22,7 +22,7 @@ export default function NavBar() {
   const navItems = [
     { path: '/', icon: Home, iconBold: HomeB, alt: 'Home' },
     { path: '/learning', icon: Course, iconBold: CourseB, alt: 'Course' },
-    { className: 'nav-item-ai', path: '/documents', icon: AI, iconBold: AIB, alt: 'AI' },
+    { className: 'nav-item-ai', path: '/documents', icon: AI, iconBold: AI, alt: 'AI' },
     { path: '/leaderboard', icon: Leaderboard, iconBold: LeaderboardB, alt: 'Leaderboard' },
     { path: '/profile', icon: Profile, iconBold: ProfileB, alt: 'Profile' },
   ];

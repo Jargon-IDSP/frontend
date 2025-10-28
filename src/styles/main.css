@@ -159,6 +159,7 @@ body {
   justify-content: center;
   height: 100%;
   padding: 0.25rem;
+  margin: 0 0.5rem;
   border: none;
   background: none;
   cursor: pointer;
@@ -175,8 +176,11 @@ body {
 }
 .navbar .nav-items .nav-item.nav-item-ai {
   background-color: #ffba0a;
-  margin: 0.25rem;
-  border-radius: 0.5rem;
+  border-radius: 10px;
+  padding: 8px;
+}
+.navbar .nav-items .nav-item.nav-item-ai img {
+  display: block;
 }
 .navbar .nav-items .nav-item.nav-item-ai:hover {
   background-color: rgba(255, 186, 10, 0.5);
@@ -683,7 +687,7 @@ body {
   font-size: 28px;
   font-weight: 700;
   color: #652a15;
-  margin-bottom: 1.5rem;
+  margin: 3rem 0 1.5rem 0;
   text-align: left;
 }
 
