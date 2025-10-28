@@ -11,18 +11,15 @@ export interface Level {
 
 export interface Term {
   id: string;
-  term: {
-    english: string;
-    [key: string]: string;
-  };
-  definition: {
-    english: string;
-    [key: string]: string;
-  };
+  term: string;
+  definition: string;
+  nativeTerm?: string;
+  nativeDefinition?: string;
   industry?: string;
+  industry_id?: number | null;
   level?: string;
-  industry_id?: number;
   level_id?: number;
+  language?: string;
 }
 
 export interface CustomFlashcard
