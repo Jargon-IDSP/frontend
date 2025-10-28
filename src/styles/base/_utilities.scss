@@ -1,10 +1,14 @@
 @use '../variables' as *;
 
-// Layout utilities
+// Container - Consistent mobile-first layout
 .container {
-  max-width: 480px; 
-  margin-left: auto;
-  margin-right: auto;
+  width: 100%;
+  max-width: 480px;
+  margin: 0 auto;
+  padding: $spacing-md;
+  padding-bottom: calc(70px + #{$spacing-md}); // Navbar height + spacing
+  min-height: calc(100vh - 70px); // Full viewport minus navbar
+  box-sizing: border-box;
 }
 
 // Spacing utilities
@@ -40,22 +44,3 @@
 // Color utilities
 .text-red-500 { color: #ef4444; }
 .border-red-500 { border-color: #ef4444; }
-
-// Page width constraints
-.home-page,
-.documents-page,
-.page-title,
-.back-button {
-  max-width: 100%;
-  overflow-x: hidden;
-}
-
-// Card constraints
-.word-of-the-day-card,
-.welcome-section,
-.documents-section,
-.ocr-section {
-  max-width: 100%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-}

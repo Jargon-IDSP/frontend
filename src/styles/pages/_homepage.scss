@@ -1,9 +1,9 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Home Page
+// Home Page - Apply consistent layout
 .home-page {
-  height: 100%;
+  @include page-layout;
 }
 
 // Top Header Section
@@ -11,9 +11,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: $spacing-md;
-  padding-left: 0;
   margin-bottom: $spacing-lg;
+  gap: $spacing-md;
 }
 
 .welcome-text-section {
@@ -33,16 +32,22 @@
   }
 }
 
-// Welcome Section
-.welcome-section {
-  text-align: center;
-  margin-bottom: $spacing-lg;
+.rocky-logo-section {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
 
-  .welcome-subtitle {
-    font-size: $font-size-body;
-    color: $color-tertiary;
-    margin-bottom: $spacing-lg;
+  .rocky-logo {
+    width: 50px;
+    height: 50px;
   }
+}
+
+// Welcome Section - Container for all cards
+.welcome-section {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
 }
 
 // Quick Actions
@@ -63,9 +68,7 @@
 
 // Daily Check-in
 .daily-checkin {
-  &-card {
-    width: 100%;
-  }
+  @include card-base;
 
   &-title {
     @include card-title;
@@ -73,6 +76,7 @@
   }
 }
 
+// Tick Box Component
 .tick-box {
   display: flex;
   flex-direction: column;
@@ -128,14 +132,12 @@
 // Top Leaderboard
 .top-leaderboard {
   @include card-base;
-}
 
-.leaderboard {
-  &-title {
+  .leaderboard-title {
     @include card-title;
   }
 
-  &-content {
+  .leaderboard-content {
     @include card-content;
     
     p {
@@ -243,14 +245,12 @@
 // Upload File Card
 .upload-file-card {
   @include card-base;
-}
 
-.upload {
-  &-title {
+  .upload-title {
     @include card-title;
   }
 
-  &-content {
+  .upload-content {
     @include card-content;
     position: relative;
     min-height: 150px;
@@ -259,44 +259,46 @@
 
 // Word of the Day
 .word-of-the-day {
+  @include card-base;
+
   &-title {
     @include card-title;
     margin-bottom: $spacing-md;
   }
 
   &-card {
-    @include card-base;
     border-radius: $spacing-sm;
     padding: $spacing-lg;
     position: relative;
     overflow: hidden;
     box-sizing: border-box;
+
+    .today-term-card-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .word-card-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+      box-sizing: border-box;
+      
+      h3 {
+        font-size: $font-size-h3;
+        font-weight: $font-weight-bold;
+        color: $color-neutral;
+        margin: 0 0 $spacing-sm 0;
+      }
+    }
   }
 }
 
-.today-term-card-image {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-}
-
-.word-card-content {
-  position: relative;
-  z-index: 2;
-  text-align: center;
-  box-sizing: border-box;
-  
-  h3 {
-    font-size: $font-size-h3;
-    font-weight: $font-weight-bold;
-    color: $color-neutral;
-    margin: 0 0 $spacing-sm 0;
-  }
-}
-
+// Word Components (nested under word-of-the-day context)
 .word {
   &-term {
     font-size: 36px;
@@ -345,31 +347,29 @@
 // Start Learning Card
 .start-learning-card {
   @include card-base;
-}
 
-.learning {
-  &-image {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  &-title {
+  .learning-title {
     @include card-title;
   }
 
-  &-content {
+  .learning-content {
     @include card-content;
   }
   
-  &-description {
+  .learning-description {
     font-size: $font-size-body;
     color: $color-tertiary;
     margin-bottom: $spacing-lg;
   }
   
-  &-button {
+  .learning-button {
     margin-top: $spacing-xs;
+  }
+
+  .learning-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
   }
 }
 

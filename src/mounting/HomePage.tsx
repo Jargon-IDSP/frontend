@@ -9,6 +9,7 @@ export default function HomePage() {
       <SignedOut>
         <SplashPage />
       </SignedOut>
+      
       <SignedIn>
         <LoggedInHome />
       </SignedIn>
