@@ -3,11 +3,21 @@ import { useQuery } from "@tanstack/react-query";
 import { BACKEND_URL } from "../lib/api";
 import type { WeeklyStatsResponse } from "@/types/dailyCheckin";
 
+function TickBox({ isChecked, label }: { isChecked: boolean; label: string }) {
+  return (
+    <div className="tick-box">
+      <span className="tick-box-label">{label}</span>
+      <div className={`tick-box-circle ${isChecked ? 'checked' : ''}`}>
+        {isChecked && <span className="tick-box-checkmark">✓</span>}
+      </div>
+    </div>
+  );
+}
+
 export default function DailyCheckIn() {
   const { getToken } = useAuth();
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
-  // Fetch function
   const fetchWeeklyStats = async (): Promise<string[]> => {
     const token = await getToken();
     const response = await fetch(`${BACKEND_URL}/weekly-tracking/current`, {
@@ -22,45 +32,37 @@ export default function DailyCheckIn() {
     return result.data?.daysActive || [];
   };
 
-  // Use TanStack Query
-  const {
-    data: daysActive = [],
-    isLoading,
-    error,
-  } = useQuery({
+  const { data: daysActive = [], isLoading, error } = useQuery({
     queryKey: ["weeklyStats"],
     queryFn: fetchWeeklyStats,
-    staleTime: 5 * 60 * 1000, // Consider data fresh for 5 minutes
+    staleTime: 5 * 60 * 1000,
   });
 
   if (isLoading) {
-    return <div>Loading check-in...</div>;
+    return (
+      <div className="daily-checkin-card">
+        <h3 className="daily-checkin-title">Daily Check-in</h3>
+        <p className="loading-text">Loading check-in...</p>
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error loading check-in: {error.message}</div>;
+    return (
+      <div className="daily-checkin-card">
+        <h3 className="daily-checkin-title">Daily Check-in</h3>
+        <p className="error-text">Error loading check-in</p>
+      </div>
+    );
   }
 
-  console.log("Days active:", daysActive);
-  console.log("Current day abbreviations:", days);
-
   return (
-    <div>
-      <h3>Daily Check-in</h3>
-      <div style={{ display: "flex", gap: "1rem" }}>
-        {days.map((day) => {
-          const isChecked = daysActive.includes(day);
-          console.log(`Day: ${day}, Checked: ${isChecked}`);
-          return (
-            <label
-              key={day}
-              style={{ display: "flex", alignItems: "center", gap: "0.25rem" }}
-            >
-              <input type="checkbox" checked={isChecked} readOnly disabled />
-              <span>{day}</span>
-            </label>
-          );
-        })}
+    <div className="daily-checkin-card">
+      <h3 className="daily-checkin-title">Daily Check-in</h3>
+      <div className="tick-box-container">
+        {days.map((day) => (
+          <TickBox key={day} label={day} isChecked={daysActive.includes(day)} />
+        ))}
       </div>
     </div>
   );

@@ -1,38 +1,35 @@
 @use 'variables' as *;
 
-// Mobile-first mixins
-@mixin mobile-only {
-  @media (max-width: $mobile-max) {
-    @content;
-  }
-}
-
-@mixin tablet-up {
-  @media (min-width: $tablet-min) {
-    @content;
-  }
-}
-
-@mixin desktop-up {
-  @media (min-width: $desktop-min) {
-    @content;
-  }
-}
-
-// Basic container mixin
-@mixin container-mobile {
+@mixin container-mobile-app {
   width: 100%;
-  max-width: 100%;
+  max-width: 430px;
   margin: 0 auto;
   padding: 0 $spacing-md;
-  
-  @include tablet-up {
-    max-width: 768px;
-    padding: 0 $spacing-lg;
-  }
-  
-  @include desktop-up {
-    max-width: 1024px;
-    padding: 0 $spacing-lg;
-  }
+}
+
+// Shared Mixins
+@mixin card-base {
+  margin-bottom: $spacing-lg;
+}
+
+@mixin card-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+  margin-bottom: $spacing-xs;
+  text-align: left;
+}
+
+@mixin card-content {
+  background-color: $color-quaternary-light;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  padding: $spacing-sm;
+  text-align: center;
+}
+
+@mixin text-overflow {
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
 }

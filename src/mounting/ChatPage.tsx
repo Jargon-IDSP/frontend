@@ -135,9 +135,9 @@ export default function ChatPage() {
 
   return (
     <div style={{ padding: "2rem", maxWidth: 900, margin: "0 auto" }}>
-      <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
+      {/* <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
         ← Back to Dashboard
-      </button>
+      </button> */}
 
       <h1 style={{ marginBottom: 4 }}>Chat Page</h1>
       {healthData?.model && (

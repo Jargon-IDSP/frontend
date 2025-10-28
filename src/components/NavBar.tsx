@@ -11,12 +11,12 @@ export default function NavBar() {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', label: 'Home', icon: <img src={Home} alt="Home" /> },
-    { path: '/documents', label: 'AI', icon: <img src={AI} alt="AI" /> },
-    { path: '/learning', label: 'Learn', icon: <img src={Course} alt="Course" /> },
-    { path: '/leaderboard', label: 'Leaderboard', icon: <img src={Leaderboard} alt="Leaderboard" /> },
-    { path: '/profile', label: 'Profile', icon: <img src={Profile} alt="Profile" /> },
-    { path: '/chat', label: 'Chat', icon: '💬' },
+    { path: '/', icon: <img src={Home} alt="Home" /> },
+    { path: '/learning', icon: <img src={Course} alt="Course" /> },
+    { className: 'nav-item-ai', path: '/documents', icon: <img src={AI} alt="AI" /> },
+    { path: '/leaderboard', icon: <img src={Leaderboard} alt="Leaderboard" /> },
+    { path: '/profile', icon: <img src={Profile} alt="Profile" /> },
+    // { path: '/chat', label: 'Chat', icon: '💬' },
   ];
 
   return (
@@ -26,11 +26,11 @@ export default function NavBar() {
           {navItems.map((item) => (
             <button
               key={item.path}
-              className={`nav-item ${location.pathname === item.path ? 'active' : ''}`}
+              className={`nav-item ${item.className || ''} ${location.pathname === item.path ? 'active' : ''}`}
               onClick={() => navigate(item.path)}
             >
               <span className="nav-icon">{item.icon}</span>
-              <span className="nav-label">{item.label}</span>
+              {/* <span className="nav-label">{item.label}</span> */}
             </button>
           ))}
         </div>

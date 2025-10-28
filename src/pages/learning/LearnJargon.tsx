@@ -5,9 +5,9 @@ export default function LearningHub() {
 
   return (
     <div style={{ padding: '2rem' }}>
-      <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
+      {/* <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
         ← Back to Dashboard
-      </button>
+      </button> */}
       
       <h1>Learn Trades Jargon</h1>
 

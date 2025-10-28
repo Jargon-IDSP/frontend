@@ -89,9 +89,9 @@ export default function DocumentsPage() {
 
   return (
     <div className="container">
-      <button onClick={() => navigate("/")} className="back-button">
+      {/* <button onClick={() => navigate("/")} className="back-button">
         ← Back to Dashboard
-      </button>
+      </button> */}
 
       <h1 className="page-title">AI Translate & Lesson</h1>
 

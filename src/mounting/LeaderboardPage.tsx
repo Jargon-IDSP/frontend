@@ -41,9 +41,9 @@ const LeaderboardPage: React.FC = () => {
 
   return (
     <div style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto" }}>
-      <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
+      {/* <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
         ← Back to Dashboard
-      </button>
+      </button> */}
       <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
         🏆 Leaderboard
       </h1>

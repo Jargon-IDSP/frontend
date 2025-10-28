@@ -1,0 +1,14 @@
+@use '../variables' as *;
+
+.text {
+  &-center { text-align: center; }
+  &-sm { font-size: $font-size-label; }
+  &-base { font-size: $font-size-body; }
+  &-lg { font-size: $font-size-h3; }
+}
+
+.font {
+  &-bold { font-weight: $font-weight-bold; }
+  &-medium { font-weight: $font-weight-medium; }
+  &-light { font-weight: $font-weight-light; }
+}

@@ -23,7 +23,7 @@ export default function AvatarPage() {
         margin: "0 auto"
       }}>
 
-        <div style={{ position: "absolute", top: 0, left: -120 }}>
+        <div style={{ position: "absolute", top: 30, left: 25 }}>
           <HappyRocky />
         </div>
         
