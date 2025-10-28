@@ -36,7 +36,7 @@ Pills row */
   cursor: pointer;
   color: #111827;
 }
-.rb-btn:hover { background: #f9fafb; }
+/* .rb-btn:hover { background: #f9fafb; } */
 .rb-btn:disabled { opacity: 0.5; cursor: not-allowed; }
 
 /* --- Dark mode fallback --- */
@@ -45,5 +45,5 @@ Pills row */
   .rb-pill.active { border-color: #818cf8; background: #1f2937; color: #ffffff; }
   .rb-step { border-color: #374151; background: #0b0f14; color: #e5e7eb; }
   .rb-btn { border-color: #374151; background: #0b0f14; color: #e5e7eb; }
-  .rb-btn:hover { background: #111827; }
+  /* .rb-btn:hover { background: #111827; } */
 }
