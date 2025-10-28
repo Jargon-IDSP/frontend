@@ -1,11 +1,11 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import rockyLogo from "/rocky.svg";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 
 const LeaderboardPage: React.FC = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const {
     data: users = [],
     isLoading: loading,

@@ -1,12 +1,12 @@
 import { useEffect, useRef, useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../lib/api";
 import type { ChatHealthResponse, ChatRequest } from "@/types/chatPage";
 
 export default function ChatPage() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const { getToken } = useAuth();
 
   // UI state
