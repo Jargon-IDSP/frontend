@@ -64,17 +64,26 @@ export default function WordOfTheDay() {
     const result: FlashcardResponse = await response.json();
     const flashcard = result.data;
 
-    // The API returns the flashcard in the user's language
-    // We need to show both English and the user's language
-    const englishTerm = flashcard.term.english;
-    const translatedTerm =
-      userLanguage !== "english" && flashcard.term[userLanguage]
-        ? flashcard.term[userLanguage]
-        : undefined;
+    // Handle both flat and nested structures
+    const isNestedStructure = typeof flashcard.term === "object";
+
+    const englishTerm = isNestedStructure
+      ? (flashcard.term as any).english
+      : flashcard.term;
+
+    const translatedTerm = isNestedStructure
+      ? userLanguage !== "english" && (flashcard.term as any)[userLanguage]
+        ? (flashcard.term as any)[userLanguage]
+        : undefined
+      : (flashcard as any).nativeTerm || undefined;
+
+    const englishDefinition = isNestedStructure
+      ? (flashcard.definition as any).english
+      : flashcard.definition;
 
     const wordData: WordOfTheDayData = {
       term: englishTerm,
-      definition: flashcard.definition.english,
+      definition: englishDefinition,
       termTranslated: translatedTerm,
       industry: flashcard.industry?.name,
       level: flashcard.level?.name,
