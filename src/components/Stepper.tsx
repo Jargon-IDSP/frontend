@@ -1,5 +1,5 @@
 import { Children, type ReactElement, type ReactNode, isValidElement, useMemo, useState } from "react";
-import "./Stepper.css";
+// import "./Stepper.css";
 
 type StepperProps = {
   initialStep?: number;
