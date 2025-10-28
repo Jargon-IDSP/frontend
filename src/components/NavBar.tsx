@@ -1,9 +1,18 @@
 import { useNavigate, useLocation } from 'react-router-dom';
-import AI from '../assets/icons/aiIcon.svg';
-import Course from '../assets/icons/courseIcon.svg';
-import Leaderboard from '../assets/icons/leaderBoardIcon.svg';
-import Profile from '../assets/icons/profileIcon.svg';
-import Home from '../assets/icons/homeIcon.svg';
+
+// Standard icons
+import AI from '../assets/icons/navbar/standard/aiIcon.svg';
+import Course from '../assets/icons/navbar/standard/courseIcon.svg';
+import Leaderboard from '../assets/icons/navbar/standard/leaderBoardIcon.svg';
+import Profile from '../assets/icons/navbar/standard/profileIcon.svg';
+import Home from '../assets/icons/navbar/standard/homeIcon.svg';
+
+// Bold icons
+import AIB from '../assets/icons/navbar/bold/aiIconB.svg';
+import CourseB from '../assets/icons/navbar/bold/courseIconB.svg';
+import LeaderboardB from '../assets/icons/navbar/bold/leaderBoardIconB.svg';
+import ProfileB from '../assets/icons/navbar/bold/profileIconB.svg';
+import HomeB from '../assets/icons/navbar/bold/homeIconB.svg';
 
 
 export default function NavBar() {
@@ -11,28 +20,32 @@ export default function NavBar() {
   const location = useLocation();
 
   const navItems = [
-    { path: '/', icon: <img src={Home} alt="Home" /> },
-    { path: '/learning', icon: <img src={Course} alt="Course" /> },
-    { className: 'nav-item-ai', path: '/documents', icon: <img src={AI} alt="AI" /> },
-    { path: '/leaderboard', icon: <img src={Leaderboard} alt="Leaderboard" /> },
-    { path: '/profile', icon: <img src={Profile} alt="Profile" /> },
-    // { path: '/chat', label: 'Chat', icon: '💬' },
+    { path: '/', icon: Home, iconBold: HomeB, alt: 'Home' },
+    { path: '/learning', icon: Course, iconBold: CourseB, alt: 'Course' },
+    { className: 'nav-item-ai', path: '/documents', icon: AI, iconBold: AIB, alt: 'AI' },
+    { path: '/leaderboard', icon: Leaderboard, iconBold: LeaderboardB, alt: 'Leaderboard' },
+    { path: '/profile', icon: Profile, iconBold: ProfileB, alt: 'Profile' },
   ];
 
   return (
     <nav className="navbar">
       <div className="container">
         <div className="nav-items">
-          {navItems.map((item) => (
-            <button
-              key={item.path}
-              className={`nav-item ${item.className || ''} ${location.pathname === item.path ? 'active' : ''}`}
-              onClick={() => navigate(item.path)}
-            >
-              <span className="nav-icon">{item.icon}</span>
-              {/* <span className="nav-label">{item.label}</span> */}
-            </button>
-          ))}
+          {navItems.map((item) => {
+            const isActive = location.pathname === item.path;
+
+            return (
+              <button
+                key={item.path}
+                className={`nav-item ${item.className || ''} ${isActive ? 'active' : ''}`}
+                onClick={() => navigate(item.path)}
+              >
+                <span className="nav-icon">
+                  <img src={isActive ? item.iconBold : item.icon} alt={item.alt} />
+                </span>
+              </button>
+            );
+          })}
         </div>
       </div>
     </nav>
