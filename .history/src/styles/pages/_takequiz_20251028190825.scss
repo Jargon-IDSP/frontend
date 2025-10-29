@@ -1,0 +1,125 @@
+// Quiz Completion Styles
+.quiz-completion {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+
+    &__title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 2rem;
+        color: #ff6b35;
+    }
+
+    &__card {
+        background-color: orange;
+        padding: 2rem;
+        border-radius: 12px;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    &__score {
+        font-size: 1.5rem;
+        margin-bottom: 1rem;
+        color: #374151;
+    }
+
+    &__percentage {
+        font-size: 3rem;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+
+        &.excellent {
+            color: #10b981;
+        }
+
+        &.good {
+            color: #f59e0b;
+        }
+
+        &.needs-improvement {
+            color: #ef4444;
+        }
+    }
+
+    &__progress-bar {
+        width: 100%;
+        height: 20px;
+        background-color: #e5e7eb;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: 1rem;
+
+        &-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+
+            &.excellent {
+                background-color: #10b981;
+            }
+
+            &.good {
+                background-color: #f59e0b;
+            }
+
+            &.needs-improvement {
+                background-color: #ef4444;
+            }
+        }
+    }
+
+    &__emoji {
+        font-size: 4rem;
+        margin-bottom: 1rem;
+    }
+
+    &__actions {
+        display: flex;
+        gap: 1rem;
+        justify-content: center;
+    }
+
+    &__button {
+        padding: 0.75rem 1.5rem;
+        border-radius: 25px; // Pill shape
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: 120px;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+
+        &--primary {
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+
+            &:hover {
+                background-color: #2563eb;
+            }
+        }
+
+        &--secondary {
+            background-color: rgba(
+                255,
+                255,
+                255,
+                0.9
+            ); // Cream/off-white background
+            color: #ff6b35; // Orange/coral text
+            border: 2px solid #ff6b35; // Orange border
+            font-weight: bold;
+
+            &:hover {
+                background-color: #ff6b35;
+                color: white;
+                transform: translateY(-2px);
+            }
+        }
+    }
+}

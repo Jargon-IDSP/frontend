@@ -1062,6 +1062,102 @@ button.back-button {
   background-color: red;
 }
 
+.quiz-completion {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+  text-align: center;
+}
+.quiz-completion__title {
+  font-size: 2.5rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  color: #ff6b35;
+}
+.quiz-completion__card {
+  background-color: orange;
+  padding: 2rem;
+  border-radius: 12px;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+}
+.quiz-completion__score {
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  color: #374151;
+}
+.quiz-completion__percentage {
+  font-size: 3rem;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+.quiz-completion__percentage.excellent {
+  color: #10b981;
+}
+.quiz-completion__percentage.good {
+  color: #f59e0b;
+}
+.quiz-completion__percentage.needs-improvement {
+  color: #ef4444;
+}
+.quiz-completion__progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: #e5e7eb;
+  border-radius: 10px;
+  overflow: hidden;
+  margin-bottom: 1rem;
+}
+.quiz-completion__progress-bar-fill {
+  height: 100%;
+  transition: width 0.5s ease;
+}
+.quiz-completion__progress-bar-fill.excellent {
+  background-color: #10b981;
+}
+.quiz-completion__progress-bar-fill.good {
+  background-color: #f59e0b;
+}
+.quiz-completion__progress-bar-fill.needs-improvement {
+  background-color: #ef4444;
+}
+.quiz-completion__emoji {
+  font-size: 4rem;
+  margin-bottom: 1rem;
+}
+.quiz-completion__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+.quiz-completion__button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 120px;
+}
+.quiz-completion__button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+.quiz-completion__button--primary {
+  background-color: #3b82f6;
+  color: white;
+}
+.quiz-completion__button--primary:hover {
+  background-color: #2563eb;
+}
+.quiz-completion__button--secondary {
+  background-color: #6b7280;
+  color: white;
+}
+.quiz-completion__button--secondary:hover {
+  background-color: #4b5563;
+}
+
 .btn, .choose-file-button, .btn-primary {
   display: inline-flex;
   align-items: center;

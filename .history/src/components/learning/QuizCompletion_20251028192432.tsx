@@ -61,8 +61,8 @@ export default function QuizCompletion({
         <div className='quiz-completion'>
             <h1 className='quiz-completion__title'>
                 Awesome! <br />
-                You completed your quiz
             </h1>
+            <h3>You completed your quiz</h3>
 
             <div className='quiz-completion__card'>
                 <div className='quiz-completion__emoji'>{getEmoji()}</div>
