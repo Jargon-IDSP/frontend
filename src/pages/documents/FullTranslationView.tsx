@@ -79,14 +79,7 @@ export default function FullTranslationView() {
 
   if (processing) {
     return (
-      <div
-        style={{
-          maxWidth: "1200px",
-          margin: "0 auto",
-          padding: "2rem",
-          textAlign: "center",
-        }}
-      >
+      <div className="fullTranslationOverview">
         <h2 style={{ fontSize: "1.5rem", marginBottom: "1rem" }}>Loading...</h2>
         <p style={{ color: "#666", marginBottom: "0.5rem" }}>
           Your document is being translated.
@@ -163,17 +156,11 @@ export default function FullTranslationView() {
     korean: "Korean",
   };
 
+  // This section for styling
   return (
-    <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
-      <div style={{ marginBottom: "2rem" }}>
-        <div
-          style={{
-            display: "flex",
-            gap: "1rem",
-            marginBottom: "1rem",
-            flexWrap: "wrap",
-          }}
-        >
+    <div className="fullTranslationOverview">
+      <div>
+        <div>
           <button onClick={() => navigate(`/study/${id}`)}>
             ← Back to Study Materials
           </button>
