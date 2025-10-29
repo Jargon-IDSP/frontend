@@ -2,6 +2,7 @@ import type { Term } from '../../types/learning';
 import FlippableTermCard from './FlippableTermCard';
 import backIcon from "../../assets/icons/backButton.svg";
 import nextIcon from "../../assets/icons/nextButton.svg";
+import { BACKEND_URL } from '../../lib/api';
 
 interface FlashcardsCarouselProps {
   terms: Term[];
@@ -53,7 +54,7 @@ export default function FlashcardsCarousel({
         
         {currentIndex === terms.length - 1 ? (
           <button
-            onClick={() => window.location.href = "http://localhost:5173/learning/documents/cmha47br90001ztmchu5awy17/quizzes"}
+            onClick={() => window.location.href = BACKEND_URL || "http://localhost:5173/learning/documents/cmha47br90001ztmchu5awy17/quizzes"}
             className="flashcards-carousel-button flashcards-carousel-finish"
           >
             Finish
