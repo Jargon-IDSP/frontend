@@ -1058,6 +1058,84 @@ button.back-button {
   border-radius: 0.5rem;
 }
 
+.terms-page {
+  width: 100vw;
+  max-width: min(480px, 100vw);
+  margin: 0 auto;
+  padding: 0 1rem;
+  padding-bottom: calc(70px + 1rem);
+  min-height: calc(100vh - 70px);
+  box-sizing: border-box;
+  padding: 2.5rem;
+  padding-bottom: 0;
+}
+.terms-page-header {
+  margin-bottom: 0;
+}
+.terms-page-header button {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  background-color: transparent;
+}
+.terms-page-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #652a15;
+  margin-bottom: 1.5rem;
+}
+.terms-page-count {
+  color: #b2af97;
+  margin-bottom: 1rem;
+}
+.terms-page-progress {
+  margin: 1.5rem 0;
+}
+.terms-page-progress-bar-container {
+  width: 100%;
+  height: 8px;
+  background-color: #e5e7eb;
+  border-radius: 9999px;
+  overflow: hidden;
+}
+.terms-page-progress-bar-fill {
+  height: 100%;
+  background-color: #fe4d13;
+  transition: width 0.3s ease-in-out;
+  border-radius: 9999px;
+}
+.terms-page-progress-text {
+  margin-top: 0.5rem;
+  text-align: center;
+  font-size: 0.875rem;
+  color: #b2af97;
+}
+.terms-page-error {
+  background-color: #fee;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #fcc;
+  margin-top: 1rem;
+}
+.terms-page-error strong {
+  display: block;
+  margin-bottom: 0.25rem;
+}
+.terms-page-error p {
+  margin: 0;
+  color: #c40000;
+}
+.terms-page-content {
+  margin-top: 0;
+}
+.terms-page-empty {
+  padding: 1.5rem;
+}
+.terms-page-empty p {
+  color: #b2af97;
+  font-size: 16px;
+}
+
 .fullTranslationOverview {
   background-color: red;
 }
@@ -1230,4 +1308,168 @@ button.back-button {
 
 :global(.cl-userButtonPopoverCard) {
   z-index: 9999 !important;
+}
+
+.flip-card-container {
+  perspective: 1000px;
+  width: 100%;
+  max-width: 100%;
+  height: 350px;
+  margin: 0 auto;
+  cursor: pointer;
+}
+
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.6s;
+}
+.flip-card-inner.flipped {
+  transform: rotateY(180deg);
+}
+
+.flip-card-front,
+.flip-card-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  border-radius: 1rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.15);
+}
+
+.flip-card-front {
+  background: linear-gradient(135deg, #fffdf4 0%, #fff 100%);
+  border: 3px solid #ffba0a;
+}
+
+.flip-card-back {
+  background: linear-gradient(135deg, #f1eae8 0%, #fffdf4 100%);
+  border: 3px solid #6f2e17;
+  transform: rotateY(180deg);
+}
+
+.flip-card-content {
+  padding: 2.5rem;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.flip-card-industry {
+  background-color: #fe4d13;
+  color: white;
+  padding: 0.25rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+.flip-card-label {
+  font-size: 13px;
+  font-weight: 700;
+  color: #393939;
+  margin-bottom: 0.25rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.flip-card-term-text {
+  font-size: 28px;
+  font-weight: 700;
+  color: #652a15;
+  word-wrap: break-word;
+  line-height: 1.3;
+  margin-bottom: 1rem;
+}
+
+.flip-card-translation-text {
+  font-size: 24px;
+  font-weight: 600;
+  color: #652a15;
+  word-wrap: break-word;
+  line-height: 1.4;
+}
+
+.flashcards-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.flashcards-carousel-counter {
+  text-align: center;
+  font-size: 13px;
+  color: #b2af97;
+  font-weight: 600;
+}
+
+.flashcards-carousel-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+.flashcards-carousel-navigation {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.flashcards-carousel-button {
+  min-width: 60px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 700;
+}
+.flashcards-carousel-button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+.flashcards-carousel-button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+.flashcards-carousel-button img {
+  display: block;
+}
+.flashcards-carousel-button.flashcards-carousel-finish {
+  background-color: #fe4d13;
+  color: white;
+  min-width: 120px;
+}
+.flashcards-carousel-button.flashcards-carousel-finish:hover {
+  box-shadow: 0 4px 12px rgba(254, 77, 19, 0.3);
+}
+
+.flashcards-carousel-progress {
+  width: 100%;
+  max-width: 100%;
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+}
+.flashcards-carousel-progress-bar {
+  height: 100%;
+  background-color: #fe4d13;
+  transition: width 0.3s ease-in-out;
 }/*# sourceMappingURL=main.css.map */

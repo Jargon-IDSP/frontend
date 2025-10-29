@@ -2,20 +2,20 @@ import { useNavigate } from 'react-router-dom';
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import StudyTypeCard from '../../components/learning/StudyType';
 import readBook from '../../assets/readBook.png';
-import demoTermCard from '../../assets/demoTermCard.png';
+import demoTermCard from '../../assets/demoTermCard.png'
 import studyLaptop from '../../assets/studyLaptop.png';
 
 export default function DemoTakeQuiz() {
   const navigate = useNavigate();
   const quizId = 'cd81eda1-ea47-4b09-9ab1-d47284aefa0f';
-  const docId = 'cmha47br90001ztmchu5awy17';
+  const documentId = 'cmha47br90001ztmchu5awy17';
 
   const handleStartQuiz = () => {
     navigate(`/learning/custom/quiz/take?quizId=${quizId}`);
   };
 
   const handleTerminology = () => {
-    navigate(`/learning/documents/${docId}/terms`);
+    navigate(`/learning/documents/${documentId}/terms`);
   };
 
   return (
