@@ -62,7 +62,7 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
         </button>
       </div>
 
-      <p style={{ fontSize: '1.25rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+      <p style={{ fontSize: '14px', marginBottom: '2rem', lineHeight: '1.2' }}>
         {isTranslated && translatedText ? translatedText : text}
       </p>
     </div>
