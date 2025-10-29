@@ -54,7 +54,9 @@
 
 import React from 'react';
 import translateFileIcon from '../assets/icons/translateFileIcon.svg';
+import fileIconB from '../assets/icons/fileIconB.svg';
 import lessonIcon from '../assets/icons/lessonIcon.svg';
+import lessonIconB from '../assets/icons/lessonIconB.svg';
 import goBackIcon from '../assets/icons/goBackIcon.svg';
 
 interface DocumentNavProps {
@@ -74,7 +76,7 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
   onDocumentClick,
   onBackClick
 }) => {
-  return (
+return (
     <>
       <div className="top">
         <img src={goBackIcon} alt="back button" onClick={onBackClick} style={{ cursor: onBackClick ? 'pointer' : 'default' }} />
@@ -86,19 +88,18 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
           className={`demoLesson ${activeTab === 'lesson' ? 'active' : ''}`}
           onClick={onLessonClick}
         >
-          <img src={lessonIcon} alt="lesson icon" />
+          <img src={activeTab === 'lesson' ? lessonIcon : lessonIconB} alt="lesson icon" />
           Lesson
         </button>
         <button 
           className={`demoDocs ${activeTab === 'document' ? 'active' : ''}`}
           onClick={onDocumentClick}
         >
-          <img src={translateFileIcon} alt="document icon" />
+          <img src={activeTab === 'document' ? fileIconB : translateFileIcon } alt="document icon" />
           Document
         </button>
       </div>
     </>
   );
 };
-
 export default DocumentNav;
