@@ -19,3 +19,16 @@
 @use "components/buttons";
 @use "components/rocky-speech-bubble";
 @use "components/clerkUserButton";
+@use 'pages/homepage';
+@use 'pages/splash';
+@use 'pages/profile';
+@use 'pages/documents';
+@use 'pages/terms';
+@use 'pages/fullTranslate';
+
+// Import components
+@use 'components/buttons';
+@use 'components/rocky-speech-bubble';
+@use 'components/clerkUserButton';
+@use 'components/flippableCard';
+@use 'components/flashcardsCarousel';

@@ -280,13 +280,8 @@ export default function FilePreviewPage() {
       return await saveRes.json();
     },
     onSuccess: (data) => {
-      // Redirect immediately with uploading message
-      navigate("/documents/user", {
-        state: {
-          message: "Uploading document...",
-          documentId: data.document.id,
-        },
-      });
+      // Navigate directly to the quizzes page for the uploaded document
+      navigate(`/learning/documents/${data.document.id}/quizzes`);
     },
   });
 
