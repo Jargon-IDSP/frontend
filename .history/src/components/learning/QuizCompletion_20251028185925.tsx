@@ -60,8 +60,7 @@ export default function QuizCompletion({
     return (
         <div className='quiz-completion'>
             <h1 className='quiz-completion__title'>
-                Awesome! <br />
-                You completed your quiz
+                Awesome! You completed your quiz
             </h1>
 
             <div className='quiz-completion__card'>
