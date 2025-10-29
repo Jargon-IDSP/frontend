@@ -1,9 +1,11 @@
 import { useNavigate } from 'react-router-dom';
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
+import translateFileIcon from '../../assets/icons/translateFileIcon.svg';
 import StudyTypeCard from '../../components/learning/StudyType';
 import readBook from '../../assets/readBook.png';
 import demoTermCard from '../../assets/demoTermCard.png'
 import studyLaptop from '../../assets/studyLaptop.png';
+import lessonIcon from '../../assets/icons/lessonIcon.svg';
 
 export default function DemoTakeQuiz() {
   const navigate = useNavigate();
@@ -18,29 +20,39 @@ export default function DemoTakeQuiz() {
     navigate(`/learning/documents/${documentId}/terms`);
   };
 
+  const handleDemoDocs = () => {
+    navigate(`/documents/${documentId}/translation`);
+  };
+
   return (
-    <div className="demo">
+    <div className="container demo">
+      <div className="top">
     <img src={goBackIcon} alt="back button" />
-      <h1>level-2-acronyms.pdf</h1>
-      <h1>...</h1>
+      <h1>Level 2 Acronyms</h1>
+      <h2>...</h2>
+      </div>
 
-      <button>Lesson</button>
-      <button>Document</button>
+      <div className="switch-view">
+      <button className='demoLesson'><img src={lessonIcon} alt="file icon" />Lesson</button>
+      <button className='demoDocs' onClick={handleDemoDocs}><img src={translateFileIcon} alt="file icon" />Document</button>
+      </div>
 
-      <img src={demoTermCard} alt="Demo Term Card" />
+      <img className="demo-term-card" src={demoTermCard} alt="Demo Term Card" />
 
       <StudyTypeCard
         name="Terminology"
         img={readBook}
         start_button_text="Start Learning"
         onClick={handleTerminology}
+        color={"blue"}
       />    
 
       <StudyTypeCard
         name="Quiz"
         img={studyLaptop}
-        start_button_text="Start Quiz"
+        start_button_text="Start the Quiz"
         onClick={handleStartQuiz}
+        color={"red"}
       />
     </div>
   );

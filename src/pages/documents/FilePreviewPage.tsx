@@ -200,7 +200,7 @@
 
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
+// import { useAuth } from "@clerk/clerk-react"; // Commented out for demo
 import { useMutation } from "@tanstack/react-query";
 import fileIcon from "../../assets/icons/fileIcon.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
@@ -215,7 +215,7 @@ import type {
 export default function FilePreviewPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const { getToken } = useAuth();
+  // const { getToken } = useAuth(); // Commented out for demo
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 
   const fileInfo = location.state as FileInfo | null;
@@ -299,24 +299,28 @@ export default function FilePreviewPage() {
   };
 
   const handleUpload = async () => {
-    if (!fileInfo) {
-      return;
-    }
+    // Temporary hardcoded navigation for demo
+    navigate('/learning/documents/cmha47br90001ztmchu5awy17/quizzes');
+    
+    // Original code commented out
+    // if (!fileInfo) {
+    //   return;
+    // }
 
-    if (!isAgreementChecked) {
-      return;
-    }
+    // if (!isAgreementChecked) {
+    //   return;
+    // }
 
-    try {
-      const token = await getToken();
-      if (!token) {
-        throw new Error("Authentication required");
-      }
+    // try {
+    //   const token = await getToken();
+    //   if (!token) {
+    //     throw new Error("Authentication required");
+    //   }
 
-      uploadMutation.mutate({ fileInfo, token });
-    } catch (error) {
-      console.error("Auth error:", error);
-    }
+    //   uploadMutation.mutate({ fileInfo, token });
+    // } catch (error) {
+    //   console.error("Auth error:", error);
+    // }
   };
 
   return (

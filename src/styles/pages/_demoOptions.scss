@@ -1,11 +1,64 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
 .demo {
     h1 {
-        color: red;
-    }
-    // max-width: 480px;
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+  }
 
-    // img {
-    //     max-width: 100%;
-    //     height: auto;
-    // }
+  h2 {
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+  }
+
+  .top {
+    display: grid;
+    grid-template-columns: 0.3fr 1fr 0.3fr;
+    align-items: center;
+    margin: 1rem 0;
+
+    h1 {
+        grid-column: 2;
+        text-align: left;
+    }
+    h2 {
+        text-align: right;
+        margin-bottom: 1rem;
+    }
+  }
+
+  .switch-view {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    background-color: $color-quaternary-dark;
+    border-radius: 25px;
+
+    button {
+         display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: $spacing-sm;
+        border-radius: 25px;
+    }
+
+    button.demoLesson {
+        background-color: $color-secondary;
+        color: $color-quaternary-dark;
+        font-weight: $font-weight-regular;
+    }
+
+    button.demoDocs {
+        color: $color-quaternary-light;
+        background-color: $color-quaternary-dark;
+        font-weight: $font-weight-light;
+    }
+    
+  }
+
+  .demo-term-card {
+    margin-top: 1.5rem;
+  }
 }
