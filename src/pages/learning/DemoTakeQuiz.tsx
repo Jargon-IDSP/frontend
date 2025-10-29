@@ -1,6 +1,6 @@
 import { useNavigate } from 'react-router-dom';
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
-import StudyTypeCard from '../../components/learning/studyType';
+import StudyTypeCard from '../../components/learning/StudyType';
 import readBook from '../../assets/readBook.png';
 import demoTermCard from '../../assets/demoTermCard.png';
 import studyLaptop from '../../assets/studyLaptop.png';
