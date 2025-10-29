@@ -132,26 +132,17 @@ export default function FullTranslationView() {
 
   return (
     <div className="fullTranslationOverview">
-      {/* Mobile Header */}
-      <div className="full-translation-header">
-        <button 
-          className="back-button"
-          onClick={() => navigate(`/study/${id}`)}
-        >
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-          </svg>
-        </button>
-        <h1 className="page-title">
+      <div>
+        <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
           {translation.document.filename}
         </h1>
-        <button className="menu-button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="1"/>
-            <circle cx="19" cy="12" r="1"/>
-            <circle cx="5" cy="12" r="1"/>
-          </svg>
-        </button>
+    
+
+        <div style={{ marginTop: "1rem" }}>
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+            Study from this document:
+          </h3>
+        </div>
       </div>
 
       {/* Document Navigation */}

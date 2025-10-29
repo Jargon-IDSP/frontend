@@ -13,9 +13,14 @@
 @use 'pages/profile';
 @use 'pages/documents';
 @use 'pages/fullTranslate';
+@use 'pages/terms';
+@use 'pages/demoOptions';
 
 // Import components
 @use 'components/buttons';
 @use 'components/rocky-speech-bubble';
 @use 'components/clerkUserButton';
 @use 'components/documentNav';
+@use 'components/flippableCard';
+@use 'components/flashcardsCarousel';
+@use 'components/studyType';
