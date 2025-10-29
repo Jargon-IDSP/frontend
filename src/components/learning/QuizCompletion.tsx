@@ -1,4 +1,7 @@
-/*interface QuizCompletionProps {
+import Star from '../../assets/icons/star.svg';
+import Hat from '../../assets/icons/hat.svg';
+
+interface QuizCompletionProps {
   score: number;
   totalQuestions: number;
   onRetry: () => void;
@@ -7,95 +10,28 @@
 
 export default function QuizCompletion({
   score,
-  totalQuestions,
-  onRetry,
   onBack,
 }: QuizCompletionProps) {
-  const percentage = Math.round((score / totalQuestions) * 100);
 
   return (
-    <div>
-      <h1>Quiz Complete!</h1>
-      <div>
-        <h2>Your Score: {score} / {totalQuestions}</h2>
-        <p>{percentage}%</p>
+    <div className="container">
+      <div className="quizCompletion">
+        <div className="points">
+        <h1>{score * 10}</h1>
+        <img src={Star} alt="Star" />
+        </div>
+              <h2>Awesome!</h2>
+              <h2> You completed your customized course!</h2>
+              <img className="hatIcon"src={Hat} alt="Hat" />
+              <p> You got a new badge to your collection!</p>
+              <p className="smallNote">You can view all your achievements on your profile page.</p>
+
       </div>
 
       <div>
-        <button onClick={onRetry}>Try Again</button>
-        <button onClick={onBack}>Back to Quizzes</button>
+        {/* <button onClick={onRetry}>Try Again</button> */}
+        <button className="returnToLesson"onClick={onBack}>Back to Lessons</button>
       </div>
     </div>
   );
-}
-*/
-
-interface QuizCompletionProps {
-    score: number;
-    totalQuestions: number;
-    onRetry: () => void;
-    onBack: () => void;
-}
-
-export default function QuizCompletion({
-    score,
-    totalQuestions,
-    onRetry,
-    onBack,
-}: QuizCompletionProps) {
-    const percentage = Math.round((score / totalQuestions) * 100);
-
-    const getPerformanceClass = () => {
-        if (percentage >= 80) return "excellent";
-        if (percentage >= 60) return "good";
-        return "needs-improvement";
-    };
-
-    const getEmoji = () => {
-        if (percentage >= 80) return "🌟";
-        if (percentage >= 60) return "👍";
-        return "📚";
-    };
-
-    return (
-        <div className='quiz-completion'>
-            <h1 className='quiz-completion__title'>
-                Awesome! <br />
-                You completed your quiz
-            </h1>
-
-            <div className='quiz-completion__card'>
-                <div className='quiz-completion__emoji'>{getEmoji()}</div>
-
-                <h2 className='quiz-completion__score'>
-                    Your Score: {score} / {totalQuestions}
-                </h2>
-
-                <p
-                    className={`quiz-completion__percentage ${getPerformanceClass()}`}>
-                    {percentage}%
-                </p>
-
-                <div className='quiz-completion__progress-bar'>
-                    <div
-                        className={`quiz-completion__progress-bar-fill ${getPerformanceClass()}`}
-                        style={{ width: `${percentage}%` }}
-                    />
-                </div>
-            </div>
-
-            <div className='quiz-completion__actions'>
-                <button
-                    onClick={onRetry}
-                    className='quiz-completion__button quiz-completion__button--primary'>
-                    Try Again
-                </button>
-                <button
-                    onClick={onBack}
-                    className='quiz-completion__button quiz-completion__button--secondary'>
-                    Back to Quizzes
-                </button>
-            </div>
-        </div>
-    );
 }

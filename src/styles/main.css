@@ -1734,4 +1734,59 @@ button.back-button {
   background-color: #ffba0a;
   color: #652a15;
   font-weight: 500;
+}
+
+.quizCompletion {
+  margin: auto;
+  text-align: center;
+  align-content: center;
+}
+.quizCompletion h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fe4d13;
+}
+.quizCompletion h2 {
+  font-size: 24px;
+  font-weight: 700;
+  max-width: 20rem;
+  margin: auto;
+}
+.quizCompletion p {
+  font-size: 16px;
+  color: black;
+}
+.quizCompletion p.smallNote {
+  margin-top: 1rem;
+  font-size: 10px;
+  color: rgba(57, 57, 57, 0.8);
+}
+.quizCompletion .points {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.returnToLesson {
+  display: block;
+  position: fixed;
+  bottom: 7rem;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 1px solid #fe4d13;
+  border-radius: 20px;
+  width: 15rem;
+  color: #fe4d13;
+  text-align: center;
+  background-color: transparent;
+}
+
+.hatIcon {
+  background-color: white;
+  border-radius: 5rem;
+  height: 6rem;
+  width: 6rem;
+  margin: 2rem auto;
+  filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
 }/*# sourceMappingURL=main.css.map */
