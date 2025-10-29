@@ -1,0 +1,63 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+@use 'sass:color';
+
+
+.quizCompletion {
+    margin: auto;
+    text-align: center;
+    align-content: center;
+    margin-top: 2rem;
+    h1 {
+        font-size: $font-size-h1;
+        font-weight: $font-weight-bold;
+        color: $color-primary;
+    }
+
+    h2 {
+         font-size: $font-size-h2;
+        font-weight: $font-weight-bold;
+        max-width: 20rem;
+        margin: auto;
+
+    }
+    p {
+        font-size: $font-size-body;
+        color: black;
+
+        &.smallNote {
+            margin-top: 1rem;
+            font-size: $font-size-tag;
+            color: rgba(57, 57, 57, 0.8);
+        }
+    }
+    .points {
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        gap: 0.5rem;
+    }
+}
+
+.returnToLesson {
+    display: block;
+    position: fixed;
+    bottom: 7rem; 
+    left: 50%;
+    transform: translateX(-50%);
+    border: 1px solid $color-primary;
+    border-radius: 20px;
+    width: 15rem;
+    color: $color-primary;
+    text-align: center;
+    background-color: transparent;
+}
+
+.hatIcon {
+    background-color: white;
+    border-radius: 5rem;
+    height: 6rem;
+    width: 6rem;
+    margin: 2rem auto;
+    filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
+}

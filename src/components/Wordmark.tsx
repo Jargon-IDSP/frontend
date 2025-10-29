@@ -1,5 +1,3 @@
-import Jargon_Wordmark from '../../public/Jargon_Wordmark.png';
-
 interface JargonLogoProps {
   size?: string;
   rounded?: boolean;
@@ -13,7 +11,7 @@ export default function JargonLogo({
 }: JargonLogoProps) {
   return (
     <img 
-      src={Jargon_Wordmark} 
+      src="/Jargon_Wordmark.png" 
       alt="Jargon Word Mark" 
       className={className}
       style={{ 

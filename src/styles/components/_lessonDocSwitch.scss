@@ -1,0 +1,42 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.switch-view {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  background-color: $color-quaternary-dark;
+  border-radius: 25px;
+
+  button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    border-radius: 25px;
+    transition: all 0.2s ease;
+  }
+
+  button.demoLesson {
+    color: $color-quaternary-light;
+    background-color: $color-quaternary-dark;
+    font-weight: $font-weight-light;
+
+    &.active {
+      background-color: $color-secondary;
+      color: $color-quaternary-dark;
+      font-weight: $font-weight-regular;
+    }
+  }
+
+  button.demoDocs {
+    color: $color-quaternary-light;
+    background-color: $color-quaternary-dark;
+    font-weight: $font-weight-light;
+
+    &.active {
+      background-color: $color-secondary;
+      color: $color-quaternary-dark;
+      font-weight: $font-weight-regular;
+    }
+  }
+}

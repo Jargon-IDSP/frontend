@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDocuments } from "../../hooks/useDocuments";
 import { NavigationCard } from "../../components/learning/ui/Card";
@@ -5,13 +6,73 @@ import Button from "../../components/learning/ui/Button";
 
 export default function CustomSelect() {
   const navigate = useNavigate();
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   // Use shared documents hook
   const { data: documents = [], isLoading: loading } = useDocuments();
 
   const ocrProcessedDocs = documents.filter((doc) => doc.ocrProcessed);
 
-  if (loading) return <div style={{ padding: "2rem" }}>Loading...</div>;
+  // Simulate progress while loading
+  useEffect(() => {
+    if (loading) {
+      setLoadingProgress(0);
+      const interval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          return prev + 15; // Faster increments for quick API call
+        });
+      }, 150);
+
+      return () => clearInterval(interval);
+    } else {
+      // When loading completes, finish the progress
+      setLoadingProgress(100);
+      // Reset after animation
+      const timeout = setTimeout(() => setLoadingProgress(0), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [loading]);
+
+  if (loading) {
+    return (
+      <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+        <h1>Custom Learning</h1>
+        {/* Progress Bar */}
+        <div style={{ marginTop: "2rem" }}>
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              backgroundColor: "#e5e7eb",
+              borderRadius: "9999px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${loadingProgress}%`,
+                backgroundColor: "#fe4d13",
+                transition: "width 0.3s ease-in-out",
+                borderRadius: "9999px",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: "0.5rem",
+              textAlign: "center",
+              fontSize: "0.875rem",
+              color: "#666",
+            }}
+          >
+            Loading documents... {loadingProgress}%
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>

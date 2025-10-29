@@ -7,9 +7,10 @@ import {
 } from "react-router-dom";
 import { useLearning } from "../../hooks/useLearning";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
-import TermCard from "../../components/learning/TermCard";
+import FlashcardsCarousel from "../../components/learning/FlashcardsCarousel";
 import EmptyState from "../../components/learning/EmptyState";
 import type { Term } from "../../types/learning";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function Terms() {
   const navigate = useNavigate();
@@ -21,6 +22,7 @@ export default function Terms() {
   }>();
   const [searchParams] = useSearchParams();
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentTermIndex, setCurrentTermIndex] = useState(0);
 
   const {
     language,
@@ -83,101 +85,74 @@ export default function Terms() {
     }
   }, [showLoading, data]);
 
-  return (
-    <div style={{ padding: "2rem" }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: "1rem" }}>
-        ← Back
-      </button>
+  // Reset to first term when terms change
+  useEffect(() => {
+    setCurrentTermIndex(0);
+  }, [terms.length]);
 
-      <h1>{type === "existing" ? "Red Seal" : "Custom"} Terms</h1>
+  const handleNext = () => {
+    if (currentTermIndex < terms.length - 1) {
+      setCurrentTermIndex(currentTermIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentTermIndex > 0) {
+      setCurrentTermIndex(currentTermIndex - 1);
+    }
+  };
+
+  return (
+    <div className="terms-page">
+      <div className="terms-page-header">
+        <button onClick={() => navigate(-1)}>
+          <img src={goBackIcon} alt="Go Back" />
+          </button>
+      </div>
 
       {/* Progress Bar */}
       {showLoading && (
-        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-          <div
-            style={{
-              width: "100%",
-              height: "8px",
-              backgroundColor: "#e5e7eb",
-              borderRadius: "9999px",
-              overflow: "hidden",
-            }}
-          >
+        <div className="terms-page-progress">
+          <div className="terms-page-progress-bar-container">
             <div
-              style={{
-                height: "100%",
-                width: `${loadingProgress}%`,
-                backgroundColor: "#fe4d13",
-                transition: "width 0.3s ease-in-out",
-                borderRadius: "9999px",
-              }}
+              className="terms-page-progress-bar-fill"
+              style={{ width: `${loadingProgress}%` }}
             />
           </div>
-          <div
-            style={{
-              marginTop: "0.5rem",
-              textAlign: "center",
-              fontSize: "0.875rem",
-              color: "#666",
-            }}
-          >
+          <div className="terms-page-progress-text">
             Loading terms... {loadingProgress}%
           </div>
         </div>
       )}
 
       {error && (
-        <div
-          style={{
-            backgroundColor: "#fee",
-            padding: "1rem",
-            borderRadius: "6px",
-            border: "1px solid #fcc",
-            marginTop: "1rem",
-          }}
-        >
+        <div className="terms-page-error">
           <strong>Error loading terms</strong>
-          <p style={{ margin: "0.5rem 0 0 0" }}>{error}</p>
+          <p>{error}</p>
         </div>
       )}
 
       {!error && data && (
         <>
-          {type === "existing" &&
-            data?.industryCount !== undefined &&
-            data?.generalCount !== undefined && (
-              <p style={{ color: "#666", marginBottom: "1rem" }}>
-                Total: {count} terms
-                {queryIndustryId &&
-                  ` (${data.industryCount} industry, ${data.generalCount} general)`}
-              </p>
-            )}
-
-          {type !== "existing" && count > 0 && (
-            <p style={{ color: "#666", marginBottom: "1rem" }}>
-              Total: {count} terms
-            </p>
-          )}
-
           {isEmpty ? (
             type !== "existing" ? (
               <EmptyState type="terms" />
             ) : (
-              <div>
+              <div className="terms-page-empty">
                 <p>No terms found for this level.</p>
               </div>
             )
           ) : (
-            <div style={{ marginTop: "2rem" }}>
-              {terms.map((term, index) => (
-                <TermCard
-                  key={term.id}
-                  term={term}
-                  index={index + 1}
-                  language={queryLanguage}
-                  type={type === "existing" ? "existing" : "custom"}
-                />
-              ))}
+            <div className="terms-page-content">
+              <FlashcardsCarousel
+                terms={terms}
+                currentIndex={currentTermIndex}
+                onNext={handleNext}
+                onPrevious={handlePrevious}
+                language={queryLanguage}
+                type={type === "existing" ? "existing" : "custom"}
+                totalCount={count}
+              />
             </div>
           )}
         </>

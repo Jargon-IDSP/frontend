@@ -1,3 +1,6 @@
+import Star from '../../assets/icons/star.svg';
+import Hat from '../../assets/icons/hat.svg';
+
 interface QuizCompletionProps {
   score: number;
   totalQuestions: number;
@@ -7,23 +10,27 @@ interface QuizCompletionProps {
 
 export default function QuizCompletion({
   score,
-  totalQuestions,
-  onRetry,
   onBack,
 }: QuizCompletionProps) {
-  const percentage = Math.round((score / totalQuestions) * 100);
 
   return (
-    <div>
-      <h1>Quiz Complete!</h1>
-      <div>
-        <h2>Your Score: {score} / {totalQuestions}</h2>
-        <p>{percentage}%</p>
+    <div className="container">
+      <div className="quizCompletion">
+        <div className="points">
+        <h1>{score * 10}</h1>
+        <img src={Star} alt="Star" />
+        </div>
+              <h2>Awesome!</h2>
+              <h2> You completed your customized course!</h2>
+              <img className="hatIcon"src={Hat} alt="Hat" />
+              <p> You got a new badge to your collection!</p>
+              <p className="smallNote">You can view all your achievements on your profile page.</p>
+
       </div>
 
       <div>
-        <button onClick={onRetry}>Try Again</button>
-        <button onClick={onBack}>Back to Quizzes</button>
+        {/* <button onClick={onRetry}>Try Again</button> */}
+        <button className="returnToLesson"onClick={onBack}>Back to Lessons</button>
       </div>
     </div>
   );
