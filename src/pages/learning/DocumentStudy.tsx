@@ -208,18 +208,17 @@ export default function DocumentStudy() {
   }
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+    <div className="DocumentStudy">
       <Button
         onClick={() => navigate("/learning/custom")}
         variant="secondary"
-        style={{ marginBottom: "1rem" }}
       >
         ← Back to Custom Learning
       </Button>
 
       <h1>Study: {document?.filename || "Document"}</h1>
 
-      <p style={{ color: "#6b7280", marginBottom: "2rem" }}>
+      <p>
         Choose how you want to study this document:
       </p>
 
