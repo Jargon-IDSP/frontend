@@ -160,21 +160,10 @@ export default function FullTranslationView() {
   return (
     <div className="fullTranslationOverview">
       <div>
-        <div>
-          <button onClick={() => navigate(`/study/${id}`)}>
-            ← Back to Study Materials
-          </button>
-          <button onClick={() => navigate("/learning/custom")}>
-            Study All Custom Content
-          </button>
-        </div>
         <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
           {translation.document.filename}
         </h1>
-        <p style={{ color: "#6b7280" }}>
-          Uploaded on{" "}
-          {new Date(translation.document.createdAt).toLocaleDateString()}
-        </p>
+    
 
         <div style={{ marginTop: "1rem" }}>
           <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>

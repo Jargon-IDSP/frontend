@@ -101,7 +101,7 @@ export default function DocumentStudy() {
   }
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+    <div className="DocumentStudy" style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
       <Button
         onClick={() => navigate("/learning/custom")}
         variant="secondary"

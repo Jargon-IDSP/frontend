@@ -5,11 +5,12 @@ interface StudyTypeCardProps {
   img: string;
   start_button_text: string;
   onClick: () => void;
+  color: string;
 }
 
 export function StudyTypeCard(props: StudyTypeCardProps) {
   return (
-    <div className="study-type">
+    <div className={`study-type study-type--${props.color}`}>
       <div className="top">
         <h2 className="type">{props.name}</h2>
         </div>
