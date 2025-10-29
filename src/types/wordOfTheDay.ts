@@ -1,0 +1,25 @@
+export interface WordOfTheDayData {
+  term: string;
+  definition: string;
+  termTranslated?: string;
+  industry?: string;
+  level?: string;
+}
+
+export interface FlashcardResponse {
+  data: {
+    term: {
+      english: string;
+      [key: string]: string;
+    };
+    definition: {
+      english: string;
+    };
+    industry?: {
+      name: string;
+    };
+    level?: {
+      name: string;
+    };
+  };
+}

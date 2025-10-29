@@ -1,0 +1,72 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+
+// Rocky Speech Container
+.rocky-speech-container {
+  display: grid;
+  grid-template-columns: auto 1fr; // Rocky takes only needed space, bubble takes rest
+  align-items: end;
+  gap: $spacing-xs; // Small gap between Rocky and bubble
+}
+
+// Rocky Container - Bottom Left
+.rocky-container {
+  display: flex;
+  align-items: flex-end;
+  justify-content: flex-start;
+  
+  .rocky-yellow-logo {
+    width: 60px;
+    height: 60px;
+    margin-left: $spacing-xl;
+    
+    // @include tablet-up {
+    //   width: 70px;
+    //   height: 70px;
+    // }
+  }
+}
+
+// Speech Bubble Container - Top Right
+.speech-bubble-container {
+  position: relative;
+  max-width: 200px; // Smaller bubble
+  
+  margin-left: $spacing-lg;
+  // @include tablet-up {
+  //   max-width: 250px;
+  // }
+  
+  .speech-bubble {
+    width: 100%;
+    height: auto;
+    display: block;
+    margin-bottom: $spacing-xl;
+  }
+  
+  .bubble-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: $font-size-label; // Smaller text
+    font-weight: $font-weight-regular;
+    color: $color-neutral;
+    text-align: center;
+    padding: $spacing-xs;
+    line-height: 1.2;
+    max-width: 85%;
+    padding-bottom: $spacing-xl;
+    
+    // @include tablet-up {
+    //   font-size: $font-size-body;
+    //   padding: $spacing-sm;
+    // }
+  }
+}
+
+// Upload-specific styling
+// .upload-speech-bubble {
+//   // Any upload-specific overrides can go here
+// }

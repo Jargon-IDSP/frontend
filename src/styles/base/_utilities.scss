@@ -1,0 +1,46 @@
+@use '../variables' as *;
+
+// Container - Consistent mobile-first layout
+.container {
+  width: 100vw;
+  max-width: min(480px, 100vw);
+  margin: 0 auto;
+  padding: 0 $spacing-md; 
+  padding-bottom: calc(70px + #{$spacing-md}); 
+  min-height: calc(100vh - 70px); 
+  box-sizing: border-box;
+}
+
+// Spacing utilities
+.p-2 { padding: $spacing-sm; }
+.p-3 { padding: $spacing-md; }
+.p-4 { padding: $spacing-lg; }
+
+.m-2 { margin: $spacing-sm; }
+.m-3 { margin: $spacing-md; }
+.m-4 { margin: $spacing-lg; }
+
+// Display utilities
+.hidden { display: none; }
+.block { display: block; }
+.flex { 
+  display: flex;
+  
+  &-wrap { flex-wrap: wrap; }
+}
+
+// Width utilities
+.w {
+  &-full { width: 100%; }
+  &-auto { width: auto; }
+}
+
+// Spacing
+.gap-2 { gap: 0.5rem; }
+
+// Misc utilities
+.cursor-pointer { cursor: pointer; }
+
+// Color utilities
+.text-red-500 { color: #ef4444; }
+.border-red-500 { border-color: #ef4444; }
