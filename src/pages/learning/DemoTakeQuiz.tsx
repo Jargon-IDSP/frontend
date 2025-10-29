@@ -1,11 +1,9 @@
 import { useNavigate } from 'react-router-dom';
-import goBackIcon from '../../assets/icons/goBackIcon.svg';
-import translateFileIcon from '../../assets/icons/translateFileIcon.svg';
 import StudyTypeCard from '../../components/learning/StudyType';
+import DocumentNav from '../../components/DocumentNav';
 import readBook from '../../assets/readBook.png';
 import demoTermCard from '../../assets/demoTermCard.png'
 import studyLaptop from '../../assets/studyLaptop.png';
-import lessonIcon from '../../assets/icons/lessonIcon.svg';
 
 export default function DemoTakeQuiz() {
   const navigate = useNavigate();
@@ -24,18 +22,18 @@ export default function DemoTakeQuiz() {
     navigate(`/documents/${documentId}/translation`);
   };
 
+  const handleBackClick = () => {
+    navigate('/learning/custom');
+  };
+
   return (
     <div className="container demo">
-      <div className="top">
-    <img src={goBackIcon} alt="back button" />
-      <h1>Level 2 Acronyms</h1>
-      <h2>...</h2>
-      </div>
-
-      <div className="switch-view">
-      <button className='demoLesson'><img src={lessonIcon} alt="file icon" />Lesson</button>
-      <button className='demoDocs' onClick={handleDemoDocs}><img src={translateFileIcon} alt="file icon" />Document</button>
-      </div>
+      <DocumentNav 
+        activeTab="lesson"
+        title="Level 2 Acronyms"
+        onDocumentClick={handleDemoDocs}
+        onBackClick={handleBackClick}
+      />
 
       <img className="demo-term-card" src={demoTermCard} alt="Demo Term Card" />
 

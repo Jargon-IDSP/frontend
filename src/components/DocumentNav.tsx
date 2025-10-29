@@ -1,75 +1,103 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// import React, { useState } from 'react';
+// import { useNavigate } from 'react-router-dom';
+
+// import translateFileIcon from '../assets/icons/translateFileIcon.svg';
+// import lessonIcon from '../assets/icons/lessonIcon.svg';
+
+// interface DocumentNavProps {
+//   onTabChange?: (tab: 'lesson' | 'document') => void;
+//   defaultTab?: 'lesson' | 'document';
+//   documentId?: string;
+// }
+
+// const DocumentNav: React.FC<DocumentNavProps> = ({ 
+//   onTabChange, 
+//   defaultTab = 'document',
+//   documentId 
+// }) => {
+//   const [activeTab, setActiveTab] = useState<'lesson' | 'document'>(defaultTab);
+//   const navigate = useNavigate();
+
+//   const handleTabClick = (tab: 'lesson' | 'document') => {
+//     setActiveTab(tab);
+//     onTabChange?.(tab);
+    
+//     // Hardcode for presentation
+//     if (tab === 'lesson' && documentId) {
+//       navigate(`/learning/documents/cmha47br90001ztmchu5awy17/quizzes`);
+//     } else if (tab === 'document' && documentId) {
+//       navigate(`/learning/custom/quiz/take?quizId=cd81eda1-ea47-4b09-9ab1-d47284aefa0f`);
+//     }
+//   };
+
+//   return (
+//     <div className="switch-view">
+//       <button 
+//         className={activeTab === 'lesson' ? 'demoLesson active' : 'demoLesson'}
+//         onClick={() => handleTabClick('lesson')}
+//       >
+//         <img src={lessonIcon} alt="lesson icon" />
+//         Lesson
+//       </button>
+//       <button 
+//         className={activeTab === 'document' ? 'demoDocs active' : 'demoDocs'}
+//         onClick={() => handleTabClick('document')}
+//       >
+//         <img src={translateFileIcon} alt="document icon" />
+//         Document
+//       </button>
+//     </div>
+//   );
+// };
+
+// export default DocumentNav;
+
+import React from 'react';
+import translateFileIcon from '../assets/icons/translateFileIcon.svg';
+import lessonIcon from '../assets/icons/lessonIcon.svg';
+import goBackIcon from '../assets/icons/goBackIcon.svg';
 
 interface DocumentNavProps {
-  onTabChange?: (tab: 'lesson' | 'document') => void;
-  defaultTab?: 'lesson' | 'document';
-  documentId?: string;
+  activeTab: 'lesson' | 'document';
+  title: string;
+  subtitle?: string;
+  onLessonClick?: () => void;
+  onDocumentClick?: () => void;
+  onBackClick?: () => void;
 }
 
 const DocumentNav: React.FC<DocumentNavProps> = ({ 
-  onTabChange, 
-  defaultTab = 'document',
-  documentId 
+  activeTab,
+  title,
+  subtitle = '...',
+  onLessonClick,
+  onDocumentClick,
+  onBackClick
 }) => {
-  const [activeTab, setActiveTab] = useState<'lesson' | 'document'>(defaultTab);
-  const navigate = useNavigate();
-
-  const handleTabClick = (tab: 'lesson' | 'document') => {
-    setActiveTab(tab);
-    onTabChange?.(tab);
-    
-    // Navigate to DocumentStudy when lesson tab is clicked
-    if (tab === 'lesson' && documentId) {
-      navigate(`/learning/documents/${documentId}`);
-    }
-  };
-
   return (
-    <div className="document-nav">
-      <button
-        className={`document-nav__tab ${activeTab === 'lesson' ? 'document-nav__tab--active' : ''}`}
-        onClick={() => handleTabClick('lesson')}
-        type="button"
-      >
-        <svg 
-          className="document-nav__icon" 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2"
+    <>
+      <div className="top">
+        <img src={goBackIcon} alt="back button" onClick={onBackClick} style={{ cursor: onBackClick ? 'pointer' : 'default' }} />
+        <h1>{title}</h1>
+        <h2>{subtitle}</h2>
+      </div>
+      <div className="switch-view">
+        <button 
+          className={`demoLesson ${activeTab === 'lesson' ? 'active' : ''}`}
+          onClick={onLessonClick}
         >
-          <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20" />
-          <path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z" />
-        </svg>
-        <span>Lesson</span>
-      </button>
-      
-      <button
-        className={`document-nav__tab ${activeTab === 'document' ? 'document-nav__tab--active' : ''}`}
-        onClick={() => handleTabClick('document')}
-        type="button"
-      >
-        <svg 
-          className="document-nav__icon" 
-          width="16" 
-          height="16" 
-          viewBox="0 0 24 24" 
-          fill="none" 
-          stroke="currentColor" 
-          strokeWidth="2"
+          <img src={lessonIcon} alt="lesson icon" />
+          Lesson
+        </button>
+        <button 
+          className={`demoDocs ${activeTab === 'document' ? 'active' : ''}`}
+          onClick={onDocumentClick}
         >
-          <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
-          <polyline points="14,2 14,8 20,8" />
-          <line x1="16" y1="13" x2="8" y2="13" />
-          <line x1="16" y1="17" x2="8" y2="17" />
-          <polyline points="10,9 9,9 8,9" />
-        </svg>
-        <span>Document</span>
-      </button>
-    </div>
+          <img src={translateFileIcon} alt="document icon" />
+          Document
+        </button>
+      </div>
+    </>
   );
 };
 

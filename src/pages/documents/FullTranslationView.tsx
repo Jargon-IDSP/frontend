@@ -1,69 +1,20 @@
 import { useParams, useNavigate } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
-import { BACKEND_URL } from "../../lib/api";
-import type { Translation } from "../../types/document";
-import { useUserPreferences } from "../../hooks/useUserPreferences";
+import { useDocumentTranslation } from "../../hooks/useDocumentTranslation";
+import { useTranslatedText } from "../../hooks/useTranslatedText";
 import DocumentNav from "../../components/DocumentNav";
 
-interface TranslationResponse {
-  processing?: boolean;
-  translation?: Translation;
-  error?: string;
-}
 
 export default function FullTranslationView() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
-  const { getToken } = useAuth();
-  const { language: userLanguage } = useUserPreferences();
 
-  // Fetch translation with smart polling
-  const {
-    data,
-    isLoading: loading,
-    error,
-  } = useQuery({
-    queryKey: ["documentTranslation", id],
-    queryFn: async (): Promise<TranslationResponse> => {
-      const token = await getToken();
-
-      const translationRes = await fetch(
-        `${BACKEND_URL}/documents/${id}/translation`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!translationRes.ok) {
-        const errorData = await translationRes.json();
-        throw new Error(errorData.error || "Translation not found");
-      }
-
-      return await translationRes.json();
-    },
-    enabled: !!id,
-    refetchInterval: (query) => {
-      // Poll every 3 seconds if processing, otherwise don't poll
-      return query.state.data?.processing ? 3000 : false;
-    },
-    refetchIntervalInBackground: false,
-    retry: false,
-  });
+  const { data, isLoading, error } = useDocumentTranslation(id);
+  const translatedText = useTranslatedText(data?.translation);
 
   const translation = data?.translation;
   const processing = data?.processing;
 
-  const getTranslatedText = () => {
-    if (!translation) return "";
-
-    const languageKey = `text${
-      userLanguage.charAt(0).toUpperCase() + userLanguage.slice(1)
-    }` as keyof Translation;
-    return (translation[languageKey] as string) || translation.textEnglish;
-  };
-
-  if (loading) {
+  if (isLoading) {
     return (
       <div className="fullTranslationOverview">
         <div className="loading-container">
@@ -120,44 +71,30 @@ export default function FullTranslationView() {
     );
   }
 
-  const languageNames: Record<string, string> = {
-    english: "English",
-    french: "French",
-    chinese: "Chinese",
-    spanish: "Spanish",
-    tagalog: "Tagalog",
-    punjabi: "Punjabi",
-    korean: "Korean",
+  const handleLessonClick = () => {
+    navigate(`/learning/documents/${id}/quizzes`);
+  };
+
+  const handleBackClick = () => {
+    navigate('/documents');
   };
 
   return (
-    <div className="fullTranslationOverview">
-      <div>
-        <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
-          {translation.document.filename}
-        </h1>
-    
+        <div className="fullTranslationOverview">
+        <div className="container demo">
+        <DocumentNav 
+          activeTab="document"
+          title="Level 2 Acronyms"
+          onLessonClick={handleLessonClick}
+          onBackClick={handleBackClick}
+        />
 
-        <div style={{ marginTop: "1rem" }}>
-          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
-            Study from this document:
-          </h3>
-        </div>
-      </div>
-
-      {/* Document Navigation */}
-      <div className="document-nav-container">
-        <DocumentNav defaultTab="document" documentId={id} />
-      </div>
-
-      {/* Main Content */}
       <div className="content-container">
         <div className="translation-content">
-          <div className="content-text">
-            {getTranslatedText()}
-          </div>
+          <div className="content-text">{translatedText}</div>
         </div>
       </div>
+    </div>
     </div>
   );
 }
