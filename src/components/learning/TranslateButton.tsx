@@ -49,7 +49,7 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
           disabled={loading}
           style={{
             padding: '0.5rem 1rem',
-            backgroundColor: isTranslated ? '#10b981' : '#6b7280',
+            backgroundColor: isTranslated ? '#ffba0a' : '#fe4d13',
             color: 'white',
             border: 'none',
             borderRadius: '6px',
@@ -58,7 +58,7 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
             fontSize: '0.875rem',
           }}
         >
-          {loading ? '...' : isTranslated ? '🌐 Show English' : `🌐 Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
+          {loading ? '...' : isTranslated ? 'Show English' : `Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
         </button>
       </div>
 

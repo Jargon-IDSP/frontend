@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
@@ -14,7 +14,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const [file, setFile] = useState<File | null>(null);
-  const [uploadProgress, setUploadProgress] = useState(0);
 
   // Upload mutation
   const uploadMutation = useMutation({
@@ -87,35 +86,6 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       }
     },
   });
-
-  // Simulate upload progress
-  useEffect(() => {
-    if (uploadMutation.isPending) {
-      setUploadProgress(0);
-      const interval = setInterval(() => {
-        setUploadProgress((prev) => {
-          // Slow down as we approach 90% to feel more realistic
-          if (prev >= 90) return prev;
-          if (prev >= 70) return prev + 2;
-          if (prev >= 40) return prev + 5;
-          return prev + 10;
-        });
-      }, 200);
-
-      return () => clearInterval(interval);
-    } else if (uploadMutation.isSuccess) {
-      setUploadProgress(100);
-      // Reset after animation
-      const timeout = setTimeout(() => setUploadProgress(0), 1000);
-      return () => clearTimeout(timeout);
-    } else if (uploadMutation.isError) {
-      setUploadProgress(0);
-    }
-  }, [
-    uploadMutation.isPending,
-    uploadMutation.isSuccess,
-    uploadMutation.isError,
-  ]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files[0]) {
@@ -221,42 +191,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
             backgroundColor: "#eff6ff",
             borderRadius: "6px",
             fontSize: "0.875rem",
+            textAlign: "center",
           }}
         >
-          {/* Progress Bar */}
-          <div style={{ marginBottom: "0.75rem" }}>
-            <div
-              style={{
-                width: "100%",
-                height: "8px",
-                backgroundColor: "#e5e7eb",
-                borderRadius: "9999px",
-                overflow: "hidden",
-              }}
-            >
-              <div
-                style={{
-                  height: "100%",
-                  width: `${uploadProgress}%`,
-                  backgroundColor: "#10b981",
-                  transition: "width 0.3s ease-in-out",
-                  borderRadius: "9999px",
-                }}
-              />
-            </div>
-            <div
-              style={{
-                marginTop: "0.5rem",
-                textAlign: "center",
-                fontSize: "0.875rem",
-                color: "#059669",
-                fontWeight: "500",
-              }}
-            >
-              {uploadProgress}%
-            </div>
-          </div>
-          <p style={{ margin: 0, textAlign: "center" }}>
+          <p style={{ margin: 0 }}>
             📤 Uploading and processing document... You'll be redirected when
             ready.
           </p>

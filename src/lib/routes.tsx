@@ -15,14 +15,13 @@ import CustomSelect from '../pages/learning/CustomSelect';
 import CategoryStudy from '../pages/learning/CategoryStudy';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
-import Quizzes from '../pages/learning/StartQuiz';
+import Quizzes from '../pages/learning/Quizzes';
 import TakeCustomQuiz from '../pages/learning/TakeCustomQuiz';
 import TakeExistingQuiz from '../pages/learning/TakeExistingQuiz';
 import TakeCategoryQuiz from '../pages/learning/TakeCategoryQuiz';
 import QuizSelection from '../pages/learning/QuizSelection';
 import SharedQuizzes from '../pages/learning/SharedQuizzes';
 import MyQuizzes from '../pages/learning/MyQuizzes';
-import DemoTakeQuiz from '../pages/learning/DemoTakeQuiz';
 import DocumentsPage from '../pages/documents/DocumentsPage';
 import AddDocumentPage from '../pages/documents/AddDocumentPage';
 import FullTranslationView from '../pages/documents/FullTranslationView';
@@ -170,7 +169,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: '/learning/documents/:documentId/quizzes',
-    element: protect(<DemoTakeQuiz />),
+    element: protect(<Quizzes />),
   },
   {
     path: '/learning/custom/categories/:category/quizzes',

@@ -1,8 +1,10 @@
+import { useState } from "react";
 import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
 import { useExistingQuiz } from "../../hooks/useExistingQuiz";
 import { useCompleteExistingQuiz } from "../../hooks/useCompleteExistingQuiz";
 import QuizComponent from "../../components/learning/QuizComponent";
+import QuizCompletion from "../../components/learning/QuizCompletion";
 
 export default function TakeExistingQuiz() {
   const navigate = useNavigate();
@@ -14,26 +16,42 @@ export default function TakeExistingQuiz() {
   const queryIndustryId =
     searchParams.get("industry_id") || industryId?.toString();
 
-  // Fetch quiz questions
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [finalScore, setFinalScore] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
+
   const {
     data: questions = [],
     isLoading: loading,
     error: queryError,
   } = useExistingQuiz(levelId, quizNumber, queryIndustryId, "english");
 
-  // Complete quiz mutation
   const completeQuizMutation = useCompleteExistingQuiz();
 
-  const handleQuizComplete = async (score: number, totalQuestions: number) => {
+  const handleQuizComplete = async (score: number, total: number) => {
     if (!levelId) return;
+
+    setFinalScore(score);
+    setTotalQuestions(total);
+    setQuizCompleted(true);
 
     completeQuizMutation.mutate({
       type: "existing",
       score,
-      totalQuestions,
+      totalQuestions: total,
       levelId,
       quizId: `quiz-${levelId}-${Date.now()}`,
     });
+  };
+
+  const handleRetry = () => {
+    setQuizCompleted(false);
+    setFinalScore(0);
+    setTotalQuestions(0);
+  };
+
+  const handleBackToQuizzes = () => {
+    navigate("/learning/existing/levels");
   };
 
   const error = queryError ? (queryError as Error).message : null;
@@ -68,12 +86,23 @@ export default function TakeExistingQuiz() {
     );
   }
 
+  if (quizCompleted) {
+    return (
+      <QuizCompletion
+        score={finalScore}
+        totalQuestions={totalQuestions}
+        onRetry={handleRetry}
+        onBack={handleBackToQuizzes}
+      />
+    );
+  }
+
   return (
     <QuizComponent
       questions={questions}
       quizNumber={quizNumber}
       onComplete={handleQuizComplete}
-      onBack={() => navigate("/learning/existing/levels")}
+      onBack={handleBackToQuizzes}
       preferredLanguage={language}
     />
   );

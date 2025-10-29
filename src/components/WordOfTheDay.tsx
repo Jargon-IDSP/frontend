@@ -166,7 +166,7 @@ export default function WordOfTheDay() {
                   marginTop: "0.5rem",
                   textAlign: "center",
                   fontSize: "0.875rem",
-                  color: "#FFFFFF",
+                  color: "#666",
                 }}
               >
                 Loading... {loadingProgress}%
