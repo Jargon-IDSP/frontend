@@ -54,7 +54,7 @@ export default function FlashcardsCarousel({
         
         {currentIndex === terms.length - 1 ? (
           <button
-            onClick={() => window.location.href = BACKEND_URL || "http://localhost:5173/learning/documents/cmha47br90001ztmchu5awy17/quizzes"}
+            onClick={() => window.location.href = `${BACKEND_URL}/learning/documents/cmha47br90001ztmchu5awy17/quizzes`}
             className="flashcards-carousel-button flashcards-carousel-finish"
           >
             Finish
