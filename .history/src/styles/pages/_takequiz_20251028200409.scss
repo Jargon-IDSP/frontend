@@ -1,0 +1,128 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+// Quiz Completion Styles
+.quiz-completion {
+    padding: 2rem;
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+
+    &__title {
+        font-size: 2.5em;
+        font-weight: $font-weight-bold;
+        margin-bottom: $spacing-lg;
+        color: $color-primary;
+    }
+
+    &__card {
+        background-color: $color-secondary;
+        padding: $spacing-lg;
+        border-radius: 12px;
+        margin-bottom: $spacing-lg;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    &__score {
+        font-size: $font-size-h3;
+        margin-bottom: 1rem;
+        color: $color-second-neutral;
+    }
+
+    &__percentage {
+        font-size: $font-size-h1;
+        font-weight: bold;
+        margin-bottom: 1.5rem;
+
+        &.excellent {
+            color: $color-success;
+        }
+
+        &.good {
+            color: $color-warning;
+        }
+
+        &.needs-improvement {
+            color: $color-error;
+        }
+    }
+
+    &__progress-bar {
+        width: 100%;
+        height: $spacing-md;
+        background-color: $color-quaternary-light;
+        border-radius: 10px;
+        overflow: hidden;
+        margin-bottom: $spacing-sm;
+
+        &-fill {
+            height: 100%;
+            transition: width 0.5s ease;
+
+            &.excellent {
+                background-color: $color-success;
+            }
+
+            &.good {
+                background-color: $color-warning;
+            }
+
+            &.needs-improvement {
+                background-color: $color-error;
+            }
+        }
+    }
+
+    &__emoji {
+        font-size: 5rem;
+        margin-bottom: 1rem;
+    }
+
+    &__actions {
+        display: flex;
+        gap: $spacing-sm;
+        justify-content: center;
+    }
+
+    &__button {
+        padding: $spacing-sm $spacing-md;
+        border-radius: $spacing-sm;
+        font-weight: $font-weight-bold;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        min-width: $spacing-lg;
+
+        &:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 $spacing-xs $spacing-sm rgba(0, 0, 0, 0.15);
+        }
+
+        &--primary {
+            background-color: $color-primary;
+            color: white;
+            border: none;
+
+            &:hover {
+                background-color: $color-quaternary-dark;
+            }
+        }
+
+        &--secondary {
+            background-color: rgba(
+                255,
+                255,
+                255,
+                0.9
+            ); // Cream/off-white background
+            color: $color-secondary; // Orange/coral text
+            border: 2px solid $color-secondary; // Orange border
+            font-weight: bold;
+
+            &:hover {
+                background-color: $color-secondary;
+                color: white;
+                transform: translateY(-2px);
+            }
+        }
+    }
+}

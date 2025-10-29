@@ -196,13 +196,98 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     }
 
     if (isComplete) {
+        const percentage = Math.round((score / questions.length) * 100);
         return (
-            <QuizCompletion
-                score={score}
-                totalQuestions={questions.length}
-                onRetry={handleRetry}
-                onBack={onBack}
-            />
+            <div
+                style={{
+                    padding: "2rem",
+                    maxWidth: "800px",
+                    margin: "0 auto",
+                }}>
+                <h1>Quiz Complete! 🎉</h1>
+                <div
+                    style={{
+                        backgroundColor: "#f9fafb",
+                        padding: "2rem",
+                        borderRadius: "8px",
+                        marginTop: "2rem",
+                        textAlign: "center",
+                    }}>
+                    <div style={{ fontSize: "3rem", marginBottom: "1rem" }}>
+                        {percentage >= 80
+                            ? "🌟"
+                            : percentage >= 60
+                            ? "👍"
+                            : "📚"}
+                    </div>
+                    <h2 style={{ margin: 0, marginBottom: "1rem" }}>
+                        Your Score: {score} / {questions.length}
+                    </h2>
+                    <p
+                        style={{
+                            fontSize: "1.5rem",
+                            color: "#3b82f6",
+                            fontWeight: "600",
+                        }}>
+                        {percentage}%
+                    </p>
+                    <div
+                        style={{
+                            width: "100%",
+                            height: "20px",
+                            backgroundColor: "#e5e7eb",
+                            borderRadius: "10px",
+                            marginTop: "1rem",
+                            overflow: "hidden",
+                        }}>
+                        <div
+                            style={{
+                                width: `${percentage}%`,
+                                height: "100%",
+                                backgroundColor:
+                                    percentage >= 80
+                                        ? "#10b981"
+                                        : percentage >= 60
+                                        ? "#f59e0b"
+                                        : "#ef4444",
+                                transition: "width 0.5s ease",
+                            }}
+                        />
+                    </div>
+                </div>
+
+                <div
+                    style={{ display: "flex", gap: "1rem", marginTop: "2rem" }}>
+                    <button
+                        onClick={handleRetry}
+                        style={{
+                            flex: 1,
+                            padding: "0.75rem",
+                            backgroundColor: "#3b82f6",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: "600",
+                        }}>
+                        Try Again
+                    </button>
+                    <button
+                        onClick={onBack}
+                        style={{
+                            flex: 1,
+                            padding: "0.75rem",
+                            backgroundColor: "#6b7280",
+                            color: "white",
+                            border: "none",
+                            borderRadius: "6px",
+                            cursor: "pointer",
+                            fontWeight: "600",
+                        }}>
+                        Back to Quizzes
+                    </button>
+                </div>
+            </div>
         );
     }
 
