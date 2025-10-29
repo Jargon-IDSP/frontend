@@ -138,8 +138,8 @@ export default function FullTranslationView() {
           className="back-button"
           onClick={() => navigate(`/study/${id}`)}
         >
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M19 12H5M12 19l-7-7 7-7"/>
           </svg>
         </button>
         <h1 className="page-title">
@@ -156,7 +156,7 @@ export default function FullTranslationView() {
 
       {/* Document Navigation */}
       <div className="document-nav-container">
-        <DocumentNav defaultTab="document" documentId={id} />
+        <DocumentNav defaultTab="document" />
       </div>
 
       {/* Main Content */}

@@ -101,21 +101,31 @@ export default function FullTranslationView() {
 
   if (error || !translation) {
     return (
-      <div className="fullTranslationOverview">
-        <div className="error-container">
-          <h2 className="error-title">Error</h2>
-          <p className="error-message">
-            {error instanceof Error ? error.message : "Translation not found."}
-          </p>
-          <div className="error-buttons">
-            <button onClick={() => navigate("/documents")}>
-              ← Back to Documents
-            </button>
-            <button onClick={() => window.location.reload()}>
-              Refresh Page
-            </button>
-          </div>
-        </div>
+      <div style={{ maxWidth: "1200px", margin: "0 auto", padding: "2rem" }}>
+        <button
+          onClick={() => navigate("/documents")}
+          style={{ marginBottom: "1rem" }}
+        >
+          ← Back to Documents
+        </button>
+        <h2 style={{ color: "#ef4444" }}>Error</h2>
+        <p>
+          {error instanceof Error ? error.message : "Translation not found."}
+        </p>
+        <button
+          onClick={() => window.location.reload()}
+          style={{
+            marginTop: "1rem",
+            padding: "0.75rem 1.5rem",
+            backgroundColor: "#3b82f6",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+          }}
+        >
+          Refresh Page
+        </button>
       </div>
     );
   }
@@ -130,43 +140,80 @@ export default function FullTranslationView() {
     korean: "Korean",
   };
 
+  // This section for styling
   return (
     <div className="fullTranslationOverview">
-      {/* Mobile Header */}
-      <div className="full-translation-header">
-        <button 
-          className="back-button"
-          onClick={() => navigate(`/study/${id}`)}
-        >
-          <svg viewBox="0 0 24 24" fill="currentColor">
-            <path d="M15.41 7.41L14 6l-6 6 6 6 1.41-1.41L10.83 12z"/>
-          </svg>
-        </button>
-        <h1 className="page-title">
+      <DocumentNav defaultTab="document" />
+      <div>
+        <div>
+          <button onClick={() => navigate(`/study/${id}`)}>
+            ← Back to Study Materials
+          </button>
+          <button onClick={() => navigate("/learning/custom")}>
+            Study All Custom Content
+          </button>
+        </div>
+        <h1 style={{ fontSize: "2rem", fontWeight: "bold" }}>
           {translation.document.filename}
         </h1>
-        <button className="menu-button">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-            <circle cx="12" cy="12" r="1"/>
-            <circle cx="19" cy="12" r="1"/>
-            <circle cx="5" cy="12" r="1"/>
-          </svg>
-        </button>
-      </div>
+        <p style={{ color: "#6b7280" }}>
+          Uploaded on{" "}
+          {new Date(translation.document.createdAt).toLocaleDateString()}
+        </p>
 
-      {/* Document Navigation */}
-      <div className="document-nav-container">
-        <DocumentNav defaultTab="document" documentId={id} />
-      </div>
-
-      {/* Main Content */}
-      <div className="content-container">
-        <div className="translation-content">
-          <div className="content-text">
-            {getTranslatedText()}
-          </div>
+        <div style={{ marginTop: "1rem" }}>
+          <h3 style={{ fontSize: "1.1rem", marginBottom: "0.5rem" }}>
+            Study from this document:
+          </h3>
         </div>
       </div>
+
+      <div
+        style={{
+          border: "2px solid #e5e7eb",
+          borderRadius: "8px",
+          overflow: "hidden",
+        }}
+      >
+        <div
+          style={{
+            padding: "1rem",
+            backgroundColor: "#f9fafb",
+            borderBottom: "2px solid #e5e7eb",
+          }}
+        >
+          <h2 style={{ fontSize: "1.25rem", fontWeight: "bold" }}>
+            {languageNames[userLanguage] || "English"} Translation
+          </h2>
+        </div>
+
+        <div
+          style={{
+            padding: "1.5rem",
+            backgroundColor: "white",
+          }}
+        >
+          <pre
+            style={{
+              whiteSpace: "pre-wrap",
+              wordWrap: "break-word",
+              margin: 0,
+              fontFamily: "inherit",
+              lineHeight: "1.6",
+              fontSize: "1rem",
+            }}
+          >
+            {getTranslatedText()}
+          </pre>
+        </div>
+      </div>
+
+      <style>{`
+        @keyframes spin {
+          0% { transform: rotate(0deg); }
+          100% { transform: rotate(360deg); }
+        }
+      `}</style>
     </div>
   );
 }

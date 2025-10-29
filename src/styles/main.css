@@ -1059,9 +1059,217 @@ button.back-button {
 }
 
 .fullTranslationOverview {
-  background-color: red;
+  background-color: #fffdf4;
+  min-height: 100vh;
+  padding: 0;
+  margin: 0;
+}
+.fullTranslationOverview .full-translation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+  background-color: #fffdf4;
+}
+.fullTranslationOverview .full-translation-header .back-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6f2e17;
+}
+.fullTranslationOverview .full-translation-header .back-button svg {
+  width: 40px;
+  height: 40px;
+}
+.fullTranslationOverview .full-translation-header .page-title {
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  color: #6f2e17;
+  text-align: center;
+  flex: 1;
+  margin: 0 1rem;
+}
+.fullTranslationOverview .full-translation-header .menu-button {
+  background: none;
+  border: none;
+  padding: 0.5rem;
+  cursor: pointer;
+  color: #6f2e17;
+}
+.fullTranslationOverview .full-translation-header .menu-button svg {
+  width: 24px;
+  height: 24px;
+}
+@media (max-width: 767px) {
+  .fullTranslationOverview .document-nav-container {
+    padding: 1rem;
+    background-color: #fffdf4;
+    display: flex;
+    justify-content: center;
+  }
+  .fullTranslationOverview .content-container {
+    padding: 1rem;
+    background-color: #fffdf4;
+  }
+  .fullTranslationOverview .content-container .translation-content {
+    background-color: transparent;
+    border-radius: 8px;
+    padding: 1.5rem;
+  }
+  .fullTranslationOverview .content-container .translation-content .content-text {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    line-height: 1.75;
+    color: #393939;
+    white-space: pre-wrap;
+    word-wrap: break-word;
+  }
+  .fullTranslationOverview .loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    padding: 2.5rem;
+    text-align: center;
+  }
+  .fullTranslationOverview .loading-container .loading-title {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 20px;
+    font-weight: 600;
+    color: #6f2e17;
+    margin-bottom: 1rem;
+  }
+  .fullTranslationOverview .loading-container .loading-description {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    color: #393939;
+    margin-bottom: 0.5rem;
+  }
+  .fullTranslationOverview .loading-container .loading-subtitle {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 13px;
+    color: #393939;
+    margin-bottom: 1.5rem;
+  }
+  .fullTranslationOverview .loading-container .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #b2af97;
+    border-top: 4px solid #fe4d13;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1.5rem;
+  }
+  .fullTranslationOverview .loading-container .button-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .fullTranslationOverview .loading-container .button-group button {
+    padding: 0.5rem 1rem;
+    background-color: #fe4d13;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .fullTranslationOverview .loading-container .button-group button:hover {
+    background-color: rgb(221.0632911392, 55.2658227848, 0.9367088608);
+  }
+  .fullTranslationOverview .loading-container .button-group button:first-child {
+    background-color: #6f2e17;
+  }
+  .fullTranslationOverview .loading-container .button-group button:first-child:hover {
+    background-color: #652a15;
+  }
+  .fullTranslationOverview .error-container {
+    padding: 2.5rem;
+    text-align: center;
+  }
+  .fullTranslationOverview .error-container .error-title {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 20px;
+    font-weight: 700;
+    color: #c40000;
+    margin-bottom: 1rem;
+  }
+  .fullTranslationOverview .error-container .error-message {
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    color: #393939;
+    margin-bottom: 1.5rem;
+  }
+  .fullTranslationOverview .error-container .error-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .fullTranslationOverview .error-container .error-buttons button {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+  }
+  .fullTranslationOverview .error-container .error-buttons button:first-child {
+    background-color: #6f2e17;
+    color: white;
+  }
+  .fullTranslationOverview .error-container .error-buttons button:first-child:hover {
+    background-color: #652a15;
+  }
+  .fullTranslationOverview .error-container .error-buttons button:last-child {
+    background-color: #fe4d13;
+    color: white;
+  }
+  .fullTranslationOverview .error-container .error-buttons button:last-child:hover {
+    background-color: rgb(221.0632911392, 55.2658227848, 0.9367088608);
+  }
+}
+@media (min-width: 768px) {
+  .fullTranslationOverview {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2.5rem;
+  }
+  .fullTranslationOverview .full-translation-header {
+    padding: 1.5rem 2.5rem;
+  }
+  .fullTranslationOverview .full-translation-header .page-title {
+    font-size: 24px;
+  }
+  .fullTranslationOverview .document-nav-container {
+    margin-bottom: 1.5rem;
+    padding: 0 2.5rem;
+    display: flex;
+    justify-content: center;
+  }
+  .fullTranslationOverview .content-container {
+    padding: 0 2.5rem;
+  }
+  .fullTranslationOverview .content-container .translation-content {
+    padding: 2.5rem;
+  }
 }
 
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
 .btn, .choose-file-button, .btn-primary {
   display: inline-flex;
   align-items: center;
@@ -1230,4 +1438,55 @@ button.back-button {
 
 :global(.cl-userButtonPopoverCard) {
   z-index: 9999 !important;
+}
+
+.document-nav {
+  display: flex;
+  background: #6f2e17;
+  border-radius: 30px;
+  overflow: hidden;
+  width: 366px;
+  padding: 2px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.document-nav__tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 20px;
+  border: none;
+  background: transparent;
+  color: white;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  position: relative;
+  border-radius: 28px;
+  flex: 1;
+  justify-content: center;
+}
+.document-nav__tab:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+.document-nav__tab--active {
+  background: #ffba0a !important;
+  color: #6f2e17 !important;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  margin: -2px;
+  padding: 10px 22px;
+}
+.document-nav__tab--active:hover {
+  background: #ffba0a !important;
+  color: #6f2e17 !important;
+}
+.document-nav__icon {
+  flex-shrink: 0;
+  width: 18px;
+  height: 18px;
+}
+.document-nav span {
+  white-space: nowrap;
+  font-weight: 600;
 }/*# sourceMappingURL=main.css.map */
