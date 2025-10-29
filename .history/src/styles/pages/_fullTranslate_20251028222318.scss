@@ -15,18 +15,18 @@
     padding: $spacing-md;
     background-color: $color-second-neutral-light;
     
-      .back-button {
-        background: none;
-        border: none;
-        padding: $spacing-sm;
-        cursor: pointer;
-        color: $color-quaternary;
-        
-        svg {
-          width: 40px;
-          height: 40px;
-        }
+    .back-button {
+      background: none;
+      border: none;
+      padding: $spacing-sm;
+      cursor: pointer;
+      color: $color-quaternary;
+      
+      svg {
+        width: 24px;
+        height: 24px;
       }
+    }
     
     .page-title {
       font-family: $font-family-primary;
@@ -67,9 +67,10 @@
       background-color: $color-second-neutral-light;
       
       .translation-content {
-        background-color: transparent;
+        background-color: white;
         border-radius: $border-radius-md;
         padding: $spacing-lg;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         
         .content-text {
           font-family: $font-family-primary;
