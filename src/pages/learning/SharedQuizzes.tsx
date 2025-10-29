@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useSharedQuizzes } from "../../hooks/useSharedQuizzes";
 import Button from "../../components/learning/ui/Button";
@@ -7,9 +8,31 @@ import type { SharedQuiz } from "../../types/learning";
 
 export default function SharedQuizzesPage() {
   const navigate = useNavigate();
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   // Use shared quizzes hook
   const { data: sharedQuizzes = [], isLoading: loading } = useSharedQuizzes();
+
+  // Simulate progress while loading
+  useEffect(() => {
+    if (loading) {
+      setLoadingProgress(0);
+      const interval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          return prev + 15; // Faster increments for quick API call
+        });
+      }, 150);
+
+      return () => clearInterval(interval);
+    } else {
+      // When loading completes, finish the progress
+      setLoadingProgress(100);
+      // Reset after animation
+      const timeout = setTimeout(() => setLoadingProgress(0), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [loading]);
 
   const handleTakeQuiz = (quiz: SharedQuiz["customQuiz"]) => {
     // Check if quiz has a documentId to determine the correct route
@@ -34,7 +57,37 @@ export default function SharedQuizzesPage() {
       <h1 style={{ marginBottom: "2rem" }}>Quizzes Shared With Me</h1>
 
       {loading ? (
-        <p>Loading...</p>
+        <div style={{ marginTop: "2rem" }}>
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              backgroundColor: "#e5e7eb",
+              borderRadius: "9999px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${loadingProgress}%`,
+                backgroundColor: "#fe4d13",
+                transition: "width 0.3s ease-in-out",
+                borderRadius: "9999px",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: "0.5rem",
+              textAlign: "center",
+              fontSize: "0.875rem",
+              color: "#666",
+            }}
+          >
+            Loading shared quizzes... {loadingProgress}%
+          </div>
+        </div>
       ) : sharedQuizzes.length === 0 ? (
         <div style={{ textAlign: "center", padding: "3rem", color: "#6b7280" }}>
           <p style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>
