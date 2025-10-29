@@ -209,14 +209,15 @@ body {
   flex: 1;
 }
 .welcome-text-section .welcome-text {
+  color: #652a15;
   font-size: 24px;
   font-weight: 300;
   margin: 0 0 0.25rem 0;
 }
 .welcome-text-section .welcome-title {
+  color: #652a15;
   font-size: 28px;
   font-weight: 700;
-  color: #393939;
   margin: 0;
 }
 
@@ -263,6 +264,7 @@ body {
   margin-bottom: 0.25rem;
   text-align: left;
   margin-bottom: 1rem;
+  color: #652a15;
 }
 
 .tick-box {
@@ -271,8 +273,8 @@ body {
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem;
-  background-color: #f1eae8;
-  border-radius: 1rem;
+  background-color: #FFEAB3;
+  border-radius: 1.5rem;
   min-width: 50px;
   transition: transform 0.2s ease;
 }
@@ -320,6 +322,7 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
+  color: #652a15;
 }
 .top-leaderboard .leaderboard-content {
   background-color: #f1eae8;
@@ -336,6 +339,99 @@ body {
 .top-leaderboard .leaderboard-content .error-text {
   color: #c40000;
   margin-bottom: 1rem;
+}
+.top-leaderboard .leaderboard-content-new {
+  background-color: #f1eae8;
+  border: 1px solid #393939;
+  border-radius: 0.5rem;
+  padding: 0.5rem;
+  text-align: center;
+  display: flex;
+  gap: 1rem;
+  align-items: flex-start;
+  min-height: 200px;
+  background-color: #fffdf4;
+  border: 10px solid #FFEAB3;
+  align-items: center;
+}
+.top-leaderboard .left-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.top-leaderboard .rocky-character-section {
+  display: flex;
+  align-items: center;
+}
+.top-leaderboard .rocky-character-section .rocky-character-image {
+  width: 100px;
+  height: 100px;
+}
+.top-leaderboard .podium-section .first-place-podium {
+  background-color: #fe4d13;
+  border-radius: 0.5rem;
+  padding: 1rem;
+  text-align: center;
+  width: 84px;
+  height: 96px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding-top: 6rem;
+}
+.top-leaderboard .podium-section .first-place-podium .podium-label {
+  font-weight: 700;
+  font-size: 16px;
+  color: white;
+}
+.top-leaderboard .message-buttons-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  padding: 1rem;
+}
+.top-leaderboard .motivational-message .message-text {
+  font-size: 16px;
+  text-align: left;
+  color: #652a15;
+  font-weight: 700;
+  margin-bottom: 1rem;
+  line-height: 1.5;
+}
+.top-leaderboard .motivational-message .message-text-2 {
+  text-align: left;
+  font-size: 16px;
+  color: #652a15;
+  font-weight: 500;
+  margin: 0 0 0.25rem 0;
+  line-height: 1.5;
+}
+.top-leaderboard .action-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+.top-leaderboard .btn-leaderboard,
+.top-leaderboard .btn-continue-learning {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #652a15;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-size: 16px;
+  font-weight: 500;
+}
+.top-leaderboard .btn-leaderboard:hover,
+.top-leaderboard .btn-continue-learning:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
 }
 
 .podium-container {
@@ -427,6 +523,7 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
+  color: #652a15;
 }
 .upload-file-card .upload-content {
   background-color: #f1eae8;
@@ -447,7 +544,8 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
-  margin-bottom: 1rem;
+  margin-bottom: 0;
+  color: #652a15;
 }
 .word-of-the-day-card {
   border-radius: 0.5rem;
@@ -530,6 +628,7 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
+  color: #652a15;
 }
 .start-learning-card .learning-content {
   background-color: #f1eae8;
@@ -537,6 +636,11 @@ body {
   border-radius: 0.5rem;
   padding: 0.5rem;
   text-align: center;
+  background-color: #FFEAB3;
+  border: 10px solid #FFEAB3;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
 }
 .start-learning-card .learning-description {
   font-size: 16px;
@@ -544,13 +648,23 @@ body {
   margin-bottom: 1.5rem;
 }
 .start-learning-card .learning-button {
-  margin-top: 0.25rem;
+  width: 100%;
+  margin: 0;
+  background-color: #652a15;
+  border: 1px solid #652a15;
+  border-radius: 0.5rem;
+  margin-top: 0.5rem;
+  padding: 1rem;
+  font-size: 16px;
+  font-weight: 700;
+  color: white;
 }
 .start-learning-card .learning-image {
   width: 100%;
-  height: 100%;
+  height: auto;
   -o-object-fit: cover;
      object-fit: cover;
+  display: block;
 }
 
 .loading-placeholder,
@@ -942,6 +1056,10 @@ button.back-button {
   background-color: #f0fdf4;
   border: 1px solid #bbf7d0;
   border-radius: 0.5rem;
+}
+
+.fullTranslationOverview {
+  background-color: red;
 }
 
 .btn, .choose-file-button, .btn-primary {
