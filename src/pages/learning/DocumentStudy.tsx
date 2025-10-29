@@ -18,6 +18,7 @@ export default function DocumentStudy() {
     name: string;
   } | null>(null);
   const [isOwner, setIsOwner] = useState<boolean>(false);
+  const [loadingProgress, setLoadingProgress] = useState(0);
 
   // Fetch document for ownership check
   const { data: documentData, isLoading: checkingOwnership } =
@@ -58,6 +59,48 @@ export default function DocumentStudy() {
     }
   }, [documentData, sharedQuizzes, userId, documentId, navigate]);
 
+  // Simulate progress while loading ownership check
+  useEffect(() => {
+    if (checkingOwnership) {
+      setLoadingProgress(0);
+      const interval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          return prev + 15; // Faster increments for quick API call
+        });
+      }, 150);
+
+      return () => clearInterval(interval);
+    } else {
+      // When loading completes, finish the progress
+      setLoadingProgress(100);
+      // Reset after animation
+      const timeout = setTimeout(() => setLoadingProgress(0), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [checkingOwnership]);
+
+  // Simulate progress while loading quizzes
+  useEffect(() => {
+    if (loadingQuizzes && isOwner) {
+      setLoadingProgress(0);
+      const interval = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          return prev + 15; // Faster increments for quick API call
+        });
+      }, 150);
+
+      return () => clearInterval(interval);
+    } else if (!loadingQuizzes && isOwner) {
+      // When loading completes, finish the progress
+      setLoadingProgress(100);
+      // Reset after animation
+      const timeout = setTimeout(() => setLoadingProgress(0), 500);
+      return () => clearTimeout(timeout);
+    }
+  }, [loadingQuizzes, isOwner]);
+
   const handleDelete = async () => {
     if (
       !confirm(
@@ -80,8 +123,40 @@ export default function DocumentStudy() {
   // Show loading while checking ownership
   if (checkingOwnership) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Loading...</p>
+      <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+        <h1>Document Study</h1>
+        {/* Progress Bar */}
+        <div style={{ marginTop: "2rem" }}>
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              backgroundColor: "#e5e7eb",
+              borderRadius: "9999px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${loadingProgress}%`,
+                backgroundColor: "#fe4d13",
+                transition: "width 0.3s ease-in-out",
+                borderRadius: "9999px",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: "0.5rem",
+              textAlign: "center",
+              fontSize: "0.875rem",
+              color: "#666",
+            }}
+          >
+            Loading document... {loadingProgress}%
+          </div>
+        </div>
       </div>
     );
   }
@@ -94,8 +169,40 @@ export default function DocumentStudy() {
   // Show loading while fetching document data
   if (loading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Loading...</p>
+      <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
+        <h1>Study: {document?.filename || "Document"}</h1>
+        {/* Progress Bar */}
+        <div style={{ marginTop: "2rem" }}>
+          <div
+            style={{
+              width: "100%",
+              height: "8px",
+              backgroundColor: "#e5e7eb",
+              borderRadius: "9999px",
+              overflow: "hidden",
+            }}
+          >
+            <div
+              style={{
+                height: "100%",
+                width: `${loadingProgress}%`,
+                backgroundColor: "#fe4d13",
+                transition: "width 0.3s ease-in-out",
+                borderRadius: "9999px",
+              }}
+            />
+          </div>
+          <div
+            style={{
+              marginTop: "0.5rem",
+              textAlign: "center",
+              fontSize: "0.875rem",
+              color: "#666",
+            }}
+          >
+            Loading study options... {loadingProgress}%
+          </div>
+        </div>
       </div>
     );
   }
