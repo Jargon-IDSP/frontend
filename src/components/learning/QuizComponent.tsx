@@ -4,6 +4,7 @@ import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
+import QuizCompletion from "./QuizCompletion";
 import type { QuizComponentProps, ChatRequest } from "@/types/quizComponent";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import nextButton from "../../assets/icons/nextButton.svg";
@@ -22,6 +23,7 @@ export default function QuizComponent({
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [score, setScore] = useState(0);
+  const [isComplete, setIsComplete] = useState(false);
 
   // Chat state
   const [showChatModal, setShowChatModal] = useState(false);
@@ -98,38 +100,48 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   };
 
   const handleNext = () => {
-  let finalScore = score;
+    let finalScore = score;
 
-  if (selectedAnswer) {
-    // Save answer
-    setAnswers({ ...answers, [currentQuestionIndex]: selectedAnswer });
+    if (selectedAnswer) {
+      // Save answer
+      setAnswers({ ...answers, [currentQuestionIndex]: selectedAnswer });
 
-    // Update score if correct
-    const selectedChoice = currentQuestion.choices.find(
-      (c) => c.id === selectedAnswer
-    );
-    if (selectedChoice?.isCorrect) {
-      finalScore = score + 1;
-      setScore(finalScore);
+      // Update score if correct
+      const selectedChoice = currentQuestion.choices.find(
+        (c) => c.id === selectedAnswer
+      );
+      if (selectedChoice?.isCorrect) {
+        finalScore = score + 1;
+        setScore(finalScore);
+      }
     }
-  }
 
-  // Navigate or complete quiz
-  if (currentQuestionIndex < questions.length - 1) {
-    setCurrentQuestionIndex(currentQuestionIndex + 1);
-    setSelectedAnswer(null);
-    resetChatState();
-  } else {
-    // Pass the final score that includes the last question
-    onComplete(finalScore, questions.length);
-  }
-};
+    // Navigate or complete quiz
+    if (currentQuestionIndex < questions.length - 1) {
+      setCurrentQuestionIndex(currentQuestionIndex + 1);
+      setSelectedAnswer(null);
+      resetChatState();
+    } else {
+      // Show completion screen
+      setIsComplete(true);
+      onComplete(finalScore, questions.length);
+    }
+  };
 
   const handlePrevious = () => {
     if (currentQuestionIndex === 0) return;
 
     setCurrentQuestionIndex(currentQuestionIndex - 1);
     setSelectedAnswer(answers[currentQuestionIndex - 1] || null);
+    resetChatState();
+  };
+
+  const handleRetry = () => {
+    setIsComplete(false);
+    setCurrentQuestionIndex(0);
+    setSelectedAnswer(null);
+    setAnswers({});
+    setScore(0);
     resetChatState();
   };
 
@@ -154,6 +166,18 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   const handleCloseChat = () => {
     setShowChatModal(false);
   };
+
+  // Show completion screen
+  if (isComplete) {
+    return (
+      <QuizCompletion
+        score={score}
+        totalQuestions={questions.length}
+        onRetry={handleRetry}
+        onBack={onBack}
+      />
+    );
+  }
 
   // Empty state
   if (questions.length === 0) {
@@ -259,7 +283,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
           <img src={backButton} alt="Back" />
         </button>
 
-           {/* <HappyRocky /> */}
         <button className="quiz-chat-button" onClick={handleOpenChat}>
           <span className="quiz-chat-button-text">Need Help? Ask Rocky!</span>
         </button>
@@ -276,8 +299,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
           <img src={nextButton} alt="Next" />
         </button>
       </div>
-
-  
 
       {/* Chat Modal */}
       <ChatModal
