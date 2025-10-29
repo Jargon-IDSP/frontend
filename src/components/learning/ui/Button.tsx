@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react';
+import type { ReactNode, CSSProperties } from 'react';
 
 interface ButtonProps {
   onClick: () => void;
@@ -8,6 +8,7 @@ interface ButtonProps {
   fullWidth?: boolean;
   size?: 'small' | 'medium' | 'large';
   className?: string;
+  style?: CSSProperties;
 }
 
 export default function Button({
@@ -18,6 +19,7 @@ export default function Button({
   fullWidth = false,
   size = 'medium',
   className = '',
+  style,
 }: ButtonProps) {
   const classes = [
     'button',
@@ -32,6 +34,7 @@ export default function Button({
       onClick={onClick}
       disabled={disabled}
       className={classes}
+      style={style}
     >
       {children}
     </button>

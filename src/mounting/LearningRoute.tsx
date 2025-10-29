@@ -7,7 +7,6 @@ import ExistingSelect from '../pages/learning/ExistingSelect';
 import CustomSelect from '../pages/learning/CustomSelect';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
-import Quizzes from '../pages/learning/Quizzes';
 import QuizSelection from '../pages/learning/QuizSelection';
 import TakeExistingQuiz from '../pages/learning/TakeExistingQuiz';
 import TakeCustomQuiz from '../pages/learning/TakeCustomQuiz';
@@ -31,7 +30,7 @@ export const learningRoutes: RouteObject = {
         { path: 'levels/:levelId', element: <ExistingSelect /> },
         { path: 'levels/:levelId/terms', element: <Terms /> },
         { path: 'levels/:levelId/questions', element: <Questions /> },
-        { path: 'levels/:levelId/quizzes', element: <Quizzes /> },
+        { path: 'levels/:levelId/quizzes', element: <QuizSelection /> },
         { path: 'levels/:levelId/quiz', element: <QuizSelection /> },
         { path: 'levels/:levelId/quiz/take', element: <TakeExistingQuiz /> },
       ],
@@ -44,14 +43,14 @@ export const learningRoutes: RouteObject = {
         { index: true, element: <CustomSelect /> },
         { path: 'terms', element: <Terms /> },
         { path: 'questions', element: <Questions /> },
-        { path: 'quizzes', element: <Quizzes /> },
+        { path: 'quizzes', element: <QuizSelection /> },
         { path: 'quiz/take', element: <TakeCustomQuiz /> },
         
         // Category routes
         { path: 'categories/:category', element: <CategoryStudy /> },
         { path: 'categories/:category/terms', element: <Terms /> },
         { path: 'categories/:category/questions', element: <Questions /> },
-        { path: 'categories/:category/quizzes', element: <Quizzes /> },
+        { path: 'categories/:category/quizzes', element: <QuizSelection /> },
         { path: 'categories/:category/quiz/take', element: <TakeCategoryQuiz /> },
       ],
     },
@@ -63,7 +62,7 @@ export const learningRoutes: RouteObject = {
         { index: true, element: <DocumentStudy /> }, // Overview
         { path: 'terms', element: <Terms /> },
         { path: 'questions', element: <Questions /> },
-        { path: 'quizzes', element: <Quizzes /> },
+        { path: 'quizzes', element: <QuizSelection /> },
       ],
     },
 
