@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import RockySpeechBubble from './RockySpeechBubble';
+import bookIcon from '../assets/icons/bookIcon.svg';
+import languageIcon from '../assets/icons/languageIcon.svg';
 
 const UploadFileCard: React.FC = () => {
   const navigate = useNavigate();
@@ -12,17 +13,24 @@ const UploadFileCard: React.FC = () => {
   return (
     <div className="upload-file-card">
       <h2 className="upload-title">AI Translate & Lesson</h2>
-      <div className="upload-content">
-        <RockySpeechBubble 
-          text="Upload your documents and I’ll turn them into bite-sized lessons!"
-          className="upload-speech-bubble"
-        />
-        <button 
-          className="btn btn-primary upload-button"
-          onClick={handleUploadClick}
-        >
-          Upload your file
-        </button>
+      <div className="upload-content upload-options">
+        <div className="upload-option-card">
+          <div className="upload-option-icon">
+            <img src={bookIcon} alt="Generate" />
+          </div>
+          <button className="btn upload-option-button" onClick={handleUploadClick}>
+            Generate
+          </button>
+        </div>
+
+        <div className="upload-option-card">
+          <div className="upload-option-icon">
+            <img src={languageIcon} alt="Translate" />
+          </div>
+          <button className="btn upload-option-button" onClick={handleUploadClick}>
+            Translate
+          </button>
+        </div>
       </div>
     </div>
   );

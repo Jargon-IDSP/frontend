@@ -359,9 +359,42 @@
   }
 
   .upload-content {
-    @include card-content;
     position: relative;
     min-height: 150px;
+  }
+}
+
+// Upload options grid (Generate / Translate)
+.upload-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+}
+
+.upload-option-card {
+  background-color: $color-second-neutral-dark;
+  border-radius: $spacing-sm;
+  padding: $spacing-md;
+  padding-bottom: $spacing-sm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upload-option-icon {
+  background-color: white;
+  border-radius: $spacing-sm;
+  padding: $spacing-lg;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-sm;
+
+  img {
+    width: 64px;
+    height: 64px;
   }
 }
 
