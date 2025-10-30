@@ -68,6 +68,16 @@ export default function Terms() {
   const isEmpty = terms.length === 0;
   const showLoading = !data && !error;
 
+  // Build dynamic finish URL based on current context
+  let finishHref = "/learning/custom/quizzes";
+  if (location.pathname.includes("/existing/")) {
+    if (levelId) finishHref = `/learning/existing/levels/${levelId}/quizzes`;
+  } else if (location.pathname.includes("/learning/documents/")) {
+    if (documentId) finishHref = `/learning/documents/${documentId}/quizzes`;
+  } else if (category) {
+    finishHref = `/learning/custom/categories/${category}/quizzes`;
+  }
+
   // Simulate progress while loading
   useEffect(() => {
     if (showLoading) {
@@ -152,6 +162,7 @@ export default function Terms() {
                 language={queryLanguage}
                 type={type === "existing" ? "existing" : "custom"}
                 totalCount={count}
+                finishHref={finishHref}
               />
             </div>
           )}
