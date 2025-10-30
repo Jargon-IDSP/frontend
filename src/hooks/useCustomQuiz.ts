@@ -11,7 +11,11 @@ interface QuizResponse {
   data?: QuizQuestion[];
 }
 
-export function useCustomQuiz(quizId: string | null, quizNumber: number = 1) {
+export function useCustomQuiz(
+    quizId: string | null,
+    quizNumber: number = 1,
+    enabled: boolean = true
+  ) {
   const { getToken } = useAuth();
 
   return useQuery({
@@ -54,6 +58,7 @@ export function useCustomQuiz(quizId: string | null, quizNumber: number = 1) {
         throw new Error("Invalid quiz data structure");
       }
     },
+    enabled,
     retry: 2,
     staleTime: 10 * 60 * 1000, // 10 minutes
   });

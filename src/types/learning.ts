@@ -193,3 +193,23 @@ export interface ApiResponse<T> {
   industryCount?: number;
   generalCount?: number;
 }
+
+ export interface UseRandomFlashcardOptions {
+    type: "custom" | "existing";
+    documentId?: string;
+    category?: string;
+    levelId?: number;
+    industryId?: number;
+    enabled?: boolean;
+  }
+
+  export interface FlashcardDisplayProps {
+    type: "custom" | "existing";
+    isRandom?: boolean;
+    documentId?: string;
+    category?: string;
+    levelId?: number;
+    industryId?: number;
+    showIndustry?: boolean;
+    showLevel?: boolean;
+  }

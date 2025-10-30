@@ -1,4 +1,6 @@
 import Button from "./ui/Button";
+import '../../styles/components/_studyType.scss'; // Add this import
+
 
 interface StudyTypeCardProps {
   name: string;
