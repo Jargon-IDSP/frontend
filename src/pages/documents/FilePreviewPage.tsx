@@ -14,7 +14,7 @@ import type {
 
 export default function FilePreviewPage() {
   const location = useLocation();
-  const navigate = ustoNavigate();
+  const navigate = useNavigate();
   const { getToken } = useAuth();
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
 
