@@ -1,4 +1,7 @@
 import { UserButton, useUser } from '@clerk/clerk-react';
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useProfile } from '../hooks/useProfile';
 import TopLeaderboard from '../components/TopLeaderboard';
 import UploadFileCard from '../components/UploadFileCard';
 import StartLearningCard from '../components/StartLearningCard';
@@ -9,6 +12,19 @@ import rockyWhiteLogo from '/rockyWhite.svg';
 
 export default function LoggedInHome() {
   const { user } = useUser();
+  const navigate = useNavigate();
+  const { data: profile, isLoading } = useProfile();
+
+  // Check if user needs to complete onboarding on first login
+  useEffect(() => {
+    if (!isLoading && user && profile) {
+      // Check if user hasn't selected an industry yet (first time user)
+      // industryId will be null for new users who haven't completed onboarding
+      if (profile.industryId === null || profile.industryId === undefined) {
+        navigate('/onboarding/language');
+      }
+    }
+  }, [user, profile, isLoading, navigate]);
 
   return (
     <div className="home-page">

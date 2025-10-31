@@ -9,6 +9,9 @@ export interface ProfileData {
   firstName?: string;
   lastName?: string;
   score?: number;
+  language?: string;
+  industryId?: number | null;
+  onboardingCompleted?: boolean;
   // Add other profile fields here
   [key: string]: any;
 }
@@ -32,7 +35,9 @@ export function useProfile() {
         throw new Error(errorData.error || "Unable to fetch profile");
       }
 
-      return await res.json();
+      const data = await res.json();
+      // Backend returns { message: "...", user: {...} }, so extract the user object
+      return data.user || data;
     },
     staleTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,

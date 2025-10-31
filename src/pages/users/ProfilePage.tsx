@@ -41,18 +41,26 @@ export default function ProfilePage() {
           <div className="profile-data">
             <pre>{JSON.stringify(data, null, 2)}</pre>
           </div>
-          <div style={{ display: "flex", gap: "1rem" }}>
+          <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/profile/avatar")}
+              >
+                View Avatar
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/profile/friends")}
+              >
+                Friends
+              </button>
+            </div>
             <button
               className="btn btn-primary"
-              onClick={() => navigate("/profile/avatar")}
+              onClick={() => navigate("/onboarding/language")}
             >
-              View Avatar
-            </button>
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate("/profile/friends")}
-            >
-              Friends
+              Update Preferences
             </button>
           </div>
         </div>
