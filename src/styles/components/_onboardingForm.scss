@@ -1,6 +1,10 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
+// Onboarding-specific color variables
+$onboarding-primary: $color-primary; // #fe4d13
+$onboarding-secondary: $color-quaternary-dark; // #652a15
+
 .onboarding-form {
   display: flex;
   flex-direction: column;
@@ -37,9 +41,10 @@
 
   &__option {
     padding: $spacing-md $spacing-lg;
-    border: 2px solid;
+    border: 2px solid $onboarding-secondary;
     border-radius: $border-radius-md;
     background-color: transparent;
+    color: $onboarding-secondary;
     font-size: $font-size-body;
     font-weight: $font-weight-medium;
     cursor: pointer;
@@ -60,6 +65,9 @@
     }
 
     &--selected {
+      background-color: $onboarding-primary;
+      border-color: $onboarding-primary;
+      color: white;
       font-weight: $font-weight-bold;
     }
   }
@@ -84,10 +92,14 @@
     min-height: 48px;
 
     &--primary {
+      background-color: $onboarding-primary;
+      border-color: $onboarding-primary;
       color: white;
       width: 100%;
 
       &:disabled {
+        background-color: #ccc;
+        border-color: #ccc;
         cursor: not-allowed;
         opacity: 0.6;
       }
@@ -105,6 +117,7 @@
     &--skip {
       background: transparent;
       border: none;
+      color: $onboarding-secondary;
       text-decoration: underline;
       font-weight: $font-weight-regular;
       padding: $spacing-sm;

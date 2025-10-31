@@ -1,9 +1,10 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
 import { OnboardingForm } from '../../components/onboarding/OnboardingForm';
 import type { OnboardingOption } from '../../components/onboarding/OnboardingForm';
+import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_industryPreferences.scss';
@@ -17,6 +18,16 @@ const industryOptions: OnboardingOption[] = [
   { id: 'welder', label: 'Welder', value: 'welder' },
 ];
 
+// Map industry IDs to names
+const industryIdToName: { [key: number]: string } = {
+  1: 'general',
+  2: 'electrician',
+  3: 'plumber',
+  4: 'carpenter',
+  5: 'mechanic',
+  6: 'welder',
+};
+
 interface OnboardingData {
   language?: string;
   industry?: string;
@@ -26,7 +37,21 @@ export default function IndustryPreferences() {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
+  const { data: profile } = useProfile();
   const [selectedIndustry, setSelectedIndustry] = useState<string>('');
+
+  // Determine if user is updating from profile or doing initial onboarding
+  const isUpdating = profile?.onboardingCompleted;
+
+  // Set initial value if user already has an industry
+  useEffect(() => {
+    if (profile?.industryId) {
+      const industryName = industryIdToName[profile.industryId];
+      if (industryName) {
+        setSelectedIndustry(industryName);
+      }
+    }
+  }, [profile]);
 
   const submitOnboardingMutation = useMutation({
     mutationFn: async (data: OnboardingData) => {
@@ -52,8 +77,12 @@ export default function IndustryPreferences() {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
       // Clear session storage
       sessionStorage.removeItem('onboardingData');
-      // Navigate to home
-      navigate('/');
+      // Navigate based on context
+      if (isUpdating) {
+        navigate('/profile');
+      } else {
+        navigate('/');
+      }
     },
     onError: (error) => {
       console.error('Failed to save onboarding preferences:', error);
@@ -62,25 +91,31 @@ export default function IndustryPreferences() {
   });
 
   const handleFinish = () => {
-    // Get stored language preference
-    const onboardingData: OnboardingData = JSON.parse(
-      sessionStorage.getItem('onboardingData') || '{}'
-    );
-    onboardingData.industry = selectedIndustry;
-
-    // Submit to backend
-    submitOnboardingMutation.mutate(onboardingData);
+    if (isUpdating) {
+      // If updating from profile, only update industry
+      submitOnboardingMutation.mutate({ industry: selectedIndustry });
+    } else {
+      // If in onboarding flow, get stored language and submit both
+      const onboardingData: OnboardingData = JSON.parse(
+        sessionStorage.getItem('onboardingData') || '{}'
+      );
+      onboardingData.industry = selectedIndustry;
+      submitOnboardingMutation.mutate(onboardingData);
+    }
   };
 
   const handleSkip = () => {
-    // Set default to general
-    const onboardingData: OnboardingData = JSON.parse(
-      sessionStorage.getItem('onboardingData') || '{}'
-    );
-    onboardingData.industry = 'general';
-
-    // Submit to backend
-    submitOnboardingMutation.mutate(onboardingData);
+    if (isUpdating) {
+      // If updating from profile, just go back
+      navigate('/profile');
+    } else {
+      // If in onboarding flow, set default and submit
+      const onboardingData: OnboardingData = JSON.parse(
+        sessionStorage.getItem('onboardingData') || '{}'
+      );
+      onboardingData.industry = 'general';
+      submitOnboardingMutation.mutate(onboardingData);
+    }
   };
 
   return (
@@ -98,10 +133,9 @@ export default function IndustryPreferences() {
           onSelect={setSelectedIndustry}
           onNext={handleFinish}
           onSkip={handleSkip}
-          isLastStep={true}
-          showSkip={true}
-          primaryColor="#ffba0a"
-          secondaryColor="#652a15"
+          isLastStep={!isUpdating}
+          showSkip={!isUpdating}
+          nextButtonText={isUpdating ? 'Done' : undefined}
         />
 
         {submitOnboardingMutation.isPending && (

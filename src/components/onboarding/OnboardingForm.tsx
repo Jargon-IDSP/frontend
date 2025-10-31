@@ -17,8 +17,7 @@ export interface OnboardingFormProps {
   onSkip?: () => void;
   isLastStep?: boolean;
   showSkip?: boolean;
-  primaryColor?: string;
-  secondaryColor?: string;
+  nextButtonText?: string;
 }
 
 export const OnboardingForm: React.FC<OnboardingFormProps> = ({
@@ -31,8 +30,7 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
   onSkip,
   isLastStep = false,
   showSkip = true,
-  primaryColor = '#fe4d13',
-  secondaryColor = '#652a15',
+  nextButtonText,
 }) => {
   return (
     <div className="onboarding-form">
@@ -49,11 +47,6 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
               selectedValue === option.value ? 'onboarding-form__option--selected' : ''
             }`}
             onClick={() => onSelect(option.value)}
-            style={{
-              backgroundColor: selectedValue === option.value ? primaryColor : 'transparent',
-              color: selectedValue === option.value ? '#fff' : secondaryColor,
-              borderColor: selectedValue === option.value ? primaryColor : secondaryColor,
-            }}
           >
             {option.label}
           </button>
@@ -65,21 +58,14 @@ export const OnboardingForm: React.FC<OnboardingFormProps> = ({
           className="onboarding-form__button onboarding-form__button--primary"
           onClick={onNext}
           disabled={!selectedValue}
-          style={{
-            backgroundColor: selectedValue ? primaryColor : '#ccc',
-            borderColor: selectedValue ? primaryColor : '#ccc',
-          }}
         >
-          {isLastStep ? 'Finish' : 'Next'}
+          {nextButtonText || (isLastStep ? 'Finish' : 'Next')}
         </button>
 
         {showSkip && onSkip && (
           <button
             className="onboarding-form__button onboarding-form__button--skip"
             onClick={onSkip}
-            style={{
-              color: secondaryColor,
-            }}
           >
             Skip
           </button>

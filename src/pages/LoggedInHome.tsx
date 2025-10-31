@@ -18,9 +18,8 @@ export default function LoggedInHome() {
   // Check if user needs to complete onboarding on first login
   useEffect(() => {
     if (!isLoading && user && profile) {
-      // Check if user hasn't selected an industry yet (first time user)
-      // industryId will be null for new users who haven't completed onboarding
-      if (profile.industryId === null || profile.industryId === undefined) {
+      // Check if user hasn't completed onboarding (first time user)
+      if (!profile.onboardingCompleted) {
         navigate('/onboarding/language');
       }
     }

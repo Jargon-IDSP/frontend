@@ -56,12 +56,20 @@ export default function ProfilePage() {
                 Friends
               </button>
             </div>
-            <button
-              className="btn btn-primary"
-              onClick={() => navigate("/onboarding/language")}
-            >
-              Update Preferences
-            </button>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/onboarding/language")}
+              >
+                Update Language
+              </button>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/onboarding/industry")}
+              >
+                Update Industry
+              </button>
+            </div>
           </div>
         </div>
       )}
