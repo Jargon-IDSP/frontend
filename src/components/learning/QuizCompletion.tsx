@@ -6,12 +6,17 @@ interface QuizCompletionProps {
   totalQuestions: number;
   onRetry: () => void;
   onBack: () => void;
+  quizType?: 'custom' | 'existing' | 'category';
 }
 
 export default function QuizCompletion({
   score,
   onBack,
+  quizType = 'custom',
 }: QuizCompletionProps) {
+  const completionMessage = quizType === 'existing'
+    ? 'You finished your Red Seal course!'
+    : 'You completed your customized course!';
 
   return (
     <div className="container">
@@ -21,7 +26,7 @@ export default function QuizCompletion({
         <img src={Star} alt="Star" />
         </div>
               <h2>Awesome!</h2>
-              <h2> You completed your customized course!</h2>
+              <h2> {completionMessage}</h2>
               <img className="hatIcon"src={Hat} alt="Hat" />
               <p> You got a new badge to your collection!</p>
               <p className="smallNote">You can view all your achievements on your profile page.</p>

@@ -24,7 +24,7 @@ export default function UnifiedQuizTaker() {
   const navigate = useNavigate();
   const { levelId, category } = useParams<{ levelId?: string; category?: string }>();
   const [searchParams] = useSearchParams();
-  const { language, industryId } = useUserPreferences();
+  const { language: userLanguage, industryId } = useUserPreferences();
 
   // Determine quiz type from route
   const quizType: QuizType = levelId
@@ -37,6 +37,12 @@ export default function UnifiedQuizTaker() {
   const quizNumber = parseInt(searchParams.get("quiz") || "1");
   const quizId = searchParams.get("quizId");
   const queryIndustryId = searchParams.get("industry_id") || industryId?.toString();
+
+  // Always fetch questions with english as default, backend should return all translations in prompts object
+  const language = "english";
+
+  // For translate button: use user preferences to determine target language
+  const displayLanguage = userLanguage || "english";
 
   // Fetch questions based on type
   const customQuiz = useCustomQuiz(quizId, quizNumber, quizType === 'custom');
@@ -153,7 +159,8 @@ export default function UnifiedQuizTaker() {
       quizNumber={quizNumber}
       onComplete={handleQuizComplete}
       onBack={handleBack}
-      preferredLanguage={language}
+      preferredLanguage={displayLanguage}
+      quizType={quizType}
     />
   );
 }

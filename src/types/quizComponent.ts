@@ -6,6 +6,7 @@ export interface QuizComponentProps {
   onComplete: (score: number, totalQuestions: number) => Promise<void>;
   onBack: () => void;
   preferredLanguage: string;
+  quizType?: 'custom' | 'existing' | 'category';
 }
 
 export interface ChatRequest {

@@ -31,13 +31,12 @@ function getQuizDescription(type: QuizType): string {
     : 'Test your knowledge with custom questions from your documents.';
 }
 
-function buildQuizUrl(metadata: QuizMetadata, language: string): string {
+function buildQuizUrl(metadata: QuizMetadata): string {
   const { quizNumber, type, levelId, industryId } = metadata;
   const params = new URLSearchParams();
-  
+
   params.set('quiz', quizNumber);
-  params.set('language', language);
-  
+
   if (industryId) {
     params.set('industry_id', industryId.toString());
   }
@@ -57,7 +56,7 @@ export default function QuizSelection() {
     quizNumber?: string;
   }>();
   
-  const { language, industryId } = useUserPreferences();
+  const { industryId } = useUserPreferences();
   const type: QuizType = location.pathname.includes('/existing/') ? 'existing' : 'custom';
 
   const metadata: QuizMetadata = {
@@ -68,7 +67,7 @@ export default function QuizSelection() {
   };
 
   const handleStartQuiz = () => {
-    const url = buildQuizUrl(metadata, language);
+    const url = buildQuizUrl(metadata);
     navigate(url);
   };
 

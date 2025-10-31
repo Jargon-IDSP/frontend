@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DocumentNav from '../../components/DocumentNav';
 import DocumentSelector from '../../components/learning/DocumentSelector';
 import DocumentStudyOptions from '../../components/learning/DocumentStudyOptions';
-import demoTermCard from '../../assets/demoTermCard.png';
+import WordOfTheDay from '../../components/WordOfTheDay';
 import type { Document } from '../../types/document';
 import { useDocument } from '../../hooks/useDocument';
 
@@ -97,7 +97,7 @@ export default function SelectStudyType() {
         />
 
         {selectedDocument && (
-          <img className="demo-term-card" src={demoTermCard} alt="Demo Term Card" />
+          <WordOfTheDay hideTitle={true} />
         )}
 
         {!selectedDocument ? (

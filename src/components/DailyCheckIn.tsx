@@ -23,7 +23,7 @@ function getPSTDate(offsetDays: number = 0): Date {
 }
 
 // Generate array of 7 days (3 before, today, 3 after) in PST
-function getSevenDayRange(): { date: Date; label: string; key: string; isToday: boolean }[] {
+function getSevenDayRange(): { date: Date; label: string; key: string; isToday: boolean; isFuture: boolean }[] {
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const result = [];
 
@@ -34,7 +34,8 @@ function getSevenDayRange(): { date: Date; label: string; key: string; isToday: 
       date,
       label: days[dayIndex],
       key: `${days[dayIndex]}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
-      isToday: i === 0
+      isToday: i === 0,
+      isFuture: i > 0  // Add this flag
     });
   }
 
@@ -95,7 +96,7 @@ export default function DailyCheckIn() {
           <TickBox
             key={day.key}
             label={day.label}
-            isChecked={daysActive.includes(day.label)}
+            isChecked={!day.isFuture && daysActive.includes(day.label)}
             isToday={day.isToday}
           />
         ))}

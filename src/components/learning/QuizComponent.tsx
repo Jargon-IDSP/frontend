@@ -5,7 +5,7 @@ import { BACKEND_URL } from "../../lib/api";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
-import type { QuizComponentProps, ChatRequest } from "@/types/quizComponent";
+import type { QuizComponentProps, ChatRequest } from "../../types/quizComponent";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import nextButton from "../../assets/icons/nextButton.svg";
 import backButton from "../../assets/icons/backButton.svg";
@@ -15,6 +15,7 @@ export default function QuizComponent({
   onComplete,
   onBack,
   preferredLanguage,
+  quizType,
 }: QuizComponentProps) {
   const { getToken } = useAuth();
 
@@ -175,6 +176,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         totalQuestions={questions.length}
         onRetry={handleRetry}
         onBack={onBack}
+        quizType={quizType}
       />
     );
   }

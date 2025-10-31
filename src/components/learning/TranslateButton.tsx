@@ -26,14 +26,25 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
         setLoading(true);
         try {
           const result = await onTranslate(targetLanguage);
-          setTranslatedText(result);
+          // Only set as translated if we got a valid translation different from original
+          if (result && result !== text) {
+            setTranslatedText(result);
+            setIsTranslated(true);
+          } else {
+            // No translation available
+            setTranslatedText('Translation not available for this content.');
+            setIsTranslated(false);
+          }
         } catch (err) {
           console.error('Translation failed:', err);
+          setTranslatedText('Translation not available for this content.');
+          setIsTranslated(false);
         } finally {
           setLoading(false);
         }
+      } else {
+        setIsTranslated(true);
       }
-      setIsTranslated(true);
     }
   };
 

@@ -6,7 +6,11 @@ import { useUserPreferences } from "../hooks/useUserPreferences";
 import todayTermCard from "../assets/todayTermCard.png";
 import type { WordOfTheDayData, FlashcardResponse } from "@/types/wordOfTheDay";
 
-export default function WordOfTheDay() {
+interface WordOfTheDayProps {
+  hideTitle?: boolean;
+}
+
+export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = {}) {
   const { getToken } = useAuth();
   const { language: userLanguage, loading: preferencesLoading } =
     useUserPreferences();
@@ -132,7 +136,7 @@ export default function WordOfTheDay() {
   if (preferencesLoading || isLoading) {
     return (
       <>
-        <h3 className="word-of-the-day-title">Today's Trade Term</h3>
+        {!hideTitle && <h3 className="word-of-the-day-title">Today's Trade Term</h3>}
         <div className="word-of-the-day-card">
           <img
             src={todayTermCard}
@@ -181,7 +185,7 @@ export default function WordOfTheDay() {
   if (error || !wordData) {
     return (
       <>
-        <h3 className="word-of-the-day-title">Today's Trade Term</h3>
+        {!hideTitle && <h3 className="word-of-the-day-title">Today's Trade Term</h3>}
         <div className="word-of-the-day-card">
           <img
             src={todayTermCard}
@@ -202,7 +206,7 @@ export default function WordOfTheDay() {
 
   return (
     <>
-      <h3 className="word-of-the-day-title">Today's Trade Term</h3>
+      {!hideTitle && <h3 className="word-of-the-day-title">Today's Trade Term</h3>}
       <div className="word-of-the-day-card">
         <img
           src={todayTermCard}
