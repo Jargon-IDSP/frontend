@@ -24,7 +24,7 @@
     
 //     // Hardcode for presentation
 //     if (tab === 'lesson' && documentId) {
-//       navigate(`/learning/documents/cmha47br90001ztmchu5awy17/quizzes`);
+//       navigate(`/learning/documents/cmha47br90001ztmchu5awy17/study`);
 //     } else if (tab === 'document' && documentId) {
 //       navigate(`/learning/custom/quiz/take?quizId=cd81eda1-ea47-4b09-9ab1-d47284aefa0f`);
 //     }

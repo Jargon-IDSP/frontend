@@ -178,8 +178,9 @@ export const routes: RouteObject[] = [
     element: protect(<Quizzes />),
   },
   {
-    path: '/learning/documents/:documentId/quizzes',
-  element: protect(<SelectStudyType />),  },
+    path: '/learning/documents/:documentId/study',
+    element: protect(<SelectStudyType />),
+  },
   {
     path: '/learning/custom/categories/:category/quizzes',
     element: protect(<Quizzes />),

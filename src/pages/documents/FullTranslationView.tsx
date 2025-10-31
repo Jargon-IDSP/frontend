@@ -72,19 +72,21 @@ export default function FullTranslationView() {
   }
 
   const handleLessonClick = () => {
-    navigate(`/learning/documents/${id}/quizzes`);
+    navigate(`/learning/documents/${id}/study`);
   };
 
   const handleBackClick = () => {
     navigate('/documents');
   };
 
+  const documentTitle = translation?.document?.filename || "Document Translation";
+
   return (
         <div className="fullTranslationOverview">
         <div className="container demo">
-        <DocumentNav 
+        <DocumentNav
           activeTab="document"
-          title="Level 2 Acronyms"
+          title={documentTitle}
           onLessonClick={handleLessonClick}
           onBackClick={handleBackClick}
         />

@@ -37,7 +37,7 @@ export default function SharedQuizzesPage() {
   const handleTakeQuiz = (quiz: SharedQuiz["customQuiz"]) => {
     // Check if quiz has a documentId to determine the correct route
     if ("documentId" in quiz && quiz.documentId) {
-      navigate(`/learning/documents/${quiz.documentId}/quizzes`);
+      navigate(`/learning/documents/${quiz.documentId}/study`);
     } else {
       // For general custom quizzes, go to the custom quiz page
       navigate(`/learning/custom/quiz/take?quizId=${quiz.id}&skipHistory=true`);

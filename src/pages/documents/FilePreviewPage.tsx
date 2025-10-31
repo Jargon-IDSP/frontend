@@ -87,7 +87,7 @@
 //   // Utilities
 //   const formatFileSize = (bytes: number) => `${(bytes / 1024 / 1024).toFixed(2)} MB`;
 //   const handleBack = () => navigate("/documents");
-//   const handleStart = () => navigate('/learning/documents/cmha47br90001ztmchu5awy17/quizzes');
+//   const handleStart = () => navigate('/learning/documents/cmha47br90001ztmchu5awy17/study');
 
 //   const isImageFile = fileInfo.fileType.startsWith("image/");
 
@@ -281,7 +281,7 @@ export default function FilePreviewPage() {
     },
     onSuccess: (data) => {
       // Navigate directly to the quizzes page for the uploaded document
-      navigate(`/learning/documents/${data.document.id}/quizzes`);
+      navigate(`/learning/documents/${data.document.id}/study`);
     },
   });
 
@@ -300,7 +300,7 @@ export default function FilePreviewPage() {
 
   const handleUpload = async () => {
     // Temporary hardcoded navigation for demo
-    navigate('/learning/documents/cmha47br90001ztmchu5awy17/quizzes');
+    navigate('/learning/documents/cmha47br90001ztmchu5awy17/study');
     
     // Original code commented out
     // if (!fileInfo) {

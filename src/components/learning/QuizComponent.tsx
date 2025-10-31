@@ -183,14 +183,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   if (questions.length === 0) {
     return (
       <div className="container">
-        <button className="back-to-quiz-button" onClick={onBack}>
-          <img src={goBackIcon} alt="Back" />
-        </button>
-        <div className="empty-state">
-          <p>
-            No questions available for this quiz. Please try again or select a
-            different quiz.
-          </p>
+        <div className="quizContainer">
+          <button className="back-to-quiz-button" onClick={onBack}>
+            <img src={goBackIcon} alt="Back" />
+          </button>
+          <div className="empty-state">
+            <p>
+              No questions available for this quiz. Please try again or select a
+              different quiz.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -198,14 +200,15 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
   return (
     <div className="container">
-      {/* Header */}
-      <button
-        className="back-to-quiz-button"
-        onClick={onBack}
-        aria-label="Back to Quizzes"
-      >
-        <img src={goBackIcon} alt="Back" />
-      </button>
+      <div className="quizContainer">
+        {/* Header */}
+        <button
+          className="back-to-quiz-button"
+          onClick={onBack}
+          aria-label="Back to Quizzes"
+        >
+          <img src={goBackIcon} alt="Back" />
+        </button>
 
       <div className="quiz-progress">
         <span className="quiz-number">
@@ -311,6 +314,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         onSendChat={handleSendChat}
         isLoading={chatMutation.isPending}
       />
+      </div>
     </div>
   );
 }

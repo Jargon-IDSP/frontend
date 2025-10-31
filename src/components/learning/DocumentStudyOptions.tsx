@@ -42,7 +42,7 @@ export default function DocumentStudyOptions({
       navigate(`/learning/custom/quiz/take?quizId=${quizzes[0].id}`);
     } else {
       // Fallback to document quizzes page if no quizzes found
-      navigate(`/learning/documents/${documentId}/quizzes`);
+      navigate(`/learning/documents/${documentId}/study`);
     }
   };
 

@@ -241,7 +241,7 @@ export default function DocumentStudy() {
           icon="🎯"
           title="Take Quiz"
           description="Test your knowledge"
-          onClick={() => navigate(`/learning/documents/${documentId}/quizzes`)}
+          onClick={() => navigate(`/learning/documents/${documentId}/study`)}
         />
 
         <NavigationCard

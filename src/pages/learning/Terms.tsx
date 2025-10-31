@@ -73,7 +73,7 @@ export default function Terms() {
   if (location.pathname.includes("/existing/")) {
     if (levelId) finishHref = `/learning/existing/levels/${levelId}/quizzes`;
   } else if (location.pathname.includes("/learning/documents/")) {
-    if (documentId) finishHref = `/learning/documents/${documentId}/quizzes`;
+    if (documentId) finishHref = `/learning/documents/${documentId}/study`;
   } else if (category) {
     finishHref = `/learning/custom/categories/${category}/quizzes`;
   }
