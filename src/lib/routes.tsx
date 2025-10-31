@@ -27,6 +27,8 @@ import FullTranslationView from '../pages/documents/FullTranslationView';
 import DocumentStudy from '../pages/learning/DocumentStudy';
 import FilePreviewPage from '../pages/documents/FilePreviewPage';
 import UserDocumentsPage from '../pages/documents/UserDocumentsPage';
+import LanguagePreferences from '../pages/onboarding/LanguagePreferences';
+import IndustryPreferences from '../pages/onboarding/IndustryPreferences';
 
 const protect = (element: ReactElement) => <ProtectedRoute>{element}</ProtectedRoute>;
 
@@ -34,6 +36,14 @@ export const routes: RouteObject[] = [
   {
     path: '/',
     element: <HomePage />,
+  },
+  {
+    path: '/onboarding/language',
+    element: protect(<LanguagePreferences />),
+  },
+  {
+    path: '/onboarding/industry',
+    element: protect(<IndustryPreferences />),
   },
   {
     path: '/chat',
