@@ -108,6 +108,14 @@
   
 }
 
+.upload-option-button {
+  background-color: $color-quaternary-dark;
+  color: $color-second-neutral-light;
+  border-color: $color-quaternary-dark;
+  width: 100%;
+  font-weight: $font-weight-bold;
+}
+
 .back-to-choose-button-preview {
   display: flex;
   width: 276px;

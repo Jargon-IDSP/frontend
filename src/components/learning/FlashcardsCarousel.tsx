@@ -2,6 +2,7 @@ import type { Term } from '../../types/learning';
 import FlippableTermCard from './FlippableTermCard';
 import backIcon from "../../assets/icons/backButton.svg";
 import nextIcon from "../../assets/icons/nextButton.svg";
+import { useNavigate } from 'react-router-dom';
 
 interface FlashcardsCarouselProps {
   terms: Term[];
@@ -11,6 +12,7 @@ interface FlashcardsCarouselProps {
   language: string;
   type: "existing" | "custom";
   totalCount: number;
+  finishHref?: string;
 }
 
 export default function FlashcardsCarousel({
@@ -21,7 +23,9 @@ export default function FlashcardsCarousel({
   language,
   type,
   totalCount,
+  finishHref,
 }: FlashcardsCarouselProps) {
+  const navigate = useNavigate();
   const currentTerm = terms[currentIndex];
 
   if (!currentTerm) {
@@ -53,7 +57,11 @@ export default function FlashcardsCarousel({
         
         {currentIndex === terms.length - 1 ? (
           <button
-            onClick={() => window.location.href = "http://localhost:5173/learning/documents/cmha47br90001ztmchu5awy17/quizzes"}
+            onClick={() => {
+              if (finishHref) {
+                navigate(finishHref);
+              }
+            }}
             className="flashcards-carousel-button flashcards-carousel-finish"
           >
             Finish
