@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, useNavigate, useLocation } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate } from "react-router-dom";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
 import { useCustomQuiz } from "../../hooks/useCustomQuiz";
 import { useExistingQuiz } from "../../hooks/useExistingQuiz";
@@ -22,7 +22,6 @@ type QuizType = 'custom' | 'existing' | 'category';
  */
 export default function UnifiedQuizTaker() {
   const navigate = useNavigate();
-  const location = useLocation();
   const { levelId, category } = useParams<{ levelId?: string; category?: string }>();
   const [searchParams] = useSearchParams();
   const { language, industryId } = useUserPreferences();
@@ -45,12 +44,12 @@ export default function UnifiedQuizTaker() {
     levelId,
     quizNumber,
     queryIndustryId,
-    language,
-    quizType === 'existing'
+    language
   );
-  const categoryQuiz = useCategoryQuestions(category, language, quizType === 'category');
+  const categoryQuiz = useCategoryQuestions(category, language);
 
-  // Select the appropriate query result
+  // Select the appropriate query result based on quiz type
+  // Only use data from the active query to prevent unnecessary fetches
   const activeQuery = quizType === 'custom'
     ? customQuiz
     : quizType === 'existing'
@@ -58,6 +57,22 @@ export default function UnifiedQuizTaker() {
     : categoryQuiz;
 
   const { data: questions = [], isLoading: loading, error: queryError } = activeQuery;
+
+  // Check if the query should be enabled based on required parameters
+  const isEnabled = quizType === 'custom'
+    ? !!quizId
+    : quizType === 'existing'
+    ? !!levelId
+    : !!category;
+
+  // Show loading if query is not enabled yet
+  if (!isEnabled && !loading) {
+    return (
+      <div style={{ padding: "2rem", textAlign: "center" }}>
+        <p>Invalid quiz parameters...</p>
+      </div>
+    );
+  }
 
   // Completion mutations based on type
   const completeCustom = useCompleteQuizAttempt();

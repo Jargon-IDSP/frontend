@@ -39,30 +39,17 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
 
   return (
     <div>
-      <div style={{ 
-        display: 'flex', 
-        justifyContent: 'flex-end', 
-        marginBottom: '1rem',
-      }}>
+      <div className="quiz-translate-button">
         <button
           onClick={handleToggle}
           disabled={loading}
-          style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: isTranslated ? '#10b981' : '#6b7280',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: loading ? 'wait' : 'pointer',
-            fontWeight: '500',
-            fontSize: '0.875rem',
-          }}
+          className={`translate-button ${isTranslated ? 'translate-button--translated' : 'translate-button--default'}`}
         >
           {loading ? '...' : isTranslated ? '🌐 Show English' : `🌐 Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
         </button>
       </div>
 
-      <p style={{ fontSize: '1.25rem', marginBottom: '2rem', lineHeight: '1.6' }}>
+      <p className="translate-button-text">
         {isTranslated && translatedText ? translatedText : text}
       </p>
     </div>

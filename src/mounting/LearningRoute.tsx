@@ -8,9 +8,7 @@ import CustomSelect from '../pages/learning/CustomSelect';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
 import QuizSelection from '../pages/learning/QuizSelection';
-import TakeExistingQuiz from '../pages/learning/TakeExistingQuiz';
-import TakeCustomQuiz from '../pages/learning/TakeCustomQuiz';
-import TakeCategoryQuiz from '../pages/learning/TakeCategoryQuiz';
+import UnifiedQuizTaker from '../pages/learning/UnifiedQuizTaker';
 import DocumentStudy from '../pages/learning/DocumentStudy';
 import MyQuizzesPage from '../pages/learning/MyQuizzes';
 import SharedQuizzesPage from '../pages/learning/SharedQuizzes';
@@ -32,7 +30,7 @@ export const learningRoutes: RouteObject = {
         { path: 'levels/:levelId/questions', element: <Questions /> },
         { path: 'levels/:levelId/quizzes', element: <QuizSelection /> },
         { path: 'levels/:levelId/quiz', element: <QuizSelection /> },
-        { path: 'levels/:levelId/quiz/take', element: <TakeExistingQuiz /> },
+        { path: 'levels/:levelId/quiz/take', element: <UnifiedQuizTaker /> },
       ],
     },
 
@@ -44,14 +42,14 @@ export const learningRoutes: RouteObject = {
         { path: 'terms', element: <Terms /> },
         { path: 'questions', element: <Questions /> },
         { path: 'quizzes', element: <QuizSelection /> },
-        { path: 'quiz/take', element: <TakeCustomQuiz /> },
+        { path: 'quiz/take', element: <UnifiedQuizTaker /> },
         
         // Category routes
         { path: 'categories/:category', element: <CategoryStudy /> },
         { path: 'categories/:category/terms', element: <Terms /> },
         { path: 'categories/:category/questions', element: <Questions /> },
         { path: 'categories/:category/quizzes', element: <QuizSelection /> },
-        { path: 'categories/:category/quiz/take', element: <TakeCategoryQuiz /> },
+        { path: 'categories/:category/quiz/take', element: <UnifiedQuizTaker /> },
       ],
     },
 
