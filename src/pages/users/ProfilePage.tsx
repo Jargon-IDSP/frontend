@@ -70,6 +70,14 @@ export default function ProfilePage() {
                 Update Industry
               </button>
             </div>
+            <div style={{ display: "flex", gap: "1rem" }}>
+              <button
+                className="btn btn-primary"
+                onClick={() => navigate("/documents/user")}
+              >
+                Manage Uploaded Documents
+              </button>
+            </div>
           </div>
         </div>
       )}

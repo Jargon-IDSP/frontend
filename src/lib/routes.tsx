@@ -97,10 +97,10 @@ export const routes: RouteObject[] = [
     element: protect(<LeaderboardPage />),
   },
   
-  // Learning
+  // Learning - redirect to custom learning
   {
     path: '/learning',
-    element: protect(<LearningHub />),
+    element: protect(<CustomSelect />),
   },
   {
     path: '/learning/shared',
@@ -128,16 +128,16 @@ export const routes: RouteObject[] = [
     element: protect(<CategoryStudy />),
   },
   
-  // Document Study (NEW - without "custom")
+  // Document Study - redirect to study type selection
   {
     path: '/learning/documents/:documentId',
-    element: protect(<DocumentStudy />),
+    element: protect(<SelectStudyType />),
   },
-  
-  // Legacy route for backwards compatibility
+
+  // Legacy route for backwards compatibility - redirect to study type selection
   {
     path: '/study/:documentId',
-    element: protect(<DocumentStudy />),
+    element: protect(<SelectStudyType />),
   },
   
   // Terms

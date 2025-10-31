@@ -1,11 +1,5 @@
-import type { ReactNode, CSSProperties } from 'react';
-
-interface CardProps {
-  onClick?: () => void;
-  children: ReactNode;
-  hoverable?: boolean;
-  style?: CSSProperties;
-}
+import type { CSSProperties } from 'react';
+import type { CardProps, NavigationCardProps } from '../../../types/ui';
 
 export default function Card({ onClick, children, hoverable = true, style = {} }: CardProps) {
   const baseStyle: CSSProperties = {
@@ -51,16 +45,15 @@ export default function Card({ onClick, children, hoverable = true, style = {} }
 }
 
 // Specialized card for navigation items
-interface NavigationCardProps {
-  icon: string;
-  title: string;
-  description?: string;
-  onClick: () => void;
-}
-
-export function NavigationCard({ icon, title, description, onClick }: NavigationCardProps) {
+export function NavigationCard({ icon, title, description, onClick, disabled = false }: NavigationCardProps) {
   return (
-    <Card onClick={onClick}>
+    <Card
+      onClick={disabled ? undefined : onClick}
+      style={{
+        opacity: disabled ? 0.5 : 1,
+        cursor: disabled ? 'not-allowed' : 'pointer'
+      }}
+    >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
         <div>
           <div style={{ fontWeight: 'bold', marginBottom: description ? '0.25rem' : 0, fontSize: '1.1rem' }}>
@@ -70,7 +63,7 @@ export function NavigationCard({ icon, title, description, onClick }: Navigation
             <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>{description}</div>
           )}
         </div>
-        <span style={{ fontSize: '1.5rem', color: '#6b7280' }}>→</span>
+        <span style={{ fontSize: '1.5rem', color: '#6b7280' }}>{disabled ? '⏳' : '→'}</span>
       </div>
     </Card>
   );

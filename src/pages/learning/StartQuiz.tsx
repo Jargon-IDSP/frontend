@@ -145,7 +145,7 @@ export default function Quizzes() {
         return;
       }
       // User IS the owner - go to document study page
-      navigate(`/learning/documents/${documentId}`);
+      navigate(`/learning/documents/${documentId}/study`);
     } else if (category) {
       navigate(`/learning/custom/categories/${category}`);
     } else {

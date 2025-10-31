@@ -13,14 +13,15 @@ export default function ExistingLevels() {
 
   return (
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <Button 
-        onClick={() => navigate('/learning')} 
-        variant="secondary"
-        style={{ marginBottom: '1rem' }}
-      >
-        ← Back to Learning Hub
-      </Button>
-      
+      <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '1rem' }}>
+        <Button
+          onClick={() => navigate('/learning/custom')}
+          variant="secondary"
+        >
+          Study Custom Content
+        </Button>
+      </div>
+
       <h1>Red Seal Apprentice Levels</h1>
       <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
         Choose your apprenticeship level to start studying trades jargon:
