@@ -36,7 +36,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     deleteMutation.mutate(documentId);
   };
 
-  const handleShare = async (documentId: string, documentName: string) => {
+  const handleShare = async (documentId: string) => {
     try {
       const token = await getToken();
       if (!token) {
@@ -191,7 +191,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
                   </button>
 
                   <button
-                    onClick={() => handleShare(doc.id, doc.filename)}
+                    onClick={() => handleShare(doc.id)}
                     style={{
                       padding: "0.5rem 1rem",
                       backgroundColor: "#10b981",
