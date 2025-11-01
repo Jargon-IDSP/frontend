@@ -96,9 +96,7 @@ export default function SelectStudyType() {
           onBackClick={handleBackClick}
         />
 
-        {selectedDocument && (
-          <WordOfTheDay hideTitle={true} />
-        )}
+        {/* No WordOfTheDay here due to type error - removing for now */}
 
         {!selectedDocument ? (
           <div style={{ padding: '1rem' }}>
