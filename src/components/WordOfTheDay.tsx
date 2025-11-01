@@ -6,11 +6,7 @@ import { useUserPreferences } from "../hooks/useUserPreferences";
 import todayTermCard from "../assets/todayTermCard.png";
 import type { WordOfTheDayData, FlashcardResponse } from "@/types/wordOfTheDay";
 
-interface WordOfTheDayProps {
-  hideTitle?: boolean;
-}
-
-export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = {}) {
+export default function WordOfTheDay() {
   const { getToken } = useAuth();
   const { language: userLanguage, loading: preferencesLoading } =
     useUserPreferences();
