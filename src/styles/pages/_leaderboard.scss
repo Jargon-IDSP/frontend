@@ -1,0 +1,336 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Leaderboard Page
+.leaderboard-page {
+  @include page-layout;
+  padding-top: $spacing-md;
+  padding-bottom: 0;
+  max-width: 600px;
+  margin-bottom: $spacing-lg;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: calc(100vh - 140px); // Account for navbar and padding
+
+  &:has(.leaderboard-empty-state) {
+    justify-content: flex-start;
+    align-items: center;
+    padding-top: $spacing-md;
+    max-width: 600px;
+  }
+}
+
+.leaderboard-title {
+  text-align: center;
+  margin-bottom: $spacing-lg;
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+
+  .leaderboard-page:has(.leaderboard-empty-state) & {
+    position: relative;
+    margin-bottom: $spacing-lg;
+    margin-top: 0;
+  }
+}
+
+// Leaderboard Tabs
+.leaderboard-tabs {
+  display: flex;
+  gap: $spacing-sm;
+  margin-bottom: $spacing-lg;
+  padding-bottom: $spacing-xs;
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 100%;
+
+  .leaderboard-page:has(.leaderboard-empty-state) & {
+    margin-bottom: $spacing-xl;
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+.leaderboard-tab {
+  flex: 1;
+  padding: $spacing-sm $spacing-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-neutral;
+  background: none;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: all $transition-normal;
+  margin-bottom: -2px;
+  width: 50%;
+  min-width: 0;
+
+  &:hover {
+    color: $color-quaternary-dark;
+  }
+
+  &--active {
+    color: $color-quaternary-dark;
+    font-weight: $font-weight-bold;
+    border-color: $color-quaternary-dark;
+  }
+}
+
+// Empty state for users with 0 points
+.leaderboard-empty-state {
+  text-align: center;
+  padding: 3rem $spacing-xl;
+  padding-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  flex: 1;
+  margin-top: 0;
+  position: relative;
+  z-index: 0;
+}
+
+.leaderboard-empty-avatar {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-bottom: $spacing-xl;
+}
+
+.leaderboard-empty-message {
+  font-size: 1.2rem;
+  color: $color-neutral;
+  margin-bottom: $spacing-xl;
+  line-height: $line-height-relaxed;
+}
+
+.leaderboard-start-button {
+  padding: 0.75rem $spacing-xl;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  background-color: $color-quaternary-dark;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background-color $transition-normal;
+
+  &:hover {
+    background-color: $color-quaternary;
+  }
+}
+
+// Leaderboard list
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+// Leaderboard item
+.leaderboard-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: .4rem;
+  padding-top: .65rem;
+  padding-bottom: .65rem;
+  font-size: $font-size-body;
+
+  &--regular {
+    border-bottom: 1px solid $color-quaternary;
+  }
+}
+
+.leaderboard-item-you {
+  font-size: 0.9rem;
+  color: $color-quaternary-dark;
+  font-weight: $font-weight-bold;
+}
+
+.leaderboard-item-content {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  font-weight: $font-weight-bold;
+
+  &--regular {
+    color: $color-neutral;
+  }
+}
+
+.leaderboard-item-rank {
+  margin-right: $spacing-sm;
+}
+
+.leaderboard-item-logo {
+  width: 30px;
+  height: 30px;
+
+  &--top {
+    filter: none;
+  }
+
+  &--regular {
+    filter: grayscale(0.3);
+  }
+}
+
+.leaderboard-item-details {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.leaderboard-item-score {
+  font-weight: $font-weight-bold;
+  color: $color-success;
+}
+
+.leaderboard-item-language {
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  font-size: $font-size-label;
+  padding: 0.2rem 0.5rem;
+}
+
+.leaderboard-error {
+  padding: $spacing-xl;
+  text-align: center;
+}
+
+.leaderboard-error-message {
+  color: $color-error;
+}
+
+.leaderboard-error-button {
+  padding: $spacing-sm $spacing-md;
+}
+
+.leaderboard-empty-list {
+  text-align: center;
+  color: $color-neutral;
+  margin-top: $spacing-xl;
+}
+
+// Podium Styles
+.podium {
+  &-container {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+    min-height: 200px;
+  }
+
+  &-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    max-width: 90px; // Prevent stretching with long names
+    
+    &:hover {
+      transform: translateY(-5px);
+    }
+    
+    &.rank-1 { order: 2; }
+    &.rank-2 { order: 1; }
+    &.rank-3 { order: 3; }
+  }
+
+  &-block {
+    background: linear-gradient(to bottom, $color-quaternary-dark, rgba($color-quaternary-dark, 0.35), rgba($color-quaternary-dark, 0));
+    padding: $spacing-md;
+    text-align: center;
+    position: relative;
+    box-shadow: none;
+    display: flex;
+    align-items: flex-end;
+    padding-bottom: $spacing-xs;
+    
+    .rank-1 & {
+      height: 115px;
+      width: 80px;
+    }
+    
+    .rank-2 & {
+      height: 80px;
+      width: 80px;
+    }
+    .rank-3 & {
+      height: 60px;
+      width: 80px;
+    }
+  }
+
+  &-you {
+    font-size: 0.85rem;
+    color: $color-quaternary-dark;
+    font-weight: $font-weight-medium;
+  }
+}
+
+.rank-label {
+  font-weight: $font-weight-bold;
+  font-size: 18px;
+  width: 100%;
+  text-align: center;
+  color: $color-quaternary-dark;
+  padding-bottom: $spacing-sm;
+}
+
+.rocky-avatar {
+  position: relative;
+  z-index: 2;
+  margin: $spacing-sm 0 $spacing-xs;
+  background-color: $color-second-neutral-light;
+  border-radius: 50%;
+  padding: $spacing-sm;
+  
+  .rocky-logo {
+    &.rank-1 {
+      width: 60px;
+      height: 60px;
+    }
+    
+    &.rank-2,
+    &.rank-3 {
+      width: 45px;
+      height: 45px;
+    }
+  }
+}
+
+.user-name {
+  font-weight: $font-weight-bold;
+  font-size: $font-size-body;
+  color: $color-neutral;
+  text-align: center;
+  margin-bottom: $spacing-xs;
+  line-height: 1.2;
+  max-width: 100%;
+  width: 100%;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  white-space: normal;
+}
+
+.user-score {
+  font-weight: $font-weight-bold;
+  font-size: $font-size-label;
+  color: $color-success;
+  text-align: center;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+

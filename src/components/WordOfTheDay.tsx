@@ -16,45 +16,8 @@ export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = 
     useUserPreferences();
   const [loadingProgress, setLoadingProgress] = useState(0);
 
-  const getTodayString = () => {
-    const today = new Date();
-    return today.toISOString().split("T")[0]; // YYYY-MM-DD format
-  };
-
-  const getStoredWordForToday = (): WordOfTheDayData | null => {
-    const today = getTodayString();
-    const stored = localStorage.getItem("wordOfTheDay");
-
-    if (stored) {
-      try {
-        const data = JSON.parse(stored);
-        if (data.date === today) {
-          return data.word;
-        }
-      } catch (e) {
-        // Invalid stored data, ignore
-      }
-    }
-    return null;
-  };
-
-  const storeWordForToday = (word: WordOfTheDayData) => {
-    const today = getTodayString();
-    const data = {
-      date: today,
-      word: word,
-    };
-    localStorage.setItem("wordOfTheDay", JSON.stringify(data));
-  };
-
-  const fetchWordOfTheDay = async (): Promise<WordOfTheDayData> => {
-    // Check if we already have a word for today
-    const storedWord = getStoredWordForToday();
-    if (storedWord) {
-      return storedWord;
-    }
-
-    // Fetch new word from existing endpoint - fetch in user's language
+  const fetchRandomWord = async (): Promise<WordOfTheDayData> => {
+    // Always fetch a new random word - no caching
     const token = await getToken();
     const response = await fetch(
       `${BACKEND_URL}/learning/existing/random/flashcard?language=${userLanguage}`,
@@ -64,7 +27,7 @@ export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = 
     );
 
     if (!response.ok) {
-      throw new Error("Failed to load word of the day");
+      throw new Error("Failed to load random word");
     }
 
     const result: FlashcardResponse = await response.json();
@@ -95,22 +58,20 @@ export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = 
       level: flashcard.level?.name,
     };
 
-    // Store the word for today
-    storeWordForToday(wordData);
     return wordData;
   };
 
-  // Use TanStack Query
+  // Use TanStack Query - refetch when language changes
   const {
     data: wordData,
     isLoading,
     error,
   } = useQuery({
-    queryKey: ["wordOfTheDay", getTodayString(), userLanguage],
-    queryFn: fetchWordOfTheDay,
+    queryKey: ["randomWord", userLanguage], // Include language so it refetches when language changes
+    queryFn: fetchRandomWord,
     enabled: !preferencesLoading && !!userLanguage, // Only fetch when preferences are loaded
-    staleTime: 24 * 60 * 60 * 1000, // 24 hours - word doesn't change during the day
-    gcTime: 24 * 60 * 60 * 1000, // Keep in cache for 24 hours
+    staleTime: 0, // Always fetch fresh data - no caching
+    gcTime: 0, // Don't cache - always fetch fresh
   });
 
   // Simulate progress while loading
@@ -136,11 +97,11 @@ export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = 
   if (preferencesLoading || isLoading) {
     return (
       <>
-        {!hideTitle && <h3 className="word-of-the-day-title">Today's Trade Term</h3>}
+        {/* {!hideTitle && <h3 className="word-of-the-day-title">Random Trade Term</h3>} */}
         <div className="word-of-the-day-card">
           <img
             src={todayTermCard}
-            alt="Today's Trade Term"
+            alt="Random Trade Term"
             className="today-term-card-image"
           />
           <div className="word-card-content">
@@ -185,18 +146,18 @@ export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = 
   if (error || !wordData) {
     return (
       <>
-        {!hideTitle && <h3 className="word-of-the-day-title">Today's Trade Term</h3>}
+        {/* {!hideTitle && <h3 className="word-of-the-day-title">Random Trade Term</h3>} */}
         <div className="word-of-the-day-card">
           <img
             src={todayTermCard}
-            alt="Today's Trade Term"
+            alt="Random Trade Term"
             className="today-term-card-image"
           />
           <div className="word-card-content">
             <div className="error-message">
               {error instanceof Error
                 ? error.message
-                : "Unable to load today's word"}
+                : "Unable to load random word"}
             </div>
           </div>
         </div>
@@ -206,11 +167,11 @@ export default function WordOfTheDay({ hideTitle = false }: WordOfTheDayProps = 
 
   return (
     <>
-      {!hideTitle && <h3 className="word-of-the-day-title">Today's Trade Term</h3>}
+      {/* {!hideTitle && <h3 className="word-of-the-day-title">Random Trade Term</h3>} */}
       <div className="word-of-the-day-card">
         <img
           src={todayTermCard}
-          alt="Today's Trade Term"
+          alt="Random Trade Term"
           className="today-term-card-image"
         />
         <div className="word-card-content">

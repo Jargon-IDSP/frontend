@@ -1,0 +1,64 @@
+import React from "react";
+import rockyYellowLogo from "/rockyYellow.svg";
+import type { User } from "../hooks/useLeaderboard";
+import { getUserDisplayName } from "../utils/userHelpers";
+
+interface PodiumProps {
+  users: User[];
+  currentUserId?: string;
+}
+
+const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
+  // Get top 3 users
+  const topThree = users.slice(0, 3);
+
+  // Ensure we have exactly 3 items (fill with null if needed)
+  const podiumUsers = [
+    topThree[0] || null,
+    topThree[1] || null,
+    topThree[2] || null,
+  ];
+
+  return (
+    <div className="podium-container">
+      {podiumUsers.map((user, index) => {
+        const rank = index + 1;
+        const isCurrentUser = user?.id === currentUserId;
+
+        if (!user) {
+          // Empty slot placeholder
+          return (
+            <div key={`empty-${rank}`} className={`podium-item rank-${rank}`}>
+              <div className="podium-block">
+                <div className="rank-label">#{rank}</div>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div key={user.id} className={`podium-item rank-${rank}`}>
+            <div className="rocky-avatar">
+              <img
+                src={rockyYellowLogo}
+                alt="Rocky"
+                className={`rocky-logo rank-${rank}`}
+              />
+            </div>
+            <div className="user-name">
+              {getUserDisplayName(user)}
+              {isCurrentUser && <span className="podium-you"> (You)</span>}
+            </div>
+            <div className="user-score">{user.score.toLocaleString()}</div>
+            <div className="podium-block">
+              <div className="rank-label">#{rank}</div>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+export default Podium;
+
