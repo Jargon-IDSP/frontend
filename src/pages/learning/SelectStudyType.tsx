@@ -3,7 +3,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DocumentNav from '../../components/DocumentNav';
 import DocumentSelector from '../../components/learning/DocumentSelector';
 import DocumentStudyOptions from '../../components/learning/DocumentStudyOptions';
-import WordOfTheDay from '../../components/WordOfTheDay';
+// import WordOfTheDay from '../../components/WordOfTheDay';
 import type { Document } from '../../types/document';
 import { useDocument } from '../../hooks/useDocument';
 
