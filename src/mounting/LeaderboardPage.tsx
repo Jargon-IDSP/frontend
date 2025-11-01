@@ -1,22 +1,39 @@
-import React from "react";
-// import { useNavigate } from "react-router-dom";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import rockyLogo from "/rocky.svg";
 import { useLeaderboard } from "../hooks/useLeaderboard";
+import { useProfile } from "../hooks/useProfile";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
+import LeaderboardConnctAvatar from "../assets/leaderboardConnectAvatar.svg";
+import Podium from "../components/Podium";
+
+type LeaderboardType = "general" | "friends";
 
 const LeaderboardPage: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>("general");
   const {
     data: users = [],
     isLoading: loading,
     error,
     refetch,
-  } = useLeaderboard();
+  } = useLeaderboard(leaderboardType);
+  const { data: profile, isLoading: profileLoading } = useProfile();
 
-  if (loading) {
+  // Check if current user has 0 points
+  const userScore = profile?.score ?? 0;
+  const hasNoPoints = userScore === 0;
+
+  // Check if user has no friends (for friends tab)
+  const hasNoFriends = 
+    leaderboardType === "friends" && 
+    users.length === 1 && 
+    users[0]?.id === profile?.id;
+
+  if (loading || profileLoading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>🏆 Leaderboard</h1>
+      <div className="leaderboard-page leaderboard-error">
+        <h1 className="leaderboard-title">Leaderboard</h1>
         <p>Loading...</p>
       </div>
     );
@@ -24,94 +41,145 @@ const LeaderboardPage: React.FC = () => {
 
   if (error) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>🏆 Leaderboard</h1>
-        <p style={{ color: "red" }}>
+      <div className="leaderboard-page leaderboard-error">
+        <h1 className="leaderboard-title">Leaderboard</h1>
+        <p className="leaderboard-error-message">
           Error:{" "}
           {error instanceof Error
             ? error.message
             : "Failed to fetch leaderboard"}
         </p>
-        <button onClick={() => refetch()} style={{ padding: "0.5rem 1rem" }}>
+        <button
+          className="leaderboard-error-button"
+          onClick={() => refetch()}
+        >
           Try Again
         </button>
       </div>
     );
   }
 
-  return (
-    <div style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto" }}>
-      {/* <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
-        ← Back to Dashboard
-      </button> */}
-      <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
-        🏆 Leaderboard
-      </h1>
-
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-        {users.map((user, index) => (
-          <div
-            key={user.id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "1rem",
-              backgroundColor: index < 3 ? "#f0f8ff" : "#f9f9f9",
-              border: index < 3 ? "2px solid #007bff" : "1px solid #ddd",
-              borderRadius: "8px",
-              fontSize: "1.1rem",
-            }}
+  // Show message if user has 0 points
+  if (hasNoPoints) {
+    return (
+      <div className="leaderboard-page">
+        <h1 className="leaderboard-title">Leaderboard</h1>
+        <div className="leaderboard-empty-state">
+          <img src={LeaderboardConnctAvatar} alt="Leaderboard Connect Avatar" className="leaderboard-empty-avatar" />
+          <p className="leaderboard-empty-message">
+            You haven't started earning points yet. Go and start learning!
+          </p>
+          <button
+            className="leaderboard-start-button"
+            onClick={() => navigate("/learning")}
           >
-            <span
-              style={{
-                fontWeight: "bold",
-                color: index < 3 ? "#007bff" : "#333",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              #{index + 1}
-              <img
-                src={rockyLogo}
-                alt="Rocky"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  filter: index < 3 ? "none" : "grayscale(0.3)",
-                }}
-              />
-              {getUserDisplayName(user)}
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <span style={{ fontWeight: "bold", color: "#28a745" }}>
-                {user.score.toLocaleString()}
-              </span>
-              <span
-                style={{
-                  fontWeight: "bold",
-                  color: "#6c757d",
-                  fontSize: "0.9rem",
-                  backgroundColor: "#f8f9fa",
-                  padding: "0.2rem 0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid #dee2e6",
-                }}
-              >
-                {getLanguageCode(user.language)}
-              </span>
-            </div>
-          </div>
-        ))}
+            Start Learning
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="leaderboard-page">
+      <h1 className="leaderboard-title">Leaderboard</h1>
+
+      {/* Tabs */}
+      <div className="leaderboard-tabs">
+        <button
+          className={`leaderboard-tab ${
+            leaderboardType === "general" ? "leaderboard-tab--active" : ""
+          }`}
+          onClick={() => setLeaderboardType("general")}
+        >
+          General
+        </button>
+        <button
+          className={`leaderboard-tab ${
+            leaderboardType === "friends" ? "leaderboard-tab--active" : ""
+          }`}
+          onClick={() => setLeaderboardType("friends")}
+        >
+          Friends
+        </button>
       </div>
 
-      {users.length === 0 && (
-        <p style={{ textAlign: "center", color: "#666", marginTop: "2rem" }}>
-          No users found in the leaderboard.
+      {/* Show message if no friends */}
+      {hasNoFriends ? (
+        <div className="leaderboard-empty-state">
+          <img 
+            src={LeaderboardConnctAvatar} 
+            alt="Leaderboard Connect Avatar" 
+            className="leaderboard-empty-avatar" 
+          />
+          <p className="leaderboard-empty-message">
+            You don't have any friends yet. Add friends to see the friends leaderboard!
+          </p>
+          <button
+            className="leaderboard-start-button"
+            onClick={() => navigate("/profile/friends")}
+          >
+            Add Friends
+          </button>
+        </div>
+      ) : (
+        <>
+          {/* Podium for top 3 */}
+          {users.length > 0 && (
+            <Podium users={users} currentUserId={profile?.id} />
+          )}
+
+          {/* Leaderboard list starting from 4th place */}
+          <div className="leaderboard-list">
+            {users.slice(3).map((user, index) => {
+              const actualRank = index + 4; // Start from 4th place
+              const isCurrentUser = user.id === profile?.id;
+              return (
+                <div
+                  key={user.id}
+                  className={`leaderboard-item leaderboard-item--regular ${
+                    isCurrentUser ? "leaderboard-item--current-user" : ""
+                  }`}
+                >
+                  <span className="leaderboard-item-content leaderboard-item-content--regular">
+                    <span className="leaderboard-item-rank">#{actualRank}</span>
+                    <img
+                      src={rockyLogo}
+                      alt="Rocky"
+                      className="leaderboard-item-logo leaderboard-item-logo--regular"
+                    />
+                    {getUserDisplayName(user)}
+                    {isCurrentUser && (
+                      <span className="leaderboard-item-you">(You)</span>
+                    )}
+                  </span>
+                  <div className="leaderboard-item-details">
+                    <span className="leaderboard-item-score">
+                      {user.score.toLocaleString()}
+                    </span>
+                    <span className="leaderboard-item-language">
+                      {getLanguageCode(user.language)}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {users.length === 0 && (
+            <p className="leaderboard-empty-list">
+              {leaderboardType === "friends"
+                ? "No friends found. Add friends to see the friends leaderboard!"
+                : "No users found in the leaderboard."}
+            </p>
+          )}
+
+      {users.length > 0 && users.length <= 3 && (
+        <p className="leaderboard-empty-list">
+          Only top {users.length} {users.length === 1 ? "user" : "users"} in the leaderboard.
         </p>
+        )}
+        </>
       )}
     </div>
   );
