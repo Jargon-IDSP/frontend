@@ -240,47 +240,14 @@ export default function CustomSelect() {
       )}
 
       <h2 style={{ marginTop: "2rem", marginBottom: "1rem" }}>
-        Study by Category
+        View My Generated Lessons
       </h2>
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-          marginBottom: "2rem",
-        }}
-      >
-        <NavigationCard
-          icon="⚠️"
-          title="Safety"
-          onClick={() => navigate("/learning/custom/categories/safety")}
-        />
-        <NavigationCard
-          icon="🔧"
-          title="Technical"
-          onClick={() => navigate("/learning/custom/categories/technical")}
-        />
-        <NavigationCard
-          icon="📖"
-          title="Training"
-          onClick={() => navigate("/learning/custom/categories/training")}
-        />
-        <NavigationCard
-          icon="🏢"
-          title="Workplace"
-          onClick={() => navigate("/learning/custom/categories/workplace")}
-        />
-        <NavigationCard
-          icon="💼"
-          title="Professional"
-          onClick={() => navigate("/learning/custom/categories/professional")}
-        />
-        <NavigationCard
-          icon="📝"
-          title="General"
-          onClick={() => navigate("/learning/custom/categories/general")}
-        />
-      </div>
+      <NavigationCard
+        icon="📝"
+        title="My Generated Lessons"
+        description="Review your generated flashcards and take quizzes"
+        onClick={() => navigate("/learning/custom/categories")}
+      />
 
       <h2 style={{ marginTop: "2rem", marginBottom: "1rem" }}>Other Options</h2>
       <NavigationCard
