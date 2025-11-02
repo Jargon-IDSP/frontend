@@ -35,7 +35,7 @@ export default function Quizzes() {
     category?: string;
   }>();
   const [searchParams] = useSearchParams();
-  const [documentOwnerId, setDocumentOwnerId] = useState<string | null>(null);
+  const [, setDocumentOwnerId] = useState<string | null>(null);
 
   const {
     language,
@@ -137,20 +137,7 @@ export default function Quizzes() {
   const showLoading = !data && !error;
 
   const handleBack = () => {
-    if (documentId) {
-      // Smart back navigation based on document ownership
-      if (documentOwnerId && userId && documentOwnerId !== userId) {
-        // User is NOT the owner (shared user) - go to shared quizzes
-        navigate("/learning/shared");
-        return;
-      }
-      // User IS the owner - go to document study page
-      navigate(`/learning/documents/${documentId}/study`);
-    } else if (category) {
-      navigate(`/learning/custom/categories/${category}`);
-    } else {
-      navigate(-1);
-    }
+    navigate(-1);
   };
 
   if (showLoading) {

@@ -5,6 +5,7 @@ import Button from "../../components/learning/ui/Button";
 import Card from "../../components/learning/ui/Card";
 import { getUserDisplayName } from "../../types/friend";
 import type { SharedQuiz } from "../../types/learning";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function SharedQuizzesPage() {
   const navigate = useNavigate();
@@ -47,11 +48,11 @@ export default function SharedQuizzesPage() {
   return (
     <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
       <Button
-        onClick={() => navigate("/learning")}
+        onClick={() => navigate(-1)}
         variant="secondary"
         style={{ marginBottom: "1rem" }}
       >
-        ← Back to Learning
+        <img src={goBackIcon} alt="Back Button" />    
       </Button>
 
       <h1 style={{ marginBottom: "2rem" }}>Quizzes Shared With Me</h1>

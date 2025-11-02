@@ -2,6 +2,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTranslation } from "../../hooks/useDocumentTranslation";
 import { useTranslatedText } from "../../hooks/useTranslatedText";
 import DocumentNav from "../../components/DocumentNav";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 
 export default function FullTranslationView() {
@@ -59,8 +60,8 @@ export default function FullTranslationView() {
             {error instanceof Error ? error.message : "Translation not found."}
           </p>
           <div className="error-buttons">
-            <button onClick={() => navigate("/documents")}>
-              ← Back to Documents
+            <button onClick={() => navigate(-1)}>
+              <img src={goBackIcon} alt="Back Button" />    
             </button>
             <button onClick={() => window.location.reload()}>
               Refresh Page
@@ -76,7 +77,7 @@ export default function FullTranslationView() {
   };
 
   const handleBackClick = () => {
-    navigate('/documents');
+    navigate(-1);
   };
 
   const documentTitle = translation?.document?.filename || "Document Translation";

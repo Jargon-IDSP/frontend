@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import type { Friend, PendingRequest, SearchResult } from "../../types/friend";
+import "../../styles/pages/_friends.scss";
+import deleteIcon from "../../assets/icons/deleteIcon.svg";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 interface FriendsResponse {
   data: Friend[];
@@ -236,113 +239,63 @@ export default function FriendsPage() {
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <button
-        onClick={() => navigate("/profile")}
-        style={{ marginBottom: "1rem" }}
-      >
-        ← Back to Profile
-      </button>
+    <div className="friends-page">
+      <div className="friends-header">
+        <button
+          className="friends-back-button"
+          onClick={() => navigate(-1)}
+        >
+          <img src={goBackIcon} alt="Back Button" />
+        </button>
+        <h1 className="friends-title">Friends</h1>
+      </div>
 
-      <h1 style={{ marginBottom: "2rem" }}>Friends</h1>
 
       {/* Search Section */}
-      <div
-        style={{
-          marginBottom: "2rem",
-          backgroundColor: "#fff",
-          padding: "1.5rem",
-          borderRadius: "8px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h2 style={{ marginBottom: "1rem" }}>Add Friends</h2>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
+      <div className="friends-search-section">
+        <h2 className="friends-search-title">Add Friends</h2>
+        <div className="friends-search-container">
           <input
             type="text"
+            className="friends-search-input"
             placeholder="Search by username or email..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyPress={(e) => e.key === "Enter" && searchUsers()}
-            style={{
-              flex: 1,
-              padding: "0.75rem",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
-              fontSize: "1rem",
-            }}
           />
           <button
+            className="friends-search-button"
             onClick={searchUsers}
             disabled={searchUsersMutation.isPending}
-            style={{
-              padding: "0.75rem 1.5rem",
-              backgroundColor: "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: searchUsersMutation.isPending ? "not-allowed" : "pointer",
-              fontWeight: "600",
-            }}
           >
             {searchUsersMutation.isPending ? "Searching..." : "Search"}
           </button>
         </div>
 
         {error && (
-          <div
-            style={{
-              marginTop: "1rem",
-              padding: "0.75rem",
-              backgroundColor: "#fee",
-              color: "#c00",
-              borderRadius: "6px",
-            }}
-          >
+          <div className="friends-error-message">
             {error}
           </div>
         )}
 
         {searchResults.length > 0 && (
-          <div style={{ marginTop: "1rem" }}>
+          <div className="friends-search-results">
             {searchResults.map((user) => (
               <div
                 key={user.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "1rem",
-                  borderBottom: "1px solid #e5e7eb",
-                }}
+                className="friends-search-result-item"
               >
                 <div>
-                  <strong>{getUserDisplayName(user)}</strong>
-                  <p
-                    style={{
-                      margin: "0.25rem 0 0 0",
-                      fontSize: "0.875rem",
-                      color: "#6b7280",
-                    }}
-                  >
+                  <strong className="friends-user-name">{getUserDisplayName(user)}</strong>
+                  <p className="friends-user-score">
                     Score: {user.score}
                   </p>
                 </div>
                 {user.friendshipStatus === "none" && (
                   <button
+                    className="friends-add-button"
                     onClick={() => sendFriendRequest(user.id)}
                     disabled={sendRequestMutation.isPending}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      backgroundColor: "#10b981",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: sendRequestMutation.isPending
-                        ? "not-allowed"
-                        : "pointer",
-                      fontWeight: "600",
-                    }}
                   >
                     {sendRequestMutation.isPending
                       ? "Sending..."
@@ -350,17 +303,17 @@ export default function FriendsPage() {
                   </button>
                 )}
                 {user.friendshipStatus === "friends" && (
-                  <span style={{ color: "#10b981", fontWeight: "600" }}>
+                  <span className="friends-status-badge friends-status-badge--friends">
                     ✓ Friends
                   </span>
                 )}
                 {user.friendshipStatus === "pending_sent" && (
-                  <span style={{ color: "#6b7280", fontWeight: "600" }}>
+                  <span className="friends-status-badge friends-status-badge--pending-sent">
                     Request Sent
                   </span>
                 )}
                 {user.friendshipStatus === "pending_received" && (
-                  <span style={{ color: "#f59e0b", fontWeight: "600" }}>
+                  <span className="friends-status-badge friends-status-badge--pending-received">
                     Pending Request
                   </span>
                 )}
@@ -372,77 +325,37 @@ export default function FriendsPage() {
 
       {/* Pending Requests */}
       {pendingRequests.length > 0 && (
-        <div
-          style={{
-            marginBottom: "2rem",
-            backgroundColor: "#fff",
-            padding: "1.5rem",
-            borderRadius: "8px",
-            border: "1px solid #e5e7eb",
-          }}
-        >
-          <h2 style={{ marginBottom: "1rem" }}>
+        <div className="friends-pending-section">
+          <h2 className="friends-pending-title">
             Pending Requests ({pendingRequests.length})
           </h2>
           {pendingRequests.map((request) => (
             <div
               key={request.friendshipId}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem",
-                borderBottom: "1px solid #e5e7eb",
-              }}
+              className="friends-pending-item"
             >
               <div>
-                <strong>{getUserDisplayName(request)}</strong>
-                <p
-                  style={{
-                    margin: "0.25rem 0 0 0",
-                    fontSize: "0.875rem",
-                    color: "#6b7280",
-                  }}
-                >
+                <strong className="friends-user-name">{getUserDisplayName(request)}</strong>
+                <p className="friends-user-score">
                   Score: {request.score}
                 </p>
               </div>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
+              <div className="friends-pending-actions">
                 <button
+                  className="friends-accept-button"
                   onClick={() =>
                     request.friendshipId && acceptRequest(request.friendshipId)
                   }
                   disabled={acceptRequestMutation.isPending}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#10b981",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: acceptRequestMutation.isPending
-                      ? "not-allowed"
-                      : "pointer",
-                    fontWeight: "600",
-                  }}
                 >
                   Accept
                 </button>
                 <button
+                  className="friends-reject-button"
                   onClick={() =>
                     request.friendshipId && rejectRequest(request.friendshipId)
                   }
                   disabled={rejectRequestMutation.isPending}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#ef4444",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: rejectRequestMutation.isPending
-                      ? "not-allowed"
-                      : "pointer",
-                    fontWeight: "600",
-                  }}
                 >
                   Reject
                 </button>
@@ -453,63 +366,34 @@ export default function FriendsPage() {
       )}
 
       {/* Friends List */}
-      <div
-        style={{
-          backgroundColor: "#fff",
-          padding: "1.5rem",
-          borderRadius: "8px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h2 style={{ marginBottom: "1rem" }}>My Friends ({friends.length})</h2>
+      <div className="friends-list-section">
+        <h2 className="friends-list-title">My Friends ({friends.length})</h2>
         {loading ? (
-          <p style={{ color: "#6b7280" }}>Loading...</p>
+          <p className="friends-list-loading">Loading...</p>
         ) : friends.length === 0 ? (
-          <p style={{ color: "#6b7280" }}>
+          <p className="friends-list-empty">
             No friends yet. Search for users to add friends!
           </p>
         ) : (
           friends.map((friend) => (
             <div
               key={friend.friendshipId}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem",
-                borderBottom: "1px solid #e5e7eb",
-              }}
+              className="friends-list-item"
             >
               <div>
-                <strong>{getUserDisplayName(friend)}</strong>
-                <p
-                  style={{
-                    margin: "0.25rem 0 0 0",
-                    fontSize: "0.875rem",
-                    color: "#6b7280",
-                  }}
-                >
+                <strong className="friends-user-name">{getUserDisplayName(friend)}</strong>
+                <p className="friends-user-score">
                   Score: {friend.score}
                 </p>
               </div>
               <button
+                className="friends-remove-button"
                 onClick={() =>
                   friend.friendshipId && removeFriend(friend.friendshipId)
                 }
                 disabled={removeFriendMutation.isPending}
-                style={{
-                  padding: "0.5rem 1rem",
-                  backgroundColor: "#ef4444",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: removeFriendMutation.isPending
-                    ? "not-allowed"
-                    : "pointer",
-                  fontWeight: "600",
-                }}
               >
-                {removeFriendMutation.isPending ? "Removing..." : "Remove"}
+                <img src={deleteIcon} alt="Delete Icon" className="friends-remove-button-icon" />
               </button>
             </div>
           ))

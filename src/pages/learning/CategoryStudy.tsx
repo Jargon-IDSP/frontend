@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from 'react-router-dom';
 import { NavigationCard } from '../../components/learning/ui/Card';
 import Button from "../../components/learning/ui/Button";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 const categoryNames: Record<string, string> = {
   'safety': 'Safety',
@@ -30,11 +31,11 @@ export default function CategoryStudy() {
   return (
     <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
       <Button 
-        onClick={() => navigate('/learning/custom')} 
+        onClick={() => navigate(-1)} 
         variant="secondary"
         style={{ marginBottom: '1rem' }}
       >
-        ← Back to Custom Learning
+        <img src={goBackIcon} alt="Back Button" />    
       </Button>
 
       <h1>{categoryEmoji} {categoryName} Category</h1>

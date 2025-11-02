@@ -206,7 +206,7 @@ export default function CustomSelect() {
             style={{ display: "flex", gap: "0.5rem", justifyContent: "center" }}
           >
             <Button
-              onClick={() => navigate("/documents/user")}
+              onClick={() => navigate("/profile")}
               variant="primary"
             >
               Go to My Documents

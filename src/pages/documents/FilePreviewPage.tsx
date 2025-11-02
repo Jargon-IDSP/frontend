@@ -101,7 +101,7 @@ export default function FilePreviewPage() {
   };
 
   const handleBack = () => {
-    navigate("/documents");
+    navigate(-1);
   };
 
   const handleUpload = async () => {

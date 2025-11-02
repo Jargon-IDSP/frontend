@@ -12,6 +12,7 @@ import type {
   ShareQuizRequest,
   ShareQuizResponse,
 } from "@/types/quizShareModal";
+import "../../styles/components/_quizShareModal.scss";
 
 export default function QuizShareModal({
   quizId,
@@ -122,38 +123,26 @@ export default function QuizShareModal({
       {loading ? (
         <p>Loading friends...</p>
       ) : friends.length === 0 ? (
-        <p style={{ color: "#6b7280" }}>
+        <p className="quiz-share-modal-empty-message">
           You don't have any friends yet. Add friends to share quizzes with
           them!
         </p>
       ) : (
         <>
-          <p style={{ marginBottom: "1rem", color: "#6b7280" }}>
+          <p className="quiz-share-modal-description">
             Select friends to share this quiz with:
           </p>
-          <div
-            style={{
-              maxHeight: "300px",
-              overflow: "auto",
-              marginBottom: "1.5rem",
-            }}
-          >
+          <div className="quiz-share-modal-friends-list">
             {friends.map((friend) => (
               <label
                 key={friend.id}
-                style={{
-                  display: "flex",
-                  alignItems: "center",
-                  padding: "0.75rem",
-                  borderBottom: "1px solid #e5e7eb",
-                  cursor: "pointer",
-                }}
+                className="quiz-share-modal-friend-item"
               >
                 <input
                   type="checkbox"
                   checked={selectedFriends.has(friend.id)}
                   onChange={() => toggleFriend(friend.id)}
-                  style={{ marginRight: "0.75rem", cursor: "pointer" }}
+                  className="quiz-share-modal-checkbox"
                   disabled={shareMutation.isPending}
                 />
                 <span>{getUserDisplayName(friend)}</span>
@@ -161,13 +150,7 @@ export default function QuizShareModal({
             ))}
           </div>
 
-          <div
-            style={{
-              display: "flex",
-              gap: "0.5rem",
-              justifyContent: "flex-end",
-            }}
-          >
+          <div className="quiz-share-modal-actions">
             <Button
               onClick={onClose}
               variant="secondary"

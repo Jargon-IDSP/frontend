@@ -1,0 +1,273 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Friends Page
+.friends-page {
+  @include page-layout;
+  padding: $spacing-xl;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.friends-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-xl;
+}
+
+.friends-back-button {
+  padding: $spacing-sm;
+  background: none;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.friends-title {
+  margin: 0;
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+}
+
+// Search Section
+.friends-search-section {
+  margin-bottom: $spacing-xl;
+  background-color: white;
+  padding: $spacing-lg;
+  border-radius: $border-radius-md;
+  border: 1px solid #e5e7eb;
+}
+
+.friends-search-title {
+  margin-bottom: $spacing-md;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+}
+
+.friends-search-container {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.friends-search-input {
+  flex: 1;
+  padding: 0.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 6px;
+  font-size: $font-size-body;
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+    border-color: $color-quaternary-dark;
+  }
+}
+
+.friends-search-button {
+  padding: 0.75rem $spacing-lg;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust(#3b82f6, $lightness: -10%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.friends-error-message {
+  margin-top: $spacing-md;
+  padding: 0.75rem;
+  background-color: #fee;
+  color: $color-error;
+  border-radius: 6px;
+}
+
+// Search Results
+.friends-search-results {
+  margin-top: $spacing-md;
+}
+
+.friends-search-result-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.friends-user-name {
+  font-weight: $font-weight-bold;
+  color: $color-neutral;
+}
+
+.friends-user-score {
+  margin: 0.25rem 0 0 0;
+  font-size: 0.875rem;
+  color: $color-neutral;
+}
+
+.friends-add-button {
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-success;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($color-success, $lightness: -10%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.friends-status-badge {
+  font-weight: $font-weight-medium;
+
+  &--friends {
+    color: $color-success;
+  }
+
+  &--pending-sent {
+    color: $color-neutral;
+  }
+
+  &--pending-received {
+    color: $color-warning;
+  }
+}
+
+// Pending Requests Section
+.friends-pending-section {
+  margin-bottom: $spacing-xl;
+  background-color: white;
+  padding: $spacing-lg;
+  border-radius: $border-radius-md;
+  border: 1px solid #e5e7eb;
+}
+
+.friends-pending-title {
+  margin-bottom: $spacing-md;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+}
+
+.friends-pending-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.friends-pending-actions {
+  display: flex;
+  gap: $spacing-sm;
+}
+
+.friends-accept-button {
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-success;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($color-success, $lightness: -10%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.friends-reject-button {
+  padding: $spacing-sm $spacing-md;
+  background-color: $color-error;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: color.adjust($color-error, $lightness: -10%);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+// Friends List Section
+.friends-list-section {
+  background-color: white;
+  padding: $spacing-lg;
+  border-radius: $border-radius-md;
+  border: 1px solid #e5e7eb;
+}
+
+.friends-list-title {
+  margin-bottom: $spacing-md;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+}
+
+.friends-list-loading,
+.friends-list-empty {
+  color: $color-neutral;
+}
+
+.friends-list-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.friends-remove-button {
+  padding: $spacing-sm $spacing-md;
+  background-color: white;
+  border: none;
+  cursor: pointer;
+}
+

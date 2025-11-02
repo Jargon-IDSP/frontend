@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables' as *;
 @use '../mixins' as *;
 
@@ -332,5 +333,32 @@
   max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+// Sticky Friends Button
+.leaderboard-friends-button {
+  position: fixed;
+  bottom: 80px; // Space above navbar
+  left: 50%;
+  transform: translateX(-50%);
+  padding-right: $spacing-xl;
+  padding-left: $spacing-xl;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  background-color: $color-quaternary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background-color $transition-normal;
+  z-index: 100;
+
+  &:hover {
+    background-color: color.adjust($color-primary, $lightness: -10%);
+  }
+
+  &:active {
+    background-color: color.adjust($color-primary, $lightness: -15%);
+  }
 }
 

@@ -174,12 +174,22 @@ const LeaderboardPage: React.FC = () => {
             </p>
           )}
 
-      {users.length > 0 && users.length <= 3 && (
+          {users.length > 0 && users.length <= 3 && (
         <p className="leaderboard-empty-list">
           Only top {users.length} {users.length === 1 ? "user" : "users"} in the leaderboard.
         </p>
         )}
         </>
+      )}
+
+      {/* Friends Button - Sticky at bottom, only in friends tab */}
+      {leaderboardType === "friends" && !hasNoFriends && (
+        <button
+          className="leaderboard-friends-button"
+          onClick={() => navigate("/profile/friends")}
+        >
+          Add Friend
+        </button>
       )}
     </div>
   );

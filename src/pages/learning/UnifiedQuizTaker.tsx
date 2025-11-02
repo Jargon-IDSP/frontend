@@ -115,13 +115,7 @@ export default function UnifiedQuizTaker() {
 
   // Determine back navigation based on type
   const handleBack = () => {
-    if (quizType === 'existing') {
-      navigate("/learning/existing/levels");
-    } else if (quizType === 'category' && category) {
-      navigate(`/learning/custom/categories/${category}`);
-    } else {
-      navigate(-1);
-    }
+    navigate(-1);
   };
 
   const error = queryError ? (queryError as Error).message : null;

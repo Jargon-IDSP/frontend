@@ -5,6 +5,7 @@ import QuizShareModal from "../../components/learning/QuizShareModal";
 import Button from "../../components/learning/ui/Button";
 import Card from "../../components/learning/ui/Card";
 import { getUserDisplayName } from "../../types/friend";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function MyQuizzesPage() {
   const [shareModalQuiz, setShareModalQuiz] = useState<{
@@ -27,11 +28,11 @@ export default function MyQuizzesPage() {
   return (
     <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
       <Button
-        onClick={() => navigate("/learning/custom")}
+        onClick={() => navigate(-1)}
         variant="secondary"
         style={{ marginBottom: "1rem" }}
       >
-        ← Back to Custom Learning
+        <img src={goBackIcon} alt="Back Button" />    
       </Button>
 
       <div

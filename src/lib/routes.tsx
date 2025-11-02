@@ -6,6 +6,7 @@ import ChatPage from "../mounting/ChatPage";
 import ProfilePage from "../pages/users/ProfilePage";
 import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
+import ManageProfilePage from "../pages/users/ManageProfilePage";
 import RandomQuestionsStepper from "../mounting/RandomQuestionsStepper";
 import LeaderboardPage from "../mounting/LeaderboardPage";
 import Levels from "../pages/learning/Levels";
@@ -25,7 +26,6 @@ import DocumentsPage from "../pages/documents/DocumentsPage";
 import AddDocumentPage from "../pages/documents/AddDocumentPage";
 import FullTranslationView from "../pages/documents/FullTranslationView";
 import FilePreviewPage from "../pages/documents/FilePreviewPage";
-import UserDocumentsPage from "../pages/documents/UserDocumentsPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
 
@@ -62,15 +62,15 @@ export const routes: RouteObject[] = [
     path: "/profile/friends",
     element: protect(<FriendsPage />),
   },
+  {
+    path: "/profile/manage",
+    element: protect(<ManageProfilePage />),
+  },
 
   // Documents
   {
     path: "/documents",
     element: protect(<DocumentsPage />),
-  },
-  {
-    path: "/documents/user",
-    element: protect(<UserDocumentsPage />),
   },
   {
     path: "/documents/preview",

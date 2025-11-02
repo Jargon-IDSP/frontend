@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useDocuments } from "../../hooks/useDocuments";
@@ -6,15 +6,42 @@ import { useDeleteDocument } from "../../hooks/useDeleteDocument";
 import QuizShareModal from "../../components/learning/QuizShareModal";
 import { BACKEND_URL } from "../../lib/api";
 import type { Document, DocumentsListProps } from "../../types/document";
+import "../../styles/components/_documentList.scss";
+import fileIconB from "../../assets/icons/fileIconB.svg";
+import deleteIcon from "../../assets/icons/deleteIcon.svg";
+import shareIcon from "../../assets/icons/shareIcon.svg";
 
 export function DocumentsList({ refresh }: DocumentsListProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
+  const [isEditMode, setIsEditMode] = useState(false);
+  const documentsListRef = useRef<HTMLDivElement>(null);
   const [shareModalQuiz, setShareModalQuiz] = useState<{
     id: string;
     name: string;
     documentId: string;
   } | null>(null);
+
+  // Close edit mode when clicking outside the documents list
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (
+        documentsListRef.current &&
+        !documentsListRef.current.contains(event.target as Node) &&
+        isEditMode
+      ) {
+        setIsEditMode(false);
+      }
+    };
+
+    if (isEditMode) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [isEditMode]);
 
   // Use custom hooks
   const {
@@ -36,7 +63,8 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     deleteMutation.mutate(documentId);
   };
 
-  const handleShare = async (documentId: string) => {
+  const handleShare = async (e: React.MouseEvent, documentId: string) => {
+    e.stopPropagation();
     try {
       const token = await getToken();
       if (!token) {
@@ -75,22 +103,33 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     }
   };
 
+  const handleDocumentClick = (doc: Document) => {
+    if (doc.ocrProcessed) {
+      navigate(`/learning/documents/${doc.id}/study`);
+    }
+  };
+
+  const handleDeleteClick = (e: React.MouseEvent, documentId: string) => {
+    e.stopPropagation();
+    handleDelete(documentId);
+  };
+
   const getStatusBadge = (doc: Document) => {
     if (doc.status === "error") {
       return (
-        <span style={{ color: "#ef4444", fontWeight: "bold" }}>✗ Error</span>
+        <span className="documents-list-status-badge">✗ Error</span>
       );
     }
     return null;
   };
 
   if (loading) {
-    return <div>Loading documents...</div>;
+    return <div className="documents-list-loading">Loading documents...</div>;
   }
 
   if (error) {
     return (
-      <div style={{ color: "#ef4444" }}>
+      <div className="documents-list-error">
         {error instanceof Error ? error.message : "Failed to load documents"}
       </div>
     );
@@ -98,15 +137,8 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
 
   if (documents.length === 0) {
     return (
-      <div
-        style={{
-          padding: "2rem",
-          textAlign: "center",
-          backgroundColor: "#f9fafb",
-          borderRadius: "8px",
-        }}
-      >
-        <p style={{ color: "#6b7280" }}>
+      <div className="documents-list-empty">
+        <p className="documents-list-empty-message">
           No documents yet. Upload your first document above!
         </p>
       </div>
@@ -114,131 +146,74 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   }
 
   return (
-    <div>
-      <h2
-        style={{
-          fontSize: "1.25rem",
-          fontWeight: "bold",
-          marginBottom: "1rem",
-        }}
-      >
-        My Documents ({documents.length})
-      </h2>
+    <div className="documents-list" ref={documentsListRef}>
+      <div className="documents-list-header">
+        <h2 className="documents-list-title">
+          My Documents
+        </h2>
+        <button
+          className="documents-list-edit-toggle"
+          onClick={() => setIsEditMode(!isEditMode)}
+          aria-label={isEditMode ? "Exit edit mode" : "Edit documents"}
+        >
+          <p>Edit</p>
+        </button>
+      </div>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+      <div className="documents-list-container">
         {documents.map((doc) => (
-          <div
-            key={doc.id}
-            style={{
-              padding: "1.5rem",
-              border: "2px solid #e5e7eb",
-              borderRadius: "8px",
-              backgroundColor: "white",
-            }}
+          <div 
+            key={doc.id} 
+            className={`documents-list-item ${doc.ocrProcessed ? 'documents-list-item--clickable' : ''}`}
+            onClick={() => handleDocumentClick(doc)}
           >
-            <div
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "start",
-              }}
-            >
-              <div style={{ flex: 1 }}>
-                <h3
-                  style={{
-                    fontSize: "1.125rem",
-                    fontWeight: "bold",
-                    marginBottom: "0.5rem",
-                  }}
-                >
+            <div className="documents-list-item-header">
+              <img src={fileIconB} alt="File Icon" className="documents-list-item-icon" />
+              <div className="documents-list-item-content">
+                <h3 className="documents-list-item-filename">
                   {doc.filename}
                 </h3>
-                <div
-                  style={{
-                    display: "flex",
-                    gap: "1rem",
-                    fontSize: "0.875rem",
-                    color: "#6b7280",
-                  }}
-                >
+                <div className="documents-list-item-meta">
                   <span>
                     Uploaded {new Date(doc.createdAt).toLocaleDateString()}
                   </span>
                   {getStatusBadge(doc) && (
                     <>
-                      <span>•</span>
+                      <span className="documents-list-status-badge-separator">•</span>
                       <span>{getStatusBadge(doc)}</span>
                     </>
                   )}
                 </div>
               </div>
 
-              {doc.ocrProcessed ? (
-                <div style={{ display: "flex", gap: "0.5rem" }}>
-                  <button
-                    onClick={() => navigate(`/learning/documents/${doc.id}/study`)}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      backgroundColor: "#3b82f6",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Study
-                  </button>
-
-                  <button
-                    onClick={() => handleShare(doc.id)}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      backgroundColor: "#10b981",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: "pointer",
-                      fontWeight: "600",
-                    }}
-                  >
-                    Share
-                  </button>
-
-                  <button
-                    onClick={() => handleDelete(doc.id)}
-                    disabled={deleteMutation.isPending}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      backgroundColor: deleteMutation.isPending
-                        ? "#9ca3af"
-                        : "#ef4444",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: deleteMutation.isPending
-                        ? "not-allowed"
-                        : "pointer",
-                    }}
-                  >
-                    {deleteMutation.isPending ? "Deleting..." : "Delete"}
-                  </button>
-                </div>
-              ) : (
-                <div
-                  style={{
-                    padding: "0.75rem 1.5rem",
-                    backgroundColor: "#fef3c7",
-                    color: "#92400e",
-                    border: "1px solid #fbbf24",
-                    borderRadius: "6px",
-                    fontSize: "0.875rem",
-                    fontWeight: "600",
-                  }}
-                >
-                  ⏳ Processing...
-                </div>
-              )}
+              <div className="documents-list-item-actions">
+                {doc.ocrProcessed ? (
+                  <>
+                    <button
+                      className="documents-list-action-button documents-list-action-button-share"
+                      onClick={(e) => handleShare(e, doc.id)}
+                      aria-label="Share document"
+                    >
+                      <img src={shareIcon} alt="Share" />
+                    </button>
+                    
+                    {isEditMode && (
+                      <button
+                        className="documents-list-action-button documents-list-action-button-delete"
+                        onClick={(e) => handleDeleteClick(e, doc.id)}
+                        disabled={deleteMutation.isPending}
+                        aria-label="Delete document"
+                      >
+                        <img src={deleteIcon} alt="Delete" />
+                      </button>
+                    )}
+                  </>
+                ) : (
+                  <div className="documents-list-processing">
+                    Processing...
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         ))}

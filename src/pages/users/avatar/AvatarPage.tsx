@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 import HappyRocky from "../../../components/avatar/HappyRocky";
 import TopHat from "@/components/avatar/TopHat";
 import Mustache from "@/components/avatar/Mustache";
+import goBackIcon from "../../../assets/icons/goBackIcon.svg";
 
 export default function AvatarPage() {
   const navigate = useNavigate();
@@ -9,10 +10,10 @@ export default function AvatarPage() {
   return (
     <div style={{ padding: "2rem" }}>
       <button 
-        onClick={() => navigate("/profile")}
-        style={{ marginBottom: "1rem" }}
+        onClick={() => navigate(-1)}
+        aria-label="Back"
       >
-        ← Back to Profile
+        <img src={goBackIcon} alt="Back Button" />    
       </button>
       <h1>Your Avatar</h1>
       
