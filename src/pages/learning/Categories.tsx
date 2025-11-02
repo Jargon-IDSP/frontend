@@ -1,64 +1,52 @@
 import { useNavigate } from "react-router-dom";
-import { NavigationCard } from "@/components/learning/ui/Card";
-import Button from "@/components/learning/ui/Button";
-import folderIcon from "@/assets/icons/folderIcon.svg";
+import { CategoryFolder } from "@/components/learning/CategoryFolder";
+import { useCategories } from "@/hooks/useCategories";
+import folderIcon from "../../assets/icons/folderIcon.svg";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function Categories() {
   const navigate = useNavigate();
+  const { data: categories, isLoading, error } = useCategories();
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "800px", margin: "0 auto" }}>
-      <div style={{ display: "flex", gap: "0.5rem", marginBottom: "1rem" }}>
-        <Button onClick={() => navigate("/learning")} variant="secondary">
-          Custom Learning
-        </Button>
+    <div className="categoriesPage">
+      <div className="categoriesHeader">
+        <img
+          src={goBackIcon}
+          alt="Go back"
+          className="categoriesBackButton"
+          onClick={() => navigate(-1)}
+        />
+        <h1>My Generated Lessons</h1>
+        <img src={folderIcon} alt="Folder Icon" className="categoriesFolderIcon" />
       </div>
 
-      <h1>My Generated Lessons</h1>
-
-      <div
-        style={{
-          display: "flex",
-          justifyContent: "flex-end",
-          margin: "1.5rem 0",
-        }}
-      >
-        <img src={folderIcon} alt="Add folder icon" />
-      </div>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "column",
-          gap: "0.5rem",
-          marginBottom: "2rem",
-        }}
-      >
-        <NavigationCard
-          title="Safety"
-          onClick={() => navigate("/learning/custom/categories/safety")}
-        />
-        <NavigationCard
-          title="Technical"
-          onClick={() => navigate("/learning/custom/categories/technical")}
-        />
-        <NavigationCard
-          title="Training"
-          onClick={() => navigate("/learning/custom/categories/training")}
-        />
-        <NavigationCard
-          title="Workplace"
-          onClick={() => navigate("/learning/custom/categories/workplace")}
-        />
-        <NavigationCard
-          title="Professional"
-          onClick={() => navigate("/learning/custom/categories/professional")}
-        />
-        <NavigationCard
-          title="General"
-          onClick={() => navigate("/learning/custom/categories/general")}
-        />
-      </div>
+      {isLoading ? (
+        <div className="categoriesLoading">
+          Loading categories...
+        </div>
+      ) : error ? (
+        <div className="categoriesError">
+          Failed to load categories. Please try again.
+        </div>
+      ) : (
+        <div className="categoriesList">
+          {categories && categories.length > 0 ? (
+            categories.map((category) => (
+              <CategoryFolder
+                key={category.id}
+                categoryId={category.id}
+                categoryName={category.name}
+                documentCount={category.documentCount}
+              />
+            ))
+          ) : (
+            <div className="categoriesEmpty">
+              No categories found. Upload a document to create your first lesson!
+            </div>
+          )}
+        </div>
+      )}
     </div>
   );
 }

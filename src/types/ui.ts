@@ -12,4 +12,5 @@ export interface NavigationCardProps {
   description?: string;
   onClick: () => void;
   disabled?: boolean;
+  buttonText?: string;
 }

@@ -19,22 +19,22 @@ export default function Card({ onClick, children, hoverable = true, style = {} }
 }
 
 // Specialized card for navigation items
-export function NavigationCard({ title, description, onClick, disabled = false }: NavigationCardProps) {
-  const cardClassName = disabled ? 'card disabled' : 'card clickable hoverable';
+export function NavigationCard({ title, description, onClick, disabled = false, buttonText }: NavigationCardProps) {
 
   return (
-    <div onClick={disabled ? undefined : onClick} className={cardClassName}>
-      <div className="navigation-card__content">
-        <div className="navigation-card__text">
-          <div className={`navigation-card__title ${!description ? 'navigation-card__title--no-description' : ''}`}>
-         {title}
-          </div>
-          {description && (
-            <div className="navigation-card__description">{description}</div>
-          )}
-        </div>
-        <span className="navigation-card__arrow">{disabled ? '⏳' : '→'}</span>
+    <div className="navCardWrapper">
+      <div className="navCardContent">
+        {description && (
+          <div className="NavCardDescription">{description}</div>
+        )}
       </div>
+      <button
+        onClick={disabled ? undefined : onClick}
+        className="NavCardButton"
+        disabled={disabled}
+      >
+        {disabled ? 'Coming Soon...' : (buttonText || title)}
+      </button>
     </div>
   );
 }

@@ -40,14 +40,16 @@ export function ExistingQuizContainer({
   };
 
   return (
-    <QuizLoader isLoading={isLoading} error={error} onBack={onBack}>
-      <QuizComponent
-        questions={questions}
-        quizNumber={quizNumber}
-        onComplete={handleQuizComplete}
-        onBack={onBack}
-        preferredLanguage={language}
-      />
-    </QuizLoader>
+    <div className="container">
+      <QuizLoader isLoading={isLoading} error={error} onBack={onBack}>
+        <QuizComponent
+          questions={questions}
+          quizNumber={quizNumber}
+          onComplete={handleQuizComplete}
+          onBack={onBack}
+          preferredLanguage={language}
+        />
+      </QuizLoader>
+    </div>
   );
 }

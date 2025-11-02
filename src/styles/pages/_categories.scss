@@ -1,0 +1,77 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.categoriesPage {
+  width: 100vw;
+  max-width: min(480px, 100vw);
+  margin: 0 auto;
+  padding: 0;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+
+.categoriesHeader {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto auto;
+  gap: 0.5rem 1rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+
+  h1 {
+    margin: 0;
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    text-align: left;
+    grid-column: 2;
+    grid-row: 1;
+  }
+}
+
+.categoriesBackButton {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  grid-column: 1;
+  grid-row: 1;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.categoriesFolderIcon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  grid-column: 2;
+  grid-row: 2;
+  justify-self: end;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.categoriesList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.categoriesLoading,
+.categoriesError,
+.categoriesEmpty {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.categoriesError {
+  color: #dc2626;
+}

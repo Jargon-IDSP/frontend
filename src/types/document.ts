@@ -69,3 +69,18 @@ export interface StatusResponse {
 export interface TranslationResponse {
   translation: Translation;
 }
+
+export interface Category {
+  id: number;
+  name: string;
+  documentCount: number;
+}
+
+export interface CategoriesResponse {
+  data: {
+    categories: Category[];
+  };
+  meta: {
+    count: number;
+  };
+}

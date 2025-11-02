@@ -104,6 +104,11 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   };
 
   const handleDocumentClick = (doc: Document) => {
+    // Don't navigate if in edit mode
+    if (isEditMode) {
+      return;
+    }
+
     if (doc.ocrProcessed) {
       navigate(`/learning/documents/${doc.id}/study`);
     }
@@ -162,9 +167,9 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
 
       <div className="documents-list-container">
         {documents.map((doc) => (
-          <div 
-            key={doc.id} 
-            className={`documents-list-item ${doc.ocrProcessed ? 'documents-list-item--clickable' : ''}`}
+          <div
+            key={doc.id}
+            className={`documents-list-item ${doc.ocrProcessed && !isEditMode ? 'documents-list-item--clickable' : ''}`}
             onClick={() => handleDocumentClick(doc)}
           >
             <div className="documents-list-item-header">

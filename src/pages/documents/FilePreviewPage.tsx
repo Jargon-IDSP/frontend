@@ -84,6 +84,8 @@ export default function FilePreviewPage() {
       return await saveRes.json();
     },
     onSuccess: (data) => {
+      // Navigate to category page with document ID once document is saved
+      // Processing will continue in background while user sees progress
       const categoryName = selectedCategory?.name || "general";
       navigate(`/learning/custom/categories/${categoryName}`, {
         state: {
@@ -111,7 +113,7 @@ export default function FilePreviewPage() {
     setSelectedCategory({ id: categoryId, name: categoryName });
     setShowCategoryModal(false);
 
-    // Start upload immediately after category selection
+    // Start upload
     try {
       const token = await getToken();
       if (!token) {

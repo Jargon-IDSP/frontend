@@ -75,84 +75,86 @@ export default function ProfilePage() {
         </div>
       )}
 
-      <div className="profile-page">
-        {/* Header with title and settings icon */}
-        <div className="profile-header">
-        <h1 className="profile-header-title">Profile</h1>
-        <div className="profile-settings-container" ref={dropdownRef}>
-          <button 
-            className="profile-settings-icon"
-            onClick={handleSettingsClick}
-            aria-label="Settings"
-          >
-            <img src={settingsIcon} alt="Settings" />
-          </button>
-          
-          {isDropdownOpen && (
-            <div className="profile-settings-dropdown">
-              <button 
-                className="profile-settings-item"
-                onClick={handleAccountClick}
-              >
-                Account
-              </button>
-              <button 
-                className="profile-settings-item"
-                onClick={handleLanguagesClick}
-              >
-                Languages
-              </button>
-              <button 
-                className="profile-settings-item"
-                onClick={handleLogoutClick}
-              >
-                Logout
-              </button>
-            </div>
-          )}
-        </div>
-      </div>
-
-      {isLoading && (
-        <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
-          Loading profile...
-        </div>
-      )}
-
-      {error && <div className="error-message">Error: {error}</div>}
-
-      {data && (
-        <div className="profile-content">
-          {/* Profile Card */}
-          <div className="profile-card">
-            <div className="profile-card-avatar">
-              <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-image" />
-            </div>
-            <div className="profile-card-info">
-              <h2 className="profile-card-name">
-                {data.firstName
-                  ? `${data.firstName}` 
-                  : data.username || data.email || 'User'}
-              </h2>
-              <p className="profile-card-industry">
-                {data.industryId ? industryIdToName[data.industryId] || 'Not set' : 'Not set'}
-              </p>
-            </div>
-            <button 
-              className="profile-card-edit"
-              onClick={() => navigate("/profile/manage")}
-              aria-label="Edit profile"
+      <div className="container">
+        <div className="profile-page">
+          {/* Header with title and settings icon */}
+          <div className="profile-header">
+          <h1 className="profile-header-title">Profile</h1>
+          <div className="profile-settings-container" ref={dropdownRef}>
+            <button
+              className="profile-settings-icon"
+              onClick={handleSettingsClick}
+              aria-label="Settings"
             >
-              <img src={editIcon} alt="Edit" />
+              <img src={settingsIcon} alt="Settings" />
             </button>
-          </div>
 
-          {/* Documents Section */}
-          <div className="profile-documents">
-            <DocumentsList refresh={0} />
+            {isDropdownOpen && (
+              <div className="profile-settings-dropdown">
+                <button
+                  className="profile-settings-item"
+                  onClick={handleAccountClick}
+                >
+                  Account
+                </button>
+                <button
+                  className="profile-settings-item"
+                  onClick={handleLanguagesClick}
+                >
+                  Languages
+                </button>
+                <button
+                  className="profile-settings-item"
+                  onClick={handleLogoutClick}
+                >
+                  Logout
+                </button>
+              </div>
+            )}
           </div>
         </div>
-      )}
+
+        {isLoading && (
+          <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
+            Loading profile...
+          </div>
+        )}
+
+        {error && <div className="error-message">Error: {error}</div>}
+
+        {data && (
+          <div className="profile-content">
+            {/* Profile Card */}
+            <div className="profile-card">
+              <div className="profile-card-avatar">
+                <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-image" />
+              </div>
+              <div className="profile-card-info">
+                <h2 className="profile-card-name">
+                  {data.firstName
+                    ? `${data.firstName}`
+                    : data.username || data.email || 'User'}
+                </h2>
+                <p className="profile-card-industry">
+                  {data.industryId ? industryIdToName[data.industryId] || 'Not set' : 'Not set'}
+                </p>
+              </div>
+              <button
+                className="profile-card-edit"
+                onClick={() => navigate("/profile/manage")}
+                aria-label="Edit profile"
+              >
+                <img src={editIcon} alt="Edit" />
+              </button>
+            </div>
+
+            {/* Documents Section */}
+            <div className="profile-documents">
+              <DocumentsList refresh={0} />
+            </div>
+          </div>
+        )}
+        </div>
       </div>
     </>
   );

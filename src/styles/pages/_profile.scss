@@ -3,7 +3,6 @@
 
 // Profile Page - Apply consistent layout
 .profile-page {
-  @include page-layout;
   padding-top: $spacing-md;
 }
 
@@ -279,7 +278,6 @@
 
 // Manage Profile Page
 .manage-profile-page {
-  @include page-layout;
   padding-top: $spacing-md;
 }
 

@@ -4,11 +4,8 @@
 
 // Leaderboard Page
 .leaderboard-page {
-  @include page-layout;
   padding-top: $spacing-md;
   padding-bottom: 0;
-  max-width: 600px;
-  margin-bottom: $spacing-lg;
   display: flex;
   flex-direction: column;
   position: relative;
@@ -18,7 +15,6 @@
     justify-content: flex-start;
     align-items: center;
     padding-top: $spacing-md;
-    max-width: 600px;
   }
 }
 

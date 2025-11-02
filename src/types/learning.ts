@@ -213,3 +213,9 @@ export interface ApiResponse<T> {
     showIndustry?: boolean;
     showLevel?: boolean;
   }
+
+  export interface CategoryFolderProps {
+    categoryId: number;
+    categoryName: string;
+    documentCount: number;
+  }

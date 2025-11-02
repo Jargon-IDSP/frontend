@@ -21,10 +21,13 @@
 @use 'pages/customLearning';
 @use 'pages/leaderboard';
 @use 'pages/friends';
+@use 'pages/learnJargon';
+@use 'pages/categories';
 
 // Import components
 @use 'components/buttons';
 @use 'components/card';
+@use 'components/categoryFolder';
 @use 'components/rocky-speech-bubble';
 @use 'components/clerkUserButton';
 @use 'components/documentNav';

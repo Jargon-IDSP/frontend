@@ -6,6 +6,26 @@ import type {
   UserPreferences,
 } from "@/types/useUserPreferences";
 
+// Map industry IDs to display names
+export const industryIdToName: { [key: number]: string } = {
+  1: 'General',
+  2: 'Electrician',
+  3: 'Plumber',
+  4: 'Carpenter',
+  5: 'Mechanic',
+  6: 'Welder',
+};
+
+/**
+ * Get the display name for an industry ID
+ * @param industryId The industry ID number
+ * @returns The display name, or 'General' if not found
+ */
+export function getIndustryName(industryId?: number | null): string {
+  if (!industryId) return 'General';
+  return industryIdToName[industryId] || 'General';
+}
+
 export const useUserPreferences = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
