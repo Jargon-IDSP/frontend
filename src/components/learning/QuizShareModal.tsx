@@ -6,12 +6,12 @@ import Modal from "./ui/Modal";
 import Button from "./ui/Button";
 import { getUserDisplayName } from "../../types/friend";
 import type { Friend } from "../../types/friend";
+import type { QuizShareModalProps } from "@/types/components/quiz";
 import type {
-  QuizShareModalProps,
   FriendsResponse,
   ShareQuizRequest,
   ShareQuizResponse,
-} from "@/types/quizShareModal";
+} from "@/types/api/friends";
 import "../../styles/components/_quizShareModal.scss";
 
 export default function QuizShareModal({

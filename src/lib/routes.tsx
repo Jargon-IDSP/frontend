@@ -7,7 +7,6 @@ import ProfilePage from "../pages/users/ProfilePage";
 import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import ManageProfilePage from "../pages/users/ManageProfilePage";
-import RandomQuestionsStepper from "../mounting/RandomQuestionsStepper";
 import LeaderboardPage from "../mounting/LeaderboardPage";
 import Levels from "../pages/learning/Levels";
 import ExistingSelect from "../pages/learning/ExistingSelect";
@@ -87,11 +86,6 @@ export const routes: RouteObject[] = [
   {
     path: "/documents/:id/status",
     element: protect(<FullTranslationView />),
-  },
-
-  {
-    path: "/random-questions",
-    element: protect(<RandomQuestionsStepper />),
   },
   {
     path: "/leaderboard",

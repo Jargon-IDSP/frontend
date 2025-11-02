@@ -33,7 +33,6 @@ export function useDocumentsByCategory(category: QuizCategory | string) {
       }
 
       const response = await res.json();
-      // successResponse wraps data in { success, data, meta }
       return response.data?.documents || [];
     },
     staleTime: 30 * 1000,

@@ -8,7 +8,6 @@ import Profile from '../assets/icons/navbar/standard/profileIcon.svg';
 import Home from '../assets/icons/navbar/standard/homeIcon.svg';
 
 // Bold icons
-// import AIB from '../assets/icons/navbar/bold/aiIconB.svg';
 import CourseB from '../assets/icons/navbar/bold/courseIconB.svg';
 import LeaderboardB from '../assets/icons/navbar/bold/leaderBoardIconB.svg';
 import ProfileB from '../assets/icons/navbar/bold/profileIconB.svg';

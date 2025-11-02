@@ -53,5 +53,4 @@ export function useMyQuizzes() {
   });
 }
 
-// Export the type so it can be used in components
 export type { CustomQuiz };

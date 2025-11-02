@@ -36,7 +36,6 @@ export function useDocumentTranslation(documentId: string | undefined) {
     },
     enabled: !!documentId,
     refetchInterval: (query) => {
-      // Poll every 3 seconds if processing, otherwise don't poll
       return query.state.data?.processing ? 3000 : false;
     },
     refetchIntervalInBackground: false,

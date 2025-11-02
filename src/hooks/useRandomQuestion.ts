@@ -19,8 +19,8 @@ export function useRandomQuestion(options: UseRandomQuestionOptions = {}) {
     },
     enabled,
     refetchOnMount,
-    staleTime: 0, // Always consider stale - we want fresh random questions
-    gcTime: 0, // Don't cache - each fetch should be independent
+    staleTime: 0,
+    gcTime: 0, 
     retry: 2,
   });
 }

@@ -36,6 +36,6 @@ export function useCategoryQuestions(
     },
     enabled: !!category,
     retry: 2,
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
   });
 }

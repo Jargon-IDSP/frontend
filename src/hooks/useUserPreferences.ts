@@ -38,8 +38,8 @@ export const useUserPreferences = () => {
         userId: user.id,
       };
     },
-    enabled: !!user?.id, // Only fetch when user is available
-    staleTime: 10 * 60 * 1000, // 10 minutes - preferences don't change often
+    enabled: !!user?.id, 
+    staleTime: 10 * 60 * 1000, 
     retry: 2,
   });
 

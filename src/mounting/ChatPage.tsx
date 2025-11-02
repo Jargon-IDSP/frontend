@@ -3,7 +3,7 @@ import { useAuth } from "@clerk/clerk-react";
 // import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../lib/api";
-import type { ChatHealthResponse, ChatRequest } from "@/types/chatPage";
+import type { ChatHealthResponse, ChatRequest } from "@/types/api/chat";
 
 export default function ChatPage() {
   // const navigate = useNavigate();

@@ -30,9 +30,8 @@ export function useSharedQuizzes(enabled: boolean = true) {
     },
     enabled,
     retry: false,
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 30 * 1000, 
   });
 }
 
-// Re-export the type for convenience
 export type { SharedQuiz };

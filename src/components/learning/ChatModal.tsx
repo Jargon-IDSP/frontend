@@ -1,17 +1,7 @@
 import { useRef, useEffect } from "react";
 import HappyRocky from "../avatar/HappyRocky";
+import type { ChatModalProps } from "../../types/components/quiz";
 import "../../styles/components/_chatbox.scss";
-
-interface ChatModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  currentQuestion: string;
-  chatReply: string;
-  chatPrompt: string;
-  onChatPromptChange: (value: string) => void;
-  onSendChat: (e?: React.FormEvent) => void;
-  isLoading: boolean;
-}
 
 export default function ChatModal({
   isOpen,

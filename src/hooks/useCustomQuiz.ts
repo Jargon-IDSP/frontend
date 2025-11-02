@@ -25,10 +25,8 @@ export function useCustomQuiz(
 
       let url = "";
       if (quizId) {
-        // Fetch specific quiz from attempts endpoint
         url = `${BACKEND_URL}/learning/attempts/${quizId}`;
       } else {
-        // Generate new quiz
         url = `${BACKEND_URL}/learning/custom/quiz/generate?quiz_number=${quizNumber}`;
       }
 
@@ -46,7 +44,6 @@ export function useCustomQuiz(
       const data: QuizResponse = await response.json();
       console.log("Quiz data received:", data);
 
-      // Handle different response structures
       if (data.quiz?.questions) {
         return data.quiz.questions;
       } else if (data.questions) {
@@ -60,6 +57,6 @@ export function useCustomQuiz(
     },
     enabled,
     retry: 2,
-    staleTime: 10 * 60 * 1000, // 10 minutes
+    staleTime: 10 * 60 * 1000,
   });
 }

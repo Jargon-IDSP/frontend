@@ -9,10 +9,8 @@ interface PodiumProps {
 }
 
 const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
-  // Get top 3 users
   const topThree = users.slice(0, 3);
 
-  // Ensure we have exactly 3 items (fill with null if needed)
   const podiumUsers = [
     topThree[0] || null,
     topThree[1] || null,
@@ -26,7 +24,6 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
         const isCurrentUser = user?.id === currentUserId;
 
         if (!user) {
-          // Empty slot placeholder
           return (
             <div key={`empty-${rank}`} className={`podium-item rank-${rank}`}>
               <div className="podium-block">

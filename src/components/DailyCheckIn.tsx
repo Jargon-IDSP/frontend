@@ -14,7 +14,6 @@ function TickBox({ isChecked, label, isToday }: { isChecked: boolean; label: str
   );
 }
 
-// Helper function to get PST date
 function getPSTDate(offsetDays: number = 0): Date {
   const now = new Date();
   const pstDate = new Date(now.toLocaleString("en-US", { timeZone: "America/Los_Angeles" }));
@@ -22,7 +21,6 @@ function getPSTDate(offsetDays: number = 0): Date {
   return pstDate;
 }
 
-// Generate array of 7 days (3 before, today, 3 after) in PST
 function getSevenDayRange(): { date: Date; label: string; key: string; isToday: boolean; isFuture: boolean }[] {
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const result = [];
@@ -35,7 +33,7 @@ function getSevenDayRange(): { date: Date; label: string; key: string; isToday: 
       label: days[dayIndex],
       key: `${days[dayIndex]}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
       isToday: i === 0,
-      isFuture: i > 0  // Add this flag
+      isFuture: i > 0  
     });
   }
 

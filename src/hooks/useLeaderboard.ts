@@ -25,7 +25,6 @@ export function useLeaderboard(type: "general" | "friends" = "general") {
       const endpoint = type === "friends" ? "/leaderboard/friends" : "/leaderboard";
       const headers: HeadersInit = {};
 
-      // Friends endpoint requires authentication
       if (type === "friends") {
         const token = await getToken();
         if (!token) {
@@ -43,7 +42,7 @@ export function useLeaderboard(type: "general" | "friends" = "general") {
 
       return data.data;
     },
-    staleTime: 2 * 60 * 1000, // 2 minutes
+    staleTime: 2 * 60 * 1000, 
     retry: 2,
   });
 }

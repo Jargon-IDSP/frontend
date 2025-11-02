@@ -34,7 +34,6 @@ export function useCompleteExistingQuiz() {
       return await response.json();
     },
     onSuccess: (_, variables) => {
-      // Invalidate existing quiz cache for this level
       queryClient.invalidateQueries({
         queryKey: ["existingQuiz", variables.levelId.toString()],
       });

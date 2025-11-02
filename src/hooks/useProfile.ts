@@ -12,7 +12,6 @@ export interface ProfileData {
   language?: string;
   industryId?: number | null;
   onboardingCompleted?: boolean;
-  // Add other profile fields here
   [key: string]: any;
 }
 
@@ -36,10 +35,9 @@ export function useProfile() {
       }
 
       const data = await res.json();
-      // Backend returns { message: "...", user: {...} }, so extract the user object
       return data.user || data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
     retry: 2,
   });
 }

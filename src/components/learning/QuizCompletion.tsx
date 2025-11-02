@@ -1,13 +1,6 @@
 import Star from '../../assets/icons/star.svg';
 import Hat from '../../assets/icons/hat.svg';
-
-interface QuizCompletionProps {
-  score: number;
-  totalQuestions: number;
-  onRetry: () => void;
-  onBack: () => void;
-  quizType?: 'custom' | 'existing' | 'category';
-}
+import type { QuizCompletionProps } from '../../types/components/quiz';
 
 export default function QuizCompletion({
   score,
