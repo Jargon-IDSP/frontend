@@ -1,0 +1,62 @@
+@use '../variables' as *;
+
+.card {
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+  background-color: white;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+
+  &.clickable {
+    cursor: pointer;
+    transition: all 0.2s;
+
+    &.hoverable:hover {
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+      transform: translateY(-2px);
+    }
+  }
+
+  &.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+
+    &:hover {
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      transform: none;
+    }
+  }
+}
+
+.navigation-card {
+  &__content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__text {
+    flex: 1;
+  }
+
+  &__title {
+    font-weight: bold;
+    font-size: 1.1rem;
+    margin-bottom: 0.25rem;
+
+    &--no-description {
+      margin-bottom: 0;
+    }
+  }
+
+  &__description {
+    font-size: 0.9rem;
+    color: #6b7280;
+  }
+
+  &__arrow {
+    font-size: 1.5rem;
+    color: #6b7280;
+    margin-left: 1rem;
+  }
+}

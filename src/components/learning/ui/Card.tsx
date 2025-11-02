@@ -1,43 +1,17 @@
-import type { CSSProperties } from 'react';
 import type { CardProps, NavigationCardProps } from '../../../types/ui';
 
 export default function Card({ onClick, children, hoverable = true, style = {} }: CardProps) {
-  const baseStyle: CSSProperties = {
-    padding: '1.5rem',
-    borderRadius: '8px',
-    border: '1px solid #e5e7eb',
-    backgroundColor: 'white',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.1)',
-    ...style,
-  };
-
-  const clickableStyle: CSSProperties = onClick
-    ? {
-        cursor: 'pointer',
-        transition: 'all 0.2s',
-      }
-    : {};
+  const className = [
+    'card',
+    onClick ? 'clickable' : '',
+    hoverable ? 'hoverable' : ''
+  ].filter(Boolean).join(' ');
 
   return (
     <div
       onClick={onClick}
-      style={{ ...baseStyle, ...clickableStyle }}
-      onMouseEnter={
-        hoverable && onClick
-          ? (e) => {
-              e.currentTarget.style.boxShadow = '0 4px 8px rgba(0,0,0,0.15)';
-              e.currentTarget.style.transform = 'translateY(-2px)';
-            }
-          : undefined
-      }
-      onMouseLeave={
-        hoverable && onClick
-          ? (e) => {
-              e.currentTarget.style.boxShadow = '0 1px 3px rgba(0,0,0,0.1)';
-              e.currentTarget.style.transform = 'translateY(0)';
-            }
-          : undefined
-      }
+      className={className}
+      style={style}
     >
       {children}
     </div>
@@ -45,26 +19,22 @@ export default function Card({ onClick, children, hoverable = true, style = {} }
 }
 
 // Specialized card for navigation items
-export function NavigationCard({ icon, title, description, onClick, disabled = false }: NavigationCardProps) {
+export function NavigationCard({ title, description, onClick, disabled = false }: NavigationCardProps) {
+  const cardClassName = disabled ? 'card disabled' : 'card clickable hoverable';
+
   return (
-    <Card
-      onClick={disabled ? undefined : onClick}
-      style={{
-        opacity: disabled ? 0.5 : 1,
-        cursor: disabled ? 'not-allowed' : 'pointer'
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div>
-          <div style={{ fontWeight: 'bold', marginBottom: description ? '0.25rem' : 0, fontSize: '1.1rem' }}>
-            {icon} {title}
+    <div onClick={disabled ? undefined : onClick} className={cardClassName}>
+      <div className="navigation-card__content">
+        <div className="navigation-card__text">
+          <div className={`navigation-card__title ${!description ? 'navigation-card__title--no-description' : ''}`}>
+         {title}
           </div>
           {description && (
-            <div style={{ fontSize: '0.9rem', color: '#6b7280' }}>{description}</div>
+            <div className="navigation-card__description">{description}</div>
           )}
         </div>
-        <span style={{ fontSize: '1.5rem', color: '#6b7280' }}>{disabled ? '⏳' : '→'}</span>
+        <span className="navigation-card__arrow">{disabled ? '⏳' : '→'}</span>
       </div>
-    </Card>
+    </div>
   );
 }

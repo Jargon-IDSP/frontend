@@ -11,7 +11,6 @@ import RandomQuestionsStepper from "../mounting/RandomQuestionsStepper";
 import LeaderboardPage from "../mounting/LeaderboardPage";
 import Levels from "../pages/learning/Levels";
 import ExistingSelect from "../pages/learning/ExistingSelect";
-import CustomSelect from "../pages/learning/CustomSelect";
 import Categories from "../pages/learning/Categories";
 import CategoryStudy from "../pages/learning/CategoryStudy";
 import Terms from "../pages/learning/Terms";
@@ -28,6 +27,7 @@ import FullTranslationView from "../pages/documents/FullTranslationView";
 import FilePreviewPage from "../pages/documents/FilePreviewPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
+import LearnJargon from "../pages/learning/LearnJargon";
 
 const protect = (element: ReactElement) => (
   <ProtectedRoute>{element}</ProtectedRoute>
@@ -101,7 +101,7 @@ export const routes: RouteObject[] = [
   // Learning - redirect to custom learning
   {
     path: "/learning",
-    element: protect(<CustomSelect />),
+    element: protect(<LearnJargon />),
   },
   {
     path: "/learning/shared",
@@ -122,7 +122,7 @@ export const routes: RouteObject[] = [
   },
   {
     path: "/learning/custom",
-    element: protect(<CustomSelect />),
+    element: protect(<LearnJargon />),
   },
   {
     path: "/learning/custom/categories",

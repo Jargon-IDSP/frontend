@@ -1,10 +1,9 @@
 import type { RouteObject } from 'react-router-dom';
 
 // Page imports
-import LearningHub from '../pages/learning/LearnJargon';
+import LearnJargon from '../pages/learning/LearnJargon';
 import ExistingLevels from '../pages/learning/Levels';
 import ExistingSelect from '../pages/learning/ExistingSelect';
-import CustomSelect from '../pages/learning/CustomSelect';
 import Terms from '../pages/learning/Terms';
 import Questions from '../pages/learning/Questions';
 import QuizSelection from '../pages/learning/QuizSelection';
@@ -18,7 +17,7 @@ export const learningRoutes: RouteObject = {
   path: '/learning',
   children: [
     // Main hub
-    { index: true, element: <LearningHub /> },
+    { index: true, element: <LearnJargon /> },
 
     // Existing content (platform)
     {
@@ -38,7 +37,7 @@ export const learningRoutes: RouteObject = {
     {
       path: 'custom',
       children: [
-        { index: true, element: <CustomSelect /> },
+        { index: true, element: <LearnJargon /> },
         { path: 'terms', element: <Terms /> },
         { path: 'questions', element: <Questions /> },
         { path: 'quizzes', element: <QuizSelection /> },

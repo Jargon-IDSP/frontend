@@ -5,10 +5,21 @@ import { useQuery } from "@tanstack/react-query";
 import RockySpeechBubble from "../../components/RockySpeechBubble";
 import { SimpleFileUpload } from "../../components/SimpleFileUpload";
 import { BACKEND_URL } from "../../lib/api";
+import type { QuizCategory } from "../../types/document";
 
 interface DocumentStatusResponse {
+  status: {
+    status: "processing" | "completed" | "error";
+    hasTranslation: boolean;
+    hasFlashcards: boolean;
+    hasQuiz: boolean;
+    flashcardCount: number;
+    questionCount: number;
+    category: QuizCategory | null;
+  };
   document: {
-    ocrProcessed: boolean;
+    id: string;
+    filename: string;
   };
 }
 
@@ -31,7 +42,7 @@ export default function DocumentsPage() {
       }
 
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/documents/${processingDocId}`, {
+      const res = await fetch(`${BACKEND_URL}/documents/${processingDocId}/status`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -48,48 +59,52 @@ export default function DocumentsPage() {
     retry: false, // Don't retry failed requests
   });
 
-  // Simulate processing progress
+  // Update progress based on actual backend status
   useEffect(() => {
-    if (processingDocId && !processingComplete) {
-      setProcessingProgress(0);
-      const interval = setInterval(() => {
-        setProcessingProgress((prev) => {
-          // Slow, realistic progress for document processing
-          if (prev >= 95) return prev; // Stop at 95% until actually complete
-          if (prev >= 80) return prev + 1; // Very slow near end
-          if (prev >= 60) return prev + 2; // Slow
-          if (prev >= 30) return prev + 3; // Medium
-          return prev + 5; // Initial fast progress
-        });
-      }, 500); // Slower intervals for document processing
+    if (documentStatus?.status && !processingComplete) {
+      const { status, hasTranslation, hasFlashcards, hasQuiz } = documentStatus.status;
 
-      return () => clearInterval(interval);
-    } else {
-      setProcessingProgress(0);
-    }
-  }, [processingDocId, processingComplete]);
+      // Calculate progress based on actual completion stages
+      let progress = 10; // Started processing
 
-  // Handle document processing completion
-  useEffect(() => {
-    if (documentStatus?.document?.ocrProcessed && !processingComplete) {
-      setProcessingProgress(100); // Complete the progress bar
+      if (hasTranslation) {
+        progress = 40; // Translation complete (40%)
+      }
 
-      // Small delay to show 100% before changing message
-      setTimeout(() => {
-        setProcessingComplete(true);
-        setSuccessMessage(
-          "🎉 Your document is ready! Flashcards and questions have been generated."
-        );
-        setShowPrebuiltLink(false);
-        setProcessingDocId(null);
+      if (hasFlashcards && !hasQuiz) {
+        progress = 70; // Flashcards generated (70%)
+      } else if (!hasFlashcards && hasQuiz) {
+        progress = 70; // Questions generated (70%)
+      } else if (hasFlashcards && hasQuiz) {
+        progress = 90; // Both generated, finalizing (90%)
+      }
 
+      // Fully complete
+      if (status === "completed" && hasFlashcards && hasQuiz) {
+        progress = 100;
+
+        // Small delay to show 100% before changing message
         setTimeout(() => {
-          setSuccessMessage("");
-          setProcessingComplete(false);
-        }, 8000);
-      }, 500);
+          setProcessingComplete(true);
+          setSuccessMessage(
+            "🎉 Your document is ready! Flashcards and questions have been generated."
+          );
+          setShowPrebuiltLink(false);
+          setProcessingDocId(null);
+
+          setTimeout(() => {
+            setSuccessMessage("");
+            setProcessingComplete(false);
+          }, 8000);
+        }, 500);
+      }
+
+      setProcessingProgress(progress);
+    } else if (processingDocId && !documentStatus && !processingComplete) {
+      // Still waiting for first status update
+      setProcessingProgress(10);
     }
-  }, [documentStatus, processingComplete]);
+  }, [documentStatus, processingDocId, processingComplete]);
 
   // Handle location state (from navigation)
   useEffect(() => {

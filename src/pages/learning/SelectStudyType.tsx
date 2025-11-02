@@ -37,12 +37,15 @@ export default function SelectStudyType() {
   };
 
   const handleBackClick = () => {
-    if (selectedDocument && !documentId) {
+    if (documentId) {
+      // If we came from a specific document, go back to previous page
+      navigate(-1);
+    } else if (selectedDocument) {
       // If document is selected (from selector), go back to document selection
       setSelectedDocument(null);
     } else {
-      // Otherwise go back to previous page
-      navigate(-1);
+      // Otherwise go back to custom learning
+      navigate('/learning/custom');
     }
   };
 

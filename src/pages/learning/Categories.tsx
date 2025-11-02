@@ -35,32 +35,26 @@ export default function Categories() {
         }}
       >
         <NavigationCard
-          icon="⚠️"
           title="Safety"
           onClick={() => navigate("/learning/custom/categories/safety")}
         />
         <NavigationCard
-          icon="🔧"
           title="Technical"
           onClick={() => navigate("/learning/custom/categories/technical")}
         />
         <NavigationCard
-          icon="📖"
           title="Training"
           onClick={() => navigate("/learning/custom/categories/training")}
         />
         <NavigationCard
-          icon="🏢"
           title="Workplace"
           onClick={() => navigate("/learning/custom/categories/workplace")}
         />
         <NavigationCard
-          icon="💼"
           title="Professional"
           onClick={() => navigate("/learning/custom/categories/professional")}
         />
         <NavigationCard
-          icon="📝"
           title="General"
           onClick={() => navigate("/learning/custom/categories/general")}
         />

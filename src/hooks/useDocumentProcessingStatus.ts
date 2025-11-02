@@ -1,11 +1,21 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";
+import type { QuizCategory } from "../types/document";
 
 interface DocumentStatusResponse {
+  status: {
+    status: "processing" | "completed" | "error";
+    hasTranslation: boolean;
+    hasFlashcards: boolean;
+    hasQuiz: boolean;
+    flashcardCount: number;
+    questionCount: number;
+    category: QuizCategory | null;
+  };
   document: {
     id: string;
-    ocrProcessed: boolean;
+    filename: string;
   };
 }
 
@@ -28,7 +38,7 @@ export function useDocumentProcessingStatus({
       }
 
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/documents/${documentId}`, {
+      const res = await fetch(`${BACKEND_URL}/documents/${documentId}/status`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },

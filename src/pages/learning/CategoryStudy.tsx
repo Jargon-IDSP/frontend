@@ -1,7 +1,6 @@
 import { useParams, useNavigate } from 'react-router-dom';
-import { NavigationCard } from '../../components/learning/ui/Card';
 import Button from "../../components/learning/ui/Button";
-import goBackIcon from "../../assets/icons/goBackIcon.svg";
+import { useDocumentsByCategory } from '../../hooks/useDocumentsByCategory';
 
 const categoryNames: Record<string, string> = {
   'safety': 'Safety',
@@ -12,53 +11,81 @@ const categoryNames: Record<string, string> = {
   'general': 'General'
 };
 
-const categoryEmojis: Record<string, string> = {
-  'safety': '⚠️',
-  'technical': '🔧',
-  'training': '📖',
-  'workplace': '🏢',
-  'professional': '💼',
-  'general': '📝'
-};
 
 export default function CategoryStudy() {
   const navigate = useNavigate();
   const { category } = useParams<{ category: string }>();
-  
+
   const categoryName = category ? categoryNames[category.toLowerCase()] || category : 'Category';
-  const categoryEmoji = category ? categoryEmojis[category.toLowerCase()] || '📚' : '📚';
+
+  const { data: documents = [], isLoading } = useDocumentsByCategory(category || 'general');
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '600px', margin: '0 auto' }}>
-      <Button 
-        onClick={() => navigate(-1)} 
+    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+      <Button
+        onClick={() => navigate('/learning/custom/categories')}
         variant="secondary"
         style={{ marginBottom: '1rem' }}
       >
-        <img src={goBackIcon} alt="Back Button" />    
+        ← Back to My Generated Lessons
       </Button>
 
-      <h1>{categoryEmoji} {categoryName} Category</h1>
+      <h1>{categoryName} Category</h1>
 
-      <p style={{ color: '#6b7280', marginBottom: '2rem' }}>
-        Choose how you want to study {categoryName.toLowerCase()} content:
-      </p>
+      <h2 style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+        Study by Document
+      </h2>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-        <NavigationCard
-          icon="📚"
-          title="Study Flashcards"
-          description="Review terms and definitions"
-          onClick={() => navigate(`/learning/custom/categories/${category}/terms`)}
-        />
-
-        <NavigationCard
-          icon="🎯"
-          title="Take Quiz"
-          description="Test your knowledge"
-          onClick={() => navigate(`/learning/custom/categories/${category}/quizzes`)}
-        />
-      </div>
+      {isLoading ? (
+        <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+          Loading documents...
+        </div>
+      ) : documents.length === 0 ? (
+        <div style={{
+          textAlign: 'center',
+          padding: '2rem',
+          backgroundColor: '#f9fafb',
+          borderRadius: '8px',
+          color: '#6b7280'
+        }}>
+          <p>No documents in the {categoryName} category yet.</p>
+          <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+            Upload and process documents to see them here!
+          </p>
+        </div>
+      ) : (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {documents.map((doc) => (
+            <div
+              key={doc.id}
+              onClick={() => navigate(`/learning/documents/${doc.id}/study`)}
+              style={{
+                border: '1px solid #e5e7eb',
+                borderRadius: '8px',
+                padding: '1.5rem',
+                backgroundColor: 'white',
+                cursor: 'pointer',
+                transition: 'all 0.2s ease',
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#3b82f6';
+                e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = '#e5e7eb';
+                e.currentTarget.style.boxShadow = 'none';
+              }}
+            >
+              <h3 style={{ marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+                📄 {doc.filename}
+              </h3>
+              <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+                {doc.flashcardCount} flashcards • {doc.questionCount} questions
+              </p>
+            </div>
+          ))}
+        </div>
+      )}
     </div>
   );
 }

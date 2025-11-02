@@ -8,7 +8,6 @@ export interface CardProps {
 }
 
 export interface NavigationCardProps {
-  icon: string;
   title: string;
   description?: string;
   onClick: () => void;

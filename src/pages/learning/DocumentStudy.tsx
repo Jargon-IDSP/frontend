@@ -8,7 +8,6 @@ import { useDeleteDocument } from "../../hooks/useDeleteDocument";
 import { NavigationCard } from "../../components/learning/ui/Card";
 import Button from "../../components/learning/ui/Button";
 import QuizShareModal from "../../components/learning/QuizShareModal";
-import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function DocumentStudy() {
   const navigate = useNavigate();
@@ -214,7 +213,7 @@ export default function DocumentStudy() {
         onClick={() => navigate(-1)}
         variant="secondary"
       >
-        <img src={goBackIcon} alt="Back Button" />    
+        ← Back
       </Button>
 
       <h1>Study: {document?.filename || "Document"}</h1>
