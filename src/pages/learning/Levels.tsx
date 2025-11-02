@@ -31,7 +31,6 @@ export default function ExistingLevels() {
         {levels.map((level) => (
           <NavigationCard
             key={level.id}
-            icon=""
             title={`Level ${level.id}: ${level.name}`}
             description={level.description}
             onClick={() => navigate(`/learning/existing/levels/${level.id}`)}

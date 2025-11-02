@@ -231,21 +231,18 @@ export default function DocumentStudy() {
         }}
       >
         <NavigationCard
-          icon="📚"
           title="Study Flashcards"
           description="Review terms and definitions"
           onClick={() => navigate(`/learning/documents/${documentId}/terms`)}
         />
 
         <NavigationCard
-          icon="🎯"
           title="Take Quiz"
           description="Test your knowledge"
           onClick={() => navigate(`/learning/documents/${documentId}/study`)}
         />
 
         <NavigationCard
-          icon="🌐"
           title="View Translation"
           description="See document in other languages"
           onClick={() => navigate(`/documents/${documentId}/translation`)}

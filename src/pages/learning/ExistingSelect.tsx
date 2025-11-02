@@ -31,14 +31,12 @@ export default function ExistingSelect() {
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
         <NavigationCard
-          icon="📝"
           title="Study Terms"
           description="Review flashcards and practice terminology"
           onClick={() => navigate(`/learning/existing/levels/${levelId}/terms`)}
         />
 
         <NavigationCard
-          icon="🎯"
           title="Take Quiz"
           description="Test your knowledge with a quiz"
           onClick={() => navigate(`/learning/existing/levels/${levelId}/quiz`)}

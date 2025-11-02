@@ -4,7 +4,7 @@ import rockyLogo from "/rocky.svg";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
-import LeaderboardConnctAvatar from "../assets/leaderboardConnectAvatar.svg";
+import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
 
 type LeaderboardType = "general" | "friends";
@@ -65,7 +65,7 @@ const LeaderboardPage: React.FC = () => {
       <div className="leaderboard-page">
         <h1 className="leaderboard-title">Leaderboard</h1>
         <div className="leaderboard-empty-state">
-          <img src={LeaderboardConnctAvatar} alt="Leaderboard Connect Avatar" className="leaderboard-empty-avatar" />
+          <img src={LeaderboardConnectAvatar} alt="Leaderboard Connect Avatar" className="leaderboard-empty-avatar" />
           <p className="leaderboard-empty-message">
             You haven't started earning points yet. Go and start learning!
           </p>
@@ -107,10 +107,10 @@ const LeaderboardPage: React.FC = () => {
       {/* Show message if no friends */}
       {hasNoFriends ? (
         <div className="leaderboard-empty-state">
-          <img 
-            src={LeaderboardConnctAvatar} 
-            alt="Leaderboard Connect Avatar" 
-            className="leaderboard-empty-avatar" 
+          <img
+            src={LeaderboardConnectAvatar}
+            alt="Leaderboard Connect Avatar"
+            className="leaderboard-empty-avatar"
           />
           <p className="leaderboard-empty-message">
             You don't have any friends yet. Add friends to see the friends leaderboard!

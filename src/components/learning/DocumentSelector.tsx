@@ -89,7 +89,6 @@ export default function DocumentSelector({
       {displayDocuments.map((doc) => (
         <NavigationCard
           key={doc.id}
-          icon="📄"
           title={doc.filename}
           description={doc.ocrProcessed ? 'Ready to study' : 'Processing...'}
           onClick={() => onDocumentSelect(doc)}
