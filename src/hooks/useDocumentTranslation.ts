@@ -36,9 +36,11 @@ export function useDocumentTranslation(documentId: string | undefined) {
     },
     enabled: !!documentId,
     refetchInterval: (query) => {
-      return query.state.data?.processing ? 3000 : false;
+      // Poll every 1 second while processing for faster updates
+      return query.state.data?.processing ? 1000 : false;
     },
     refetchIntervalInBackground: false,
     retry: false,
+    staleTime: 0, // Always consider data stale during processing
   });
 }

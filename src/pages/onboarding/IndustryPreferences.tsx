@@ -75,6 +75,7 @@ export default function IndustryPreferences() {
     onSuccess: () => {
       // Invalidate and refetch profile data
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
       // Clear session storage
       sessionStorage.removeItem('onboardingData');
       // Navigate based on context

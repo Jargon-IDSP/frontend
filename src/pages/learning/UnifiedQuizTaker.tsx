@@ -1,4 +1,4 @@
-import { useParams, useSearchParams, useNavigate } from "react-router-dom";
+import { useParams, useSearchParams, useNavigate, useLocation } from "react-router-dom";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
 import { useCustomQuiz } from "../../hooks/useCustomQuiz";
 import { useExistingQuiz } from "../../hooks/useExistingQuiz";
@@ -22,7 +22,8 @@ type QuizType = 'custom' | 'existing' | 'category';
  */
 export default function UnifiedQuizTaker() {
   const navigate = useNavigate();
-  const { levelId, category } = useParams<{ levelId?: string; category?: string }>();
+  const location = useLocation();
+  const { levelId, category, sessionNumber } = useParams<{ levelId?: string; category?: string; sessionNumber?: string }>();
   const [searchParams] = useSearchParams();
   const { language: userLanguage, industryId } = useUserPreferences();
 
@@ -115,7 +116,12 @@ export default function UnifiedQuizTaker() {
 
   // Determine back navigation based on type
   const handleBack = () => {
-    navigate(-1);
+    // Check if this is a Red Seal quiz with sessionNumber
+    if (quizType === 'existing' && location.pathname.includes('/quiz/') && sessionNumber) {
+      navigate('/learning/existing/levels');
+    } else {
+      navigate(-1);
+    }
   };
 
   const error = queryError ? (queryError as Error).message : null;

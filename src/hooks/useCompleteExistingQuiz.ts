@@ -38,6 +38,8 @@ export function useCompleteExistingQuiz() {
         queryKey: ["existingQuiz", variables.levelId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ["quizAttempts"] });
+      // Invalidate levels cache to update completion status and unlock next levels
+      queryClient.invalidateQueries({ queryKey: ["levels"] });
     },
     onError: (error: Error) => {
       console.error("Error saving quiz results:", error);

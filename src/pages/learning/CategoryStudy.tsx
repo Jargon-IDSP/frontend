@@ -32,69 +32,51 @@ function ProcessingDocumentCard({ filename, status }: ProcessingDocumentCardProp
     { name: 'Questions', complete: status.hasQuiz },
   ];
 
+  const activeStepIndex = steps.findIndex(step => !step.complete);
+
   return (
-    <div
-      style={{
-        border: '2px solid #3b82f6',
-        borderRadius: '8px',
-        padding: '1.5rem',
-        backgroundColor: '#eff6ff',
-      }}
-    >
-      <h3 style={{ marginBottom: '1rem', fontSize: '1.1rem', display: 'flex', alignItems: 'center', gap: '0.5rem' }}>
+    <div className="processing-card">
+      <h3 className="processing-card__header">
         {filename}
-        <span style={{
-          fontSize: '0.75rem',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          padding: '0.25rem 0.5rem',
-          borderRadius: '4px',
-          fontWeight: 'bold'
-        }}>
+        <span className="processing-card__badge">
           PROCESSING
         </span>
       </h3>
 
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
-        {steps.map((step) => (
-          <div key={step.name} style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-            <div
-              style={{
-                width: '24px',
-                height: '24px',
-                borderRadius: '50%',
-                backgroundColor: step.complete ? '#10b981' : '#e5e7eb',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                fontSize: '0.75rem',
-                color: 'white',
-                fontWeight: 'bold',
-              }}
-            >
-              {step.complete ? '✓' : ''}
+      <div className="processing-card__steps">
+        {steps.map((step, index) => {
+          const isActive = index === activeStepIndex && !step.complete;
+          const indicatorClass = step.complete
+            ? 'processing-card__step-indicator--complete'
+            : isActive
+            ? 'processing-card__step-indicator--active'
+            : 'processing-card__step-indicator--pending';
+
+          const labelClass = step.complete
+            ? 'processing-card__step-label--complete'
+            : isActive
+            ? 'processing-card__step-label--active'
+            : 'processing-card__step-label--pending';
+
+          return (
+            <div key={step.name} className="processing-card__step">
+              <div className={`processing-card__step-indicator ${indicatorClass}`}>
+                {step.complete ? '✓' : isActive ? '...' : ''}
+              </div>
+              <span className={`processing-card__step-label ${labelClass}`}>
+                {step.name}
+                {isActive && <span className="processing-card__progress-text">(in progress)</span>}
+              </span>
             </div>
-            <span style={{
-              fontSize: '0.875rem',
-              color: step.complete ? '#10b981' : '#6b7280',
-              fontWeight: step.complete ? '500' : '400'
-            }}>
-              {step.name}
-            </span>
-          </div>
-        ))}
+          );
+        })}
       </div>
 
-      {status.hasFlashcards && status.flashcardCount > 0 && (
-        <p style={{
-          marginTop: '1rem',
-          fontSize: '0.875rem',
-          color: '#6b7280',
-          paddingTop: '1rem',
-          borderTop: '1px solid #cbd5e1'
-        }}>
-          Generated {status.flashcardCount} flashcard{status.flashcardCount !== 1 ? 's' : ''}
-          {status.questionCount > 0 && ` • ${status.questionCount} question${status.questionCount !== 1 ? 's' : ''}`}
+      {(status.flashcardCount > 0 || status.questionCount > 0) && (
+        <p className="processing-card__stats">
+          {status.flashcardCount > 0 && `✓ Generated ${status.flashcardCount} flashcard${status.flashcardCount !== 1 ? 's' : ''}`}
+          {status.flashcardCount > 0 && status.questionCount > 0 && ' • '}
+          {status.questionCount > 0 && `${status.questionCount} question${status.questionCount !== 1 ? 's' : ''}`}
         </p>
       )}
     </div>
@@ -111,92 +93,93 @@ export default function CategoryStudy() {
 
   const { data: documents = [], isLoading, refetch } = useDocumentsByCategory(category || 'general');
 
-  // Get the document ID from navigation state if user just uploaded
   const justUploadedDocId = location.state?.documentId;
   const justUploaded = location.state?.justUploaded;
 
-  // Poll status for the just-uploaded document
   const { data: statusData, isLoading: statusLoading } = useDocumentProcessingStatus({
     documentId: justUploaded ? justUploadedDocId : null,
-    pollingInterval: 3000,
+    pollingInterval: 1000, 
   });
 
-  // Refetch documents list when processing completes
   useEffect(() => {
     if (statusData?.status.status === 'completed') {
+      // Invalidate queries to refresh the document list
       refetch();
       queryClient.invalidateQueries({ queryKey: ['documents', 'by-category', category] });
+
+      // Immediately clear the upload state to hide the completion card and refresh the view
+      window.history.replaceState({}, document.title);
     }
   }, [statusData?.status.status, refetch, queryClient, category]);
 
   return (
-    <div style={{ padding: '2rem', maxWidth: '800px', margin: '0 auto' }}>
+    <div className="category-study">
       <Button
         onClick={() => navigate('/learning/custom/categories')}
         variant="secondary"
-        style={{ marginBottom: '1rem' }}
+        className="category-study__back-button"
       >
         ← Back to My Generated Lessons
       </Button>
 
-      <h1>{categoryName} Category</h1>
+      <h1 className="category-study__title">{categoryName} Category</h1>
 
-      <h2 style={{ marginTop: '2rem', marginBottom: '1rem' }}>
+      <h2 className="category-study__section-title">
         Study by Document
       </h2>
 
-      {/* Show just-uploaded document at the top if processing */}
       {justUploaded && statusData && statusData.status.status === 'processing' && (
-        <div style={{ marginBottom: '1rem' }}>
-          <ProcessingDocumentCard
-            filename={statusData.document.filename}
-            status={statusData.status}
-          />
+        <ProcessingDocumentCard
+          filename={statusData.document.filename}
+          status={statusData.status}
+        />
+      )}
+
+      {justUploaded && statusData && statusData.status.status === 'completed' && (
+        <div className="completion-card">
+          <h3 className="completion-card__header">
+            ✓ {statusData.document.filename}
+            <span className="completion-card__badge">
+              READY
+            </span>
+          </h3>
+          <p className="completion-card__message">
+            Your document has been successfully processed!
+          </p>
+          <div className="completion-card__stats">
+            <span>✓ {statusData.status.flashcardCount} flashcards</span>
+            <span>•</span>
+            <span>✓ {statusData.status.questionCount} questions</span>
+          </div>
         </div>
       )}
 
-      {/* Show loading state for status if we're waiting for the just-uploaded document */}
       {justUploaded && statusLoading && !statusData && (
-        <div style={{
-          border: '2px solid #3b82f6',
-          borderRadius: '8px',
-          padding: '1.5rem',
-          backgroundColor: '#eff6ff',
-          marginBottom: '1rem',
-          textAlign: 'center'
-        }}>
-          <p style={{ color: '#3b82f6', fontWeight: '500' }}>
+        <div className="upload-loading-card">
+          <p className="upload-loading-card__title">
             Uploading your document...
           </p>
-          <p style={{ fontSize: '0.875rem', color: '#6b7280', marginTop: '0.5rem' }}>
+          <p className="upload-loading-card__message">
             Please wait while we process your file
           </p>
         </div>
       )}
 
       {isLoading ? (
-        <div style={{ textAlign: 'center', padding: '2rem', color: '#6b7280' }}>
+        <div className="category-study__loading">
           Loading documents...
         </div>
       ) : documents.length === 0 && !justUploaded ? (
-        <div style={{
-          textAlign: 'center',
-          padding: '2rem',
-          backgroundColor: '#f9fafb',
-          borderRadius: '8px',
-          color: '#6b7280'
-        }}>
+        <div className="category-study__empty-state">
           <p>No documents in the {categoryName} category yet.</p>
-          <p style={{ fontSize: '0.875rem', marginTop: '0.5rem' }}>
+          <p className="category-study__empty-state-description">
             Upload and process documents to see them here!
           </p>
         </div>
       ) : (
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-
+        <div className="category-study__documents-list">
           {documents.map((doc) => {
-            // Skip the just-uploaded doc if it's still processing (we show it above)
-            if (justUploaded && doc.id === justUploadedDocId && statusData?.status.status === 'processing') {
+            if (justUploaded && doc.id === justUploadedDocId) {
               return null;
             }
 
@@ -210,39 +193,19 @@ export default function CategoryStudy() {
                     navigate(`/learning/documents/${doc.id}/study`);
                   }
                 }}
-                style={{
-                  border: '1px solid #e5e7eb',
-                  borderRadius: '8px',
-                  padding: '1.5rem',
-                  backgroundColor: isProcessing ? '#f9fafb' : 'white',
-                  cursor: isProcessing ? 'not-allowed' : 'pointer',
-                  transition: 'all 0.2s ease',
-                  opacity: isProcessing ? 0.7 : 1,
-                }}
-                onMouseEnter={(e) => {
-                  if (!isProcessing) {
-                    e.currentTarget.style.borderColor = '#3b82f6';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(59, 130, 246, 0.1)';
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  if (!isProcessing) {
-                    e.currentTarget.style.borderColor = '#e5e7eb';
-                    e.currentTarget.style.boxShadow = 'none';
-                  }
-                }}
+                className={`document-card ${isProcessing ? 'document-card--processing' : ''}`}
               >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-                  <div style={{ flex: 1 }}>
-                    <h3 style={{ marginBottom: '0.5rem', fontSize: '1.1rem' }}>
+                <div className="document-card__content">
+                  <div className="document-card__details">
+                    <h3 className="document-card__title">
                       {doc.filename}
                     </h3>
                     {isProcessing ? (
-                      <p style={{ color: '#f59e0b', fontSize: '0.875rem', fontWeight: '500' }}>
+                      <p className="document-card__status document-card__status--processing">
                         Processing document...
                       </p>
                     ) : (
-                      <p style={{ color: '#6b7280', fontSize: '0.875rem' }}>
+                      <p className="document-card__status document-card__status--ready">
                         {doc.flashcardCount} flashcards • {doc.questionCount} questions
                       </p>
                     )}

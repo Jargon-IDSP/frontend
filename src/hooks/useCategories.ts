@@ -23,7 +23,7 @@ export function useCategories() {
       const response: CategoriesResponse = await res.json();
       return response.data?.categories || [];
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 30 * 1000, // 30 seconds - shorter to reflect processing updates faster
     retry: 2,
   });
 }

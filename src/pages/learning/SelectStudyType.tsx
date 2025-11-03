@@ -3,23 +3,18 @@ import { useNavigate, useParams } from 'react-router-dom';
 import DocumentNav from '../../components/DocumentNav';
 import DocumentSelector from '../../components/learning/DocumentSelector';
 import DocumentStudyOptions from '../../components/learning/DocumentStudyOptions';
-// import WordOfTheDay from '../../components/WordOfTheDay';
+import WordOfTheDay from '../../components/WordOfTheDay';
 import type { Document } from '../../types/document';
 import { useDocument } from '../../hooks/useDocument';
 
-/**
- * SelectStudyType - Allows users to select a document and choose study type
- * Can be accessed directly with a documentId in the URL or via document selection
- */
+
 export default function SelectStudyType() {
   const navigate = useNavigate();
   const { documentId } = useParams<{ documentId: string }>();
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
 
-  // Fetch document from URL param using cached hook
   const { data: documentData, isLoading } = useDocument(documentId);
 
-  // Update selected document when data is fetched
   useEffect(() => {
     if (documentData?.document && !selectedDocument) {
       setSelectedDocument(documentData.document);
@@ -38,43 +33,14 @@ export default function SelectStudyType() {
 
   const handleBackClick = () => {
     if (documentId) {
-      // If we came from a specific document, go back to previous page
       navigate(-1);
     } else if (selectedDocument) {
-      // If document is selected (from selector), go back to document selection
       setSelectedDocument(null);
     } else {
-      // Otherwise go back to custom learning
       navigate('/learning/custom');
     }
   };
 
-  /*
-  ==========================================
-  COMMENTED OUT FOR FUTURE USE:
-  Category/Level selection logic will be implemented here
-  when moved from design mockups to production
-  ==========================================
-
-  const [viewMode, setViewMode] = useState<'document' | 'category' | 'level'>('document');
-
-  const handleCategorySelect = (category: string) => {
-    navigate(`/learning/custom/categories/${category}`);
-  };
-
-  const handleLevelSelect = (levelId: number) => {
-    navigate(`/learning/existing/levels/${levelId}`);
-  };
-
-  // Add UI switcher for document/category/level views
-  <div className="view-mode-selector">
-    <button onClick={() => setViewMode('document')}>By Document</button>
-    <button onClick={() => setViewMode('category')}>By Category</button>
-    <button onClick={() => setViewMode('level')}>By Level</button>
-  </div>
-
-  ==========================================
-  */
 
   if (isLoading) {
     return (
@@ -96,7 +62,7 @@ export default function SelectStudyType() {
           onBackClick={handleBackClick}
         />
 
-        {/* No WordOfTheDay here due to type error - removing for now */}
+        {selectedDocument && <WordOfTheDay />}
 
         {!selectedDocument ? (
           <div style={{ padding: '1rem' }}>

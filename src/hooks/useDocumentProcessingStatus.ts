@@ -26,7 +26,7 @@ interface UseDocumentProcessingStatusOptions {
 
 export function useDocumentProcessingStatus({
   documentId,
-  pollingInterval = 3000,
+  pollingInterval = 1000, // Reduced from 3000ms to 1000ms for faster updates
 }: UseDocumentProcessingStatusOptions) {
   const { getToken } = useAuth();
 
@@ -51,8 +51,13 @@ export function useDocumentProcessingStatus({
       return await res.json();
     },
     enabled: !!documentId,
-    refetchInterval: pollingInterval,
+    refetchInterval: (query) => {
+      // Stop polling when completed, otherwise poll every 1 second
+      const data = query.state.data;
+      return data?.status.status === 'completed' ? false : pollingInterval;
+    },
     refetchIntervalInBackground: false,
     retry: false,
+    staleTime: 0, // Always consider data stale to ensure fresh fetches
   });
 }

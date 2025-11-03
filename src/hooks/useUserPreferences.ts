@@ -6,14 +6,13 @@ import type {
   UserPreferences,
 } from "@/types/useUserPreferences";
 
-// Map industry IDs to display names
+// Map industry IDs to display names (matching industries.json in backend)
 export const industryIdToName: { [key: number]: string } = {
-  1: 'General',
-  2: 'Electrician',
-  3: 'Plumber',
-  4: 'Carpenter',
-  5: 'Mechanic',
-  6: 'Welder',
+  1: 'Electrician',
+  2: 'Plumber',
+  3: 'Carpenter',
+  4: 'Mechanic',
+  5: 'Welder',
 };
 
 /**

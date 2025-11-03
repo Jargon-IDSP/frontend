@@ -13,6 +13,33 @@
   &:hover {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
+
+  &--locked {
+    opacity: 0.6;
+    background-color: #f9fafb;
+    border-color: #d1d5db;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    .category-folder-header {
+      cursor: not-allowed !important;
+
+      &:hover {
+        background-color: transparent;
+      }
+    }
+  }
+
+  &--completed {
+    border-color: #10b981;
+    background-color: #f0fdf4;
+
+    .category-folder-title h3 {
+      color: #10b981;
+    }
+  }
 }
 
 .category-folder-header {

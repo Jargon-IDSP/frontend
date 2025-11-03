@@ -1,8 +1,10 @@
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
+import { useQueryClient } from "@tanstack/react-query";
 import { useDocuments } from "../../hooks/useDocuments";
 import { useDeleteDocument } from "../../hooks/useDeleteDocument";
+import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
 import QuizShareModal from "../../components/learning/QuizShareModal";
 import { BACKEND_URL } from "../../lib/api";
 import type { Document, DocumentsListProps } from "../../types/document";
@@ -14,6 +16,7 @@ import shareIcon from "../../assets/icons/shareIcon.svg";
 export function DocumentsList({ refresh }: DocumentsListProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
+  const queryClient = useQueryClient();
   const [isEditMode, setIsEditMode] = useState(false);
   const documentsListRef = useRef<HTMLDivElement>(null);
   const [shareModalQuiz, setShareModalQuiz] = useState<{
@@ -50,6 +53,22 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     error,
   } = useDocuments(refresh);
   const deleteMutation = useDeleteDocument();
+
+  // Find processing documents and poll for their status
+  const processingDocuments = documents.filter((doc) => !doc.ocrProcessed);
+  const processingDocId = processingDocuments.length > 0 ? processingDocuments[0].id : null;
+
+  const { data: processingStatus } = useDocumentProcessingStatus({
+    documentId: processingDocId,
+  });
+
+  // Auto-refresh document list when processing completes
+  useEffect(() => {
+    if (processingStatus?.status.status === 'completed') {
+      // Invalidate documents query to refetch the list
+      queryClient.invalidateQueries({ queryKey: ["documents"] });
+    }
+  }, [processingStatus?.status.status, queryClient]);
 
   const handleDelete = async (documentId: string) => {
     if (

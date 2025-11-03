@@ -1,0 +1,276 @@
+.category-study {
+  padding: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+
+  &__back-button {
+    margin-bottom: 1rem;
+  }
+
+
+
+  &__section-title {
+    margin-top: 2rem;
+    margin-bottom: 1rem;
+  }
+
+  &__loading {
+    text-align: center;
+    padding: 2rem;
+    color: #6b7280;
+  }
+
+  &__empty-state {
+    text-align: center;
+    padding: 2rem;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    color: #6b7280;
+
+    p {
+      margin: 0;
+    }
+
+    &-description {
+      font-size: 0.875rem;
+      margin-top: 0.5rem;
+    }
+  }
+
+  &__documents-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+}
+
+// Processing Document Card
+.processing-card {
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #eff6ff;
+  margin-bottom: 1rem;
+
+  &__header {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__badge {
+    font-size: 0.75rem;
+    background-color: #3b82f6;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  &__steps {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+  }
+
+  &__step {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__step-indicator {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.75rem;
+    color: white;
+    font-weight: bold;
+
+    &--complete {
+      background-color: #10b981;
+    }
+
+    &--active {
+      background-color: #3b82f6;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    &--pending {
+      background-color: #e5e7eb;
+    }
+  }
+
+  &__step-label {
+    font-size: 0.875rem;
+
+    &--complete {
+      color: #10b981;
+      font-weight: 500;
+    }
+
+    &--active {
+      color: #3b82f6;
+      font-weight: 500;
+    }
+
+    &--pending {
+      color: #6b7280;
+      font-weight: 400;
+    }
+  }
+
+  &__progress-text {
+    margin-left: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  &__stats {
+    margin-top: 1rem;
+    font-size: 0.875rem;
+    color: #10b981;
+    padding-top: 1rem;
+    border-top: 1px solid #cbd5e1;
+    font-weight: 500;
+  }
+}
+
+// Completion Card
+.completion-card {
+  border: 2px solid #10b981;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #ecfdf5;
+  margin-bottom: 1rem;
+  animation: slideIn 0.3s ease-out;
+
+  &__header {
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #10b981;
+  }
+
+  &__badge {
+    font-size: 0.75rem;
+    background-color: #10b981;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+    font-weight: bold;
+  }
+
+  &__message {
+    font-size: 0.875rem;
+    color: #059669;
+    margin-bottom: 0.75rem;
+  }
+
+  &__stats {
+    display: flex;
+    gap: 0.5rem;
+    font-size: 0.875rem;
+    color: #6b7280;
+  }
+}
+
+// Upload Loading Card
+.upload-loading-card {
+  border: 2px solid #3b82f6;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #eff6ff;
+  margin-bottom: 1rem;
+  text-align: center;
+
+  &__title {
+    color: #3b82f6;
+    font-weight: 500;
+    margin: 0;
+  }
+
+  &__message {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+}
+
+// Document Card
+.document-card {
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: white;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  opacity: 1;
+
+  &--processing {
+    background-color: #f9fafb;
+    cursor: not-allowed;
+    opacity: 0.7;
+  }
+
+  &:not(&--processing):hover {
+    border-color: #3b82f6;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
+  }
+
+  &__content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  &__details {
+    flex: 1;
+  }
+
+  &__title {
+    margin-bottom: 0.5rem;
+    font-size: 1.1rem;
+  }
+
+  &__status {
+    font-size: 0.875rem;
+
+    &--processing {
+      color: #f59e0b;
+      font-weight: 500;
+    }
+
+    &--ready {
+      color: #6b7280;
+    }
+  }
+}
+
+// Animations
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

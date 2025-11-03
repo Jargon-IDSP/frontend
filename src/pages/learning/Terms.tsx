@@ -73,7 +73,12 @@ export default function Terms() {
   // Build dynamic finish URL based on current context
   let finishHref = "/learning/custom/quizzes";
   if (location.pathname.includes("/existing/")) {
-    if (levelId) finishHref = `/learning/existing/levels/${levelId}/quizzes`;
+    // Check if this is the new Red Seal flashcards route
+    if (location.pathname.includes("/flashcards/")) {
+      finishHref = `/learning/existing/levels`;
+    } else if (levelId) {
+      finishHref = `/learning/existing/levels/${levelId}/quizzes`;
+    }
   } else if (location.pathname.includes("/learning/documents/")) {
     if (documentId) finishHref = `/learning/documents/${documentId}/study`;
   } else if (category) {

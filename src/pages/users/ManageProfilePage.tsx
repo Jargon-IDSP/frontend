@@ -64,6 +64,7 @@ export default function ManageProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
+      queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
       navigate('/profile');
     },
     onError: (error) => {
