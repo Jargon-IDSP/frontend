@@ -15,10 +15,11 @@ import goBackIcon from "../../assets/icons/goBackIcon.svg";
 export default function Terms() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { levelId, documentId, category } = useParams<{
+  const { levelId, documentId, category, sessionNumber } = useParams<{
     levelId?: string;
     documentId?: string;
     category?: string;
+    sessionNumber?: string;
   }>();
   const [searchParams] = useSearchParams();
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -59,6 +60,7 @@ export default function Terms() {
       language: queryLanguage,
       ...(queryIndustryId &&
         type === "existing" && { industry_id: queryIndustryId }),
+      ...(sessionNumber && { limit: "10" }),
     },
     enabled: !preferencesLoading,
   });

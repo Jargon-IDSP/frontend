@@ -139,7 +139,11 @@ export const routes: RouteObject[] = [
     element: protect(<SelectStudyType />),
   },
 
-  // Terms
+  // Flashcards (Terms)
+  {
+    path: "/learning/existing/levels/:levelId/flashcards/:sessionNumber",
+    element: protect(<Terms />),
+  },
   {
     path: "/learning/existing/levels/:levelId/terms",
     element: protect(<Terms />),
@@ -191,6 +195,10 @@ export const routes: RouteObject[] = [
 
   // Quiz Selection
   {
+    path: "/learning/existing/levels/:levelId/quiz/:sessionNumber",
+    element: protect(<QuizSelection />),
+  },
+  {
     path: "/learning/existing/levels/:levelId/quiz",
     element: protect(<QuizSelection />),
   },
@@ -204,7 +212,10 @@ export const routes: RouteObject[] = [
   },
 
   // Take Quiz
-
+  {
+    path: "/learning/existing/levels/:levelId/quiz/:sessionNumber/take",
+    element: protect(<UnifiedQuizTaker />),
+  },
   {
     path: "/learning/existing/levels/:levelId/quiz/take",
     element: protect(<UnifiedQuizTaker />),

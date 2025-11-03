@@ -111,7 +111,6 @@ const LeaderboardPage: React.FC = () => {
           </button>
         </div>
 
-        {/* Show message if no friends */}
         {hasNoFriends ? (
           <div className="leaderboard-empty-state">
             <img
