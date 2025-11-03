@@ -31,11 +31,15 @@ export default function DocumentDrawer({
           >
             Generate a lesson
           </Button>
-          <Button className="bg-[#6F2E17] text-white hover:bg-orange-90">
+          <Button className="bg-[#6F2E17] text-white hover:bg-orange-90 my-4">
             Both
           </Button>
+          {/* Horizontal divider */}
+          <hr className="my-2 border-gray-200 mb-4" />
           <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
+            <Button variant="outline" className="text-red-500">
+              Cancel
+            </Button>
           </DrawerClose>
         </DrawerFooter>
       </DrawerContent>
