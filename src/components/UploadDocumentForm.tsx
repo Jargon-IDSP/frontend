@@ -4,12 +4,18 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../lib/api";
 import type { UploadDocumentFormProps } from "@/types/components/forms";
-import type {
-  UploadData,
-  SignResponse,
-  SaveResponse,
-} from "@/types/api/upload";
+import type { UploadData, SignResponse, SaveResponse } from "@/types/api/upload";
 import { CategorySelectModal } from "./CategorySelectModal";
+import "../styles/components/_uploadDocumentForm.scss";
+
+const CATEGORY_MAP: Record<number, string> = {
+  1: "safety",
+  2: "technical",
+  3: "training",
+  4: "workplace",
+  5: "professional",
+  6: "general",
+};
 
 export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const { getToken } = useAuth();
@@ -99,8 +105,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         throw new Error("Failed to save document");
       }
 
-      const data: SaveResponse = await saveRes.json();
-      return { ...data, categoryName: "" };
+      return (await saveRes.json()) as SaveResponse;
     },
     onSuccess: (data, variables) => {
       setFile(null);
@@ -108,7 +113,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       setShowCategoryModal(false);
       onSuccess();
 
-      const categoryName = getCategoryNameById(variables.categoryId);
+      const categoryName = CATEGORY_MAP[variables.categoryId] || "general";
       navigate(`/learning/custom/categories/${categoryName}`, {
         state: {
           documentId: data.documentId,
@@ -118,38 +123,28 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     },
   });
 
-  const getCategoryNameById = (id: number): string => {
-    const map: Record<number, string> = {
-      1: "safety",
-      2: "technical",
-      3: "training",
-      4: "workplace",
-      5: "professional",
-      6: "general",
-    };
-    return map[id] || "general";
-  };
-
   const handleCategorySelect = async (categoryId: number) => {
     if (!uploadedData) return;
 
-    try {
-      const token = await getToken();
-      if (!token) {
-        throw new Error("Authentication required");
-      }
-
-      saveDocumentMutation.mutate({
-        fileKey: uploadedData.key,
-        filename: uploadedData.filename,
-        fileType: uploadedData.fileType,
-        fileSize: uploadedData.fileSize,
-        categoryId,
-        token,
-      });
-    } catch (err) {
-      console.error("Save error:", err);
+    // Prevent duplicate submissions
+    if (saveDocumentMutation.isPending) {
+      console.warn("Save already in progress, ignoring duplicate request");
+      return;
     }
+
+    const token = await getToken();
+    if (!token) {
+      throw new Error("Authentication required");
+    }
+
+    saveDocumentMutation.mutate({
+      fileKey: uploadedData.key,
+      filename: uploadedData.filename,
+      fileType: uploadedData.fileType,
+      fileSize: uploadedData.fileSize,
+      categoryId,
+      token,
+    });
   };
 
   const handleCategoryModalClose = () => {
@@ -159,7 +154,11 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   };
 
   useEffect(() => {
-    if (uploadMutation.isPending || saveDocumentMutation.isPending) {
+    const isPending = uploadMutation.isPending || saveDocumentMutation.isPending;
+    const isSuccess = uploadMutation.isSuccess || saveDocumentMutation.isSuccess;
+    const isError = uploadMutation.isError || saveDocumentMutation.isError;
+
+    if (isPending) {
       setUploadProgress(0);
       const interval = setInterval(() => {
         setUploadProgress((prev) => {
@@ -171,11 +170,11 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       }, 200);
 
       return () => clearInterval(interval);
-    } else if (uploadMutation.isSuccess || saveDocumentMutation.isSuccess) {
+    } else if (isSuccess) {
       setUploadProgress(100);
       const timeout = setTimeout(() => setUploadProgress(0), 1000);
       return () => clearTimeout(timeout);
-    } else if (uploadMutation.isError || saveDocumentMutation.isError) {
+    } else if (isError) {
       setUploadProgress(0);
     }
   }, [
@@ -188,8 +187,9 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   ]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      setFile(e.target.files[0]);
+    const selectedFile = e.target.files?.[0];
+    if (selectedFile) {
+      setFile(selectedFile);
       uploadMutation.reset();
     }
   };
@@ -197,147 +197,80 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!file) {
-      return;
+    if (!file) return;
+
+    const token = await getToken();
+    if (!token) {
+      throw new Error("Authentication required");
     }
 
-    try {
-      const token = await getToken();
-      if (!token) {
-        throw new Error("Authentication required");
-      }
-
-      uploadMutation.mutate({ file, token });
-    } catch (err) {
-      console.error("Auth error:", err);
-    }
+    uploadMutation.mutate({ file, token });
   };
 
+  const isLoading = uploadMutation.isPending || saveDocumentMutation.isPending;
+  const error = uploadMutation.error || saveDocumentMutation.error;
+
   return (
-    <form
-      onSubmit={handleSubmit}
-      style={{ display: "flex", flexDirection: "column", gap: "1rem" }}
-    >
-      <div>
-        <label
-          style={{
-            display: "block",
-            marginBottom: "0.5rem",
-            fontWeight: "500",
-          }}
-        >
-          Select Document
-        </label>
+    <form onSubmit={handleSubmit} className="upload-document-form">
+      <div className="upload-document-form__field">
+        <label className="upload-document-form__label">Select Document</label>
         <input
           type="file"
           onChange={handleFileChange}
           accept=".pdf,.jpg,.jpeg,.png"
-          disabled={uploadMutation.isPending}
-          style={{
-            width: "100%",
-            padding: "0.5rem",
-            border: "2px solid #e5e7eb",
-            borderRadius: "6px",
-          }}
+          disabled={isLoading}
+          className="upload-document-form__input"
         />
-        <p
-          style={{
-            fontSize: "0.875rem",
-            color: "#6b7280",
-            marginTop: "0.5rem",
-          }}
-        >
+        <p className="upload-document-form__hint">
           Supported formats: PDF, JPG, PNG
         </p>
       </div>
 
-      {(uploadMutation.isError || saveDocumentMutation.isError) && (
-        <div
-          style={{
-            padding: "0.75rem",
-            backgroundColor: "#fee2e2",
-            border: "1px solid #ef4444",
-            borderRadius: "6px",
-            color: "#991b1b",
-          }}
-        >
-          {uploadMutation.error instanceof Error
-            ? uploadMutation.error.message
-            : saveDocumentMutation.error instanceof Error
-            ? saveDocumentMutation.error.message
-            : "Upload failed"}
+      {error && (
+        <div className="upload-document-form__error">
+          {error instanceof Error ? error.message : "Upload failed"}
         </div>
       )}
 
       <button
         type="submit"
-        disabled={!file || uploadMutation.isPending || saveDocumentMutation.isPending}
-        style={{
-          padding: "0.75rem 1.5rem",
-          backgroundColor:
-            uploadMutation.isPending || saveDocumentMutation.isPending || !file ? "#d1d5db" : "#10b981",
-          color: "white",
-          border: "none",
-          borderRadius: "6px",
-          fontWeight: "bold",
-          cursor: uploadMutation.isPending || saveDocumentMutation.isPending || !file ? "not-allowed" : "pointer",
-        }}
+        disabled={!file || isLoading}
+        className="upload-document-form__button"
       >
-        {uploadMutation.isPending ? "Uploading..." : saveDocumentMutation.isPending ? "Saving..." : "Choose File"}
+        {uploadMutation.isPending
+          ? "Uploading..."
+          : saveDocumentMutation.isPending
+          ? "Saving..."
+          : "Choose File"}
       </button>
 
-      {(uploadMutation.isPending || saveDocumentMutation.isPending) && (
-        <div
-          style={{
-            padding: "0.75rem",
-            backgroundColor: "#eff6ff",
-            borderRadius: "6px",
-            fontSize: "0.875rem",
-          }}
-        >
-          <div style={{ marginBottom: "0.75rem" }}>
-            <div
-              style={{
-                width: "100%",
-                height: "8px",
-                backgroundColor: "#e5e7eb",
-                borderRadius: "9999px",
-                overflow: "hidden",
-              }}
-            >
+      {isLoading && (
+        <div className="upload-document-form__progress">
+          <div className="upload-document-form__progress-bar-container">
+            <div className="upload-document-form__progress-bar-track">
               <div
-                style={{
-                  height: "100%",
-                  width: `${uploadProgress}%`,
-                  backgroundColor: "#10b981",
-                  transition: "width 0.3s ease-in-out",
-                  borderRadius: "9999px",
-                }}
+                className="upload-document-form__progress-bar-fill"
+                style={{ width: `${uploadProgress}%` }}
               />
             </div>
-            <div
-              style={{
-                marginTop: "0.5rem",
-                textAlign: "center",
-                fontSize: "0.875rem",
-                color: "#059669",
-                fontWeight: "500",
-              }}
-            >
+            <div className="upload-document-form__progress-percentage">
               {uploadProgress}%
             </div>
           </div>
-          <p style={{ margin: 0, textAlign: "center" }}>
-            {uploadMutation.isPending ? "📤 Uploading document..." : "💾 Saving document..."}
+          <p className="upload-document-form__progress-text">
+            {uploadMutation.isPending
+              ? "📤 Uploading document..."
+              : "💾 Saving document..."}
           </p>
         </div>
       )}
 
       <CategorySelectModal
         isOpen={showCategoryModal}
-        onSelect={handleCategorySelect}
+        onSelect={(categoryId) => handleCategorySelect(categoryId)}
         onClose={handleCategoryModalClose}
         filename={uploadedData?.filename || ""}
+        isSubmitting={saveDocumentMutation.isPending}
       />
     </form>
   );

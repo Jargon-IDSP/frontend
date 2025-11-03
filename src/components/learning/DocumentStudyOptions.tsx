@@ -3,26 +3,9 @@ import { useDocumentQuizzes } from '../../hooks/useDocumentQuizzes';
 import StudyTypeCard from './StudyType';
 import readBook from '../../assets/readBook.png';
 import studyLaptop from '../../assets/studyLaptop.png';
+import type { DocumentStudyOptionsProps } from '../../types/documentStudyOptions';
 import '../../styles/components/_studyType.scss';
 
-interface DocumentStudyOptionsProps {
-  documentId: string;
-  documentTitle?: string;
-  terminologyColor?: string;
-  quizColor?: string;
-}
-
-/**
- * DocumentStudyOptions - Reusable component that displays study options for a document
- * Shows cards for:
- * - Terminology (flashcards)
- * - Quiz (take quiz)
- *
- * @param documentId - ID of the document to study
- * @param documentTitle - Optional title to display
- * @param terminologyColor - Color for the terminology card (default: "blue")
- * @param quizColor - Color for the quiz card (default: "red")
- */
 export default function DocumentStudyOptions({
   documentId,
   documentTitle,
@@ -37,11 +20,9 @@ export default function DocumentStudyOptions({
   };
 
   const handleStartQuiz = () => {
-    // If there are quizzes for this document, navigate to the first one
     if (quizzes.length > 0) {
       navigate(`/learning/custom/quiz/take?quizId=${quizzes[0].id}`);
     } else {
-      // Fallback to document quizzes page if no quizzes found
       navigate(`/learning/documents/${documentId}/study`);
     }
   };
@@ -49,7 +30,7 @@ export default function DocumentStudyOptions({
   return (
     <div className="document-study-options">
       {documentTitle && (
-        <h2 style={{ marginBottom: '1rem', textAlign: 'center' }}>
+        <h2 className="document-study-options__title">
           {documentTitle}
         </h2>
       )}

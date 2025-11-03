@@ -61,8 +61,11 @@ export const useLearning = <T>({
       return result;
     },
     enabled: enabled && isLoaded && isSignedIn,
-    staleTime: 5 * 60 * 1000, 
+    staleTime: 10 * 60 * 1000, // Consider data fresh for 10 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
     retry: 2,
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+    refetchOnMount: false, // Don't refetch on component mount if data exists
   });
 
   return {

@@ -26,12 +26,10 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
         setLoading(true);
         try {
           const result = await onTranslate(targetLanguage);
-          // Only set as translated if we got a valid translation different from original
           if (result && result !== text) {
             setTranslatedText(result);
             setIsTranslated(true);
           } else {
-            // No translation available
             setTranslatedText('Translation not available for this content.');
             setIsTranslated(false);
           }
@@ -56,7 +54,7 @@ export default function TranslateButton({ text, preferredLanguage, onTranslate }
           disabled={loading}
           className={`translate-button ${isTranslated ? 'translate-button--translated' : 'translate-button--default'}`}
         >
-          {loading ? '...' : isTranslated ? '🌐 Show English' : `🌐 Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
+          {loading ? '...' : isTranslated ? 'Show English' : `Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
         </button>
       </div>
 

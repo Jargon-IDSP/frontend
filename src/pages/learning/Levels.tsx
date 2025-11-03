@@ -4,17 +4,8 @@ import { useProfile } from "@/hooks/useProfile";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "@/lib/api";
+import type { StudySession } from "@/types/learning";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
-
-type StudySessionType = "flashcards" | "quiz";
-
-interface StudySession {
-  id: string;
-  name: string;
-  description: string;
-  type: StudySessionType;
-  sessionNumber: number;
-}
 
 interface Level {
   id: number;

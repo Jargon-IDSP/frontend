@@ -14,7 +14,6 @@ export default function MyQuizzesPage() {
   } | null>(null);
   const navigate = useNavigate();
 
-  // Use custom hook
   const {
     data: quizzes = [],
     isLoading: loading,
@@ -170,7 +169,7 @@ export default function MyQuizzesPage() {
           quizName={shareModalQuiz.name}
           onClose={() => setShareModalQuiz(null)}
           onShared={() => {
-            refetchQuizzes(); // Refresh to show updated share count
+            refetchQuizzes(); 
           }}
         />
       )}

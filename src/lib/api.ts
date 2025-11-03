@@ -113,7 +113,6 @@ function findId(node: unknown, maxDepth = 4): string | undefined {
   return undefined;
 }
 
-// Keep as utility function for use in hooks
 export async function fetchRandomQuestion(
   token?: string
 ): Promise<NormalizedQuestion & { __raw?: unknown }> {

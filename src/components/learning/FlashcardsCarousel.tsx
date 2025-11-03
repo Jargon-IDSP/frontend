@@ -1,19 +1,8 @@
-import type { Term } from '../../types/learning';
 import FlippableTermCard from './FlippableTermCard';
 import backIcon from "../../assets/icons/backButton.svg";
 import nextIcon from "../../assets/icons/nextButton.svg";
 import { useNavigate } from 'react-router-dom';
-
-interface FlashcardsCarouselProps {
-  terms: Term[];
-  currentIndex: number;
-  onNext: () => void;
-  onPrevious: () => void;
-  language: string;
-  type: "existing" | "custom";
-  totalCount: number;
-  finishHref?: string;
-}
+import type { FlashcardsCarouselProps } from '../../types/flashcardsCarousel';
 
 export default function FlashcardsCarousel({
   terms,

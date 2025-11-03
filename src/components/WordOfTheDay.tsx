@@ -5,6 +5,7 @@ import { BACKEND_URL } from "../lib/api";
 import { useUserPreferences } from "../hooks/useUserPreferences";
 import todayTermCard from "../assets/todayTermCard.png";
 import type { WordOfTheDayData, FlashcardResponse } from "@/types/wordOfTheDay";
+import "../styles/components/_wordOfTheDay.scss";
 
 export default function WordOfTheDay() {
   const { getToken } = useAuth();
@@ -87,74 +88,6 @@ export default function WordOfTheDay() {
 
   if (preferencesLoading || isLoading) {
     return (
-      <>
-        <div className="word-of-the-day-card">
-          <img
-            src={todayTermCard}
-            alt="Random Trade Term"
-            className="today-term-card-image"
-          />
-          <div className="word-card-content">
-            <div style={{ marginBottom: "1rem" }}>
-              <div
-                style={{
-                  width: "100%",
-                  height: "6px",
-                  backgroundColor: "#e5e7eb",
-                  borderRadius: "9999px",
-                  overflow: "hidden",
-                }}
-              >
-                <div
-                  style={{
-                    height: "100%",
-                    width: `${loadingProgress}%`,
-                    backgroundColor: "#ffba0a80",
-                    transition: "width 0.3s ease-in-out",
-                    borderRadius: "9999px",
-                  }}
-                />
-              </div>
-              <div
-                style={{
-                  marginTop: "0.5rem",
-                  textAlign: "center",
-                  fontSize: "0.875rem",
-                  color: "#FFFFFF",
-                }}
-              >
-                Loading... {loadingProgress}%
-              </div>
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  if (error || !wordData) {
-    return (
-      <>
-        <div className="word-of-the-day-card">
-          <img
-            src={todayTermCard}
-            alt="Random Trade Term"
-            className="today-term-card-image"
-          />
-          <div className="word-card-content">
-            <div className="error-message">
-              {error instanceof Error
-                ? error.message
-                : "Unable to load random word"}
-            </div>
-          </div>
-        </div>
-      </>
-    );
-  }
-
-  return (
-    <>
       <div className="word-of-the-day-card">
         <img
           src={todayTermCard}
@@ -162,25 +95,67 @@ export default function WordOfTheDay() {
           className="today-term-card-image"
         />
         <div className="word-card-content">
-          <div className="word-term">{wordData.term}</div>
-          {wordData.termTranslated && (
-            <div className="word-term-translated">
-              {wordData.termTranslated}
+          <div className="word-of-the-day-card__loading">
+            <div className="word-of-the-day-card__progress-track">
+              <div
+                className="word-of-the-day-card__progress-fill"
+                style={{ width: `${loadingProgress}%` }}
+              />
             </div>
-          )}
-          <div className="word-definition">{wordData.definition}</div>
-          {(wordData.industry || wordData.level) && (
-            <div className="word-meta">
-              {wordData.industry && (
-                <span className="word-industry">{wordData.industry}</span>
-              )}
-              {wordData.level && (
-                <span className="word-level">{wordData.level}</span>
-              )}
+            <div className="word-of-the-day-card__progress-text">
+              Loading... {loadingProgress}%
             </div>
-          )}
+          </div>
         </div>
       </div>
-    </>
+    );
+  }
+
+  if (error || !wordData) {
+    return (
+      <div className="word-of-the-day-card">
+        <img
+          src={todayTermCard}
+          alt="Random Trade Term"
+          className="today-term-card-image"
+        />
+        <div className="word-card-content">
+          <div className="error-message">
+            {error instanceof Error
+              ? error.message
+              : "Unable to load random word"}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="word-of-the-day-card">
+      <img
+        src={todayTermCard}
+        alt="Random Trade Term"
+        className="today-term-card-image"
+      />
+      <div className="word-card-content">
+        <div className="word-term">{wordData.term}</div>
+        {wordData.termTranslated && (
+          <div className="word-term-translated">
+            {wordData.termTranslated}
+          </div>
+        )}
+        <div className="word-definition">{wordData.definition}</div>
+        {(wordData.industry || wordData.level) && (
+          <div className="word-meta">
+            {wordData.industry && (
+              <span className="word-industry">{wordData.industry}</span>
+            )}
+            {wordData.level && (
+              <span className="word-level">{wordData.level}</span>
+            )}
+          </div>
+        )}
+      </div>
+    </div>
   );
 }

@@ -134,10 +134,10 @@ export const routes: RouteObject[] = [
   },
 
   // Legacy route for backwards compatibility - redirect to study type selection
-  {
-    path: "/study/:documentId",
-    element: protect(<SelectStudyType />),
-  },
+  // {
+  //   path: "/study/:documentId",
+  //   element: protect(<SelectStudyType />),
+  // },
 
   // Flashcards (Terms)
   {

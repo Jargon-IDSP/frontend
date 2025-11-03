@@ -1,14 +1,6 @@
 import Button from "./ui/Button";
-import '../../styles/components/_studyType.scss'; // Add this import
-
-
-interface StudyTypeCardProps {
-  name: string;
-  img: string;
-  start_button_text: string;
-  onClick: () => void;
-  color: string;
-}
+import '../../styles/components/_studyType.scss';
+import type { StudyTypeCardProps } from '../../types/studyTypeCard';
 
 export function StudyTypeCard(props: StudyTypeCardProps) {
   return (

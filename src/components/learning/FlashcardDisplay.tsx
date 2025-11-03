@@ -2,29 +2,8 @@ import { useState, useEffect } from 'react';
 import { useRandomFlashcard } from '../../hooks/useRandomFlashcard';
 import todayTermCard from '../../assets/todayTermCard.png';
 import type { FlashcardDisplayProps } from '../../types/learning';
+import '../../styles/pages/_homepage.scss';
 
-/**
- * FlashcardDisplay - Unified component for displaying flashcards
- * Can show random flashcards from custom or prebuilt sources
- * Reusable across homepage, study pages, and anywhere else
- *
- * @example
- * // Homepage "Word of the Day" - random prebuilt flashcard
- * <FlashcardDisplay type="existing" isRandom showIndustry showLevel />
- *
- * @example
- * // Random custom flashcard from user's uploads
- * <FlashcardDisplay type="custom" isRandom />
- *
- * @example
- * // Random flashcard from specific level/industry
- * <FlashcardDisplay
- *   type="existing"
- *   isRandom
- *   levelId={2}
- *   industryId={1}
- * />
- */
 export default function FlashcardDisplay({
   type,
   isRandom = false,
@@ -47,10 +26,9 @@ export default function FlashcardDisplay({
     category,
     levelId,
     industryId,
-    enabled: isRandom, // Only fetch if isRandom is true
+    enabled: isRandom,
   });
 
-  // Simulate progress while loading
   useEffect(() => {
     if (isLoading) {
       setLoadingProgress(0);
@@ -82,34 +60,14 @@ export default function FlashcardDisplay({
             className="today-term-card-image"
           />
           <div className="word-card-content">
-            <div style={{ marginBottom: "1rem" }}>
-              <div
-                style={{
-                  width: "100%",
-                  height: "6px",
-                  backgroundColor: "#e5e7eb",
-                  borderRadius: "9999px",
-                  overflow: "hidden",
-                }}
-              >
+            <div className="flashcard-loading">
+              <div className="flashcard-loading__bar-container">
                 <div
-                  style={{
-                    height: "100%",
-                    width: `${loadingProgress}%`,
-                    backgroundColor: "#ffba0a80",
-                    transition: "width 0.3s ease-in-out",
-                    borderRadius: "9999px",
-                  }}
+                  className="flashcard-loading__bar-fill"
+                  style={{ width: `${loadingProgress}%` }}
                 />
               </div>
-              <div
-                style={{
-                  marginTop: "0.5rem",
-                  textAlign: "center",
-                  fontSize: "0.875rem",
-                  color: "#FFFFFF",
-                }}
-              >
+              <div className="flashcard-loading__text">
                 Loading... {loadingProgress}%
               </div>
             </div>

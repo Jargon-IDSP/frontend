@@ -3,8 +3,7 @@ import type { QuizQuestion } from "../learning";
 // Quiz component prop types
 export interface QuizComponentProps {
   questions: QuizQuestion[];
-  quizNumber: number;
-  onComplete: (score: number, totalQuestions: number) => Promise<void>;
+  onComplete: (score: number, totalQuestions: number) => void;
   onBack: () => void;
   preferredLanguage: string;
   quizType?: 'custom' | 'existing' | 'category';

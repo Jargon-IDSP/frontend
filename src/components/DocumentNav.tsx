@@ -1,18 +1,10 @@
 import React from 'react';
+import type { DocumentNavProps } from '../types/documentNav';
 import translateFileIcon from '../assets/icons/translateFileIcon.svg';
 import fileIconB from '../assets/icons/fileIconB.svg';
 import lessonIcon from '../assets/icons/lessonIcon.svg';
 import lessonIconB from '../assets/icons/lessonIconB.svg';
 import goBackIcon from '../assets/icons/goBackIcon.svg';
-
-interface DocumentNavProps {
-  activeTab: 'lesson' | 'document';
-  title: string;
-  subtitle?: string;
-  onLessonClick?: () => void;
-  onDocumentClick?: () => void;
-  onBackClick?: () => void;
-}
 
 const DocumentNav: React.FC<DocumentNavProps> = ({ 
   activeTab,

@@ -1,21 +1,8 @@
 import { useDocuments } from '../../hooks/useDocuments';
 import { NavigationCard } from './ui/Card';
-import type { Document } from '../../types/document';
+import type { DocumentSelectorProps } from '../../types/documentSelector';
+import '../../styles/components/_documentSelector.scss';
 
-interface DocumentSelectorProps {
-  onDocumentSelect: (document: Document) => void;
-  filterProcessed?: boolean;
-  emptyStateMessage?: string;
-}
-
-/**
- * DocumentSelector - Reusable component for selecting a document
- * Fetches and displays all user documents with optional filtering
- *
- * @param onDocumentSelect - Callback when a document is selected
- * @param filterProcessed - If true, only shows OCR processed documents (default: true)
- * @param emptyStateMessage - Custom message when no documents are available
- */
 export default function DocumentSelector({
   onDocumentSelect,
   filterProcessed = true,
@@ -29,26 +16,10 @@ export default function DocumentSelector({
 
   if (isLoading) {
     return (
-      <div style={{ textAlign: 'center', padding: '2rem' }}>
-        <p style={{ color: '#6b7280' }}>Loading documents...</p>
-        <div
-          style={{
-            width: '100%',
-            height: '4px',
-            backgroundColor: '#e5e7eb',
-            borderRadius: '9999px',
-            overflow: 'hidden',
-            marginTop: '1rem',
-          }}
-        >
-          <div
-            style={{
-              height: '100%',
-              width: '60%',
-              backgroundColor: '#fe4d13',
-              animation: 'pulse 2s ease-in-out infinite',
-            }}
-          />
+      <div className="document-selector__loading">
+        <p className="document-selector__loading-text">Loading documents...</p>
+        <div className="document-selector__loading-bar-container">
+          <div className="document-selector__loading-bar-fill" />
         </div>
       </div>
     );
@@ -56,19 +27,11 @@ export default function DocumentSelector({
 
   if (displayDocuments.length === 0) {
     return (
-      <div
-        style={{
-          textAlign: 'center',
-          padding: '3rem 2rem',
-          backgroundColor: '#f9fafb',
-          borderRadius: '8px',
-          color: '#6b7280',
-        }}
-      >
-        <p style={{ fontSize: '1.125rem', marginBottom: '0.5rem' }}>
+      <div className="document-selector__empty-state">
+        <p className="document-selector__empty-state-title">
           {emptyStateMessage}
         </p>
-        <p style={{ fontSize: '0.875rem' }}>
+        <p className="document-selector__empty-state-subtitle">
           Upload and process documents to study from them.
         </p>
       </div>
@@ -76,14 +39,8 @@ export default function DocumentSelector({
   }
 
   return (
-    <div
-      style={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '0.75rem',
-      }}
-    >
-      <h3 style={{ marginBottom: '0.5rem', color: '#1f2937' }}>
+    <div className="document-selector__list">
+      <h3 className="document-selector__title">
         Select a Document
       </h3>
       {displayDocuments.map((doc) => (

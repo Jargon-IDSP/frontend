@@ -20,21 +20,18 @@ export default function QuizComponent({
 }: QuizComponentProps) {
   const { getToken } = useAuth();
 
-  // Quiz state
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
 
-  // Chat state
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatPrompt, setChatPrompt] = useState("");
   const [chatReply, setChatReply] = useState("");
 
   const currentQuestion = questions[currentQuestionIndex];
 
-  // Chat mutation
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
       const contextualPrompt = `You are a friendly, helpful tutor assisting immigrants learning skilled trades terminology in British Columbia, Canada. Your role is to explain concepts in simple, clear language. Give short, conversational answers (2-4 sentences) that are warm and encouraging. Use everyday examples when helpful.
@@ -79,7 +76,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     },
   });
 
-  // Handlers
   const translateText = async (
     text: string,
     targetLanguage: string
@@ -105,10 +101,8 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     let finalScore = score;
 
     if (selectedAnswer) {
-      // Save answer
       setAnswers({ ...answers, [currentQuestionIndex]: selectedAnswer });
 
-      // Update score if correct
       const selectedChoice = currentQuestion.choices.find(
         (c) => c.id === selectedAnswer
       );
@@ -118,13 +112,11 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       }
     }
 
-    // Navigate or complete quiz
     if (currentQuestionIndex < questions.length - 1) {
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(null);
       resetChatState();
     } else {
-      // Show completion screen
       setIsComplete(true);
       onComplete(finalScore, questions.length);
     }
@@ -169,7 +161,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     setShowChatModal(false);
   };
 
-  // Show completion screen
   if (isComplete) {
     return (
       <QuizCompletion
@@ -182,7 +173,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     );
   }
 
-  // Empty state
   if (questions.length === 0) {
     return (
       <div className="container">
@@ -204,7 +194,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   return (
     <div className="container">
       <div className="quizContainer">
-        {/* Header */}
         <button
           className="back-to-quiz-button"
           onClick={onBack}
@@ -219,7 +208,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         </span>
       </div>
 
-      {/* Question section */}
       <div className="quiz-question-section">
         <div className="quiz-translate-button">
           <TranslateButton
@@ -231,7 +219,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
           />
         </div>
 
-        {/* Choices */}
         <div className="quiz-choices-section">
           {currentQuestion.choices.map((choice) => {
             const isSelected = selectedAnswer === choice.id;
@@ -278,7 +265,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         </div>
       </div>
 
-      {/* Navigation */}
       <div className="quiz-nav-buttons">
         <button
           className="back-previous-question-button"
@@ -306,7 +292,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         </button>
       </div>
 
-      {/* Chat Modal */}
       <ChatModal
         isOpen={showChatModal}
         onClose={handleCloseChat}

@@ -26,7 +26,6 @@ export default function QuizShareModal({
     new Set()
   );
 
-  // Fetch friends using TanStack Query
   const { data: friends = [], isLoading: loading } = useQuery({
     queryKey: ["friends"],
     queryFn: async (): Promise<Friend[]> => {
@@ -42,10 +41,9 @@ export default function QuizShareModal({
       const data: FriendsResponse = await res.json();
       return data.data || [];
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
   });
 
-  // Share quiz mutation
   const shareMutation = useMutation({
     mutationFn: async ({
       customQuizId,
@@ -78,7 +76,6 @@ export default function QuizShareModal({
       alert(`Successfully shared with ${data.data.totalShared} friend(s)!`);
       onShared?.();
       onClose();
-      // Optional: Invalidate any queries that might be affected by sharing
       queryClient.invalidateQueries({ queryKey: ["sharedQuizzes"] });
     },
     onError: (error: Error) => {

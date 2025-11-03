@@ -313,3 +313,289 @@ button.back-button {
     border-radius: $spacing-sm;
   }
 }
+
+// OCR Documents List
+.ocr-documents {
+  &-loading {
+    padding: $spacing-md;
+  }
+
+  &-empty {
+    padding: $spacing-xl;
+    text-align: center;
+    background-color: #f9fafb;
+    border-radius: $spacing-sm;
+    border: 1px solid #e5e7eb;
+
+    p {
+      color: #6b7280;
+      margin: 0;
+    }
+  }
+
+  &-title {
+    margin-bottom: $spacing-md;
+    color: #1f2937;
+  }
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &-item {
+    background-color: white;
+    border: 1px solid #e5e7eb;
+    border-radius: $spacing-sm;
+    padding: $spacing-lg;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+  }
+
+  &-content {
+    flex: 1;
+  }
+
+  &-filename {
+    margin: 0 0 $spacing-sm 0;
+    color: #1f2937;
+    font-size: 1.125rem;
+  }
+
+  &-metadata {
+    display: flex;
+    gap: $spacing-md;
+    font-size: $font-size-label;
+
+    span {
+      color: #6b7280;
+    }
+  }
+
+  &-status {
+    color: #10b981;
+    font-weight: $font-weight-medium;
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+  }
+
+  &-preview {
+    margin: $spacing-sm 0 0 0;
+    color: #6b7280;
+    font-size: $font-size-label;
+  }
+
+  &-view-button {
+    padding: 0.75rem $spacing-lg;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: $font-weight-medium;
+    white-space: nowrap;
+    margin-left: $spacing-md;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: #2563eb;
+    }
+  }
+}
+
+// OCR Results Modal
+.ocr-modal {
+  &-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    padding: $spacing-xl;
+  }
+
+  &-container {
+    background-color: white;
+    border-radius: $spacing-sm;
+    padding: $spacing-xl;
+    max-width: 900px;
+    width: 100%;
+    max-height: 80vh;
+    overflow: auto;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  }
+
+  &-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+    border-bottom: 2px solid #e5e7eb;
+    padding-bottom: $spacing-md;
+
+    h2 {
+      margin: 0;
+      color: #1f2937;
+    }
+  }
+
+  &-close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #6b7280;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: #1f2937;
+    }
+  }
+
+  &-toolbar {
+    margin-bottom: $spacing-md;
+    display: flex;
+    gap: $spacing-sm;
+    align-items: center;
+  }
+
+  &-view-toggle {
+    padding: $spacing-sm $spacing-md;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: $font-weight-medium;
+    transition: all $transition-fast;
+
+    &--active {
+      background-color: #3b82f6;
+      color: white;
+    }
+
+    &--inactive {
+      background-color: #e5e7eb;
+      color: #374151;
+
+      &:hover {
+        background-color: #d1d5db;
+      }
+    }
+  }
+
+  &-copy-button {
+    padding: $spacing-sm $spacing-md;
+    background-color: #10b981;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: $font-weight-medium;
+    margin-left: auto;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: #059669;
+    }
+  }
+
+  &-json-view {
+    background-color: #1f2937;
+    color: #f9fafb;
+    padding: $spacing-lg;
+    border-radius: 6px;
+    overflow: auto;
+    max-height: 60vh;
+    font-size: $font-size-label;
+    font-family: monospace;
+    margin: 0;
+  }
+
+  &-section {
+    margin-bottom: $spacing-xl;
+
+    h3 {
+      color: #374151;
+      margin-bottom: $spacing-sm;
+    }
+  }
+
+  &-text-preview {
+    background-color: #f9fafb;
+    padding: $spacing-md;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+    max-height: 200px;
+    overflow: auto;
+    white-space: pre-wrap;
+    font-family: monospace;
+    font-size: $font-size-label;
+  }
+
+  &-text-length {
+    font-size: $font-size-label;
+    color: #6b7280;
+    margin-top: $spacing-sm;
+  }
+
+  &-loading,
+  &-empty {
+    color: #6b7280;
+  }
+
+  &-flashcards-grid {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+
+  &-flashcard {
+    background-color: #f9fafb;
+    padding: $spacing-md;
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+  }
+
+  &-flashcard-term,
+  &-flashcard-definition {
+    margin-bottom: $spacing-sm;
+
+    strong {
+      color: #1f2937;
+    }
+
+    p {
+      margin: 0.25rem 0 0 0;
+      color: #374151;
+    }
+  }
+
+  &-flashcard-definition {
+    margin-bottom: 0;
+  }
+
+  &-main-button {
+    margin-top: $spacing-lg;
+    padding: 0.75rem $spacing-lg;
+    background-color: #3b82f6;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: $font-weight-medium;
+    width: 100%;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: #2563eb;
+    }
+  }
+}

@@ -20,11 +20,9 @@ const LeaderboardPage: React.FC = () => {
   } = useLeaderboard(leaderboardType);
   const { data: profile, isLoading: profileLoading } = useProfile();
 
-  // Check if current user has 0 points
   const userScore = profile?.score ?? 0;
   const hasNoPoints = userScore === 0;
 
-  // Check if user has no friends (for friends tab)
   const hasNoFriends = 
     leaderboardType === "friends" && 
     users.length === 1 && 
@@ -63,7 +61,6 @@ const LeaderboardPage: React.FC = () => {
     );
   }
 
-  // Show message if user has 0 points
   if (hasNoPoints) {
     return (
       <div className="container">
@@ -91,7 +88,6 @@ const LeaderboardPage: React.FC = () => {
       <div className="leaderboard-page">
         <h1 className="leaderboard-title">Leaderboard</h1>
 
-        {/* Tabs */}
         <div className="leaderboard-tabs">
           <button
             className={`leaderboard-tab ${
@@ -130,15 +126,13 @@ const LeaderboardPage: React.FC = () => {
           </div>
         ) : (
           <>
-            {/* Podium for top 3 */}
             {users.length > 0 && (
               <Podium users={users} currentUserId={profile?.id} />
             )}
 
-            {/* Leaderboard list starting from 4th place */}
             <div className="leaderboard-list">
               {users.slice(3).map((user, index) => {
-                const actualRank = index + 4; // Start from 4th place
+                const actualRank = index + 4; 
                 const isCurrentUser = user.id === profile?.id;
                 return (
                   <div
@@ -188,7 +182,6 @@ const LeaderboardPage: React.FC = () => {
           </>
         )}
 
-        {/* Friends Button - Sticky at bottom, only in friends tab */}
         {leaderboardType === "friends" && !hasNoFriends && (
           <button
             className="leaderboard-friends-button"

@@ -1,29 +1,20 @@
 import { useNavigate } from 'react-router-dom';
-import type { Quiz, CustomQuiz, UserQuizAttempt } from '../../types/learning';
-
-interface QuizCardProps {
-  quiz: Quiz | CustomQuiz | UserQuizAttempt;
-  index: number;
-  type?: 'existing' | 'custom';
-  hasAttempts?: boolean;
-  category?: string;
-}
+import type { QuizCardProps } from '../../types/quizCard';
+import '../../styles/components/_quizCard.scss';
 
 export default function QuizCard({ quiz, index, type = 'existing', hasAttempts = false, category }: QuizCardProps) {
   const navigate = useNavigate();
-  
-  // Check what type of quiz this is
-  const isUserQuizAttempt = 'customQuizId' in quiz; // UserQuizAttempt has customQuizId
-  const isCustomQuiz = !('score' in quiz) && !isUserQuizAttempt; // CustomQuiz template (not started)
-  const isExistingQuiz = 'score' in quiz && 'levelId' in quiz; // Completed existing quiz
-  
+
+  const isUserQuizAttempt = 'customQuizId' in quiz;
+  const isCustomQuiz = !('score' in quiz) && !isUserQuizAttempt;
+  const isExistingQuiz = 'score' in quiz && 'levelId' in quiz;
+
   const isCompleted = isUserQuizAttempt ? quiz.completed : (isExistingQuiz && quiz.completed);
-  
-  // Get question count and score
+
   let questionCount = 0;
   let scoreValue = 0;
   let maxScore = 0;
-  
+
   if (isUserQuizAttempt) {
     questionCount = quiz.totalQuestions;
     scoreValue = quiz.pointsEarned;
@@ -36,8 +27,20 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
     maxScore = questionCount * 5;
     scoreValue = quiz.score || 0;
   }
-  
+
   const scorePercentage = maxScore > 0 ? (scoreValue / maxScore) * 100 : 0;
+
+  const getProgressClass = () => {
+    if (scorePercentage >= 80) return 'quiz-card__progress-fill--high';
+    if (scorePercentage >= 60) return 'quiz-card__progress-fill--medium';
+    return 'quiz-card__progress-fill--low';
+  };
+
+  const getStatusBadgeClass = () => {
+    if (isCustomQuiz) return 'quiz-card__status-badge--not-started';
+    if (isCompleted) return 'quiz-card__status-badge--completed';
+    return 'quiz-card__status-badge--in-progress';
+  };
 
   const handleStartQuiz = () => {
     if (isUserQuizAttempt) {
@@ -59,150 +62,74 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
 
   if (isCustomQuiz && hasAttempts) {
     return (
-      <button
-        onClick={handleStartQuiz}
-        style={{
-          width: '100%',
-          padding: '0.75rem',
-          backgroundColor: '#3b82f6',
-          color: 'white',
-          border: 'none',
-          borderRadius: '6px',
-          fontWeight: '600',
-          cursor: 'pointer',
-          marginBottom: '1rem'
-        }}
-      >
+      <button onClick={handleStartQuiz} className="quiz-card-compact">
         New Attempt ({questionCount} questions)
       </button>
     );
   }
 
   return (
-    <div
-      style={{
-        border: '1px solid #ddd',
-        padding: '1.5rem',
-        marginBottom: '1rem',
-        borderRadius: '8px',
-        backgroundColor: '#fff',
-      }}
-    >
-      <div style={{ 
-        marginBottom: '1rem',
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'flex-start',
-        borderBottom: '2px solid #f0f0f0',
-        paddingBottom: '0.75rem'
-      }}>
+    <div className="quiz-card">
+      <div className="quiz-card__header">
         <div>
-          <strong style={{ fontSize: '1.2rem', display: 'block', marginBottom: '0.25rem' }}>
+          <strong className="quiz-card__title">
             {isUserQuizAttempt ? `Attempt ${index}` : `Quiz ${index}`}
           </strong>
           {type === 'existing' && isExistingQuiz && 'level' in quiz && (
-            <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+            <span className="quiz-card__subtitle">
               Level: {quiz.level.name}
             </span>
           )}
           {type === 'custom' && isCustomQuiz && 'document' in quiz && quiz.document && (
-            <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+            <span className="quiz-card__subtitle">
               Document: {quiz.document.filename}
             </span>
           )}
           {isUserQuizAttempt && quiz.customQuiz && (
-            <span style={{ color: '#6b7280', fontSize: '0.9rem' }}>
+            <span className="quiz-card__subtitle">
               Quiz: {quiz.customQuiz.name}
             </span>
           )}
         </div>
 
         {(!isCustomQuiz || !hasAttempts) && (
-          <span style={{
-            padding: '0.5rem 1rem',
-            backgroundColor: isCustomQuiz ? '#e0e7ff' : (isCompleted ? '#d1fae5' : '#fef3c7'),
-            color: isCustomQuiz ? '#3730a3' : (isCompleted ? '#065f46' : '#92400e'),
-            borderRadius: '12px',
-            fontWeight: '600',
-            fontSize: '0.875rem'
-          }}>
+          <span className={`quiz-card__status-badge ${getStatusBadgeClass()}`}>
             {isCustomQuiz ? 'Not Started' : (isCompleted ? '✓ Completed' : 'In Progress')}
           </span>
         )}
       </div>
 
       {isCustomQuiz && (
-        <button
-          onClick={handleStartQuiz}
-          style={{
-            width: '100%',
-            padding: '0.75rem',
-            backgroundColor: '#3b82f6',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            fontWeight: '600',
-            cursor: 'pointer',
-            marginBottom: '1rem'
-          }}
-        >
+        <button onClick={handleStartQuiz} className="quiz-card__button">
           {hasAttempts ? 'New Attempt' : 'Start Quiz'} ({questionCount} questions)
         </button>
       )}
 
       {!isCustomQuiz && (
-        <div style={{ 
-          display: 'grid',
-          gridTemplateColumns: 'repeat(auto-fit, minmax(150px, 1fr))',
-          gap: '1rem',
-          marginBottom: '1rem'
-        }}>
-          <div style={{ 
-            backgroundColor: '#f9fafb',
-            padding: '1rem',
-            borderRadius: '6px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
-              Score
-            </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' }}>
-              {scoreValue}
-            </div>
+        <div className="quiz-card__stats-grid">
+          <div className="quiz-card__stat">
+            <div className="quiz-card__stat-label">Score</div>
+            <div className="quiz-card__stat-value">{scoreValue}</div>
             {maxScore > 0 && (
-              <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+              <div className="quiz-card__stat-subtext">
                 out of {maxScore} ({Math.round(scorePercentage)}%)
               </div>
             )}
           </div>
 
-          <div style={{ 
-            backgroundColor: '#f9fafb',
-            padding: '1rem',
-            borderRadius: '6px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
-              Questions
-            </div>
-            <div style={{ fontSize: '1.5rem', fontWeight: '700', color: '#1f2937' }}>
-              {questionCount}
-            </div>
+          <div className="quiz-card__stat">
+            <div className="quiz-card__stat-label">Questions</div>
+            <div className="quiz-card__stat-value">{questionCount}</div>
           </div>
 
-          <div style={{ 
-            backgroundColor: '#f9fafb',
-            padding: '1rem',
-            borderRadius: '6px',
-            textAlign: 'center'
-          }}>
-            <div style={{ fontSize: '0.875rem', color: '#6b7280', marginBottom: '0.25rem' }}>
+          <div className="quiz-card__stat">
+            <div className="quiz-card__stat-label">
               {isCompleted ? 'Completed' : 'Started'}
             </div>
-            <div style={{ fontSize: '0.875rem', fontWeight: '600', color: '#1f2937' }}>
+            <div className="quiz-card__stat-date">
               {new Date('createdAt' in quiz ? quiz.createdAt : Date.now()).toLocaleDateString()}
             </div>
-            <div style={{ fontSize: '0.75rem', color: '#9ca3af' }}>
+            <div className="quiz-card__stat-time">
               {new Date('createdAt' in quiz ? quiz.createdAt : Date.now()).toLocaleTimeString()}
             </div>
           </div>
@@ -210,30 +137,18 @@ export default function QuizCard({ quiz, index, type = 'existing', hasAttempts =
       )}
 
       {!isCustomQuiz && isCompleted && maxScore > 0 && (
-        <div style={{ marginTop: '1rem' }}>
-          <div style={{ 
-            width: '100%',
-            height: '8px',
-            backgroundColor: '#e5e7eb',
-            borderRadius: '4px',
-            overflow: 'hidden'
-          }}>
-            <div style={{
-              width: `${scorePercentage}%`,
-              height: '100%',
-              backgroundColor: scorePercentage >= 80 ? '#10b981' : scorePercentage >= 60 ? '#f59e0b' : '#ef4444',
-              transition: 'width 0.3s ease'
-            }} />
+        <div className="quiz-card__progress">
+          <div className="quiz-card__progress-bar">
+            <div
+              className={`quiz-card__progress-fill ${getProgressClass()}`}
+              style={{ width: `${scorePercentage}%` }}
+            />
           </div>
         </div>
       )}
 
       {questionCount > 0 && (
-        <div style={{ 
-          marginTop: '1rem',
-          fontSize: '0.875rem',
-          color: '#6b7280'
-        }}>
+        <div className="quiz-card__question-count">
           This quiz contains {questionCount} question{questionCount !== 1 ? 's' : ''}
         </div>
       )}

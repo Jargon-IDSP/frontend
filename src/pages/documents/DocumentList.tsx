@@ -25,7 +25,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     documentId: string;
   } | null>(null);
 
-  // Close edit mode when clicking outside the documents list
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -46,7 +45,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     };
   }, [isEditMode]);
 
-  // Use custom hooks
   const {
     data: documents = [],
     isLoading: loading,
@@ -54,18 +52,20 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   } = useDocuments(refresh);
   const deleteMutation = useDeleteDocument();
 
-  // Find processing documents and poll for their status
-  const processingDocuments = documents.filter((doc) => !doc.ocrProcessed);
+  // Deduplicate documents by ID (in case cache returns duplicates)
+  const uniqueDocuments = Array.from(
+    new Map(documents.map(doc => [doc.id, doc])).values()
+  );
+
+  const processingDocuments = uniqueDocuments.filter((doc) => !doc.ocrProcessed);
   const processingDocId = processingDocuments.length > 0 ? processingDocuments[0].id : null;
 
   const { data: processingStatus } = useDocumentProcessingStatus({
     documentId: processingDocId,
   });
 
-  // Auto-refresh document list when processing completes
   useEffect(() => {
     if (processingStatus?.status.status === 'completed') {
-      // Invalidate documents query to refetch the list
       queryClient.invalidateQueries({ queryKey: ["documents"] });
     }
   }, [processingStatus?.status.status, queryClient]);
@@ -91,7 +91,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
         return;
       }
 
-      // Fetch quizzes for this document
       const response = await fetch(
         `${BACKEND_URL}/learning/documents/${documentId}/quizzes`,
         {
@@ -123,7 +122,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   };
 
   const handleDocumentClick = (doc: Document) => {
-    // Don't navigate if in edit mode
     if (isEditMode) {
       return;
     }
@@ -159,7 +157,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     );
   }
 
-  if (documents.length === 0) {
+  if (uniqueDocuments.length === 0) {
     return (
       <div className="documents-list-empty">
         <p className="documents-list-empty-message">
@@ -185,7 +183,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
       </div>
 
       <div className="documents-list-container">
-        {documents.map((doc) => (
+        {uniqueDocuments.map((doc) => (
           <div
             key={doc.id}
             className={`documents-list-item ${doc.ocrProcessed && !isEditMode ? 'documents-list-item--clickable' : ''}`}

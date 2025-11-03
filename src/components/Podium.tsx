@@ -1,12 +1,7 @@
 import React from "react";
+import type { PodiumProps } from "../types/podium";
 import rockyYellowLogo from "/rockyYellow.svg";
-import type { User } from "../hooks/useLeaderboard";
 import { getUserDisplayName } from "../utils/userHelpers";
-
-interface PodiumProps {
-  users: User[];
-  currentUserId?: string;
-}
 
 const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
   const topThree = users.slice(0, 3);

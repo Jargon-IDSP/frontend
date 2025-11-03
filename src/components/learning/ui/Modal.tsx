@@ -1,45 +1,17 @@
-import type { ReactNode } from 'react';
-
-interface ModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  title: string;
-  children: ReactNode;
-  maxWidth?: string;
-}
+import type { ModalProps } from '../../../types/modal';
+import '../../../styles/components/_modal.scss';
 
 export default function Modal({ isOpen, onClose, title, children, maxWidth = '500px' }: ModalProps) {
   if (!isOpen) return null;
 
   return (
-    <div
-      style={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
-        backgroundColor: 'rgba(0,0,0,0.5)',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        zIndex: 1000,
-      }}
-      onClick={onClose}
-    >
+    <div className="modal__overlay" onClick={onClose}>
       <div
-        style={{
-          backgroundColor: 'white',
-          borderRadius: '12px',
-          padding: '2rem',
-          maxWidth,
-          width: '90%',
-          maxHeight: '80vh',
-          overflow: 'auto',
-        }}
+        className="modal__content"
+        style={{ maxWidth }}
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 style={{ marginTop: 0, marginBottom: '1.5rem' }}>{title}</h2>
+        <h2 className="modal__title">{title}</h2>
         {children}
       </div>
     </div>

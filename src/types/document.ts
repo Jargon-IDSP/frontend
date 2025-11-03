@@ -29,6 +29,14 @@ export interface DocumentStatus {
   category: QuizCategory | null;
 }
 
+export interface DocumentStatusResponse {
+  status: DocumentStatus;
+  document: {
+    id: string;
+    filename: string;
+  };
+}
+
 export interface Translation extends Multilingual<'text'> {
   id: string;
   documentId: string;

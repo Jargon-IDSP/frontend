@@ -1,11 +1,5 @@
 import { useState } from 'react';
-import type { Term } from '../../types/learning';
-
-interface FlippableTermCardProps {
-  term: Term;
-  language: string;
-  type?: "existing" | "custom";
-}
+import type { FlippableTermCardProps } from '../../types/flippableTermCard';
 
 export default function FlippableTermCard({
   term,

@@ -27,7 +27,6 @@ export default function QuizCompletion({
       </div>
 
       <div>
-        {/* <button onClick={onRetry}>Try Again</button> */}
         <button className="returnToLesson"onClick={onBack}>Back to Lessons</button>
       </div>
     </div>
