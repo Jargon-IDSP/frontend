@@ -1,3 +1,5 @@
+@use '../variables' as *;
+
 .category-select-modal {
   position: fixed;
   top: 0;
@@ -53,7 +55,7 @@
     }
 
     &--selected {
-      border-color: #3b82f6;
+      border-color: $color-primary;
       background-color: #eff6ff;
 
       &:hover {
@@ -88,7 +90,7 @@
     width: 24px;
     height: 24px;
     border-radius: 50%;
-    background-color: #3b82f6;
+    background-color: $color-primary;
     color: white;
     display: flex;
     align-items: center;
@@ -117,7 +119,7 @@
     }
 
     &--continue {
-      background-color: #3b82f6;
+      background-color: $color-primary;
       color: white;
 
       &:disabled {

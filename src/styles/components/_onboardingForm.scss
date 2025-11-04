@@ -1,9 +1,8 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Onboarding-specific color variables
-$onboarding-primary: $color-primary; // #fe4d13
-$onboarding-secondary: $color-quaternary-dark; // #652a15
+$onboarding-primary: $color-primary; 
+$onboarding-secondary: $color-quaternary-dark; 
 
 .onboarding-form {
   display: flex;

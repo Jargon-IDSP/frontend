@@ -35,7 +35,7 @@ export default function LanguagePreferences() {
   }, [profile]);
 
   const updateLanguageMutation = useMutation({
-    mutationFn: async (language: string) => {
+    mutationFn: async ({ language, wasUpdating }: { language: string; wasUpdating: boolean }) => {
       const token = await getToken();
       const res = await fetch(`${BACKEND_URL}/profile/onboarding`, {
         method: 'POST',
@@ -51,13 +51,13 @@ export default function LanguagePreferences() {
         throw new Error(errorData.error || 'Failed to update language');
       }
 
-      return res.json();
+      return { data: await res.json(), wasUpdating };
     },
-    onSuccess: () => {
+    onSuccess: ({ wasUpdating }) => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
 
       // If updating from profile, go back to profile
-      if (isUpdating) {
+      if (wasUpdating) {
         navigate('/profile');
       } else {
         // If in onboarding flow, continue to industry
@@ -73,7 +73,7 @@ export default function LanguagePreferences() {
   const handleNext = () => {
     if (isUpdating) {
       // If updating from profile, save directly to backend
-      updateLanguageMutation.mutate(selectedLanguage);
+      updateLanguageMutation.mutate({ language: selectedLanguage, wasUpdating: true });
     } else {
       // If in onboarding flow, store in sessionStorage and continue
       const onboardingData = JSON.parse(sessionStorage.getItem('onboardingData') || '{}');
@@ -88,11 +88,10 @@ export default function LanguagePreferences() {
       // If updating from profile, just go back
       navigate('/profile');
     } else {
-      // If in onboarding flow, set default and continue
-      const onboardingData = JSON.parse(sessionStorage.getItem('onboardingData') || '{}');
-      onboardingData.language = 'english';
-      sessionStorage.setItem('onboardingData', JSON.stringify(onboardingData));
-      navigate('/onboarding/industry');
+      // If in onboarding flow, skip without continuing - just clear and go home
+      sessionStorage.removeItem('onboardingData');
+      sessionStorage.setItem('onboardingSkippedThisSession', 'true');
+      navigate('/');
     }
   };
 

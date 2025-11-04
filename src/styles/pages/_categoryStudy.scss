@@ -1,3 +1,5 @@
+@use '../variables' as *;
+
 .category-study {
   padding: 2rem;
   max-width: 800px;
@@ -46,7 +48,7 @@
 
 // Processing Document Card
 .processing-card {
-  border: 2px solid #3b82f6;
+  border: 2px solid ;
   border-radius: 8px;
   padding: 1.5rem;
   background-color: #eff6ff;
@@ -62,7 +64,7 @@
 
   &__badge {
     font-size: 0.75rem;
-    background-color: #3b82f6;
+    background-color: $color-error;
     color: white;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -93,11 +95,11 @@
     font-weight: bold;
 
     &--complete {
-      background-color: #10b981;
+      background-color: $color-success;
     }
 
     &--active {
-      background-color: #3b82f6;
+      background-color: $color-primary;
       animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
     }
 
@@ -110,17 +112,17 @@
     font-size: 0.875rem;
 
     &--complete {
-      color: #10b981;
+      color: $color-success;
       font-weight: 500;
     }
 
     &--active {
-      color: #3b82f6;
+      color: $color-primary;
       font-weight: 500;
     }
 
     &--pending {
-      color: #6b7280;
+      color: $color-quaternary-light;
       font-weight: 400;
     }
   }
@@ -133,7 +135,7 @@
   &__stats {
     margin-top: 1rem;
     font-size: 0.875rem;
-    color: #10b981;
+    color: $color-success;
     padding-top: 1rem;
     border-top: 1px solid #cbd5e1;
     font-weight: 500;
@@ -142,7 +144,7 @@
 
 // Completion Card
 .completion-card {
-  border: 2px solid #10b981;
+  border: 2px solid $color-success;
   border-radius: 8px;
   padding: 1.5rem;
   background-color: #ecfdf5;
@@ -155,12 +157,12 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
-    color: #10b981;
+    color: $color-success;
   }
 
   &__badge {
     font-size: 0.75rem;
-    background-color: #10b981;
+    background-color: $color-success;
     color: white;
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
@@ -169,7 +171,7 @@
 
   &__message {
     font-size: 0.875rem;
-    color: #059669;
+    color: $color-success;
     margin-bottom: 0.75rem;
   }
 
@@ -177,13 +179,13 @@
     display: flex;
     gap: 0.5rem;
     font-size: 0.875rem;
-    color: #6b7280;
+    color: $color-success;
   }
 }
 
 // Upload Loading Card
 .upload-loading-card {
-  border: 2px solid #3b82f6;
+  border: 2px solid $color-primary;
   border-radius: 8px;
   padding: 1.5rem;
   background-color: #eff6ff;
@@ -191,7 +193,7 @@
   text-align: center;
 
   &__title {
-    color: #3b82f6;
+    color: $color-primary;
     font-weight: 500;
     margin: 0;
   }
@@ -221,7 +223,7 @@
   }
 
   &:not(&--processing):hover {
-    border-color: #3b82f6;
+    border-color: $color-primary;
     box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
   }
 
@@ -244,12 +246,12 @@
     font-size: 0.875rem;
 
     &--processing {
-      color: #f59e0b;
+      color: $color-warning;
       font-weight: 500;
     }
 
     &--ready {
-      color: #6b7280;
+      color: $color-primary;
     }
   }
 }
