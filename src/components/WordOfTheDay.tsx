@@ -1,83 +1,33 @@
 import { useAuth } from "@clerk/clerk-react";
-import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect } from "react";
-import { BACKEND_URL } from "../lib/api";
 import { useUserPreferences } from "../hooks/useUserPreferences";
+import { useRandomWord } from "../hooks/useRandomWord";
 import todayTermCard from "../assets/todayTermCard.png";
-import type { WordOfTheDayData, FlashcardResponse } from "@/types/wordOfTheDay";
 import "../styles/components/_wordOfTheDay.scss";
 
 export default function WordOfTheDay() {
-  const { getToken } = useAuth();
+  const { isSignedIn, isLoaded } = useAuth();
   const { language: userLanguage, loading: preferencesLoading } =
     useUserPreferences();
   const [loadingProgress, setLoadingProgress] = useState(0);
-
-  const fetchRandomWord = async (): Promise<WordOfTheDayData> => {
-    const token = await getToken();
-    const response = await fetch(
-      `${BACKEND_URL}/learning/existing/random/flashcard?language=${userLanguage}`,
-      {
-        headers: { Authorization: `Bearer ${token}` },
-      }
-    );
-
-    if (!response.ok) {
-      throw new Error("Failed to load random word");
-    }
-
-    const result: FlashcardResponse = await response.json();
-    const flashcard = result.data;
-
-    const isNestedStructure = typeof flashcard.term === "object";
-
-    const englishTerm = isNestedStructure
-      ? (flashcard.term as any).english
-      : flashcard.term;
-
-    const translatedTerm = isNestedStructure
-      ? userLanguage !== "english" && (flashcard.term as any)[userLanguage]
-        ? (flashcard.term as any)[userLanguage]
-        : undefined
-      : (flashcard as any).nativeTerm || undefined;
-
-    const englishDefinition = isNestedStructure
-      ? (flashcard.definition as any).english
-      : flashcard.definition;
-
-    const wordData: WordOfTheDayData = {
-      term: englishTerm,
-      definition: englishDefinition,
-      termTranslated: translatedTerm,
-      industry: flashcard.industry?.name,
-      level: flashcard.level?.name,
-    };
-
-    return wordData;
-  };
 
   const {
     data: wordData,
     isLoading,
     error,
-  } = useQuery({
-    queryKey: ["randomWord", userLanguage], 
-    queryFn: fetchRandomWord,
-    enabled: !preferencesLoading && !!userLanguage, 
-    staleTime: 0, 
-    gcTime: 0,
-  });
+    refetch,
+  } = useRandomWord(
+    userLanguage,
+    isLoaded && isSignedIn && !preferencesLoading && !!userLanguage
+  );
 
+  // Loading progress animation
   useEffect(() => {
     if (isLoading) {
       setLoadingProgress(0);
       const interval = setInterval(() => {
-        setLoadingProgress((prev) => {
-          if (prev >= 90) return prev; 
-          return prev + 15; 
-        });
+        setLoadingProgress((prev) => (prev >= 90 ? prev : prev + 15));
       }, 150);
-
       return () => clearInterval(interval);
     } else if (wordData || error) {
       setLoadingProgress(100);
@@ -86,7 +36,52 @@ export default function WordOfTheDay() {
     }
   }, [isLoading, wordData, error]);
 
-  if (preferencesLoading || isLoading) {
+  // Loading state - auth or preferences loading
+  if (!isLoaded || preferencesLoading) {
+    return (
+      <div className="word-of-the-day-card">
+        <img
+          src={todayTermCard}
+          alt="Random Trade Term"
+          className="today-term-card-image"
+        />
+        <div className="word-card-content">
+          <div className="word-of-the-day-card__loading">
+            <div className="word-of-the-day-card__progress-track">
+              <div
+                className="word-of-the-day-card__progress-fill"
+                style={{ width: "50%" }}
+              />
+            </div>
+            <div className="word-of-the-day-card__progress-text">
+              Initializing...
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Not signed in
+  if (!isSignedIn) {
+    return (
+      <div className="word-of-the-day-card">
+        <img
+          src={todayTermCard}
+          alt="Random Trade Term"
+          className="today-term-card-image"
+        />
+        <div className="word-card-content">
+          <div className="error-message">
+            Please sign in to view trade terms
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Loading state - fetching word
+  if (isLoading) {
     return (
       <div className="word-of-the-day-card">
         <img
@@ -111,7 +106,8 @@ export default function WordOfTheDay() {
     );
   }
 
-  if (error || !wordData) {
+  // Error state
+  if (error) {
     return (
       <div className="word-of-the-day-card">
         <img
@@ -125,11 +121,56 @@ export default function WordOfTheDay() {
               ? error.message
               : "Unable to load random word"}
           </div>
+          <button
+            onClick={() => refetch()}
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              backgroundColor: "#3b82f6",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
+          >
+            Try Again
+          </button>
         </div>
       </div>
     );
   }
 
+  // No data
+  if (!wordData) {
+    return (
+      <div className="word-of-the-day-card">
+        <img
+          src={todayTermCard}
+          alt="Random Trade Term"
+          className="today-term-card-image"
+        />
+        <div className="word-card-content">
+          <div className="error-message">No term available</div>
+          <button
+            onClick={() => refetch()}
+            style={{
+              marginTop: "1rem",
+              padding: "0.5rem 1rem",
+              backgroundColor: "#3b82f6",
+              color: "white",
+              border: "none",
+              borderRadius: "6px",
+              cursor: "pointer",
+            }}
+          >
+            Load Term
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  // Success - show the word
   return (
     <div className="word-of-the-day-card">
       <img
@@ -140,9 +181,7 @@ export default function WordOfTheDay() {
       <div className="word-card-content">
         <div className="word-term">{wordData.term}</div>
         {wordData.termTranslated && (
-          <div className="word-term-translated">
-            {wordData.termTranslated}
-          </div>
+          <div className="word-term-translated">{wordData.termTranslated}</div>
         )}
         <div className="word-definition">{wordData.definition}</div>
         {(wordData.industry || wordData.level) && (
@@ -155,6 +194,21 @@ export default function WordOfTheDay() {
             )}
           </div>
         )}
+        <button
+          onClick={() => refetch()}
+          style={{
+            marginTop: "1rem",
+            padding: "0.5rem 1rem",
+            backgroundColor: "#10b981",
+            color: "white",
+            border: "none",
+            borderRadius: "6px",
+            cursor: "pointer",
+            fontWeight: "600",
+          }}
+        >
+          Get New Term
+        </button>
       </div>
     </div>
   );
