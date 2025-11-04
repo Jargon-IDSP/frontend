@@ -1,5 +1,5 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import Button from "../../components/learning/ui/Button";
 import { useDocumentsByCategory } from '../../hooks/useDocumentsByCategory';
 import { useDocumentProcessingStatus } from '../../hooks/useDocumentProcessingStatus';
@@ -96,19 +96,25 @@ export default function CategoryStudy() {
   const justUploadedDocId = location.state?.documentId;
   const justUploaded = location.state?.justUploaded;
 
+  // Track if processing is complete to hide the completion card
+  const [showCompletionCard, setShowCompletionCard] = useState(true);
+
   const { data: statusData, isLoading: statusLoading } = useDocumentProcessingStatus({
     documentId: justUploaded ? justUploadedDocId : null,
-    pollingInterval: 1000, 
+    pollingInterval: 1000,
   });
 
   useEffect(() => {
     if (statusData?.status.status === 'completed') {
-      // Invalidate queries to refresh the document list
+      // Invalidate queries to refetch the document list
       refetch();
       queryClient.invalidateQueries({ queryKey: ['documents', 'by-category', category] });
 
-      // Immediately clear the upload state to hide the completion card and refresh the view
-      window.history.replaceState({}, document.title);
+      // Hide the completion card after a brief delay to allow the refetch to complete
+      setTimeout(() => {
+        setShowCompletionCard(false);
+        window.history.replaceState({}, document.title);
+      }, 500);
     }
   }, [statusData?.status.status, refetch, queryClient, category]);
 
@@ -135,7 +141,7 @@ export default function CategoryStudy() {
         />
       )}
 
-      {justUploaded && statusData && statusData.status.status === 'completed' && (
+      {justUploaded && statusData && statusData.status.status === 'completed' && showCompletionCard && (
         <div className="completion-card">
           <h3 className="completion-card__header">
             ✓ {statusData.document.filename}
@@ -179,7 +185,8 @@ export default function CategoryStudy() {
       ) : (
         <div className="category-study__documents-list">
           {documents.map((doc) => {
-            if (justUploaded && doc.id === justUploadedDocId) {
+            // Only hide the just-uploaded document if we're still showing the completion card
+            if (justUploaded && doc.id === justUploadedDocId && showCompletionCard) {
               return null;
             }
 

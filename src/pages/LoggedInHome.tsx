@@ -18,8 +18,18 @@ export default function LoggedInHome() {
   // Check if user needs to complete onboarding on first login
   useEffect(() => {
     if (!isLoading && user && profile) {
-      // Check if user hasn't completed onboarding (first time user)
-      if (!profile.onboardingCompleted) {
+      const justCompleted = sessionStorage.getItem('onboardingJustCompleted') === 'true';
+
+      // Clear the just completed flag after checking
+      if (justCompleted) {
+        sessionStorage.removeItem('onboardingJustCompleted');
+      }
+
+      // Only check skip flag during the current session (sessionStorage, not localStorage)
+      // This way, skip only persists within a single session, not across logins
+      const hasSkippedThisSession = sessionStorage.getItem('onboardingSkippedThisSession') === 'true';
+
+      if (!profile.onboardingCompleted && !hasSkippedThisSession && !justCompleted) {
         navigate('/onboarding/language');
       }
     }

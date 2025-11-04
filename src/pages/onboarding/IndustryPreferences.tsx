@@ -18,7 +18,6 @@ const industryOptions: OnboardingOption[] = [
   { id: 'welder', label: 'Welder', value: 'welder' },
 ];
 
-// Map industry IDs to names
 const industryIdToName: { [key: number]: string } = {
   1: 'general',
   2: 'electrician',
@@ -72,16 +71,18 @@ export default function IndustryPreferences() {
 
       return res.json();
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate and refetch profile data
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      await queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
       // Clear session storage
       sessionStorage.removeItem('onboardingData');
       // Navigate based on context
       if (isUpdating) {
         navigate('/profile');
       } else {
+        // Mark onboarding as just completed to prevent redirect loop
+        sessionStorage.setItem('onboardingJustCompleted', 'true');
         navigate('/');
       }
     },
@@ -110,12 +111,10 @@ export default function IndustryPreferences() {
       // If updating from profile, just go back
       navigate('/profile');
     } else {
-      // If in onboarding flow, set default and submit
-      const onboardingData: OnboardingData = JSON.parse(
-        sessionStorage.getItem('onboardingData') || '{}'
-      );
-      onboardingData.industry = 'general';
-      submitOnboardingMutation.mutate(onboardingData);
+      // If in onboarding flow, skip without submitting - just clear and go home
+      sessionStorage.removeItem('onboardingData');
+      sessionStorage.setItem('onboardingSkippedThisSession', 'true');
+      navigate('/');
     }
   };
 
