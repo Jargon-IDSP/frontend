@@ -74,7 +74,7 @@ export function CategorySelectModal({
             disabled={!selectedId || isSubmitting}
             className="category-select-modal__button category-select-modal__button--continue"
           >
-            {isSubmitting ? "Saving..." : "Continue"}
+            {isSubmitting ? "Continue..." : "Continue"}
           </button>
         </div>
       </div>

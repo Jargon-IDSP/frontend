@@ -12,6 +12,7 @@ interface DocumentStatusResponse {
     flashcardCount: number;
     questionCount: number;
     category: QuizCategory | null;
+    quickTranslation?: boolean; // Flag indicating quick cache is available (English + user's language)
   };
   document: {
     id: string;
