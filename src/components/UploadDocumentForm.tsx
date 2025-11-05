@@ -120,7 +120,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
       return await finalizeRes.json();
     },
-    onSuccess: (data, variables) => {
+    onSuccess: (_data, variables) => {
       // Navigate AFTER mutation succeeds
       setFile(null);
       setUploadedData(null);
