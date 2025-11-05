@@ -23,7 +23,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [uploadedData, setUploadedData] = useState<{ key: string; filename: string; fileType: string; fileSize: number } | null>(null);
+  const [uploadedData, setUploadedData] = useState<{ key: string; filename: string; fileType: string; fileSize: number; documentId: string } | null>(null);
 
   const uploadMutation = useMutation({
     mutationFn: async ({ file, token }: UploadData) => {
@@ -57,11 +57,34 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         throw new Error("Failed to upload file");
       }
 
+      // Immediately save document to start OCR/translation
+      const saveRes = await fetch(`${BACKEND_URL}/documents`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          fileKey: key,
+          filename: file.name,
+          fileType: file.type,
+          fileSize: file.size,
+          categoryId: 6, // Default to General, will be updated when user selects
+        }),
+      });
+
+      if (!saveRes.ok) {
+        throw new Error("Failed to save document");
+      }
+
+      const saveData = (await saveRes.json()) as SaveResponse;
+
       return {
         key,
         filename: file.name,
         fileType: file.type,
         fileSize: file.size,
+        documentId: saveData.documentId,
       };
     },
     onSuccess: (data) => {
@@ -70,44 +93,35 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     },
   });
 
-  const saveDocumentMutation = useMutation({
+  const finalizeDocumentMutation = useMutation({
     mutationFn: async ({
-      fileKey,
-      filename,
-      fileType,
-      fileSize,
+      documentId,
       categoryId,
       token
     }: {
-      fileKey: string;
-      filename: string;
-      fileType: string;
-      fileSize: number;
+      documentId: string;
       categoryId: number;
       token: string;
     }) => {
-      const saveRes = await fetch(`${BACKEND_URL}/documents`, {
+      const finalizeRes = await fetch(`${BACKEND_URL}/documents/${documentId}/finalize`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          fileKey,
-          filename,
-          fileType,
-          fileSize,
           categoryId,
         }),
       });
 
-      if (!saveRes.ok) {
-        throw new Error("Failed to save document");
+      if (!finalizeRes.ok) {
+        throw new Error("Failed to finalize document");
       }
 
-      return (await saveRes.json()) as SaveResponse;
+      return await finalizeRes.json();
     },
     onSuccess: (data, variables) => {
+      // Navigate AFTER mutation succeeds
       setFile(null);
       setUploadedData(null);
       setShowCategoryModal(false);
@@ -116,7 +130,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       const categoryName = CATEGORY_MAP[variables.categoryId] || "general";
       navigate(`/learning/custom/categories/${categoryName}`, {
         state: {
-          documentId: data.documentId,
+          documentId: variables.documentId,
           justUploaded: true,
         },
       });
@@ -125,25 +139,32 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
   const handleCategorySelect = async (categoryId: number) => {
     if (!uploadedData) return;
-
-    // Prevent duplicate submissions
-    if (saveDocumentMutation.isPending) {
-      console.warn("Save already in progress, ignoring duplicate request");
-      return;
-    }
+    if (finalizeDocumentMutation.isPending) return;
 
     const token = await getToken();
-    if (!token) {
-      throw new Error("Authentication required");
-    }
+    if (!token) throw new Error("Authentication required");
 
-    saveDocumentMutation.mutate({
-      fileKey: uploadedData.key,
-      filename: uploadedData.filename,
-      fileType: uploadedData.fileType,
-      fileSize: uploadedData.fileSize,
-      categoryId,
-      token,
+    const documentId = uploadedData.documentId;
+
+    // Call finalize endpoint immediately
+    fetch(`${BACKEND_URL}/documents/${documentId}/finalize`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ categoryId }),
+    }).catch(err => console.error("Finalize error:", err));
+
+    // Navigate immediately
+    setFile(null);
+    setUploadedData(null);
+    setShowCategoryModal(false);
+    onSuccess();
+
+    const categoryName = CATEGORY_MAP[categoryId] || "general";
+    navigate(`/learning/custom/categories/${categoryName}`, {
+      state: { documentId, justUploaded: true },
     });
   };
 
@@ -154,9 +175,9 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   };
 
   useEffect(() => {
-    const isPending = uploadMutation.isPending || saveDocumentMutation.isPending;
-    const isSuccess = uploadMutation.isSuccess || saveDocumentMutation.isSuccess;
-    const isError = uploadMutation.isError || saveDocumentMutation.isError;
+    const isPending = uploadMutation.isPending || finalizeDocumentMutation.isPending;
+    const isSuccess = uploadMutation.isSuccess || finalizeDocumentMutation.isSuccess;
+    const isError = uploadMutation.isError || finalizeDocumentMutation.isError;
 
     if (isPending) {
       setUploadProgress(0);
@@ -181,9 +202,9 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     uploadMutation.isPending,
     uploadMutation.isSuccess,
     uploadMutation.isError,
-    saveDocumentMutation.isPending,
-    saveDocumentMutation.isSuccess,
-    saveDocumentMutation.isError,
+    finalizeDocumentMutation.isPending,
+    finalizeDocumentMutation.isSuccess,
+    finalizeDocumentMutation.isError,
   ]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -207,8 +228,8 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     uploadMutation.mutate({ file, token });
   };
 
-  const isLoading = uploadMutation.isPending || saveDocumentMutation.isPending;
-  const error = uploadMutation.error || saveDocumentMutation.error;
+  const isLoading = uploadMutation.isPending || finalizeDocumentMutation.isPending;
+  const error = uploadMutation.error || finalizeDocumentMutation.error;
 
   return (
     <form onSubmit={handleSubmit} className="upload-document-form">
@@ -239,8 +260,8 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       >
         {uploadMutation.isPending
           ? "Uploading..."
-          : saveDocumentMutation.isPending
-          ? "Saving..."
+          : finalizeDocumentMutation.isPending
+          ? "Processing..."
           : "Choose File"}
       </button>
 
@@ -259,8 +280,8 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
           </div>
           <p className="upload-document-form__progress-text">
             {uploadMutation.isPending
-              ? "📤 Uploading document..."
-              : "💾 Saving document..."}
+              ? "📤 Uploading and processing document..."
+              : "⚡ Generating flashcards..."}
           </p>
         </div>
       )}
@@ -270,7 +291,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         onSelect={(categoryId) => handleCategorySelect(categoryId)}
         onClose={handleCategoryModalClose}
         filename={uploadedData?.filename || ""}
-        isSubmitting={saveDocumentMutation.isPending}
+        isSubmitting={finalizeDocumentMutation.isPending}
       />
     </form>
   );
