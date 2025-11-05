@@ -22,24 +22,39 @@ interface ProcessingDocumentCardProps {
     hasQuiz: boolean;
     flashcardCount: number;
     questionCount: number;
+    quickTranslation?: boolean;
   };
+  documentId?: string;
 }
 
-function ProcessingDocumentCard({ filename, status }: ProcessingDocumentCardProps) {
+function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocumentCardProps) {
+  const navigate = useNavigate();
+
+  // If quick translation is available, user can start studying immediately
+  const canStudy = status.quickTranslation && (status.flashcardCount > 0 || status.questionCount > 0);
+
   const steps = [
-    { name: 'Translation', complete: status.hasTranslation },
-    { name: 'Flashcards', complete: status.hasFlashcards },
-    { name: 'Questions', complete: status.hasQuiz },
+    { name: 'Translation', complete: status.hasTranslation || status.quickTranslation },
+    { name: 'Flashcards', complete: status.hasFlashcards || (status.quickTranslation && status.flashcardCount > 0) },
+    { name: 'Questions', complete: status.hasQuiz || (status.quickTranslation && status.questionCount > 0) },
   ];
 
   const activeStepIndex = steps.findIndex(step => !step.complete);
 
   return (
-    <div className="processing-card">
+    <div
+      className={`processing-card ${canStudy ? 'processing-card--clickable' : ''}`}
+      onClick={() => {
+        if (canStudy && documentId) {
+          navigate(`/learning/documents/${documentId}/study`);
+        }
+      }}
+      style={{ cursor: canStudy ? 'pointer' : 'default' }}
+    >
       <h3 className="processing-card__header">
         {filename}
         <span className="processing-card__badge">
-          PROCESSING
+          {canStudy ? 'READY TO STUDY' : 'PROCESSING'}
         </span>
       </h3>
 
@@ -74,8 +89,8 @@ function ProcessingDocumentCard({ filename, status }: ProcessingDocumentCardProp
 
       {(status.flashcardCount > 0 || status.questionCount > 0) && (
         <p className="processing-card__stats">
-          {status.flashcardCount > 0 && `✓ Generated ${status.flashcardCount} flashcard${status.flashcardCount !== 1 ? 's' : ''}`}
-          {status.flashcardCount > 0 && status.questionCount > 0 && ' • '}
+          {status.flashcardCount > 0 && `Generated ${status.flashcardCount} flashcard${status.flashcardCount !== 1 ? 's' : ''}`}
+          {status.flashcardCount > 0 && status.questionCount > 0 && ' and '}
           {status.questionCount > 0 && `${status.questionCount} question${status.questionCount !== 1 ? 's' : ''}`}
         </p>
       )}
@@ -138,6 +153,7 @@ export default function CategoryStudy() {
         <ProcessingDocumentCard
           filename={statusData.document.filename}
           status={statusData.status}
+          documentId={statusData.document.id}
         />
       )}
 

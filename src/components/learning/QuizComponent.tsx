@@ -80,10 +80,18 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     text: string,
     targetLanguage: string
   ): Promise<string> => {
-    if (!currentQuestion.prompts) return text;
+    console.log('🔄 Translating text:', { text, targetLanguage, prompts: currentQuestion.prompts });
+
+    if (!currentQuestion.prompts) {
+      console.log('❌ No prompts available on question');
+      return text;
+    }
 
     const lang = targetLanguage.toLowerCase() as keyof typeof currentQuestion.prompts;
-    return currentQuestion.prompts[lang] || text;
+    const translated = currentQuestion.prompts[lang] || text;
+
+    console.log('✅ Translation result:', { lang, translated });
+    return translated;
   };
 
   const resetChatState = () => {

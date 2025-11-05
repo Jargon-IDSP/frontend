@@ -1,6 +1,7 @@
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTranslation } from "../../hooks/useDocumentTranslation";
 import { useTranslatedText } from "../../hooks/useTranslatedText";
+import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
 import DocumentNav from "../../components/DocumentNav";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
@@ -10,10 +11,17 @@ export default function FullTranslationView() {
   const navigate = useNavigate();
 
   const { data, isLoading, error } = useDocumentTranslation(id);
+  const { data: statusData } = useDocumentProcessingStatus({ documentId: id || null });
   const translatedText = useTranslatedText(data?.translation);
 
   const translation = data?.translation;
   const processing = data?.processing;
+
+  const hasFlashcards = statusData?.status?.hasFlashcards || false;
+  const hasQuiz = statusData?.status?.hasQuiz || false;
+  const hasQuickTranslation = statusData?.status?.quickTranslation || false;
+  const hasQuickFlashcards = hasQuickTranslation && (statusData?.status?.flashcardCount || 0) > 0;
+  const hasQuickQuestions = hasQuickTranslation && (statusData?.status?.questionCount || 0) > 0;
 
   if (isLoading) {
     return (
@@ -25,17 +33,17 @@ export default function FullTranslationView() {
     );
   }
 
-  if (processing) {
+  if (processing && !translation) {
     return (
       <div className="fullTranslationOverview">
         <div className="loading-container">
-          <h2 className="loading-title">Loading...</h2>
+          <h2 className="loading-title">Processing Document...</h2>
           <p className="loading-description">
-            Your document is being translated.
+            Your document is being processed.
           </p>
           <p className="loading-subtitle">
-            Feel free to navigate away - translation will continue in the
-            background and flashcards/quizzes will be generated automatically.
+            Feel free to navigate away - processing will continue in the
+            background.
           </p>
           <div className="spinner" />
           <div className="button-group">
@@ -73,7 +81,10 @@ export default function FullTranslationView() {
   }
 
   const handleLessonClick = () => {
-    navigate(`/learning/documents/${id}/study`);
+    const canNavigate = (hasFlashcards && hasQuiz) || (hasQuickFlashcards && hasQuickQuestions);
+    if (canNavigate) {
+      navigate(`/learning/documents/${id}/study`);
+    }
   };
 
   const handleBackClick = () => {
@@ -82,13 +93,16 @@ export default function FullTranslationView() {
 
   const documentTitle = translation?.document?.filename || "Document Translation";
 
+  const isProcessingComplete = hasFlashcards && hasQuiz;
+  const canStudy = isProcessingComplete || (hasQuickFlashcards && hasQuickQuestions);
+
   return (
         <div className="fullTranslationOverview">
         <div className="container demo">
         <DocumentNav
           activeTab="document"
           title={documentTitle}
-          onLessonClick={handleLessonClick}
+          onLessonClick={canStudy ? handleLessonClick : undefined}
           onBackClick={handleBackClick}
         />
 
@@ -96,6 +110,27 @@ export default function FullTranslationView() {
         <div className="translation-content">
           <div className="content-text">{translatedText}</div>
         </div>
+
+        {!isProcessingComplete && (
+          <div className="processing-notice">
+            {!canStudy && <div className="spinner" />}
+            {canStudy ? (
+              <>
+                <p>Lessons are ready! Click the Lesson tab to start studying.</p>
+                <p className="processing-subtitle">
+                  Full multilingual support is being finalized in the background.
+                </p>
+              </>
+            ) : (
+              <>
+                <p>Generating flashcards and quiz questions...</p>
+                <p className="processing-subtitle">
+                  The lesson tab will be available once processing is complete.
+                </p>
+              </>
+            )}
+          </div>
+        )}
       </div>
     </div>
     </div>
