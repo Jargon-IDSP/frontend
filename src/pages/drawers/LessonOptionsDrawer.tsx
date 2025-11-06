@@ -7,25 +7,27 @@ import {
   DrawerFooter,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
-import bookAddIcon from "@/assets/icons/bookAdd.svg";
-import pdfIcon from "@/assets/icons/pdfIcon.svg";
+import editNameIcon from "@/assets/icons/editNameIcon.svg";
+import addToFolderIcon from "@/assets/icons/addToFolderIcon.svg";
 import uploadIcon from "@/assets/icons/uploadIcon.svg";
 import deleteIcon from "@/assets/icons/deleteIcon-brown.svg";
 // import { useNavigate } from "react-router-dom";
 import DocumentDrawer from "./DocumentDrawer";
 import DeleteDrawer from "./DeleteDrawer";
+import AddToFolderDrawer from "./AddToFolderDrawer";
 
 interface DocumentDrawerProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 }
 
-export default function DocOptionsDrawer({
+export default function LessonOptionsDrawer({
   open,
   onOpenChange,
 }: DocumentDrawerProps) {
-  // const navigate = useNavigate();
+  //   const navigate = useNavigate();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [isAddToFolderDrawerOpen, setIsAddToFolderDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
 
   const handleUpload = () => {
@@ -33,6 +35,17 @@ export default function DocOptionsDrawer({
     setTimeout(() => {
       setIsDrawerOpen(true);
     }, 200);
+  };
+
+  const handleAddToFolder = () => {
+    onOpenChange(false);
+    setTimeout(() => {
+      setIsAddToFolderDrawerOpen(true);
+    }, 200);
+  };
+
+  const handleAddToFolderCancel = () => {
+    onOpenChange(true);
   };
 
   const handleDelete = () => {
@@ -49,6 +62,11 @@ export default function DocOptionsDrawer({
   return (
     <>
       <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <AddToFolderDrawer
+        open={isAddToFolderDrawerOpen}
+        onOpenChange={setIsAddToFolderDrawerOpen}
+        onCancel={handleAddToFolderCancel}
+      />
       <DeleteDrawer
         open={isDeleteDrawerOpen}
         onOpenChange={setIsDeleteDrawerOpen}
@@ -59,12 +77,15 @@ export default function DocOptionsDrawer({
         <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
           <DrawerHeader>
             <button className="button" onClick={handleUpload}>
-              <img src={bookAddIcon} alt="Book with a plus icon" />
-              Generate a lesson
+              <img src={editNameIcon} alt="A book and a pen icon" />
+              Edit name
             </button>
-            <button>
-              <img src={pdfIcon} alt="PDF icon" />
-              Download to my device
+            <button onClick={handleAddToFolder}>
+              <img
+                src={addToFolderIcon}
+                alt="A folder with a upload symbol icon"
+              />
+              Add to folder
             </button>
             <button>
               <img src={uploadIcon} alt="Upload icon" />

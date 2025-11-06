@@ -14,7 +14,7 @@ interface DeleteDrawerProps {
   onCancel?: () => void; // Add this prop
 }
 
-export default function DeleteDrawer({
+export default function AddToFolderDrawer({
   open,
   onOpenChange,
   onCancel,
@@ -35,15 +35,18 @@ export default function DeleteDrawer({
       <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
         <DrawerHeader>
           <DrawerTitle>
-            <h2>Are you sure you want to delete this file?</h2>
+            <button>+ New folder</button>
+            {/* Horizontal divider */}
+            <hr className="my-2 border-gray-200 mb-4" />
           </DrawerTitle>
         </DrawerHeader>
         <DrawerFooter>
           <Button
             variant="outline"
-            className="border-red-500 text-red-500 hover:bg-red-50"
+            className="text-white bg-green-500"
+            onClick={undefined}
           >
-            Delete
+            Save
           </Button>
           {/* Horizontal divider */}
           <hr className="my-2 border-gray-200 mb-4" />
