@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, useRoutes } from "react-router-dom";
+import { BrowserRouter as Router, useRoutes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SignedIn } from "@clerk/clerk-react";
 import { routes } from "./lib/routes";
@@ -18,6 +18,17 @@ function AppRoutes() {
   return useRoutes(routes);
 }
 
+function ConditionalNavBar() {
+  const location = useLocation();
+  const isOnboardingPage = location.pathname.startsWith('/onboarding');
+  
+  if (isOnboardingPage) {
+    return null;
+  }
+  
+  return <NavBar />;
+}
+
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
@@ -26,7 +37,7 @@ export default function App() {
           <AppRoutes />
         </main>
         <SignedIn>
-          <NavBar />
+          <ConditionalNavBar />
         </SignedIn>
       </Router>
     </QueryClientProvider>

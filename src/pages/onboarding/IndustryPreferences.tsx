@@ -42,6 +42,13 @@ export default function IndustryPreferences() {
   // Determine if user is updating from profile or doing initial onboarding
   const isUpdating = profile?.onboardingCompleted;
 
+  // Redirect to introduction if not viewed
+  useEffect(() => {
+    if (!profile?.introductionViewed && !isUpdating) {
+      navigate('/onboarding/introduction', { replace: true });
+    }
+  }, [profile, isUpdating, navigate]);
+
   // Set initial value if user already has an industry
   useEffect(() => {
     if (profile?.industryId) {
