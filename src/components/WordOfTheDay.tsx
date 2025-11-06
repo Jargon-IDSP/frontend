@@ -194,7 +194,7 @@ export default function WordOfTheDay() {
             )}
           </div>
         )}
-        <button
+        {/* <button
           onClick={() => refetch()}
           style={{
             marginTop: "1rem",
@@ -208,7 +208,7 @@ export default function WordOfTheDay() {
           }}
         >
           Get New Term
-        </button>
+        </button> */}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import DocumentStudyOptions from '../../components/learning/DocumentStudyOptions
 import WordOfTheDay from '../../components/WordOfTheDay';
 import type { Document } from '../../types/document';
 import { useDocument } from '../../hooks/useDocument';
+import { useDocumentAccess } from '../../hooks/useDocumentAccess';
 
 
 export default function SelectStudyType() {
@@ -14,6 +15,7 @@ export default function SelectStudyType() {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(null);
 
   const { data: documentData, isLoading } = useDocument(documentId);
+  const { isOwner } = useDocumentAccess(selectedDocument);
 
   useEffect(() => {
     if (documentData?.document && !selectedDocument) {
@@ -58,6 +60,7 @@ export default function SelectStudyType() {
         <DocumentNav
           activeTab="lesson"
           title={selectedDocument ? selectedDocument.filename : "Select a Document"}
+          subtitle={isOwner && selectedDocument ? '...' : ''}
           onDocumentClick={selectedDocument ? handleDemoDocs : undefined}
           onBackClick={handleBackClick}
         />
