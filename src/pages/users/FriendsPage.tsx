@@ -61,6 +61,26 @@ export default function FriendsPage() {
     retry: 2,
   });
 
+  // Fetch lesson requests
+  const { data: lessonRequests = [] } = useQuery({
+    queryKey: ["lessonRequests"],
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/lesson-requests`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        return [];
+      }
+
+      const data = await res.json();
+      return data.data || [];
+    },
+    staleTime: 10 * 1000, // 10 seconds
+    retry: 2,
+  });
+
   // Filter out followers who are already friends (mutual follows)
   const followers = allFollowers.filter(
     (follower) => !friends.some((friend) => friend.id === follower.id)
@@ -181,6 +201,66 @@ export default function FriendsPage() {
     },
     onError: (err: Error) => {
       console.error("Error removing friend:", err);
+    },
+  });
+
+  // Accept lesson request mutation
+  const acceptLessonRequestMutation = useMutation({
+    mutationFn: async (requesterId: string) => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/lesson-requests/accept`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ requesterId }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to accept lesson request");
+      }
+
+      return await res.json();
+    },
+    onSuccess: (_, requesterId) => {
+      queryClient.invalidateQueries({ queryKey: ["lessonRequests"] });
+      // Invalidate the requester's lesson request status so they can see the lessons
+      queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", requesterId] });
+      // Invalidate their friend quizzes query so lessons appear
+      queryClient.invalidateQueries({ queryKey: ["friendQuizzes", requesterId] });
+    },
+    onError: (err: Error) => {
+      alert(err.message);
+    },
+  });
+
+  // Deny lesson request mutation
+  const denyLessonRequestMutation = useMutation({
+    mutationFn: async (requesterId: string) => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/lesson-requests/deny`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ requesterId }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to deny lesson request");
+      }
+
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lessonRequests"] });
+    },
+    onError: (err: Error) => {
+      alert(err.message);
     },
   });
 
@@ -362,32 +442,69 @@ export default function FriendsPage() {
             No friends yet. Search for users to add friends!
           </p>
         ) : (
-          friends.map((friend) => (
-            <div
-              key={friend.friendshipId}
-              className="friends-list-item"
-            >
+          friends.map((friend) => {
+            const lessonRequest = lessonRequests.find(
+              (req: any) => req.requester.id === friend.id
+            );
+            
+            return (
               <div
-                className="friends-list-item-clickable"
-                onClick={() => navigate(`/profile/friends/${friend.id}`)}
+                key={friend.friendshipId}
+                className="friends-list-item"
               >
-                <strong className="friends-user-name">{getUserDisplayName(friend)}</strong>
-                <p className="friends-user-score">
-                  Score: {friend.score}
-                </p>
+                <div
+                  className="friends-list-item-clickable"
+                  onClick={() => navigate(`/profile/friends/${friend.id}`)}
+                >
+                  <strong className="friends-user-name">{getUserDisplayName(friend)}</strong>
+                  <p className="friends-user-score">
+                    Score: {friend.score}
+                  </p>
+                  {lessonRequest && (
+                    <p className="friends-lesson-request-message">
+                      Wants to see your lessons
+                    </p>
+                  )}
+                </div>
+                <div className="friends-list-item-actions">
+                  {lessonRequest && (
+                    <>
+                      <button
+                        className="friends-accept-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          acceptLessonRequestMutation.mutate(friend.id);
+                        }}
+                        disabled={acceptLessonRequestMutation.isPending || denyLessonRequestMutation.isPending}
+                      >
+                        {acceptLessonRequestMutation.isPending ? "..." : "Accept Lesson Request"}
+                      </button>
+                      <button
+                        className="friends-deny-button"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          denyLessonRequestMutation.mutate(friend.id);
+                        }}
+                        disabled={acceptLessonRequestMutation.isPending || denyLessonRequestMutation.isPending}
+                      >
+                        {denyLessonRequestMutation.isPending ? "..." : "Deny"}
+                      </button>
+                    </>
+                  )}
+                  <button
+                    className="friends-remove-button"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      friend.friendshipId && removeFriend(friend.friendshipId);
+                    }}
+                    disabled={removeFriendMutation.isPending}
+                  >
+                    <img src={deleteIcon} alt="Delete Icon" className="friends-remove-button-icon" />
+                  </button>
+                </div>
               </div>
-              <button
-                className="friends-remove-button"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  friend.friendshipId && removeFriend(friend.friendshipId);
-                }}
-                disabled={removeFriendMutation.isPending}
-              >
-                <img src={deleteIcon} alt="Delete Icon" className="friends-remove-button-icon" />
-              </button>
-            </div>
-          ))
+            );
+          })
         )}
       </div>
     </div>

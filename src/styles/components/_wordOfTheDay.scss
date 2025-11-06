@@ -1,36 +1,49 @@
+@use '../variables' as *;
+
 .word-of-the-day-card {
   position: relative;
+  transition: min-height $transition-fast;
+
+  &--loading {
+    min-height: 220px;
+  }
 
   &__loading {
-    margin-bottom: 1rem;
+    margin-bottom: $spacing-md;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   &__progress-track {
     width: 100%;
+    max-width: 100%;
     height: 6px;
     background-color: #e5e7eb;
-    border-radius: 9999px;
+    border-radius: $border-radius-full;
     overflow: hidden;
+    box-sizing: border-box;
   }
 
   &__progress-fill {
     height: 100%;
-    background-color: #ffba0a;
-    transition: width 0.3s ease-in-out;
-    border-radius: 9999px;
+    background-color: $color-secondary;
+    transition: width $transition-normal;
+    border-radius: $border-radius-full;
   }
 
   &__progress-text {
-    margin-top: 0.5rem;
+    margin-top: $spacing-sm;
     text-align: center;
-    font-size: 0.875rem;
-    color: #ffffff;
+    font-size: $font-size-label;
+    color: white;
   }
 }
 
 .today-term-card-image {
   width: 100%;
   height: auto;
+  display: block;
 }
 
 .word-card-content {
@@ -42,49 +55,52 @@
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1.5rem;
+  padding: $spacing-lg;
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
 }
 
 .word-term {
-  font-size: 1.5rem;
-  font-weight: bold;
-  color: #ffffff;
-  margin-bottom: 0.5rem;
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: white;
+  margin-bottom: $spacing-sm;
 }
 
 .word-term-translated {
-  font-size: 1.25rem;
-  font-weight: 500;
-  color: #ffba0a;
-  margin-bottom: 0.75rem;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-regular;
+  color: $color-secondary;
+  margin-bottom: 0.75rem; // Between $spacing-sm and $spacing-md
 }
 
 .word-definition {
-  font-size: 1rem;
-  color: #ffffff;
-  margin-bottom: 1rem;
-  line-height: 1.5;
+  font-size: $font-size-body;
+  color: white;
+  margin-bottom: $spacing-md;
+  line-height: $line-height-normal;
 }
 
 .word-meta {
   display: flex;
-  gap: 0.75rem;
+  gap: 0.75rem; // Between $spacing-sm and $spacing-md
   flex-wrap: wrap;
 }
 
 .word-industry,
 .word-level {
   display: inline-block;
-  padding: 0.25rem 0.75rem;
-  background-color: rgba(255, 186, 10, 0.2);
-  color: #ffba0a;
-  border-radius: 1rem;
-  font-size: 0.875rem;
-  font-weight: 500;
+  padding: $spacing-xs 0.75rem; // 0.75rem is between $spacing-sm and $spacing-md
+  background-color: rgba($color-secondary, 0.2);
+  color: $color-secondary;
+  border-radius: $spacing-md;
+  font-size: $font-size-label;
+  font-weight: $font-weight-regular;
 }
 
 .error-message {
-  color: #ffffff;
+  color: white;
   text-align: center;
-  font-size: 1rem;
+  font-size: $font-size-body;
 }

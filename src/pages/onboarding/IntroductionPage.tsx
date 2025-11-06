@@ -46,8 +46,10 @@ export default function IntroductionPage() {
 
       return res.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    onSuccess: async () => {
+      // Invalidate and wait for profile to refetch before navigating
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      await queryClient.refetchQueries({ queryKey: ['profile'] });
     },
   });
 
@@ -66,7 +68,18 @@ export default function IntroductionPage() {
     });
   }, [currentMediaIndex]);
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
+    if (!markIntroductionViewedMutation.isSuccess && user?.id) {
+      try {
+        await markIntroductionViewedMutation.mutateAsync();
+      } catch (error) {
+        console.error('Failed to mark introduction as viewed:', error);
+        // Still navigate even if marking fails
+      }
+    }
+    
+    // Ensure profile is up to date before navigating
+    await queryClient.refetchQueries({ queryKey: ['profile'] });
     navigate('/onboarding/language');
   };
 

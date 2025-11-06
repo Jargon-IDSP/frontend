@@ -21,18 +21,16 @@ export default function LanguagePreferences() {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
-  const { data: profile } = useProfile();
+  const { data: profile, isLoading } = useProfile();
   const [selectedLanguage, setSelectedLanguage] = useState<string>('');
 
-  // Determine if user is updating from profile or doing initial onboarding
   const isUpdating = profile?.onboardingCompleted;
 
-  // Redirect to introduction if not viewed
   useEffect(() => {
-    if (!profile?.introductionViewed && !isUpdating) {
+    if (!isLoading && profile && !profile.introductionViewed && !isUpdating) {
       navigate('/onboarding/introduction', { replace: true });
     }
-  }, [profile, isUpdating, navigate]);
+  }, [profile, isLoading, isUpdating, navigate]);
 
   // Set initial value if user already has a language
   useEffect(() => {
