@@ -29,11 +29,6 @@ interface FriendProfile {
 interface FriendQuiz {
   id: string;
   name: string;
-  category: string | null;
-  createdAt: string;
-  _count: {
-    questions: number;
-  };
 }
 
 export default function FriendProfilePage() {
@@ -119,54 +114,74 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
-  // Fetch friend's quizzes (from shared quizzes)
-  const { data: friendQuizzes = [] } = useQuery({
-    queryKey: ["friendQuizzes", friendId],
-    queryFn: async (): Promise<FriendQuiz[]> => {
+  // Fetch follower count
+  const { data: followerCountData } = useQuery({
+    queryKey: ["followerCount", friendId],
+    queryFn: async () => {
       const token = await getToken();
-
-      // First try the specific endpoint for user's quizzes
-      let res = await fetch(
-        `${BACKEND_URL}/learning/sharing/user/${friendId}/quizzes`,
+      const res = await fetch(
+        `${BACKEND_URL}/friendships/${friendId}/followers/count`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      if (!res.ok) return { count: 0 };
+      const data = await res.json();
+      return data.data || { count: 0 };
+    },
+    enabled: !!friendId,
+  });
 
-      if (res.ok) {
-        const data = await res.json();
-        return data.data || [];
-      }
-
-      // If that fails, fetch all shared quizzes and filter by friend ID
-      const sharedRes = await fetch(
-        `${BACKEND_URL}/learning/sharing/shared-with-me`,
+  // Fetch following count
+  const { data: followingCountData } = useQuery({
+    queryKey: ["followingCount", friendId],
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/friendships/${friendId}/following/count`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
       );
+      if (!res.ok) return { count: 0 };
+      const data = await res.json();
+      return data.data || { count: 0 };
+    },
+    enabled: !!friendId,
+  });
 
-      if (!sharedRes.ok) {
-        return [];
-      }
+  // Fetch lesson request status
+  const { data: lessonRequestStatus } = useQuery({
+    queryKey: ["lessonRequestStatus", friendId],
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/lesson-requests/status/${friendId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) return { status: null, hasAccess: false };
+      const data = await res.json();
+      return data.data || { status: null, hasAccess: false };
+    },
+    enabled: !!friendId && !isOwnProfile,
+  });
 
-      const sharedData = await sharedRes.json();
-      const allSharedQuizzes = sharedData.data || [];
-
-      // Filter quizzes shared by this friend
-      const friendSharedQuizzes = allSharedQuizzes
-        .filter((shared: any) => shared.customQuiz.user.id === friendId)
-        .map((shared: any) => ({
-          id: shared.customQuiz.id,
-          name: shared.customQuiz.name,
-          category: shared.customQuiz.category,
-          createdAt: shared.customQuiz.createdAt,
-          _count: {
-            questions: shared.customQuiz._count.questions,
-          },
-        }));
-
-      return friendSharedQuizzes;
+  // Fetch friend's quiz count (all custom quizzes they created)
+  const { data: quizCountData } = useQuery({
+    queryKey: ["friendQuizCount", friendId],
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/learning/custom/users/${friendId}/quizzes/count`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) return { count: 0 };
+      const data = await res.json();
+      return data.data || { count: 0 };
     },
     enabled: !!friendId,
   });
@@ -176,6 +191,7 @@ export default function FriendProfilePage() {
     queryKey: ["friendshipStatus", friendId],
     queryFn: async (): Promise<{
       isFriend: boolean;
+      isFollowing: boolean;
       friendshipId: string | null;
       status?: string;
       isBlocked?: boolean;
@@ -186,25 +202,53 @@ export default function FriendProfilePage() {
       });
 
       if (!res.ok) {
-        return { isFriend: false, friendshipId: null };
+        return { isFriend: false, isFollowing: false, friendshipId: null };
       }
 
       const data = await res.json();
       const friends = data.data || [];
       const friend = friends.find((f: any) => f.id === friendId);
 
-      const status = friend?.status || FriendshipStatus.PENDING;
+      const status = friend?.status || null;
       const isBlocked = status === FriendshipStatus.BLOCKED;
       const isAccepted = status === FriendshipStatus.ACCEPTED || status === "ACCEPTED";
+      const isPending = status === FriendshipStatus.PENDING || status === "PENDING";
+      
+      // isFollowing = true if you're following them (regardless of whether they follow back)
+      const isFollowing = !!friend && (isAccepted || isPending);
 
       return {
         isFriend: !!friend && isAccepted,
+        isFollowing,
         friendshipId: friend?.friendshipId || null,
-        status,
+        status: status || null,
         isBlocked,
       };
     },
     enabled: !!friendId && !isOwnProfile,
+  });
+
+  // Fetch lesson names (not full quiz data)
+  const { data: friendQuizzes = [] } = useQuery({
+    queryKey: ["friendLessons", friendId, lessonRequestStatus?.hasAccess],
+    queryFn: async (): Promise<FriendQuiz[]> => {
+      const token = await getToken();
+
+      const res = await fetch(
+        `${BACKEND_URL}/learning/custom/users/${friendId}/lessons`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        return data.data || [];
+      }
+
+      return [];
+    },
+    enabled: !!friendId && (isOwnProfile || friendshipStatus?.isFriend === true),
   });
 
   // Send friend request mutation
@@ -231,6 +275,65 @@ export default function FriendProfilePage() {
       alert("Friend request sent!");
       queryClient.invalidateQueries({ queryKey: ["friendshipStatus", friendId] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
+      queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
+    },
+    onError: (err: Error) => {
+      alert(err.message);
+    },
+  });
+
+  // Create lesson request mutation
+  const createLessonRequestMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/lesson-requests`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ recipientId: friendId }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to send lesson request");
+      }
+
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
+      // Invalidate lesson requests so recipient sees the new request
+      queryClient.invalidateQueries({ queryKey: ["lessonRequests"] });
+    },
+    onError: (err: Error) => {
+      alert(err.message);
+    },
+  });
+
+  // Cancel lesson request mutation
+  const cancelLessonRequestMutation = useMutation({
+    mutationFn: async () => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/lesson-requests`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ recipientId: friendId }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to cancel lesson request");
+      }
+
+      return await res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
     },
     onError: (err: Error) => {
       alert(err.message);
@@ -350,30 +453,8 @@ export default function FriendProfilePage() {
         </div>
       )}
 
-      {/* Not Friends Yet State */}
-      {friendProfile && friendshipStatus && !friendshipStatus.isFriend && !friendshipStatus.isBlocked && !isOwnProfile && (
-        <div className="friend-profile-not-friends">
-          <div className="friend-profile-not-friends-content">
-            <div className="friend-profile-avatar">
-              <img src={rockyWhiteLogo} alt="User Avatar" />
-            </div>
-            <h2 className="friend-profile-name">{getUserDisplayName()}</h2>
-            <p className="friend-profile-not-friends-message">
-              You are not following yet
-            </p>
-            <button
-              className="friend-profile-friendship-button friend-profile-friendship-button--add"
-              onClick={handleFriendshipAction}
-              disabled={sendRequestMutation.isPending}
-            >
-              {sendRequestMutation.isPending ? "..." : "Follow"}
-            </button>
-          </div>
-        </div>
-      )}
-
-      {/* Profile Content - Show if friends OR if viewing own profile */}
-      {friendProfile && (friendshipStatus?.isFriend || isOwnProfile) && (
+      {/* Profile Content - Show if not blocked (friends, not friends, or own profile) */}
+      {friendProfile && !friendshipStatus?.isBlocked && (
         <>
           {/* Profile Card */}
           <div className="friend-profile-card">
@@ -387,17 +468,19 @@ export default function FriendProfilePage() {
             <div className="friend-profile-stats">
               <div className="friend-profile-stat">
                 <div className="friend-profile-stat-value">
-                  {friendProfile.score}
+                  {followerCountData?.count ?? 0}
                 </div>
-                <div className="friend-profile-stat-label">Points</div>
+                <div className="friend-profile-stat-label">Followers</div>
               </div>
               <div className="friend-profile-stat">
-                <div className="friend-profile-stat-value">13</div>
+                <div className="friend-profile-stat-value">
+                  {followingCountData?.count ?? 0}
+                </div>
                 <div className="friend-profile-stat-label">Followings</div>
               </div>
               <div className="friend-profile-stat">
                 <div className="friend-profile-stat-value">
-                  {friendQuizzes.length}
+                  {quizCountData?.count ?? 0}
                 </div>
                 <div className="friend-profile-stat-label">Lessons</div>
               </div>
@@ -409,50 +492,116 @@ export default function FriendProfilePage() {
             <h3 className="friend-profile-section-title">
               {getUserDisplayName()}'s Lessons
             </h3>
-            {friendQuizzes.length === 0 ? (
-              <div className="friend-profile-no-lessons">
-                {getUserDisplayName()} hasn't created any quizzes yet.
-              </div>
-            ) : (
-              <>
-                <div className="friend-profile-lessons">
-                  {friendQuizzes.slice(0, 3).map((quiz) => (
-                    <div key={quiz.id} className="friend-profile-lesson-item">
-                      <div className="friend-profile-lesson-icon">
-                        <div className="friend-profile-lesson-placeholder"></div>
-                      </div>
-                      <div className="friend-profile-lesson-info">
-                        <h4 className="friend-profile-lesson-title">
-                          {quiz.name}
-                        </h4>
-                        <p className="friend-profile-lesson-topic">
-                          {quiz.category ? `Topic: ${quiz.category}` : "General"}
-                        </p>
-                        <p className="friend-profile-lesson-questions">
-                          {quiz._count.questions} question{quiz._count.questions !== 1 ? 's' : ''}
-                        </p>
-                      </div>
-                      <div className="friend-profile-lesson-actions">
-                        <button
-                          className="friend-profile-lesson-view"
-                          onClick={() => navigate(`/learning/custom/quiz/take?quizId=${quiz.id}`)}
-                          title="Take Quiz"
-                        >
-                          ▶
-                        </button>
-                      </div>
+            {/* Show different states based on friendship status */}
+            {isOwnProfile ? (
+              // Own profile - show lessons
+              friendQuizzes.length === 0 ? (
+                <div className="friend-profile-no-lessons">
+                  {getUserDisplayName()} hasn't created any lessons yet.
+                </div>
+              ) : (
+                <div className="friend-profile-lessons-list">
+                  {friendQuizzes.map((quiz) => (
+                    <div
+                      key={quiz.id}
+                      className="friend-profile-lesson-list-item"
+                    >
+                      <span className="friend-profile-lesson-list-name">
+                        {quiz.name}
+                      </span>
                     </div>
                   ))}
                 </div>
-                {friendQuizzes.length > 3 && (
+              )
+            ) : friendshipStatus ? (
+              // If following but not friends (pending approval)
+              friendshipStatus.isFollowing && !friendshipStatus.isFriend ? (
+                <div className="friend-profile-no-lessons">
+                  <p className="friend-profile-lessons-message">
+                    Waiting for {getUserDisplayName()} to accept your friend request
+                  </p>
+                </div>
+              ) : 
+              // If not following at all
+              !friendshipStatus.isFollowing ? (
+                <div className="friend-profile-no-lessons">
+                  <p className="friend-profile-lessons-message">
+                    Add {getUserDisplayName()} as a friend to request their lessons
+                  </p>
                   <button
-                    className="friend-profile-view-more"
-                    onClick={() => navigate('/learning/shared')}
+                    className="friend-profile-friendship-button friend-profile-friendship-button--add"
+                    onClick={handleFriendshipAction}
+                    disabled={sendRequestMutation.isPending}
                   >
-                    View More <span>∨</span>
+                    {sendRequestMutation.isPending ? "..." : "Send Friend Request"}
                   </button>
-                )}
-              </>
+                </div>
+              ) : (
+                // If friends (mutual follow)
+                lessonRequestStatus?.hasAccess ? (
+                  // Has access - show lessons
+                  friendQuizzes.length === 0 ? (
+                    <div className="friend-profile-no-lessons">
+                      {getUserDisplayName()} hasn't created any lessons yet.
+                    </div>
+                  ) : (
+                    <div className="friend-profile-lessons-list">
+                      {friendQuizzes.map((quiz) => (
+                        <div
+                          key={quiz.id}
+                          className="friend-profile-lesson-list-item"
+                        >
+                          <span className="friend-profile-lesson-list-name">
+                            {quiz.name}
+                          </span>
+                        </div>
+                      ))}
+                    </div>
+                  )
+                ) : lessonRequestStatus?.status === "PENDING" ? (
+                  // Request pending - show cancel button
+                  <div className="friend-profile-no-lessons">
+                    <p className="friend-profile-lessons-message">
+                      Request to see all of {getUserDisplayName()}'s current lessons
+                    </p>
+                    <button
+                      className="friend-profile-friendship-button friend-profile-friendship-button--remove"
+                      onClick={() => cancelLessonRequestMutation.mutate()}
+                      disabled={cancelLessonRequestMutation.isPending}
+                    >
+                      {cancelLessonRequestMutation.isPending ? "..." : "Cancel Request"}
+                    </button>
+                  </div>
+                ) : (
+                  // No request or denied - show request button
+                  <div className="friend-profile-no-lessons">
+                    <p className="friend-profile-lessons-message">
+                      Request to see all of {getUserDisplayName()}'s current lessons
+                    </p>
+                    <button
+                      className="friend-profile-friendship-button friend-profile-friendship-button--add"
+                      onClick={() => createLessonRequestMutation.mutate()}
+                      disabled={createLessonRequestMutation.isPending}
+                    >
+                      {createLessonRequestMutation.isPending ? "..." : "Request"}
+                    </button>
+                  </div>
+                )
+              )
+            ) : (
+              // Loading state - show default "not following" message
+              <div className="friend-profile-no-lessons">
+                <p className="friend-profile-lessons-message">
+                  Add {getUserDisplayName()} as a friend to request their lessons
+                </p>
+                <button
+                  className="friend-profile-friendship-button friend-profile-friendship-button--add"
+                  onClick={handleFriendshipAction}
+                  disabled={sendRequestMutation.isPending}
+                >
+                  {sendRequestMutation.isPending ? "..." : "Send Friend Request"}
+                </button>
+              </div>
             )}
           </div>
 

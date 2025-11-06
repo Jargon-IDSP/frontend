@@ -39,7 +39,7 @@ export default function WordOfTheDay() {
   // Loading state - auth or preferences loading
   if (!isLoaded || preferencesLoading) {
     return (
-      <div className="word-of-the-day-card">
+      <div className="word-of-the-day-card word-of-the-day-card--loading">
         <img
           src={todayTermCard}
           alt="Random Trade Term"

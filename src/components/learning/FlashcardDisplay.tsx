@@ -53,7 +53,7 @@ export default function FlashcardDisplay({
         <h3 className="word-of-the-day-title">
           {type === "existing" ? "Today's Trade Term" : "Your Flashcard"}
         </h3>
-        <div className="word-of-the-day-card">
+        <div className="word-of-the-day-card word-of-the-day-card--loading">
           <img
             src={todayTermCard}
             alt="Flashcard"
