@@ -6,7 +6,7 @@ import lessonIcon from '../assets/icons/lessonIcon.svg';
 import lessonIconB from '../assets/icons/lessonIconB.svg';
 import goBackIcon from '../assets/icons/goBackIcon.svg';
 
-const DocumentNav: React.FC<DocumentNavProps> = ({ 
+const DocumentNav: React.FC<DocumentNavProps> = ({
   activeTab,
   title,
   subtitle = '...',
@@ -14,6 +14,8 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
   onDocumentClick,
   onBackClick
 }) => {
+  const isLessonDisabled = !onLessonClick;
+
 return (
     <>
       <div className="top">
@@ -22,14 +24,16 @@ return (
         <h2>{subtitle}</h2>
       </div>
       <div className="switch-view">
-        <button 
-          className={`demoLesson ${activeTab === 'lesson' ? 'active' : ''}`}
+        <button
+          className={`demoLesson ${activeTab === 'lesson' ? 'active' : ''} ${isLessonDisabled ? 'disabled' : ''}`}
           onClick={onLessonClick}
+          disabled={isLessonDisabled}
+          title={isLessonDisabled ? 'Processing... please wait' : 'View flashcards and quizzes'}
         >
           <img src={activeTab === 'lesson' ? lessonIcon : lessonIconB} alt="lesson icon" />
           Lesson
         </button>
-        <button 
+        <button
           className={`demoDocs ${activeTab === 'document' ? 'active' : ''}`}
           onClick={onDocumentClick}
         >

@@ -1,50 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "@/hooks/useProfile";
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
-import { BACKEND_URL } from "@/lib/api";
 import type { StudySession } from "@/types/learning";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
-
-interface Level {
-  id: number;
-  name: string;
-  completed: boolean;
-}
+import { useLevels } from "@/hooks/useLevels";
 
 const levelDescriptions: Record<number, string> = {
-  1: 'Basic trades terminology',
-  2: 'Common trade practices',
-  3: 'Complex technical concepts',
+  1: "Basic trades terminology",
+  2: "Common trade practices",
+  3: "Complex technical concepts",
 };
+
+// Default levels in case API fails
+const DEFAULT_LEVELS = [
+  { id: 1, name: "Foundation", completed: false },
+  { id: 2, name: "Intermediate", completed: false },
+  { id: 3, name: "Advanced", completed: false },
+];
 
 export default function ExistingLevels() {
   const navigate = useNavigate();
-  const { getToken } = useAuth();
   const { data: profile } = useProfile();
   const [openLevelId, setOpenLevelId] = useState<number | null>(null);
 
-  // Fetch levels with completion status
-  const { data: levelsData, isLoading } = useQuery({
-    queryKey: ["levels", profile?.industryId],
-    queryFn: async () => {
-      const token = await getToken();
-      const response = await fetch(`${BACKEND_URL}/learning/existing/levels`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!response.ok) throw new Error("Failed to fetch levels");
-      const result = await response.json();
-      return result.data as Level[];
-    },
-    enabled: !!getToken,
-  });
-
-  const levels = levelsData || [
-    { id: 1, name: 'Foundation', completed: false },
-    { id: 2, name: 'Intermediate', completed: false },
-    { id: 3, name: 'Advanced', completed: false },
-  ];
+  // Use the custom hook - REMOVE the duplicate useQuery below
+  const { data: levelsData, isLoading, error } = useLevels(profile?.industryId);
+  const levels = levelsData || DEFAULT_LEVELS;
 
   // Check if a level is locked (all previous levels must be completed)
   const isLevelLocked = (levelId: number): boolean => {
@@ -52,7 +33,7 @@ export default function ExistingLevels() {
 
     // Check if all previous levels are completed
     for (let i = 1; i < levelId; i++) {
-      const prevLevel = levels.find(l => l.id === i);
+      const prevLevel = levels.find((l) => l.id === i);
       if (!prevLevel || !prevLevel.completed) {
         return true; // Lock if any previous level is not completed
       }
@@ -115,10 +96,18 @@ export default function ExistingLevels() {
 
     if (session.type === "flashcards") {
       // Navigate to flashcards practice
-      navigate(`/learning/existing/levels/${levelId}/flashcards/${session.sessionNumber}${industryId ? `?industry=${industryId}` : ''}`);
+      navigate(
+        `/learning/existing/levels/${levelId}/flashcards/${
+          session.sessionNumber
+        }${industryId ? `?industry=${industryId}` : ""}`
+      );
     } else {
       // Navigate to quiz
-      navigate(`/learning/existing/levels/${levelId}/quiz/${session.sessionNumber}${industryId ? `?industry=${industryId}` : ''}`);
+      navigate(
+        `/learning/existing/levels/${levelId}/quiz/${session.sessionNumber}${
+          industryId ? `?industry=${industryId}` : ""
+        }`
+      );
     }
   };
 
@@ -139,6 +128,28 @@ export default function ExistingLevels() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="categoriesPage">
+        <div className="categoriesHeader">
+          <img
+            src={goBackIcon}
+            alt="Go back"
+            className="categoriesBackButton"
+            onClick={() => navigate(-1)}
+          />
+          <h1>Red Seal Levels</h1>
+        </div>
+        <div
+          className="error-message"
+          style={{ padding: "2rem", textAlign: "center" }}
+        >
+          {error instanceof Error ? error.message : "Failed to load levels"}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="categoriesPage">
       <div className="categoriesHeader">
@@ -155,38 +166,56 @@ export default function ExistingLevels() {
         {levels.map((level) => {
           const isOpen = openLevelId === level.id;
           const locked = isLevelLocked(level.id);
-          const description = levelDescriptions[level.id] || '';
+          const description = levelDescriptions[level.id] || "";
 
           return (
             <div
               key={level.id}
-              className={`category-folder ${locked ? 'category-folder--locked' : ''} ${level.completed ? 'category-folder--completed' : ''}`}
+              className={`category-folder ${
+                locked ? "category-folder--locked" : ""
+              } ${level.completed ? "category-folder--completed" : ""}`}
             >
               <div
                 className="category-folder-header"
                 onClick={() => toggleLevel(level.id)}
-                style={{ cursor: locked ? 'not-allowed' : 'pointer' }}
+                style={{ cursor: locked ? "not-allowed" : "pointer" }}
               >
                 <div className="category-folder-title">
                   <h3>
-                    {locked && <span style={{ marginRight: '0.5rem' }}>🔒</span>}
-                    {level.completed && <span style={{ marginRight: '0.5rem' }}>✅</span>}
+                    {locked && (
+                      <span style={{ marginRight: "0.5rem" }}>🔒</span>
+                    )}
+                    {level.completed && (
+                      <span style={{ marginRight: "0.5rem" }}>✅</span>
+                    )}
                     Level {level.id}: {level.name}
                   </h3>
                   {locked && (
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0.25rem 0 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6b7280",
+                        margin: "0.25rem 0 0 0",
+                      }}
+                    >
                       Complete previous levels to unlock
                     </p>
                   )}
                   {!locked && !level.completed && (
-                    <p style={{ fontSize: '0.875rem', color: '#6b7280', margin: '0.25rem 0 0 0' }}>
+                    <p
+                      style={{
+                        fontSize: "0.875rem",
+                        color: "#6b7280",
+                        margin: "0.25rem 0 0 0",
+                      }}
+                    >
                       {description}
                     </p>
                   )}
                 </div>
                 {!locked && (
                   <svg
-                    className={`chevron ${isOpen ? 'open' : ''}`}
+                    className={`chevron ${isOpen ? "open" : ""}`}
                     width="24"
                     height="24"
                     viewBox="0 0 24 24"
@@ -210,7 +239,9 @@ export default function ExistingLevels() {
                       <div
                         key={session.id}
                         className="document-item"
-                        onClick={() => handleStudySessionClick(level.id, session)}
+                        onClick={() =>
+                          handleStudySessionClick(level.id, session)
+                        }
                       >
                         <div className="document-info">
                           <span className="document-name">{session.name}</span>

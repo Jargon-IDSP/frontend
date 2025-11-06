@@ -29,6 +29,7 @@ export function CategorySelectModal({
   };
 
   return (
+    <div className ="container">
     <div className="category-select-modal" onClick={onClose}>
       <div className="category-select-modal__content" onClick={(e) => e.stopPropagation()}>
         <h2 className="category-select-modal__header">Select a Category</h2>
@@ -73,10 +74,11 @@ export function CategorySelectModal({
             disabled={!selectedId || isSubmitting}
             className="category-select-modal__button category-select-modal__button--continue"
           >
-            {isSubmitting ? "Saving..." : "Continue"}
+            {isSubmitting ? "Continue..." : "Continue"}
           </button>
         </div>
       </div>
+    </div>
     </div>
   );
 }
