@@ -6,6 +6,7 @@ import ChatPage from "../mounting/ChatPage";
 import ProfilePage from "../pages/users/ProfilePage";
 import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
+import FriendProfilePage from "../pages/users/FriendProfilePage";
 import ManageProfilePage from "../pages/users/ManageProfilePage";
 import LeaderboardPage from "../mounting/LeaderboardPage";
 import Levels from "../pages/learning/Levels";
@@ -24,6 +25,7 @@ import DocumentsPage from "../pages/documents/DocumentsPage";
 import AddDocumentPage from "../pages/documents/AddDocumentPage";
 import FullTranslationView from "../pages/documents/FullTranslationView";
 import FilePreviewPage from "../pages/documents/FilePreviewPage";
+import IntroductionPage from "../pages/onboarding/IntroductionPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
 import LearnJargon from "../pages/learning/LearnJargon";
@@ -36,6 +38,10 @@ export const routes: RouteObject[] = [
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/onboarding/introduction",
+    element: protect(<IntroductionPage />),
   },
   {
     path: "/onboarding/language",
@@ -60,6 +66,10 @@ export const routes: RouteObject[] = [
   {
     path: "/profile/friends",
     element: protect(<FriendsPage />),
+  },
+  {
+    path: "/profile/friends/:friendId",
+    element: protect(<FriendProfilePage />),
   },
   {
     path: "/profile/manage",

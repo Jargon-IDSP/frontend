@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useRandomFlashcard } from '../../hooks/useRandomFlashcard';
-import todayTermCard from '../../assets/todayTermCard.png';
+import todayTermCard from '../../assets/todayTermCard.svg';
 import type { FlashcardDisplayProps } from '../../types/learning';
 import '../../styles/pages/_homepage.scss';
 

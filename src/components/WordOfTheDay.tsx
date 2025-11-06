@@ -2,7 +2,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useState, useEffect } from "react";
 import { useUserPreferences } from "../hooks/useUserPreferences";
 import { useRandomWord } from "../hooks/useRandomWord";
-import todayTermCard from "../assets/todayTermCard.png";
+import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
 
 export default function WordOfTheDay() {
@@ -194,7 +194,7 @@ export default function WordOfTheDay() {
             )}
           </div>
         )}
-        <button
+        {/* <button
           onClick={() => refetch()}
           style={{
             marginTop: "1rem",
@@ -208,7 +208,7 @@ export default function WordOfTheDay() {
           }}
         >
           Get New Term
-        </button>
+        </button> */}
       </div>
     </div>
   );
