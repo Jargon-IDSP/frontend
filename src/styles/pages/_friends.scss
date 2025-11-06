@@ -262,6 +262,17 @@
   align-items: center;
   padding: $spacing-md;
   border-bottom: 1px solid #e5e7eb;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+}
+
+.friends-list-item-clickable {
+  flex: 1;
+  cursor: pointer;
+  padding: $spacing-xs 0;
 }
 
 .friends-remove-button {
@@ -269,5 +280,10 @@
   background-color: white;
   border: none;
   cursor: pointer;
+  flex-shrink: 0;
+
+  &:hover {
+    opacity: 0.7;
+  }
 }
 

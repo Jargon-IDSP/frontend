@@ -7,6 +7,7 @@ import { DocumentsList } from "../documents/DocumentList";
 import settingsIcon from '../../assets/icons/settingsIcon.svg';
 import editIcon from '../../assets/icons/editIcon.svg';
 import rockyWhiteLogo from '/rockyWhite.svg';
+import '../../styles/pages/_profile.scss';
 
 const industryIdToName: { [key: number]: string } = {
   1: 'Electrician',
@@ -145,6 +146,16 @@ export default function ProfilePage() {
                 aria-label="Edit profile"
               >
                 <img src={editIcon} alt="Edit" />
+              </button>
+            </div>
+
+            {/* Friends Button */}
+            <div className="profile-actions">
+              <button
+                className="profile-friends-button"
+                onClick={() => navigate("/profile/friends")}
+              >
+                View Friends
               </button>
             </div>
 

@@ -1,3 +1,9 @@
+export enum FriendshipStatus {
+  PENDING = "PENDING",
+  ACCEPTED = "ACCEPTED",
+  BLOCKED = "BLOCKED",
+}
+
 export interface Friend {
   friendshipId: string | null;
   id: string;
@@ -6,6 +12,7 @@ export interface Friend {
   lastName: string | null;
   email: string;
   score: number;
+  status?: FriendshipStatus | string; // Optional for backward compatibility
 }
 
 export interface PendingRequest extends Friend {
