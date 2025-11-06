@@ -11,6 +11,7 @@ export interface ProfileData {
   score?: number;
   language?: string;
   industryId?: number | null;
+  introductionViewed?: boolean;
   onboardingCompleted?: boolean;
   [key: string]: any;
 }

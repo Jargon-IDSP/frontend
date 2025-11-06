@@ -1,5 +1,5 @@
 import { UserButton, useUser } from '@clerk/clerk-react';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../hooks/useProfile';
 import TopLeaderboard from '../components/TopLeaderboard';
@@ -14,8 +14,9 @@ export default function LoggedInHome() {
   const { user } = useUser();
   const navigate = useNavigate();
   const { data: profile, isLoading } = useProfile();
+  const [isCheckingRedirect, setIsCheckingRedirect] = useState(true);
 
-  // Check if user needs to complete onboarding on first login
+  // Check if user needs to see introduction or complete onboarding on first login
   useEffect(() => {
     if (!isLoading && user && profile) {
       const justCompleted = sessionStorage.getItem('onboardingJustCompleted') === 'true';
@@ -29,11 +30,33 @@ export default function LoggedInHome() {
       // This way, skip only persists within a single session, not across logins
       const hasSkippedThisSession = sessionStorage.getItem('onboardingSkippedThisSession') === 'true';
 
-      if (!profile.onboardingCompleted && !hasSkippedThisSession && !justCompleted) {
-        navigate('/onboarding/language');
+      // Check if user has viewed the introduction page (from database)
+      const introductionViewed = profile?.introductionViewed ?? false;
+
+      // If introduction hasn't been viewed, redirect to introduction page first
+      if (!introductionViewed && !hasSkippedThisSession && !justCompleted) {
+        navigate('/onboarding/introduction', { replace: true });
+        return;
       }
+
+      // If introduction has been viewed but onboarding not completed, redirect to onboarding
+      if (!profile.onboardingCompleted && !hasSkippedThisSession && !justCompleted && introductionViewed) {
+        navigate('/onboarding/language', { replace: true });
+        return;
+      }
+
+      // If we get here, user doesn't need redirect, show the home page
+      setIsCheckingRedirect(false);
+    } else if (isLoading || !user) {
+      // Still loading or no user, keep checking
+      setIsCheckingRedirect(true);
     }
   }, [user, profile, isLoading, navigate]);
+
+  // Show loading state while checking for redirects or while profile is loading
+  if (isLoading || isCheckingRedirect || !user || !profile) {
+    return null; // Return null to prevent flash, the redirect will happen
+  }
 
   return (
     <div className="home-page">

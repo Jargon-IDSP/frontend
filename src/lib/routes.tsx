@@ -24,6 +24,7 @@ import DocumentsPage from "../pages/documents/DocumentsPage";
 import AddDocumentPage from "../pages/documents/AddDocumentPage";
 import FullTranslationView from "../pages/documents/FullTranslationView";
 import FilePreviewPage from "../pages/documents/FilePreviewPage";
+import IntroductionPage from "../pages/onboarding/IntroductionPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
 import LearnJargon from "../pages/learning/LearnJargon";
@@ -36,6 +37,10 @@ export const routes: RouteObject[] = [
   {
     path: "/",
     element: <HomePage />,
+  },
+  {
+    path: "/onboarding/introduction",
+    element: protect(<IntroductionPage />),
   },
   {
     path: "/onboarding/language",
