@@ -48,25 +48,30 @@ export default function FriendsPage() {
     retry: 2,
   });
 
-  // Fetch pending requests
-  const { data: pendingRequests = [] } = useQuery({
-    queryKey: ["pendingRequests"],
-    queryFn: async (): Promise<PendingRequest[]> => {
+  // Fetch followers (people who follow you)
+  const { data: allFollowers = [] } = useQuery({
+    queryKey: ["followers"],
+    queryFn: async (): Promise<Friend[]> => {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships/pending`, {
+      const res = await fetch(`${BACKEND_URL}/friendships/followers`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) {
-        throw new Error("Failed to fetch pending requests");
+        throw new Error("Failed to fetch followers");
       }
 
-      const data: PendingRequestsResponse = await res.json();
+      const data: FriendsResponse = await res.json();
       return data.data || [];
     },
     staleTime: 30 * 1000, // 30 seconds
     retry: 2,
   });
+
+  // Filter out followers who are already friends (mutual follows)
+  const followers = allFollowers.filter(
+    (follower) => !friends.some((friend) => friend.id === follower.id)
+  );
 
   // Search users mutation
   const searchUsersMutation = useMutation({
@@ -124,64 +129,42 @@ export default function FriendsPage() {
     onSuccess: () => {
       setSearchResults([]);
       setSearchQuery("");
-      alert("Friend request sent!");
-      queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
+      alert("Now following!");
+      queryClient.invalidateQueries({ queryKey: ["friends"] });
+      queryClient.invalidateQueries({ queryKey: ["followers"] });
     },
     onError: (err: Error) => {
       alert(err.message);
     },
   });
 
-  // Accept request mutation
-  const acceptRequestMutation = useMutation({
-    mutationFn: async (friendshipId: string) => {
+  // Follow back mutation (for following back a follower)
+  const followBackMutation = useMutation({
+    mutationFn: async (addresseeId: string) => {
       const token = await getToken();
-      const res = await fetch(
-        `${BACKEND_URL}/friendships/${friendshipId}/accept`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
+      const res = await fetch(`${BACKEND_URL}/friendships`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ addresseeId }),
+      });
 
       if (!res.ok) {
-        throw new Error("Failed to accept request");
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to follow back");
       }
 
       return await res.json();
     },
     onSuccess: () => {
+      alert("You are now friends!");
       queryClient.invalidateQueries({ queryKey: ["friends"] });
-      queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
+      queryClient.invalidateQueries({ queryKey: ["followers"] });
     },
     onError: (err: Error) => {
-      console.error("Error accepting request:", err);
-    },
-  });
-
-  // Reject request mutation
-  const rejectRequestMutation = useMutation({
-    mutationFn: async (friendshipId: string) => {
-      const token = await getToken();
-      const res = await fetch(
-        `${BACKEND_URL}/friendships/${friendshipId}/reject`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to reject request");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
-    },
-    onError: (err: Error) => {
-      console.error("Error rejecting request:", err);
+      alert(err.message);
     },
   });
 
@@ -217,16 +200,12 @@ export default function FriendsPage() {
     sendRequestMutation.mutate(addresseeId);
   };
 
-  const acceptRequest = (friendshipId: string) => {
-    acceptRequestMutation.mutate(friendshipId);
-  };
-
-  const rejectRequest = (friendshipId: string) => {
-    rejectRequestMutation.mutate(friendshipId);
+  const followBack = (addresseeId: string) => {
+    followBackMutation.mutate(addresseeId);
   };
 
   const removeFriend = (friendshipId: string) => {
-    if (!confirm("Are you sure you want to remove this friend?")) return;
+    if (!confirm("Are you sure you want to unfollow this friend?")) return;
     removeFriendMutation.mutate(friendshipId);
   };
 
@@ -298,8 +277,8 @@ export default function FriendsPage() {
                     disabled={sendRequestMutation.isPending}
                   >
                     {sendRequestMutation.isPending
-                      ? "Sending..."
-                      : "Add Friend"}
+                      ? "Following..."
+                      : "Follow"}
                   </button>
                 )}
                 {user.friendshipStatus === "friends" && (
@@ -307,14 +286,31 @@ export default function FriendsPage() {
                     ✓ Friends
                   </span>
                 )}
-                {user.friendshipStatus === "pending_sent" && (
+                {user.friendshipStatus === "following" && (
                   <span className="friends-status-badge friends-status-badge--pending-sent">
-                    Request Sent
+                    Following
                   </span>
                 )}
-                {user.friendshipStatus === "pending_received" && (
-                  <span className="friends-status-badge friends-status-badge--pending-received">
-                    Pending Request
+                {user.friendshipStatus === "follower" && (
+                  <button
+                    className="friends-add-button"
+                    onClick={() => sendFriendRequest(user.id)}
+                    disabled={sendRequestMutation.isPending}
+                    title="Follow back to become friends"
+                  >
+                    {sendRequestMutation.isPending
+                      ? "Following..."
+                      : "Follow Back"}
+                  </button>
+                )}
+                {user.friendshipStatus === "blocked_by_you" && (
+                  <span className="friends-status-badge friends-status-badge--blocked">
+                    Blocked
+                  </span>
+                )}
+                {user.friendshipStatus === "blocked_by_them" && (
+                  <span className="friends-status-badge friends-status-badge--blocked">
+                    Unavailable
                   </span>
                 )}
               </div>
@@ -323,41 +319,39 @@ export default function FriendsPage() {
         )}
       </div>
 
-      {/* Pending Requests */}
-      {pendingRequests.length > 0 && (
+      {/* Followers (people who follow you but you don't follow back) */}
+      {followers.length > 0 && (
         <div className="friends-pending-section">
           <h2 className="friends-pending-title">
-            Pending Requests ({pendingRequests.length})
+            Followers ({followers.length})
           </h2>
-          {pendingRequests.map((request) => (
+          <p className="friends-followers-subtitle">
+            Follow back to become friends
+          </p>
+          {followers.map((follower) => (
             <div
-              key={request.friendshipId}
+              key={follower.id}
               className="friends-pending-item"
             >
               <div>
-                <strong className="friends-user-name">{getUserDisplayName(request)}</strong>
+                <strong className="friends-user-name">{getUserDisplayName(follower)}</strong>
                 <p className="friends-user-score">
-                  Score: {request.score}
+                  Score: {follower.score}
                 </p>
               </div>
               <div className="friends-pending-actions">
                 <button
                   className="friends-accept-button"
-                  onClick={() =>
-                    request.friendshipId && acceptRequest(request.friendshipId)
-                  }
-                  disabled={acceptRequestMutation.isPending}
+                  onClick={() => followBack(follower.id)}
+                  disabled={followBackMutation.isPending}
                 >
-                  Accept
+                  {followBackMutation.isPending ? "Following..." : "Follow Back"}
                 </button>
                 <button
-                  className="friends-reject-button"
-                  onClick={() =>
-                    request.friendshipId && rejectRequest(request.friendshipId)
-                  }
-                  disabled={rejectRequestMutation.isPending}
+                  className="friends-view-button"
+                  onClick={() => navigate(`/profile/friends/${follower.id}`)}
                 >
-                  Reject
+                  View Profile
                 </button>
               </div>
             </div>

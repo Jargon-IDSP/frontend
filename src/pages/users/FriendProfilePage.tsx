@@ -359,14 +359,14 @@ export default function FriendProfilePage() {
             </div>
             <h2 className="friend-profile-name">{getUserDisplayName()}</h2>
             <p className="friend-profile-not-friends-message">
-              You are not friends yet
+              You are not following yet
             </p>
             <button
               className="friend-profile-friendship-button friend-profile-friendship-button--add"
               onClick={handleFriendshipAction}
               disabled={sendRequestMutation.isPending}
             >
-              {sendRequestMutation.isPending ? "..." : "Add as Friend"}
+              {sendRequestMutation.isPending ? "..." : "Follow"}
             </button>
           </div>
         </div>
