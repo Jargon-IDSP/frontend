@@ -1,6 +1,6 @@
-@use 'sass:color';
-@use '../variables' as *;
-@use '../mixins' as *;
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
 
 // Button Component Styles
 .button {
@@ -78,7 +78,6 @@
   color: $color-neutral;
   text-decoration: none;
 
-  
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -90,7 +89,6 @@
   background-color: $color-primary;
   color: white;
   border-color: $color-primary;
-  
 }
 
 .choose-file-button {
@@ -105,7 +103,6 @@
   gap: 10px;
   flex-shrink: 0;
   border-radius: 18px;
-  
 }
 
 .upload-option-button {
@@ -154,5 +151,4 @@
   cursor: pointer;
   transition: all 0.2s ease;
   padding-left: 0;
-
 }

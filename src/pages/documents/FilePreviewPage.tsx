@@ -6,6 +6,7 @@ import fileIcon from "../../assets/icons/fileIcon.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import { BACKEND_URL } from "../../lib/api";
 import { CategorySelectModal } from "../../components/CategorySelectModal";
+import DocumentDrawer from "@/pages/drawers/DocumentDrawer"; // Add this import
 import type {
   FileInfo,
   UploadRequest,
@@ -19,6 +20,7 @@ export default function FilePreviewPage() {
   const { getToken } = useAuth();
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Add this state
   const [selectedCategory, setSelectedCategory] = useState<{
     id: number;
     name: string;
@@ -104,7 +106,11 @@ export default function FilePreviewPage() {
   };
 
   const handleBack = () => {
-    navigate(-1);
+    setIsDrawerOpen(true); // Open drawer instead of navigate(-1)
+  };
+
+  const handleBackButton = () => {
+    navigate("/learning");
   };
 
   const CATEGORY_MAP: Record<number, string> = {
@@ -158,11 +164,13 @@ export default function FilePreviewPage() {
         filename={fileInfo?.fileName || ""}
       />
 
+      <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+
       <div className="container">
-        <button onClick={handleBack} className="back-button">
+        <button onClick={handleBackButton} className="back-button">
           <h1 className="page-title">
             <img src={goBackIcon} alt="go back" />
-            Upload your document
+            Courses
           </h1>
         </button>
 
@@ -211,8 +219,8 @@ export default function FilePreviewPage() {
                     disabled={uploadMutation.isPending}
                   />
                   <span className="checkbox-text">
-                    I have legal rights to upload this file and it complies
-                    with the Acceptable Use Policy.
+                    I have legal rights to upload this file and it complies with
+                    the Acceptable Use Policy.
                   </span>
                 </label>
               </div>

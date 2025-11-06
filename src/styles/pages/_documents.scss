@@ -1,5 +1,5 @@
-@use '../variables' as *;
-@use '../mixins' as *;
+@use "../variables" as *;
+@use "../mixins" as *;
 
 // Documents Page - Apply consistent layout
 .documents-page {
@@ -247,12 +247,12 @@ button.back-button {
     background-color: white;
     border: 2px solid $color-neutral;
     border-radius: 3px;
-    
+
     &:checked {
       background-color: white;
       border-color: $color-neutral;
     }
-    
+
     &:focus {
       outline: 2px solid $color-primary;
       outline-offset: 2px;

@@ -28,6 +28,7 @@ export default function DocumentDrawer({
     input.onchange = (e) => {
       const target = e.target as HTMLInputElement;
       if (target.files && target.files[0]) {
+        onOpenChange(false); // Close the drawer
         navigate("/documents/preview", {
           state: {
             fileName: target.files[0].name,
