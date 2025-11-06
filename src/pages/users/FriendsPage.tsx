@@ -3,22 +3,15 @@ import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
-import type { Friend, PendingRequest, SearchResult } from "../../types/friend";
+import type {
+  Friend,
+  SearchResult,
+  FriendsResponse,
+  SearchResponse
+} from "../../types/friend";
 import "../../styles/pages/_friends.scss";
 import deleteIcon from "../../assets/icons/deleteIcon.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
-
-interface FriendsResponse {
-  data: Friend[];
-}
-
-interface PendingRequestsResponse {
-  data: PendingRequest[];
-}
-
-interface SearchResponse {
-  data: SearchResult[];
-}
 
 export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -209,7 +202,7 @@ export default function FriendsPage() {
     removeFriendMutation.mutate(friendshipId);
   };
 
-  const getUserDisplayName = (user: Friend | PendingRequest | SearchResult) => {
+  const getUserDisplayName = (user: Friend | SearchResult) => {
     if (user.username) return user.username;
     if (user.firstName || user.lastName) {
       return `${user.firstName || ""} ${user.lastName || ""}`.trim();
