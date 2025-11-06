@@ -68,10 +68,7 @@ export default function DocumentDrawer({
           {/* Horizontal divider */}
           <hr className="my-2 border-gray-200 mb-4" />
           <DrawerClose asChild>
-            <Button
-              variant="outline"
-              className="border-red-500 text-red-500 hover:bg-red-50"
-            >
+            <Button variant="outline" className="text-red-500 hover:bg-red-50">
               Cancel
             </Button>
           </DrawerClose>

@@ -6,7 +6,7 @@ import fileIcon from "../../assets/icons/fileIcon.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import { BACKEND_URL } from "../../lib/api";
 import { CategorySelectModal } from "../../components/CategorySelectModal";
-import DocumentDrawer from "@/pages/drawers/DocumentDrawer"; // Add this import
+import DocumentDrawer from "@/pages/drawers/DocumentDrawer";
 import type {
   FileInfo,
   UploadRequest,
@@ -20,7 +20,7 @@ export default function FilePreviewPage() {
   const { getToken } = useAuth();
   const [isAgreementChecked, setIsAgreementChecked] = useState(false);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Add this state
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<{
     id: number;
     name: string;
@@ -106,7 +106,7 @@ export default function FilePreviewPage() {
   };
 
   const handleBack = () => {
-    setIsDrawerOpen(true); // Open drawer instead of navigate(-1)
+    setIsDrawerOpen(true);
   };
 
   const handleBackButton = () => {

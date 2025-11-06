@@ -1,47 +1,74 @@
-import React from 'react';
-import type { DocumentNavProps } from '../types/documentNav';
-import translateFileIcon from '../assets/icons/translateFileIcon.svg';
-import fileIconB from '../assets/icons/fileIconB.svg';
-import lessonIcon from '../assets/icons/lessonIcon.svg';
-import lessonIconB from '../assets/icons/lessonIconB.svg';
-import goBackIcon from '../assets/icons/goBackIcon.svg';
+import React from "react";
+import type { DocumentNavProps } from "../types/documentNav";
+import translateFileIcon from "../assets/icons/translateFileIcon.svg";
+import fileIconB from "../assets/icons/fileIconB.svg";
+import lessonIcon from "../assets/icons/lessonIcon.svg";
+import lessonIconB from "../assets/icons/lessonIconB.svg";
+import goBackIcon from "../assets/icons/goBackIcon.svg";
 
 const DocumentNav: React.FC<DocumentNavProps> = ({
   activeTab,
   title,
-  subtitle = '...',
+  subtitle = "...",
   onLessonClick,
   onDocumentClick,
-  onBackClick
+  onBackClick,
+  onSubtitleClick,
 }) => {
   const isLessonDisabled = !onLessonClick;
 
-return (
+  return (
     <>
       <div className="top">
-        <img src={goBackIcon} alt="back button" onClick={onBackClick} style={{ cursor: onBackClick ? 'pointer' : 'default' }} />
+        <img
+          src={goBackIcon}
+          alt="back button"
+          onClick={onBackClick}
+          style={{ cursor: onBackClick ? "pointer" : "default" }}
+        />
         <h1>{title}</h1>
-        <h2>{subtitle}</h2>
+        <button
+          className="subtitle-button"
+          onClick={onSubtitleClick}
+          disabled={!onSubtitleClick}
+        >
+          {subtitle}
+        </button>
       </div>
+
       <div className="switch-view">
         <button
-          className={`demoLesson ${activeTab === 'lesson' ? 'active' : ''} ${isLessonDisabled ? 'disabled' : ''}`}
+          className={`demoLesson ${activeTab === "lesson" ? "active" : ""} ${
+            isLessonDisabled ? "disabled" : ""
+          }`}
           onClick={onLessonClick}
           disabled={isLessonDisabled}
-          title={isLessonDisabled ? 'Processing... please wait' : 'View flashcards and quizzes'}
+          title={
+            isLessonDisabled
+              ? "Processing... please wait"
+              : "View flashcards and quizzes"
+          }
         >
-          <img src={activeTab === 'lesson' ? lessonIcon : lessonIconB} alt="lesson icon" />
+          <img
+            src={activeTab === "lesson" ? lessonIcon : lessonIconB}
+            alt="lesson icon"
+          />
           Lesson
         </button>
+
         <button
-          className={`demoDocs ${activeTab === 'document' ? 'active' : ''}`}
+          className={`demoDocs ${activeTab === "document" ? "active" : ""}`}
           onClick={onDocumentClick}
         >
-          <img src={activeTab === 'document' ? fileIconB : translateFileIcon } alt="document icon" />
+          <img
+            src={activeTab === "document" ? fileIconB : translateFileIcon}
+            alt="document icon"
+          />
           Document
         </button>
       </div>
     </>
   );
 };
+
 export default DocumentNav;

@@ -1,17 +1,26 @@
+import { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useDocumentTranslation } from "../../hooks/useDocumentTranslation";
 import { useTranslatedText } from "../../hooks/useTranslatedText";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
 import DocumentNav from "../../components/DocumentNav";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
-
+import DocOptionsDrawer from "../drawers/DocOptionsDrawer";
 
 export default function FullTranslationView() {
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+  const handleOptions = () => {
+    setIsDrawerOpen(true);
+  };
+
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
 
   const { data, isLoading, error } = useDocumentTranslation(id);
-  const { data: statusData } = useDocumentProcessingStatus({ documentId: id || null });
+  const { data: statusData } = useDocumentProcessingStatus({
+    documentId: id || null,
+  });
   const translatedText = useTranslatedText(data?.translation);
 
   const translation = data?.translation;
@@ -20,8 +29,10 @@ export default function FullTranslationView() {
   const hasFlashcards = statusData?.status?.hasFlashcards || false;
   const hasQuiz = statusData?.status?.hasQuiz || false;
   const hasQuickTranslation = statusData?.status?.quickTranslation || false;
-  const hasQuickFlashcards = hasQuickTranslation && (statusData?.status?.flashcardCount || 0) > 0;
-  const hasQuickQuestions = hasQuickTranslation && (statusData?.status?.questionCount || 0) > 0;
+  const hasQuickFlashcards =
+    hasQuickTranslation && (statusData?.status?.flashcardCount || 0) > 0;
+  const hasQuickQuestions =
+    hasQuickTranslation && (statusData?.status?.questionCount || 0) > 0;
 
   if (isLoading) {
     return (
@@ -69,7 +80,7 @@ export default function FullTranslationView() {
           </p>
           <div className="error-buttons">
             <button onClick={() => navigate(-1)}>
-              <img src={goBackIcon} alt="Back Button" />    
+              <img src={goBackIcon} alt="Back Button" />
             </button>
             <button onClick={() => window.location.reload()}>
               Refresh Page
@@ -81,7 +92,8 @@ export default function FullTranslationView() {
   }
 
   const handleLessonClick = () => {
-    const canNavigate = (hasFlashcards && hasQuiz) || (hasQuickFlashcards && hasQuickQuestions);
+    const canNavigate =
+      (hasFlashcards && hasQuiz) || (hasQuickFlashcards && hasQuickQuestions);
     if (canNavigate) {
       navigate(`/learning/documents/${id}/study`);
     }
@@ -91,48 +103,59 @@ export default function FullTranslationView() {
     navigate(-1);
   };
 
-  const documentTitle = translation?.document?.filename || "Document Translation";
+  const documentTitle =
+    translation?.document?.filename || "Document Translation";
 
   const isProcessingComplete = hasFlashcards && hasQuiz;
-  const canStudy = isProcessingComplete || (hasQuickFlashcards && hasQuickQuestions);
+  const canStudy =
+    isProcessingComplete || (hasQuickFlashcards && hasQuickQuestions);
 
   return (
-        <div className="fullTranslationOverview">
+    <>
+      <DocOptionsDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+
+      <div className="fullTranslationOverview">
         <div className="container demo">
-        <DocumentNav
-          activeTab="document"
-          title={documentTitle}
-          onLessonClick={canStudy ? handleLessonClick : undefined}
-          onBackClick={handleBackClick}
-        />
+          <DocumentNav
+            activeTab="document"
+            title={documentTitle}
+            onLessonClick={canStudy ? handleLessonClick : undefined}
+            onBackClick={handleBackClick}
+            onSubtitleClick={handleOptions}
+          />
 
-      <div className="content-container">
-        <div className="translation-content">
-          <div className="content-text">{translatedText}</div>
-        </div>
+          <div className="content-container">
+            <div className="translation-content">
+              <div className="content-text">{translatedText}</div>
+            </div>
 
-        {!isProcessingComplete && (
-          <div className="processing-notice">
-            {!canStudy && <div className="spinner" />}
-            {canStudy ? (
-              <>
-                <p>Lessons are ready! Click the Lesson tab to start studying.</p>
-                <p className="processing-subtitle">
-                  Full multilingual support is being finalized in the background.
-                </p>
-              </>
-            ) : (
-              <>
-                <p>Generating flashcards and quiz questions...</p>
-                <p className="processing-subtitle">
-                  The lesson tab will be available once processing is complete.
-                </p>
-              </>
+            {!isProcessingComplete && (
+              <div className="processing-notice">
+                {!canStudy && <div className="spinner" />}
+                {canStudy ? (
+                  <>
+                    <p>
+                      Lessons are ready! Click the Lesson tab to start studying.
+                    </p>
+                    <p className="processing-subtitle">
+                      Full multilingual support is being finalized in the
+                      background.
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p>Generating flashcards and quiz questions...</p>
+                    <p className="processing-subtitle">
+                      The lesson tab will be available once processing is
+                      complete.
+                    </p>
+                  </>
+                )}
+              </div>
             )}
           </div>
-        )}
+        </div>
       </div>
-    </div>
-    </div>
+    </>
   );
 }
