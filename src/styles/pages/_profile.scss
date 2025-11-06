@@ -161,6 +161,30 @@
     flex-wrap: wrap;
   }
 
+  // Friends Button
+  &-friends-button {
+    padding: $spacing-md $spacing-xl;
+    background-color: $color-quaternary-dark;
+    color: white;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: $font-size-body;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    width: 100%;
+    max-width: 400px;
+
+    &:hover {
+      background-color: $color-quaternary;
+    }
+
+    &:focus {
+      outline: 2px solid $color-quaternary-dark;
+      outline-offset: 2px;
+    }
+  }
+
   // Profile Card
   &-card {
     display: flex;
