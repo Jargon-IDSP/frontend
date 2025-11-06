@@ -6,6 +6,7 @@ import ChatPage from "../mounting/ChatPage";
 import ProfilePage from "../pages/users/ProfilePage";
 import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
+import FriendProfilePage from "../pages/users/FriendProfilePage";
 import ManageProfilePage from "../pages/users/ManageProfilePage";
 import LeaderboardPage from "../mounting/LeaderboardPage";
 import Levels from "../pages/learning/Levels";
@@ -60,6 +61,10 @@ export const routes: RouteObject[] = [
   {
     path: "/profile/friends",
     element: protect(<FriendsPage />),
+  },
+  {
+    path: "/profile/friends/:friendId",
+    element: protect(<FriendProfilePage />),
   },
   {
     path: "/profile/manage",

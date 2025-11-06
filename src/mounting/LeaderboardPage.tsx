@@ -132,14 +132,15 @@ const LeaderboardPage: React.FC = () => {
 
             <div className="leaderboard-list">
               {users.slice(3).map((user, index) => {
-                const actualRank = index + 4; 
+                const actualRank = index + 4;
                 const isCurrentUser = user.id === profile?.id;
                 return (
                   <div
                     key={user.id}
                     className={`leaderboard-item leaderboard-item--regular ${
                       isCurrentUser ? "leaderboard-item--current-user" : ""
-                    }`}
+                    } leaderboard-item--clickable`}
+                    onClick={() => navigate(`/profile/friends/${user.id}`)}
                   >
                     <span className="leaderboard-item-content leaderboard-item-content--regular">
                       <span className="leaderboard-item-rank">#{actualRank}</span>

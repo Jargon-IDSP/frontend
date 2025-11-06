@@ -1,9 +1,11 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import type { PodiumProps } from "../types/podium";
 import rockyYellowLogo from "/rockyYellow.svg";
 import { getUserDisplayName } from "../utils/userHelpers";
 
 const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
+  const navigate = useNavigate();
   const topThree = users.slice(0, 3);
 
   const podiumUsers = [
@@ -29,7 +31,11 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
         }
 
         return (
-          <div key={user.id} className={`podium-item rank-${rank}`}>
+          <div
+            key={user.id}
+            className={`podium-item rank-${rank} podium-item--clickable`}
+            onClick={() => navigate(`/profile/friends/${user.id}`)}
+          >
             <div className="rocky-avatar">
               <img
                 src={rockyYellowLogo}

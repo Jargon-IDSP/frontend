@@ -1,0 +1,388 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+@use 'sass:color';
+
+.friend-profile-page {
+  padding: $spacing-md;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-bottom: 100px; // Space for bottom nav
+}
+
+// Header
+.friend-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.friend-profile-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.friend-profile-friendship-button {
+  padding: $spacing-sm $spacing-lg;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--add {
+    background-color: $color-success;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($color-success, $lightness: -10%);
+      transform: translateY(-1px);
+    }
+  }
+
+  &--remove {
+    background-color: $color-error;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($color-error, $lightness: -10%);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Loading & Error States
+.friend-profile-loading,
+.friend-profile-error {
+  text-align: center;
+  padding: $spacing-xl;
+  font-size: $font-size-body;
+  color: $color-neutral;
+}
+
+.friend-profile-error {
+  color: $color-error;
+}
+
+// Not Friends Yet State
+.friend-profile-not-friends {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: $spacing-xl;
+}
+
+.friend-profile-not-friends-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.friend-profile-not-friends-message {
+  font-size: $font-size-h2;
+  color: $color-neutral;
+  margin: $spacing-lg 0 $spacing-xl 0;
+  font-weight: $font-weight-medium;
+}
+
+// Profile Card
+.friend-profile-card {
+  background: linear-gradient(180deg, #E8E8E8 0%, #F5F5F5 100%);
+  border-radius: $border-radius-lg;
+  padding: $spacing-xl;
+  text-align: center;
+  margin-bottom: $spacing-lg;
+  position: relative;
+}
+
+.friend-profile-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto $spacing-md;
+  background-color: $color-secondary;
+  border-radius: $border-radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+  }
+}
+
+.friend-profile-name {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0 0 $spacing-xs 0;
+}
+
+.friend-profile-industry {
+  font-size: $font-size-body;
+  color: $color-neutral;
+  margin: 0 0 $spacing-lg 0;
+}
+
+// Stats
+.friend-profile-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: $spacing-md;
+  margin-top: $spacing-lg;
+}
+
+.friend-profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.friend-profile-stat-value {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+}
+
+.friend-profile-stat-label {
+  font-size: $font-size-label;
+  color: $color-neutral;
+  margin-top: $spacing-xs;
+}
+
+// Sections
+.friend-profile-section {
+  margin-bottom: $spacing-xl;
+}
+
+.friend-profile-section-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin-bottom: $spacing-md;
+}
+
+// Lessons
+.friend-profile-no-lessons {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-neutral;
+  font-size: $font-size-body;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+}
+
+.friend-profile-lessons {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.friend-profile-lesson-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+}
+
+.friend-profile-lesson-icon {
+  flex-shrink: 0;
+  width: 50px;
+  height: 50px;
+}
+
+.friend-profile-lesson-placeholder {
+  width: 100%;
+  height: 100%;
+  background-color: $color-quaternary-light;
+  border: 2px solid $color-quaternary;
+  border-radius: $border-radius-sm;
+}
+
+.friend-profile-lesson-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friend-profile-lesson-title {
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0 0 $spacing-xs 0;
+  line-height: 1.3;
+}
+
+.friend-profile-lesson-topic {
+  font-size: $font-size-label;
+  color: $color-neutral;
+  margin: 0 0 $spacing-xs 0;
+}
+
+.friend-profile-lesson-questions {
+  font-size: $font-size-label;
+  color: $color-neutral;
+  margin: 0;
+  font-style: italic;
+}
+
+.friend-profile-lesson-actions {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+}
+
+.friend-profile-lesson-share,
+.friend-profile-lesson-edit,
+.friend-profile-lesson-view {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-sm;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+}
+
+.friend-profile-lesson-view {
+  background-color: $color-secondary;
+  color: $color-quaternary-dark;
+  width: 36px;
+  height: 36px;
+  font-size: 18px;
+
+  &:hover {
+    background-color: $color-quaternary;
+    transform: scale(1.05);
+  }
+}
+
+.friend-profile-view-more {
+  width: 100%;
+  padding: $spacing-md;
+  background: none;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  color: $color-quaternary-dark;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-sm;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  span {
+    font-size: $font-size-label;
+  }
+}
+
+// Overview
+.friend-profile-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+}
+
+.friend-profile-overview-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-lg;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.friend-profile-overview-icon {
+  width: 60px;
+  height: 60px;
+  background-color: $color-quaternary-light;
+  border-radius: $border-radius-md;
+  margin-bottom: $spacing-sm;
+}
+
+.friend-profile-overview-label {
+  font-size: $font-size-label;
+  color: $color-quaternary-dark;
+  font-weight: $font-weight-medium;
+  margin: 0;
+}
+
+// Social / Connect With Me
+.friend-profile-social {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.friend-profile-social-button {
+  width: 50px;
+  height: 50px;
+  background-color: $color-quaternary-light;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-full;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary;
+    transform: scale(1.05);
+  }
+}
+
+.friend-profile-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: $spacing-md;
+}
+
+.friend-profile-action-link {
+  background: none;
+  border: none;
+  color: $color-neutral;
+  font-size: $font-size-label;
+  cursor: pointer;
+  padding: $spacing-sm;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-quaternary-dark;
+    text-decoration: underline;
+  }
+}

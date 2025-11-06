@@ -380,7 +380,10 @@ export default function FriendsPage() {
               key={friend.friendshipId}
               className="friends-list-item"
             >
-              <div>
+              <div
+                className="friends-list-item-clickable"
+                onClick={() => navigate(`/profile/friends/${friend.id}`)}
+              >
                 <strong className="friends-user-name">{getUserDisplayName(friend)}</strong>
                 <p className="friends-user-score">
                   Score: {friend.score}
@@ -388,9 +391,10 @@ export default function FriendsPage() {
               </div>
               <button
                 className="friends-remove-button"
-                onClick={() =>
-                  friend.friendshipId && removeFriend(friend.friendshipId)
-                }
+                onClick={(e) => {
+                  e.stopPropagation();
+                  friend.friendshipId && removeFriend(friend.friendshipId);
+                }}
                 disabled={removeFriendMutation.isPending}
               >
                 <img src={deleteIcon} alt="Delete Icon" className="friends-remove-button-icon" />
