@@ -1,17 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "@clerk/clerk-react";
 import rockyLogo from "/rocky.svg";
+import rockyWhiteLogo from '/rockyWhite.svg';
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
+import { useUnreadCount } from "../hooks/useNotifications";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
+import notificationIcon from '../assets/icons/notification.svg';
+import emptyBellIcon from '../assets/icons/emptyBell.svg';
 
 type LeaderboardType = "general" | "friends";
 
 const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate();
+  const { signOut } = useAuth();
   const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>("general");
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
   const {
     data: users = [],
     isLoading: loading,
@@ -19,9 +27,54 @@ const LeaderboardPage: React.FC = () => {
     refetch,
   } = useLeaderboard(leaderboardType);
   const { data: profile, isLoading: profileLoading } = useProfile();
+  const { data: unreadCount } = useUnreadCount();
 
   const userScore = profile?.score ?? 0;
   const hasNoPoints = userScore === 0;
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
+
+  const handleSettingsClick = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleProfileClick = () => {
+    setIsDropdownOpen(false);
+    navigate("/profile");
+  };
+
+  const handleLanguagesClick = () => {
+    setIsDropdownOpen(false);
+    navigate("/onboarding/language");
+  };
+
+  const handleIndustryClick = () => {
+    setIsDropdownOpen(false);
+    navigate("/onboarding/industry");
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      setIsDropdownOpen(false);
+      await signOut({ redirectUrl: "/" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Force navigation even if signOut fails
+      window.location.href = "/";
+    }
+  };
 
   const hasNoFriends = 
     leaderboardType === "friends" && 
@@ -86,7 +139,65 @@ const LeaderboardPage: React.FC = () => {
   return (
     <div className="container">
       <div className="leaderboard-page">
-        <h1 className="leaderboard-title">Leaderboard</h1>
+        <div className="leaderboard-header">
+          <h1 className="leaderboard-title">Leaderboard</h1>
+          <div className="leaderboard-header-actions">
+            <button
+              className="leaderboard-notifications-icon"
+              onClick={() => navigate("/notifications")}
+              aria-label="Notifications"
+            >
+              <img src={unreadCount && unreadCount > 0 ? notificationIcon : emptyBellIcon} alt="Notifications" />
+            </button>
+            <div className="leaderboard-settings-container" ref={dropdownRef}>
+              <button
+                className="leaderboard-settings-icon"
+                onClick={handleSettingsClick}
+                aria-label="Settings"
+              >
+                <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+              </button>
+
+              {isDropdownOpen && (
+                <div className="leaderboard-settings-dropdown">
+                  <button
+                    className="leaderboard-settings-item"
+                    onClick={handleProfileClick}
+                  >
+                    Profile
+                  </button>
+                  <button
+                    className="leaderboard-settings-item"
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      navigate("/profile/avatar");
+                    }}
+                  >
+                    Avatar
+                  </button>
+                  <button
+                    className="leaderboard-settings-item"
+                    onClick={handleLanguagesClick}
+                  >
+                    Languages
+                  </button>
+                  <button
+                    className="leaderboard-settings-item"
+                    onClick={handleIndustryClick}
+                  >
+                    Industry
+                  </button>
+                  <button
+                    className="leaderboard-settings-item"
+                    onClick={handleLogoutClick}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
 
         <div className="leaderboard-tabs">
           <button

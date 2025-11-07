@@ -26,6 +26,7 @@
 @use 'pages/learnJargon';
 @use 'pages/categories';
 @use 'pages/categoryStudy';
+@use 'pages/notifications';
 
 // Import components
 @use 'components/buttons';
@@ -42,3 +43,5 @@
 @use 'components/quizCompletion';
 @use 'components/onboardingForm';
 @use 'components/quizShareModal';
+@use 'components/notificationsList';
+@use 'components/toast';

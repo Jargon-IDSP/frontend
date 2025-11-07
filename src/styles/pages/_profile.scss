@@ -22,6 +22,50 @@
   margin: 0;
 }
 
+// Header actions (notifications + settings)
+.profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+// Notifications icon
+.profile-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-normal;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.profile-notifications-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background: $color-secondary;
+  color: white;
+  font-size: 10px;
+  font-weight: $font-weight-medium;
+  padding: 2px 6px;
+  border-radius: $border-radius-full;
+  min-width: 18px;
+  text-align: center;
+}
+
 // Settings container with dropdown
 .profile-settings-container {
   position: relative;
@@ -31,17 +75,19 @@
   background: none;
   border: none;
   cursor: pointer;
-  padding: $spacing-sm;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
   color: $color-neutral;
-  transition: color $transition-normal;
-  border-radius: $border-radius-md;
+  transition: opacity $transition-normal;
+  background-color: $color-secondary;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
 
   &:hover {
-    color: $color-quaternary-dark;
-    background-color: $color-quaternary-light;
+    opacity: 0.7;
   }
 
   &:focus {
@@ -52,6 +98,11 @@
   svg {
     width: 24px;
     height: 24px;
+  }
+
+  .rocky-logo {
+    width: 32px;
+    height: 32px;
   }
 }
 

@@ -8,6 +8,7 @@ import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import FriendProfilePage from "../pages/users/FriendProfilePage";
 import ManageProfilePage from "../pages/users/ManageProfilePage";
+import NotificationsPage from "../pages/notifications/NotificationsPage";
 import LeaderboardPage from "../mounting/LeaderboardPage";
 import Levels from "../pages/learning/Levels";
 import ExistingSelect from "../pages/learning/ExistingSelect";
@@ -74,6 +75,10 @@ export const routes: RouteObject[] = [
   {
     path: "/profile/manage",
     element: protect(<ManageProfilePage />),
+  },
+  {
+    path: "/notifications",
+    element: protect(<NotificationsPage />),
   },
 
   // Documents

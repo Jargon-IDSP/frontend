@@ -183,8 +183,9 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
   if (questions.length === 0) {
     return (
-      <div className="container">
-        <div className="quizContainer">
+      <div className="quiz-page-wrapper">
+        <div className="container">
+          <div className="quizContainer">
           <button className="back-to-quiz-button" onClick={onBack}>
             <img src={goBackIcon} alt="Back" />
           </button>
@@ -195,13 +196,15 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             </p>
           </div>
         </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="container">
-      <div className="quizContainer">
+    <div className="quiz-page-wrapper">
+      <div className="container">
+        <div className="quizContainer">
         <button
           className="back-to-quiz-button"
           onClick={onBack}
@@ -311,6 +314,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         isLoading={chatMutation.isPending}
       />
       </div>
+    </div>
     </div>
   );
 }

@@ -1,9 +1,10 @@
 import { BrowserRouter as Router, useRoutes, useLocation } from "react-router-dom";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { SignedIn, useUser } from "@clerk/clerk-react";
+import { useUser } from "@clerk/clerk-react";
 import { routes } from "./lib/routes";
 import NavBar from "./components/NavBar";
 import { useProfile } from "./hooks/useProfile";
+import { NotificationProvider } from "./contexts/NotificationContext";
 
 // Create a client
 const queryClient = new QueryClient({
@@ -55,12 +56,12 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
-        <main>
-          <AppRoutes />
-        </main>
-        <SignedIn>
+        <NotificationProvider>
+          <main>
+            <AppRoutes />
+          </main>
           <ConditionalNavBar />
-        </SignedIn>
+        </NotificationProvider>
       </Router>
     </QueryClientProvider>
   );

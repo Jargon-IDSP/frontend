@@ -6,6 +6,7 @@ import { BACKEND_URL } from "../lib/api";
 import type { UploadDocumentFormProps } from "@/types/components/forms";
 import type { UploadData, SignResponse, SaveResponse } from "@/types/api/upload";
 import { CategorySelectModal } from "./CategorySelectModal";
+import { useNotificationContext } from "../contexts/NotificationContext";
 import "../styles/components/_uploadDocumentForm.scss";
 
 const CATEGORY_MAP: Record<number, string> = {
@@ -20,6 +21,7 @@ const CATEGORY_MAP: Record<number, string> = {
 export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const { showErrorToast } = useNotificationContext();
   const [file, setFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
@@ -91,6 +93,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       setUploadedData(data);
       setShowCategoryModal(true);
     },
+    onError: (error) => {
+      console.error("Upload error:", error);
+      showErrorToast("Creating study materials failed, please upload again");
+    },
   });
 
   const finalizeDocumentMutation = useMutation({
@@ -135,6 +141,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         },
       });
     },
+    onError: (error) => {
+      console.error("Finalize error:", error);
+      showErrorToast("Creating study materials failed, please upload again");
+    },
   });
 
   const handleCategorySelect = async (categoryId: number) => {
@@ -146,26 +156,44 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
     const documentId = uploadedData.documentId;
 
-    // Call finalize endpoint immediately
-    fetch(`${BACKEND_URL}/documents/${documentId}/finalize`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ categoryId }),
-    }).catch(err => console.error("Finalize error:", err));
+    try {
+      // Wait for finalize to complete before navigating
+      const response = await fetch(`${BACKEND_URL}/documents/${documentId}/finalize`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ categoryId }),
+      });
 
-    // Navigate immediately
-    setFile(null);
-    setUploadedData(null);
-    setShowCategoryModal(false);
-    onSuccess();
+      if (!response.ok) {
+        throw new Error(`Finalize failed: ${response.statusText}`);
+      }
 
-    const categoryName = CATEGORY_MAP[categoryId] || "general";
-    navigate(`/learning/custom/categories/${categoryName}`, {
-      state: { documentId, justUploaded: true },
-    });
+      // Navigate only after successful finalization
+      setFile(null);
+      setUploadedData(null);
+      setShowCategoryModal(false);
+      onSuccess();
+
+      const categoryName = CATEGORY_MAP[categoryId] || "general";
+      navigate(`/learning/custom/categories/${categoryName}`, {
+        state: { documentId, justUploaded: true },
+      });
+    } catch (err) {
+      console.error("Finalize error:", err);
+      // Still navigate even if finalize fails, but log the error
+      setFile(null);
+      setUploadedData(null);
+      setShowCategoryModal(false);
+      onSuccess();
+
+      const categoryName = CATEGORY_MAP[categoryId] || "general";
+      navigate(`/learning/custom/categories/${categoryName}`, {
+        state: { documentId, justUploaded: true },
+      });
+    }
   };
 
   const handleCategoryModalClose = () => {

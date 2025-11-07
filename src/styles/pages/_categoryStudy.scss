@@ -2,14 +2,31 @@
 
 .category-study {
   padding: 2rem;
-  max-width: 800px;
-  margin: 0 auto;
 
-  &__back-button {
-    margin-bottom: 1rem;
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
   }
 
+  &__back-icon {
+    width: 32px;
+    height: 32px;
+    cursor: pointer;
+    transition: opacity 0.2s;
 
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+
+  &__header-title {
+    margin: 0;
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+  }
 
   &__section-title {
     margin-top: 2rem;
@@ -70,6 +87,10 @@
     padding: 0.25rem 0.5rem;
     border-radius: 4px;
     font-weight: bold;
+
+    &--ready {
+      background-color: $color-success;
+    }
   }
 
   &__steps {
