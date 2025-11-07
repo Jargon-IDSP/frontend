@@ -1,15 +1,12 @@
 import { useAuth } from "@clerk/clerk-react";
-import { useNavigate } from "react-router-dom";
 import { useUserPreferences } from "../hooks/useUserPreferences";
 import { useRandomWord } from "../hooks/useRandomWord";
 import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
 import LoadingBar from "./LoadingBar";
-import type { WordOfTheDayProps } from "../types/wordOfTheDay";
 
-export default function WordOfTheDay({ navigateTo = "/learning" }: WordOfTheDayProps) {
+export default function WordOfTheDay() {
   const { isSignedIn, isLoaded } = useAuth();
-  const navigate = useNavigate();
   const { language: userLanguage, loading: preferencesLoading } =
     useUserPreferences();
 
@@ -25,6 +22,15 @@ export default function WordOfTheDay({ navigateTo = "/learning" }: WordOfTheDayP
 
   // Only show loading when query is actually enabled and running
   const shouldShowLoading = isLoaded && isSignedIn && !preferencesLoading && !!userLanguage && isLoading;
+
+  const handleCardClick = () => {
+    // Clear the cached word for this language
+    if (userLanguage) {
+      localStorage.removeItem(`wordOfTheDay_${userLanguage}`);
+    }
+    // Refetch to get a new word
+    refetch();
+  };
 
   // Loading state - auth or preferences loading
   if (!isLoaded || preferencesLoading) {
@@ -142,7 +148,7 @@ export default function WordOfTheDay({ navigateTo = "/learning" }: WordOfTheDayP
 
   // Success - show the word
   return (
-    <div className="word-of-the-day-card" onClick={() => navigate(navigateTo)} style={{ cursor: "pointer" }}>
+    <div className="word-of-the-day-card" onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <img
         src={todayTermCard}
         alt="Random Trade Term"
