@@ -1,15 +1,17 @@
 import { useAuth } from "@clerk/clerk-react";
-import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import { useUserPreferences } from "../hooks/useUserPreferences";
 import { useRandomWord } from "../hooks/useRandomWord";
 import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
+import LoadingBar from "./LoadingBar";
+import type { WordOfTheDayProps } from "../types/wordOfTheDay";
 
-export default function WordOfTheDay() {
+export default function WordOfTheDay({ navigateTo = "/learning" }: WordOfTheDayProps) {
   const { isSignedIn, isLoaded } = useAuth();
+  const navigate = useNavigate();
   const { language: userLanguage, loading: preferencesLoading } =
     useUserPreferences();
-  const [loadingProgress, setLoadingProgress] = useState(0);
 
   const {
     data: wordData,
@@ -21,20 +23,8 @@ export default function WordOfTheDay() {
     isLoaded && isSignedIn && !preferencesLoading && !!userLanguage
   );
 
-  // Loading progress animation
-  useEffect(() => {
-    if (isLoading) {
-      setLoadingProgress(0);
-      const interval = setInterval(() => {
-        setLoadingProgress((prev) => (prev >= 90 ? prev : prev + 15));
-      }, 150);
-      return () => clearInterval(interval);
-    } else if (wordData || error) {
-      setLoadingProgress(100);
-      const timeout = setTimeout(() => setLoadingProgress(0), 500);
-      return () => clearTimeout(timeout);
-    }
-  }, [isLoading, wordData, error]);
+  // Only show loading when query is actually enabled and running
+  const shouldShowLoading = isLoaded && isSignedIn && !preferencesLoading && !!userLanguage && isLoading;
 
   // Loading state - auth or preferences loading
   if (!isLoaded || preferencesLoading) {
@@ -46,17 +36,7 @@ export default function WordOfTheDay() {
           className="today-term-card-image"
         />
         <div className="word-card-content">
-          <div className="word-of-the-day-card__loading">
-            <div className="word-of-the-day-card__progress-track">
-              <div
-                className="word-of-the-day-card__progress-fill"
-                style={{ width: "50%" }}
-              />
-            </div>
-            <div className="word-of-the-day-card__progress-text">
-              Initializing...
-            </div>
-          </div>
+          <LoadingBar isLoading={true} text="Initializing" />
         </div>
       </div>
     );
@@ -81,7 +61,7 @@ export default function WordOfTheDay() {
   }
 
   // Loading state - fetching word
-  if (isLoading) {
+  if (shouldShowLoading) {
     return (
       <div className="word-of-the-day-card">
         <img
@@ -90,17 +70,7 @@ export default function WordOfTheDay() {
           className="today-term-card-image"
         />
         <div className="word-card-content">
-          <div className="word-of-the-day-card__loading">
-            <div className="word-of-the-day-card__progress-track">
-              <div
-                className="word-of-the-day-card__progress-fill"
-                style={{ width: `${loadingProgress}%` }}
-              />
-            </div>
-            <div className="word-of-the-day-card__progress-text">
-              Loading... {loadingProgress}%
-            </div>
-          </div>
+          <LoadingBar isLoading={true} hasData={!!wordData} hasError={!!error} />
         </div>
       </div>
     );
@@ -172,7 +142,7 @@ export default function WordOfTheDay() {
 
   // Success - show the word
   return (
-    <div className="word-of-the-day-card">
+    <div className="word-of-the-day-card" onClick={() => navigate(navigateTo)} style={{ cursor: "pointer" }}>
       <img
         src={todayTermCard}
         alt="Random Trade Term"

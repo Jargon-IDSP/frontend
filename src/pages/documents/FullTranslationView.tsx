@@ -6,6 +6,7 @@ import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingSt
 import DocumentNav from "../../components/DocumentNav";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import DocOptionsDrawer from "../drawers/DocOptionsDrawer";
+import LoadingBar from "../../components/LoadingBar";
 
 export default function FullTranslationView() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -38,7 +39,7 @@ export default function FullTranslationView() {
     return (
       <div className="fullTranslationOverview">
         <div className="loading-container">
-          <h2 className="loading-title">Loading...</h2>
+          <LoadingBar isLoading={true} hasData={!!data} hasError={!!error} />
         </div>
       </div>
     );

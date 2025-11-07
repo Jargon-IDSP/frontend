@@ -6,6 +6,15 @@ export interface WordOfTheDayData {
   level?: string;
 }
 
+export interface WordOfTheDayProps {
+  navigateTo?: string; // Optional custom navigation path
+}
+
+export interface CachedWordData {
+  data: WordOfTheDayData;
+  date: string; // YYYY-MM-DD format
+}
+
 export interface FlashcardResponse {
   data: {
     term: {
