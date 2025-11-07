@@ -77,7 +77,7 @@ export default function SelectStudyType() {
             onSubtitleClick={handleOptionsClick}
           />
 
-          {selectedDocument && <WordOfTheDay navigateTo={`/learning/documents/${selectedDocument.id}/terms`} />}
+          {selectedDocument && <WordOfTheDay />}
 
           {!selectedDocument ? (
             <div style={{ padding: "1rem" }}>
