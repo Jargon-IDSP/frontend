@@ -5,9 +5,6 @@
 // Friends Page
 .friends-page {
   @include page-layout;
-  padding: $spacing-xl;
-  max-width: 1200px;
-  margin: 0 auto;
 }
 
 .friends-header {
@@ -67,7 +64,8 @@
 
 .friends-search-input {
   flex: 1;
-  padding: 0.75rem;
+  height: 2.75rem;
+  padding: 0 $spacing-md;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
   font-size: $font-size-body;
@@ -80,8 +78,9 @@
 }
 
 .friends-search-button {
-  padding: 0.75rem $spacing-lg;
-  background-color: #3b82f6;
+  height: 2.75rem;
+  padding: 0 $spacing-lg;
+  background-color: $color-primary;
   color: white;
   border: none;
   border-radius: 6px;
@@ -90,7 +89,7 @@
   transition: background-color $transition-fast;
 
   &:hover:not(:disabled) {
-    background-color: color.adjust(#3b82f6, $lightness: -10%);
+    background-color: color.adjust($color-primary, $lightness: -10%);
   }
 
   &:disabled {
@@ -132,7 +131,8 @@
 }
 
 .friends-add-button {
-  padding: $spacing-sm $spacing-md;
+  height: 2.5rem;
+  padding: 0 $spacing-md;
   background-color: $color-success;
   color: white;
   border: none;
@@ -197,7 +197,8 @@
 }
 
 .friends-accept-button {
-  padding: $spacing-sm $spacing-md;
+  height: 2.5rem;
+  padding: 0 $spacing-md;
   background-color: $color-success;
   color: white;
   border: none;
@@ -217,7 +218,8 @@
 }
 
 .friends-reject-button {
-  padding: $spacing-sm $spacing-md;
+  height: 2.5rem;
+  padding: 0 $spacing-md;
   background-color: $color-error;
   color: white;
   border: none;
@@ -284,6 +286,23 @@
 
   &:hover {
     opacity: 0.7;
+  }
+}
+
+.friends-unfollow-button {
+  height: 2.5rem;
+  padding: 0 $spacing-lg;
+  background-color: $color-error;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  flex-shrink: 0;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
   }
 }
 

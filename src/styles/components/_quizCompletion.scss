@@ -5,7 +5,7 @@
 // Quiz Completion Component Styles
 // Scope container styles to only QuizCompletion pages
 // Using descendant selector to avoid affecting navbar
-main .container {
+.quiz-page-wrapper main .container {
   @include page-layout;
   padding: $spacing-xl;
   display: flex;

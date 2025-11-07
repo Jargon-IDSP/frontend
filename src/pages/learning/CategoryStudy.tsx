@@ -1,9 +1,9 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import Button from "../../components/learning/ui/Button";
 import { useDocumentsByCategory } from '../../hooks/useDocumentsByCategory';
 import { useDocumentProcessingStatus } from '../../hooks/useDocumentProcessingStatus';
 import { useQueryClient } from '@tanstack/react-query';
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 const categoryNames: Record<string, string> = {
   'safety': 'Safety',
@@ -39,6 +39,7 @@ function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocu
     { name: 'Translation', complete: status.hasTranslation || status.quickTranslation },
     { name: 'Flashcards', complete: status.hasFlashcards || (status.quickTranslation && status.flashcardCount > 0) },
     { name: 'Questions', complete: status.hasQuiz || (status.quickTranslation && status.questionCount > 0) },
+    { name: 'Saving to Profile', complete: status.hasTranslation && status.hasFlashcards && status.hasQuiz },
   ];
 
   const activeStepIndex = steps.findIndex(step => !step.complete);
@@ -87,8 +88,8 @@ function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocu
     >
       <h3 className="processing-card__header">
         {filename}
-        <span className="processing-card__badge">
-          {canStudy ? 'READY TO STUDY' : 'PROCESSING'}
+        <span className={`processing-card__badge ${canStudy ? 'processing-card__badge--ready' : ''}`}>
+          {canStudy ? 'SNEAK PEEK READY' : 'PROCESSING'}
         </span>
       </h3>
 
@@ -146,13 +147,6 @@ function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocu
         })}
       </div>
 
-      {(status.flashcardCount > 0 || status.questionCount > 0) && (
-        <p className="processing-card__stats">
-          {status.flashcardCount > 0 && `Generated ${status.flashcardCount} flashcard${status.flashcardCount !== 1 ? 's' : ''}`}
-          {status.flashcardCount > 0 && status.questionCount > 0 && ' and '}
-          {status.questionCount > 0 && `${status.questionCount} question${status.questionCount !== 1 ? 's' : ''}`}
-        </p>
-      )}
     </div>
   );
 }
@@ -188,19 +182,15 @@ export default function CategoryStudy() {
 
   return (
     <div className="category-study">
-      <Button
-        onClick={() => navigate('/learning/custom/categories')}
-        variant="secondary"
-        className="category-study__back-button"
-      >
-        ← Back to My Generated Lessons
-      </Button>
-
-      <h1 className="category-study__title">{categoryName} Category</h1>
-
-      <h2 className="category-study__section-title">
-        Study by Document
-      </h2>
+      <div className="category-study__header">
+        <img
+          src={goBackIcon}
+          alt="Go back"
+          className="category-study__back-icon"
+          onClick={() => navigate(-1)}
+        />
+        <h1 className="category-study__header-title">{categoryName} Category</h1>
+      </div>
 
       {justUploaded && statusData && statusData.status.status === 'processing' && (
         <ProcessingDocumentCard

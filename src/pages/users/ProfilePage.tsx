@@ -4,8 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
-import settingsIcon from '../../assets/icons/settingsIcon.svg';
+import { useUnreadCount } from "../../hooks/useNotifications";
 import editIcon from '../../assets/icons/editIcon.svg';
+import notificationIcon from '../../assets/icons/notification.svg';
+import emptyBellIcon from '../../assets/icons/emptyBell.svg';
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_profile.scss';
 
@@ -24,6 +26,7 @@ export default function ProfilePage() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const { data: unreadCount } = useUnreadCount();
 
   const error = queryError ? (queryError as Error).message : null;
 
@@ -45,6 +48,11 @@ export default function ProfilePage() {
     setIsDropdownOpen(!isDropdownOpen);
   };
 
+  const handleProfileClick = () => {
+    setIsDropdownOpen(false);
+    navigate("/profile");
+  };
+
   const handleAccountClick = () => {
     setIsDropdownOpen(false);
     setIsAccountModalOpen(true);
@@ -59,10 +67,20 @@ export default function ProfilePage() {
     navigate("/onboarding/language");
   };
 
-  const handleLogoutClick = async () => {
+  const handleIndustryClick = () => {
     setIsDropdownOpen(false);
-    await signOut();
-    navigate("/");
+    navigate("/onboarding/industry");
+  };
+
+  const handleLogoutClick = async () => {
+    try {
+      setIsDropdownOpen(false);
+      await signOut({ redirectUrl: "/" });
+    } catch (error) {
+      console.error("Logout error:", error);
+      // Force navigation even if signOut fails
+      window.location.href = "/";
+    }
   };
 
   return (
@@ -81,17 +99,40 @@ export default function ProfilePage() {
           {/* Header with title and settings icon */}
           <div className="profile-header">
           <h1 className="profile-header-title">Profile</h1>
-          <div className="profile-settings-container" ref={dropdownRef}>
+          <div className="profile-header-actions">
             <button
-              className="profile-settings-icon"
-              onClick={handleSettingsClick}
-              aria-label="Settings"
+              className="profile-notifications-icon"
+              onClick={() => navigate("/notifications")}
+              aria-label="Notifications"
             >
-              <img src={settingsIcon} alt="Settings" />
+              <img src={unreadCount && unreadCount > 0 ? notificationIcon : emptyBellIcon} alt="Notifications" />
             </button>
+            <div className="profile-settings-container" ref={dropdownRef}>
+              <button
+                className="profile-settings-icon"
+                onClick={handleSettingsClick}
+                aria-label="Settings"
+              >
+                <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+              </button>
 
             {isDropdownOpen && (
               <div className="profile-settings-dropdown">
+                <button
+                  className="profile-settings-item"
+                  onClick={handleProfileClick}
+                >
+                  Profile
+                </button>
+                <button
+                  className="profile-settings-item"
+                  onClick={() => {
+                    setIsDropdownOpen(false);
+                    navigate("/profile/avatar");
+                  }}
+                >
+                  Avatar
+                </button>
                 <button
                   className="profile-settings-item"
                   onClick={handleAccountClick}
@@ -106,12 +147,19 @@ export default function ProfilePage() {
                 </button>
                 <button
                   className="profile-settings-item"
+                  onClick={handleIndustryClick}
+                >
+                  Industry
+                </button>
+                <button
+                  className="profile-settings-item"
                   onClick={handleLogoutClick}
                 >
                   Logout
                 </button>
               </div>
             )}
+            </div>
           </div>
         </div>
 

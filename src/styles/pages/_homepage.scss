@@ -38,10 +38,124 @@
   display: flex;
   align-items: center;
   gap: $spacing-sm;
+  background-color: $color-secondary;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity $transition-fast;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  justify-content: center;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   .rocky-logo {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+.home-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Settings container with dropdown
+.home-settings-container {
+  position: relative;
+}
+
+.home-settings-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-neutral;
+  transition: all $transition-normal;
+  border-radius: $border-radius-md;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Settings dropdown menu
+.home-settings-dropdown {
+  position: absolute;
+  top: calc(100% + $spacing-xs);
+  right: 0;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  z-index: $z-index-dropdown;
+  overflow: hidden;
+  margin-top: $spacing-xs;
+}
+
+.home-settings-item {
+  width: 100%;
+  padding: $spacing-md;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-neutral;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+    color: $color-quaternary-dark;
+  }
+
+  &:first-child {
+    border-top-left-radius: $border-radius-md;
+    border-top-right-radius: $border-radius-md;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: $border-radius-md;
+    border-bottom-right-radius: $border-radius-md;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $color-quaternary-light;
+    color: $color-quaternary-dark;
   }
 }
 

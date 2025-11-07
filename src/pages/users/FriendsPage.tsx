@@ -10,13 +10,13 @@ import type {
   SearchResponse
 } from "../../types/friend";
 import "../../styles/pages/_friends.scss";
-import deleteIcon from "../../assets/icons/deleteIcon.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [followingUserId, setFollowingUserId] = useState<string | null>(null);
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
@@ -61,6 +61,26 @@ export default function FriendsPage() {
     retry: 2,
   });
 
+  // Fetch following (people you follow)
+  const { data: allFollowing = [] } = useQuery({
+    queryKey: ["following"],
+    queryFn: async (): Promise<Friend[]> => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/friendships/following`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!res.ok) {
+        throw new Error("Failed to fetch following");
+      }
+
+      const data: FriendsResponse = await res.json();
+      return data.data || [];
+    },
+    staleTime: 30 * 1000, // 30 seconds
+    retry: 2,
+  });
+
   // Fetch lesson requests
   const { data: lessonRequests = [] } = useQuery({
     queryKey: ["lessonRequests"],
@@ -81,9 +101,14 @@ export default function FriendsPage() {
     retry: 2,
   });
 
-  // Filter out followers who are already friends (mutual follows)
+  // Followers: People who follow you but you don't follow back
   const followers = allFollowers.filter(
-    (follower) => !friends.some((friend) => friend.id === follower.id)
+    (follower) => !allFollowing.some((followed) => followed.id === follower.id)
+  );
+
+  // Following: People you follow who don't follow you back
+  const following = allFollowing.filter(
+    (followedUser) => !allFollowers.some((follower) => follower.id === followedUser.id)
   );
 
   // Search users mutation
@@ -122,6 +147,7 @@ export default function FriendsPage() {
   // Send friend request mutation
   const sendRequestMutation = useMutation({
     mutationFn: async (addresseeId: string) => {
+      setFollowingUserId(addresseeId);
       const token = await getToken();
       const res = await fetch(`${BACKEND_URL}/friendships`, {
         method: "POST",
@@ -139,14 +165,19 @@ export default function FriendsPage() {
 
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      setFollowingUserId(null);
       setSearchResults([]);
       setSearchQuery("");
-      alert("Now following!");
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-      queryClient.invalidateQueries({ queryKey: ["followers"] });
+      // Refetch all queries immediately to update the UI
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["friends"] }),
+        queryClient.refetchQueries({ queryKey: ["followers"] }),
+        queryClient.refetchQueries({ queryKey: ["following"] }),
+      ]);
     },
     onError: (err: Error) => {
+      setFollowingUserId(null);
       alert(err.message);
     },
   });
@@ -154,6 +185,7 @@ export default function FriendsPage() {
   // Follow back mutation (for following back a follower)
   const followBackMutation = useMutation({
     mutationFn: async (addresseeId: string) => {
+      setFollowingUserId(addresseeId);
       const token = await getToken();
       const res = await fetch(`${BACKEND_URL}/friendships`, {
         method: "POST",
@@ -171,12 +203,18 @@ export default function FriendsPage() {
 
       return await res.json();
     },
-    onSuccess: () => {
+    onSuccess: async () => {
+      setFollowingUserId(null);
       alert("You are now friends!");
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-      queryClient.invalidateQueries({ queryKey: ["followers"] });
+      // Refetch all queries immediately to update the UI
+      await Promise.all([
+        queryClient.refetchQueries({ queryKey: ["friends"] }),
+        queryClient.refetchQueries({ queryKey: ["followers"] }),
+        queryClient.refetchQueries({ queryKey: ["following"] }),
+      ]);
     },
     onError: (err: Error) => {
+      setFollowingUserId(null);
       alert(err.message);
     },
   });
@@ -198,6 +236,7 @@ export default function FriendsPage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["friends"] });
+      queryClient.invalidateQueries({ queryKey: ["following"] });
     },
     onError: (err: Error) => {
       console.error("Error removing friend:", err);
@@ -278,7 +317,6 @@ export default function FriendsPage() {
   };
 
   const removeFriend = (friendshipId: string) => {
-    if (!confirm("Are you sure you want to unfollow this friend?")) return;
     removeFriendMutation.mutate(friendshipId);
   };
 
@@ -291,6 +329,7 @@ export default function FriendsPage() {
   };
 
   return (
+    <div className="container">
     <div className="friends-page">
       <div className="friends-header">
         <button
@@ -347,9 +386,9 @@ export default function FriendsPage() {
                   <button
                     className="friends-add-button"
                     onClick={() => sendFriendRequest(user.id)}
-                    disabled={sendRequestMutation.isPending}
+                    disabled={followingUserId === user.id}
                   >
-                    {sendRequestMutation.isPending
+                    {followingUserId === user.id
                       ? "Following..."
                       : "Follow"}
                   </button>
@@ -368,10 +407,10 @@ export default function FriendsPage() {
                   <button
                     className="friends-add-button"
                     onClick={() => sendFriendRequest(user.id)}
-                    disabled={sendRequestMutation.isPending}
+                    disabled={followingUserId === user.id}
                     title="Follow back to become friends"
                   >
-                    {sendRequestMutation.isPending
+                    {followingUserId === user.id
                       ? "Following..."
                       : "Follow Back"}
                   </button>
@@ -416,9 +455,9 @@ export default function FriendsPage() {
                 <button
                   className="friends-accept-button"
                   onClick={() => followBack(follower.id)}
-                  disabled={followBackMutation.isPending}
+                  disabled={followingUserId === follower.id}
                 >
-                  {followBackMutation.isPending ? "Following..." : "Follow Back"}
+                  {followingUserId === follower.id ? "Following..." : "Follow Back"}
                 </button>
                 <button
                   className="friends-view-button"
@@ -432,9 +471,53 @@ export default function FriendsPage() {
         </div>
       )}
 
-      {/* Friends List */}
+      {/* Following (people you follow but who don't follow you back) */}
+      {following.length > 0 && (
+        <div className="friends-pending-section">
+          <h2 className="friends-pending-title">
+            Following ({following.length})
+          </h2>
+          <p className="friends-followers-subtitle">
+            People you follow who haven't followed you back yet
+          </p>
+          {following.map((followedUser) => (
+            <div
+              key={followedUser.id}
+              className="friends-pending-item"
+            >
+              <div>
+                <strong className="friends-user-name">{getUserDisplayName(followedUser)}</strong>
+                <p className="friends-user-score">
+                  Score: {followedUser.score}
+                </p>
+              </div>
+              <div className="friends-pending-actions">
+                <button
+                  className="friends-view-button"
+                  onClick={() => navigate(`/profile/friends/${followedUser.id}`)}
+                >
+                  View Profile
+                </button>
+                <button
+                  className="friends-unfollow-button"
+                  onClick={() => {
+                    if (followedUser.friendshipId) {
+                      removeFriendMutation.mutate(followedUser.friendshipId);
+                    }
+                  }}
+                  disabled={removeFriendMutation.isPending}
+                >
+                  Unfollow
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Friends List (Mutual Follows) */}
       <div className="friends-list-section">
-        <h2 className="friends-list-title">My Friends ({friends.length})</h2>
+        <h2 className="friends-list-title">Friends - Mutual Follows ({friends.length})</h2>
         {loading ? (
           <p className="friends-list-loading">Loading...</p>
         ) : friends.length === 0 ? (
@@ -492,14 +575,14 @@ export default function FriendsPage() {
                     </>
                   )}
                   <button
-                    className="friends-remove-button"
+                    className="friends-unfollow-button"
                     onClick={(e) => {
                       e.stopPropagation();
                       friend.friendshipId && removeFriend(friend.friendshipId);
                     }}
                     disabled={removeFriendMutation.isPending}
                   >
-                    <img src={deleteIcon} alt="Delete Icon" className="friends-remove-button-icon" />
+                    Unfollow
                   </button>
                 </div>
               </div>
@@ -507,6 +590,7 @@ export default function FriendsPage() {
           })
         )}
       </div>
+    </div>
     </div>
   );
 }

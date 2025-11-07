@@ -1,0 +1,42 @@
+@use '../variables' as *;
+
+.notifications-page {
+  padding: $spacing-md 0;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+  }
+
+  &__back {
+    background: none;
+    border: none;
+    font-size: $font-size-h2;
+    cursor: pointer;
+    padding: $spacing-sm;
+    color: $color-neutral;
+    transition: transform $transition-fast;
+
+    &:hover {
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+  }
+
+  &__title {
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    color: $color-neutral;
+    margin: 0;
+  }
+
+  &__content {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+}

@@ -272,7 +272,6 @@ export default function FriendProfilePage() {
       return await res.json();
     },
     onSuccess: () => {
-      alert("Friend request sent!");
       queryClient.invalidateQueries({ queryKey: ["friendshipStatus", friendId] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
       queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
@@ -533,7 +532,7 @@ export default function FriendProfilePage() {
                     onClick={handleFriendshipAction}
                     disabled={sendRequestMutation.isPending}
                   >
-                    {sendRequestMutation.isPending ? "..." : "Send Friend Request"}
+                    {sendRequestMutation.isPending ? "..." : "Follow"}
                   </button>
                 </div>
               ) : (
@@ -599,7 +598,7 @@ export default function FriendProfilePage() {
                   onClick={handleFriendshipAction}
                   disabled={sendRequestMutation.isPending}
                 >
-                  {sendRequestMutation.isPending ? "..." : "Send Friend Request"}
+                  {sendRequestMutation.isPending ? "..." : "Follow"}
                 </button>
               </div>
             )}

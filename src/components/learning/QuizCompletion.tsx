@@ -12,8 +12,9 @@ export default function QuizCompletion({
     : 'You completed your customized course!';
 
   return (
-    <div className="container">
-      <div className="quizCompletion">
+    <div className="quiz-page-wrapper">
+      <div className="container">
+        <div className="quizCompletion">
         <div className="points">
         <h1>{score * 10}</h1>
         <img src={Star} alt="Star" />
@@ -28,6 +29,7 @@ export default function QuizCompletion({
 
       <div>
         <button className="returnToLesson"onClick={onBack}>Back to Lessons</button>
+      </div>
       </div>
     </div>
   );

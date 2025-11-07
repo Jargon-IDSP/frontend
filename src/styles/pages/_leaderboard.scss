@@ -18,9 +18,23 @@
   }
 }
 
-.leaderboard-title {
-  text-align: center;
+.leaderboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: $spacing-lg;
+}
+
+.leaderboard-header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.leaderboard-title {
+  text-align: left;
+  margin: 0;
+  flex: 1;
   font-size: $font-size-h1;
   font-weight: $font-weight-bold;
   color: $color-quaternary-dark;
@@ -29,6 +43,87 @@
     position: relative;
     margin-bottom: $spacing-lg;
     margin-top: 0;
+  }
+}
+
+.leaderboard-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.leaderboard-settings-container {
+  position: relative;
+}
+
+.leaderboard-settings-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+  background-color: $color-secondary;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  .rocky-logo {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+.leaderboard-settings-dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  background: white;
+  border-radius: $border-radius-md;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  min-width: 160px;
+  z-index: 1000;
+  overflow: hidden;
+}
+
+.leaderboard-settings-item {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: $font-size-body;
+  color: $color-neutral;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  &:active {
+    background-color: $color-quaternary;
+    color: white;
   }
 }
 
