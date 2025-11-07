@@ -1,14 +1,65 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";
-import type { WordOfTheDayData, FlashcardResponse } from "@/types/wordOfTheDay";
+import type { WordOfTheDayData, FlashcardResponse, CachedWordData } from "@/types/wordOfTheDay";
+
+const CACHE_KEY = "wordOfTheDay";
+
+// Get today's date in YYYY-MM-DD format (local timezone)
+const getTodayDateString = (): string => {
+  const now = new Date();
+  return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+};
+
+// Get cached word if it's from today
+const getCachedWord = (language: string): WordOfTheDayData | null => {
+  try {
+    const cached = localStorage.getItem(`${CACHE_KEY}_${language}`);
+    if (!cached) return null;
+
+    const cachedData: CachedWordData = JSON.parse(cached);
+    const today = getTodayDateString();
+
+    // Return cached data only if it's from today
+    if (cachedData.date === today) {
+      return cachedData.data;
+    }
+
+    // Clear old cache
+    localStorage.removeItem(`${CACHE_KEY}_${language}`);
+    return null;
+  } catch (error) {
+    console.error("Error reading cached word:", error);
+    return null;
+  }
+};
+
+// Save word to cache with today's date
+const setCachedWord = (language: string, data: WordOfTheDayData): void => {
+  try {
+    const cacheData: CachedWordData = {
+      data,
+      date: getTodayDateString(),
+    };
+    localStorage.setItem(`${CACHE_KEY}_${language}`, JSON.stringify(cacheData));
+  } catch (error) {
+    console.error("Error caching word:", error);
+  }
+};
 
 export function useRandomWord(language: string, enabled: boolean = true) {
   const { getToken } = useAuth();
 
   return useQuery({
-    queryKey: ["randomWord", language],
+    queryKey: ["randomWord", language, getTodayDateString()], // Include date in query key
     queryFn: async (): Promise<WordOfTheDayData> => {
+      // Check cache first
+      const cachedWord = getCachedWord(language);
+      if (cachedWord) {
+        return cachedWord;
+      }
+
+      // Fetch new word
       const token = await getToken();
       const response = await fetch(
         `${BACKEND_URL}/learning/existing/random/flashcard?language=${language}`,
@@ -47,17 +98,22 @@ export function useRandomWord(language: string, enabled: boolean = true) {
         ? (flashcard.definition as any).english
         : flashcard.definition;
 
-      return {
+      const wordData: WordOfTheDayData = {
         term: englishTerm || "Unknown Term",
         definition: englishDefinition || "No definition available",
         termTranslated: translatedTerm,
         industry: flashcard.industry?.name,
         level: flashcard.level?.name,
       };
+
+      // Cache the word for today
+      setCachedWord(language, wordData);
+
+      return wordData;
     },
     enabled,
-    staleTime: 0, // Always fetch fresh
-    gcTime: 0, // Don't cache
+    staleTime: 24 * 60 * 60 * 1000, // 24 hours
+    gcTime: 24 * 60 * 60 * 1000, // Keep in cache for 24 hours
     retry: 2,
     retryDelay: 1000,
   });
