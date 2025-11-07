@@ -6,7 +6,9 @@
   padding: $spacing-md;
   max-width: 600px;
   margin: 0 auto;
-  padding-bottom: 100px; // Space for bottom nav
+  padding-bottom: 100px; // Space for bottom nav;
+  width: 100%;
+  box-sizing: border-box;
 }
 
 // Header
@@ -299,4 +301,88 @@
     color: $color-quaternary-dark;
     text-decoration: underline;
   }
+}
+
+// Lesson Details Page
+.lesson-details-page {
+  width: 100vw;
+  max-width: 100vw;
+  margin: 0;
+  padding: $spacing-md;
+  padding-bottom: calc(70px + #{$spacing-md});
+  box-sizing: border-box;
+  min-height: calc(100vh - 70px);
+}
+
+.lesson-details-header {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  position: relative;
+}
+
+.lesson-details-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  left: 0;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.lesson-details-loading,
+.lesson-details-error {
+  text-align: center;
+  padding: $spacing-xl;
+  font-size: $font-size-body;
+  color: $color-neutral;
+}
+
+.lesson-details-error {
+  color: $color-error;
+}
+
+.lesson-details-container {
+  padding: 0;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+}
+
+.lesson-details-field {
+  margin-bottom: $spacing-lg;
+  width: 100%;
+
+  p {
+    font-weight: $font-weight-bold;
+    margin-bottom: $spacing-sm;
+    color: #000;
+  }
+}
+
+.lesson-details-textbox {
+  background-color: #f5f5f5;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  color: #000;
+  width: 100%;
+  box-sizing: border-box;
+  word-wrap: break-word;
+}
+
+.lesson-details-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  text-align: center;
 }

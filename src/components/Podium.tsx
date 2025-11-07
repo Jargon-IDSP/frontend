@@ -34,7 +34,7 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
           <div
             key={user.id}
             className={`podium-item rank-${rank} podium-item--clickable`}
-            onClick={() => navigate(`/profile/friends/${user.id}`)}
+            onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/leaderboard" } })}
           >
             <div className="rocky-avatar">
               <img
