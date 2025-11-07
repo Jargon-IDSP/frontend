@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/clerk-react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import { FriendshipStatus } from "../../types/friend";
@@ -23,6 +23,7 @@ interface FriendProfile {
   email: string;
   score: number;
   industryId: number | null;
+  createdAt?: string;
   // Add any other fields that might come from the backend
 }
 
@@ -34,6 +35,7 @@ interface FriendQuiz {
 export default function FriendProfilePage() {
   const { friendId } = useParams<{ friendId: string }>();
   const navigate = useNavigate();
+  const location = useLocation();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
 
@@ -105,6 +107,7 @@ export default function FriendProfilePage() {
             email: user.email || '',
             score: user.score,
             industryId: null,
+            createdAt: user.createdAt,
           };
         }
       }
@@ -395,13 +398,35 @@ export default function FriendProfilePage() {
     return industryIdToName[friendProfile.industryId] || "Not set";
   };
 
+  const formatDate = (dateString: string | undefined) => {
+    if (!dateString) return "N/A";
+    try {
+      const date = new Date(dateString);
+      return date.toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+      });
+    } catch {
+      return "N/A";
+    }
+  };
+
   return (
     <div className="friend-profile-page">
       {/* Header */}
       <div className="friend-profile-header">
         <button
           className="friend-profile-back-button"
-          onClick={() => navigate(-1)}
+          onClick={() => {
+            // Use location state if available, otherwise default to leaderboard
+            const from = (location.state as { from?: string })?.from;
+            if (from) {
+              navigate(from);
+            } else {
+              navigate("/leaderboard");
+            }
+          }}
         >
           <img src={goBackIcon} alt="Back" />
         </button>
@@ -504,6 +529,8 @@ export default function FriendProfilePage() {
                     <div
                       key={quiz.id}
                       className="friend-profile-lesson-list-item"
+                      onClick={() => navigate(`/profile/friends/${friendId}/lessons/${quiz.id}`)}
+                      style={{ cursor: "pointer" }}
                     >
                       <span className="friend-profile-lesson-list-name">
                         {quiz.name}
@@ -549,6 +576,8 @@ export default function FriendProfilePage() {
                         <div
                           key={quiz.id}
                           className="friend-profile-lesson-list-item"
+                          onClick={() => navigate(`/profile/friends/${friendId}/lessons/${quiz.id}`)}
+                          style={{ cursor: "pointer" }}
                         >
                           <span className="friend-profile-lesson-list-name">
                             {quiz.name}
@@ -614,7 +643,7 @@ export default function FriendProfilePage() {
               </div>
               <div className="friend-profile-overview-item">
                 <div className="friend-profile-overview-icon"></div>
-                <p className="friend-profile-overview-label">Joined:</p>
+                <p className="friend-profile-overview-label">Joined: {formatDate(friendProfile?.createdAt)}</p>
               </div>
               <div className="friend-profile-overview-item">
                 <div className="friend-profile-overview-icon"></div>
@@ -624,7 +653,7 @@ export default function FriendProfilePage() {
           </div>
 
           {/* Connect With Me Section */}
-          <div className="friend-profile-section">
+          {/* <div className="friend-profile-section">
             <h3 className="friend-profile-section-title">Connect With Me</h3>
             <div className="friend-profile-social">
               <button className="friend-profile-social-button"></button>
@@ -640,7 +669,7 @@ export default function FriendProfilePage() {
                 Block User 🚫
               </button>
             </div>
-          </div>
+          </div> */}
         </>
       )}
     </div>

@@ -251,7 +251,7 @@ const LeaderboardPage: React.FC = () => {
                     className={`leaderboard-item leaderboard-item--regular ${
                       isCurrentUser ? "leaderboard-item--current-user" : ""
                     } leaderboard-item--clickable`}
-                    onClick={() => navigate(`/profile/friends/${user.id}`)}
+                    onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/leaderboard" } })}
                   >
                     <span className="leaderboard-item-content leaderboard-item-content--regular">
                       <span className="leaderboard-item-rank">#{actualRank}</span>
