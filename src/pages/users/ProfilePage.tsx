@@ -6,7 +6,6 @@ import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
 import { useUnreadCount } from "../../hooks/useNotifications";
 import editIcon from '../../assets/icons/editIcon.svg';
-import notificationIcon from '../../assets/icons/notification.svg';
 import emptyBellIcon from '../../assets/icons/emptyBell.svg';
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_profile.scss';
@@ -105,7 +104,12 @@ export default function ProfilePage() {
               onClick={() => navigate("/notifications")}
               aria-label="Notifications"
             >
-              <img src={unreadCount && unreadCount > 0 ? notificationIcon : emptyBellIcon} alt="Notifications" />
+              <div className="profile-notifications-icon-wrapper">
+                <img src={emptyBellIcon} alt="Notifications" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="profile-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
+                )}
+              </div>
             </button>
             <div className="profile-settings-container" ref={dropdownRef}>
               <button
