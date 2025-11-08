@@ -1,0 +1,55 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.lesson-request-modal {
+  &__question {
+    font-size: $font-size-body;
+    color: $color-neutral;
+    margin-bottom: $spacing-xl;
+    text-align: center;
+    line-height: 1.5;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-md;
+    justify-content: center;
+  }
+
+  &__button {
+    padding: $spacing-sm $spacing-xl;
+    font-size: $font-size-body;
+    font-weight: $font-weight-bold;
+    border: none;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: all $transition-normal;
+    min-width: 100px;
+
+    &:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    &--deny {
+      background-color: $color-quaternary-light;
+      color: $color-neutral;
+
+      &:hover:not(:disabled) {
+        background-color: $color-quaternary;
+        color: white;
+      }
+    }
+
+    &--allow {
+      background-color: $color-quaternary-dark;
+      color: white;
+
+      &:hover:not(:disabled) {
+        background-color: $color-quaternary;
+      }
+    }
+  }
+}
+
+

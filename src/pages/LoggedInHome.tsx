@@ -10,7 +10,6 @@ import DailyCheckIn from '../components/DailyCheckIn';
 import WordOfTheDay from '../components/WordOfTheDay';
 // import JargonLogo from '../components/Wordmark';
 import rockyWhiteLogo from '/rockyWhite.svg';
-import notificationIcon from '../assets/icons/notification.svg';
 import emptyBellIcon from '../assets/icons/emptyBell.svg';
 
 export default function LoggedInHome() {
@@ -124,7 +123,12 @@ export default function LoggedInHome() {
           onClick={() => navigate("/notifications")}
           aria-label="Notifications"
         >
-          <img src={unreadCount && unreadCount > 0 ? notificationIcon : emptyBellIcon} alt="Notifications" />
+          <div className="home-notifications-icon-wrapper">
+            <img src={emptyBellIcon} alt="Notifications" />
+            {(unreadCount ?? 0) > 0 && (
+              <span className="home-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
+            )}
+          </div>
         </button>
         <div className="home-settings-container" ref={dropdownRef}>
           <button
