@@ -7,7 +7,6 @@ import ProfilePage from "../pages/users/ProfilePage";
 import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import FriendProfilePage from "../pages/users/FriendProfilePage";
-import LessonDetailsPage from "../pages/users/LessonDetailsPage";
 import ManageProfilePage from "../pages/users/ManageProfilePage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import LeaderboardPage from "../mounting/LeaderboardPage";
@@ -72,10 +71,6 @@ export const routes: RouteObject[] = [
   {
     path: "/profile/friends/:friendId",
     element: protect(<FriendProfilePage />),
-  },
-  {
-    path: "/profile/friends/:friendId/lessons/:lessonId",
-    element: protect(<LessonDetailsPage />),
   },
   {
     path: "/profile/manage",

@@ -57,6 +57,11 @@ export default function SharedQuizzesPage() {
     };
 
     sharedQuizzes.forEach((quiz) => {
+      // Safety check: ensure quiz and customQuiz exist
+      if (!quiz || !quiz.customQuiz) {
+        console.warn("Invalid quiz data:", quiz);
+        return;
+      }
       const mappedCategory = mapToBaseCategory(quiz.customQuiz.category);
       groups[mappedCategory].push(quiz);
     });
