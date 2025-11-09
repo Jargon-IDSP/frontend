@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useLocation } from "react-router-dom";
 import DocumentNav from "../../components/DocumentNav";
 import DocumentSelector from "../../components/learning/DocumentSelector";
 import DocumentStudyOptions from "../../components/learning/DocumentStudyOptions";
@@ -11,11 +11,15 @@ import LessonOptionsDrawer from "../drawers/LessonOptionsDrawer";
 
 export default function SelectStudyType() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { documentId } = useParams<{ documentId: string }>();
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null
   );
   const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Add drawer state
+
+  // Check if this is a friend's lesson from location state
+  const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
   const { data: documentData, isLoading } = useDocument(documentId);
   const { isOwner } = useDocumentAccess(selectedDocument);
@@ -32,7 +36,9 @@ export default function SelectStudyType() {
 
   const handleDemoDocs = () => {
     if (selectedDocument) {
-      navigate(`/documents/${selectedDocument.id}/translation`);
+      navigate(`/documents/${selectedDocument.id}/translation`, {
+        state: { isFriendLesson },
+      });
     }
   };
 
@@ -47,7 +53,9 @@ export default function SelectStudyType() {
   };
 
   const handleOptionsClick = () => {
-    setIsDrawerOpen(true); // Open drawer when three dots clicked
+    if (!isFriendLesson) {
+      setIsDrawerOpen(true); // Open drawer when three dots clicked (only for own lessons)
+    }
   };
 
   if (isLoading) {
@@ -60,6 +68,11 @@ export default function SelectStudyType() {
     );
   }
 
+  // If we have a documentId in the URL (from friend's lesson), don't show DocumentSelector
+  // Wait for the document to load or show error
+  const shouldShowDocumentSelector = !documentId && !selectedDocument;
+  const shouldShowStudyOptions = selectedDocument || (documentId && !isLoading && documentData?.document);
+
   return (
     <>
       <LessonOptionsDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
@@ -69,17 +82,18 @@ export default function SelectStudyType() {
           <DocumentNav
             activeTab="lesson"
             title={
-              selectedDocument ? selectedDocument.filename : "Select a Document"
+              selectedDocument ? selectedDocument.filename : 
+              (documentData?.document ? documentData.document.filename : "Select a Document")
             }
-            subtitle={isOwner && selectedDocument ? "..." : ""}
-            onDocumentClick={selectedDocument ? handleDemoDocs : undefined}
+            subtitle={!isFriendLesson && isOwner && (selectedDocument || documentData?.document) ? "..." : ""}
+            onDocumentClick={(selectedDocument || documentData?.document) ? handleDemoDocs : undefined}
             onBackClick={handleBackClick}
-            onSubtitleClick={handleOptionsClick}
+            onSubtitleClick={!isFriendLesson ? handleOptionsClick : undefined}
           />
 
-          {selectedDocument && <WordOfTheDay />}
+          {(selectedDocument || documentData?.document) && <WordOfTheDay />}
 
-          {!selectedDocument ? (
+          {shouldShowDocumentSelector ? (
             <div style={{ padding: "1rem" }}>
               <DocumentSelector
                 onDocumentSelect={handleDocumentSelect}
@@ -87,12 +101,18 @@ export default function SelectStudyType() {
                 emptyStateMessage="No documents available for study yet."
               />
             </div>
-          ) : (
+          ) : shouldShowStudyOptions && (selectedDocument?.id || documentData?.document?.id || documentId) ? (
             <DocumentStudyOptions
-              documentId={selectedDocument.id}
+              documentId={selectedDocument?.id || documentData?.document?.id || documentId!}
               terminologyColor="blue"
               quizColor="red"
             />
+          ) : (
+            <div className="fullTranslationOverview">
+              <div className="loading-container">
+                <h2 className="loading-title">Loading document...</h2>
+              </div>
+            </div>
           )}
         </div>
       </div>

@@ -412,6 +412,38 @@ export default function FriendProfilePage() {
     }
   };
 
+  const handleLessonClick = async (lessonId: string) => {
+    try {
+      const token = await getToken();
+      // Fetch lesson details to get documentId
+      const res = await fetch(
+        `${BACKEND_URL}/learning/custom/users/${friendId}/lessons/${lessonId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        const lesson = data.data;
+        
+        if (lesson?.documentId) {
+          // Navigate to study page with location state indicating it's a friend's lesson
+          navigate(`/learning/documents/${lesson.documentId}/study`, {
+            state: { isFriendLesson: true, friendId },
+          });
+        } else {
+          alert("This lesson doesn't have an associated document.");
+        }
+      } else {
+        alert("Failed to load lesson details.");
+      }
+    } catch (error) {
+      console.error("Error fetching lesson details:", error);
+      alert("Failed to load lesson details.");
+    }
+  };
+
   return (
     <div className="friend-profile-page">
       {/* Header */}
@@ -529,7 +561,7 @@ export default function FriendProfilePage() {
                     <div
                       key={quiz.id}
                       className="friend-profile-lesson-list-item"
-                      onClick={() => navigate(`/profile/friends/${friendId}/lessons/${quiz.id}`)}
+                      onClick={() => handleLessonClick(quiz.id)}
                       style={{ cursor: "pointer" }}
                     >
                       <span className="friend-profile-lesson-list-name">
@@ -576,7 +608,7 @@ export default function FriendProfilePage() {
                         <div
                           key={quiz.id}
                           className="friend-profile-lesson-list-item"
-                          onClick={() => navigate(`/profile/friends/${friendId}/lessons/${quiz.id}`)}
+                          onClick={() => handleLessonClick(quiz.id)}
                           style={{ cursor: "pointer" }}
                         >
                           <span className="friend-profile-lesson-list-name">

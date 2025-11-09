@@ -2,6 +2,7 @@
 @use '../mixins' as *;
 
 .switch-view {
+  margin-bottom: $spacing-md;
   display: grid;
   grid-template-columns: 1fr 1fr;
   background-color: $color-quaternary-dark;
