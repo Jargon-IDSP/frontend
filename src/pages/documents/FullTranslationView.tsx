@@ -32,11 +32,7 @@ export default function FullTranslationView() {
   const translatedText = useTranslatedText(data?.translation);
   
   // Check document ownership
-  const document = data?.translation?.document ? {
-    id: data.translation.document.id,
-    userId: data.translation.document.userId,
-    filename: data.translation.document.filename,
-  } : null;
+  const document = data?.translation?.document || null;
   const { isOwner } = useDocumentAccess(document);
 
   const translation = data?.translation;
