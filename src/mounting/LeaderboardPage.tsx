@@ -9,7 +9,6 @@ import { useUnreadCount } from "../hooks/useNotifications";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
-import notificationIcon from '../assets/icons/notification.svg';
 import emptyBellIcon from '../assets/icons/emptyBell.svg';
 
 type LeaderboardType = "general" | "friends";
@@ -147,7 +146,12 @@ const LeaderboardPage: React.FC = () => {
               onClick={() => navigate("/notifications")}
               aria-label="Notifications"
             >
-              <img src={unreadCount && unreadCount > 0 ? notificationIcon : emptyBellIcon} alt="Notifications" />
+              <div className="leaderboard-notifications-icon-wrapper">
+                <img src={emptyBellIcon} alt="Notifications" />
+                {(unreadCount ?? 0) > 0 && (
+                  <span className="leaderboard-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
+                )}
+              </div>
             </button>
             <div className="leaderboard-settings-container" ref={dropdownRef}>
               <button
@@ -251,7 +255,7 @@ const LeaderboardPage: React.FC = () => {
                     className={`leaderboard-item leaderboard-item--regular ${
                       isCurrentUser ? "leaderboard-item--current-user" : ""
                     } leaderboard-item--clickable`}
-                    onClick={() => navigate(`/profile/friends/${user.id}`)}
+                    onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/leaderboard" } })}
                   >
                     <span className="leaderboard-item-content leaderboard-item-content--regular">
                       <span className="leaderboard-item-rank">#{actualRank}</span>

@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, useLocation } from "react-router-dom";
 import { useDocumentTranslation } from "../../hooks/useDocumentTranslation";
 import { useTranslatedText } from "../../hooks/useTranslatedText";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
+import { useDocumentAccess } from "../../hooks/useDocumentAccess";
 import DocumentNav from "../../components/DocumentNav";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import DocOptionsDrawer from "../drawers/DocOptionsDrawer";
@@ -10,9 +11,15 @@ import LoadingBar from "../../components/LoadingBar";
 
 export default function FullTranslationView() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const location = useLocation();
+
+  // Check if this is a friend's lesson from location state
+  const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
   const handleOptions = () => {
-    setIsDrawerOpen(true);
+    if (!isFriendLesson) {
+      setIsDrawerOpen(true);
+    }
   };
 
   const { id } = useParams<{ id: string }>();
@@ -23,6 +30,10 @@ export default function FullTranslationView() {
     documentId: id || null,
   });
   const translatedText = useTranslatedText(data?.translation);
+  
+  // Check document ownership
+  const document = data?.translation?.document || null;
+  const { isOwner } = useDocumentAccess(document);
 
   const translation = data?.translation;
   const processing = data?.processing;
@@ -96,7 +107,9 @@ export default function FullTranslationView() {
     const canNavigate =
       (hasFlashcards && hasQuiz) || (hasQuickFlashcards && hasQuickQuestions);
     if (canNavigate) {
-      navigate(`/learning/documents/${id}/study`);
+      navigate(`/learning/documents/${id}/study`, {
+        state: { isFriendLesson },
+      });
     }
   };
 
@@ -120,9 +133,10 @@ export default function FullTranslationView() {
           <DocumentNav
             activeTab="document"
             title={documentTitle}
+            subtitle={!isFriendLesson && isOwner ? "..." : ""}
             onLessonClick={canStudy ? handleLessonClick : undefined}
             onBackClick={handleBackClick}
-            onSubtitleClick={handleOptions}
+            onSubtitleClick={!isFriendLesson ? handleOptions : undefined}
           />
 
           <div className="content-container">

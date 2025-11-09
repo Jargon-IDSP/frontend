@@ -1,20 +1,85 @@
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
 import { useNotifications, useMarkAsRead, useMarkAllAsRead } from "@/hooks/useNotifications";
 import { formatDistanceToNow } from "date-fns";
+import { BACKEND_URL } from "@/lib/api";
+import LessonRequestModal from "./LessonRequestModal";
 
 export function NotificationsList() {
   const navigate = useNavigate();
+  const { getToken } = useAuth();
   const { data: notifications, isLoading } = useNotifications();
   const markAsReadMutation = useMarkAsRead();
   const markAllAsReadMutation = useMarkAllAsRead();
+  const [selectedNotification, setSelectedNotification] = useState<{
+    id: string;
+    lessonRequestId: string;
+  } | null>(null);
+
+  // Fetch lesson request details when modal is opened
+  const { data: lessonRequest } = useQuery({
+    queryKey: ["lessonRequest", selectedNotification?.lessonRequestId],
+    queryFn: async () => {
+      if (!selectedNotification?.lessonRequestId) return null;
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/lesson-requests/${selectedNotification.lessonRequestId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      if (!res.ok) throw new Error("Failed to fetch lesson request");
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!selectedNotification?.lessonRequestId,
+  });
+
+  // Handle case where lesson request is already approved/denied
+  useEffect(() => {
+    if (selectedNotification && lessonRequest && lessonRequest.status !== "PENDING") {
+      // Request already handled - mark as read and navigate
+      const notification = notifications?.find(n => n.id === selectedNotification.id);
+      if (notification) {
+        if (!notification.isRead) {
+          markAsReadMutation.mutate(notification.id);
+        }
+        if (notification.actionUrl) {
+          navigate(notification.actionUrl);
+        }
+      }
+      setSelectedNotification(null);
+    }
+  }, [selectedNotification, lessonRequest, notifications, navigate, markAsReadMutation]);
 
   const handleNotificationClick = (notification: any) => {
+    // Check if this is a lesson request notification
+    if (notification.title === "New Lesson Request" && notification.lessonRequestId) {
+      // Set selected notification - the query will fetch and check status
+      // The modal will only show if status is PENDING (checked in render)
+      setSelectedNotification({
+        id: notification.id,
+        lessonRequestId: notification.lessonRequestId,
+      });
+      return;
+    }
+
+    // For other notifications, mark as read and navigate
     if (!notification.isRead) {
       markAsReadMutation.mutate(notification.id);
     }
 
     if (notification.actionUrl) {
-      navigate(notification.actionUrl);
+      // Fix LESSON_APPROVED notifications to use /profile/friends/ instead of /profile/
+      let url = notification.actionUrl;
+      if (notification.type === "LESSON_APPROVED" && url.startsWith("/profile/") && !url.startsWith("/profile/friends/")) {
+        // Extract userId from /profile/userId and convert to /profile/friends/userId
+        const userId = url.replace("/profile/", "");
+        url = `/profile/friends/${userId}`;
+      }
+      navigate(url);
     }
   };
 
@@ -92,6 +157,24 @@ export function NotificationsList() {
           </div>
         ))}
       </div>
+
+      {/* Lesson Request Modal - Only show if request is still PENDING */}
+      {selectedNotification && lessonRequest && lessonRequest.status === "PENDING" && (
+        <LessonRequestModal
+          isOpen={!!selectedNotification}
+          onClose={() => setSelectedNotification(null)}
+          notificationId={selectedNotification.id}
+          requesterName={
+            lessonRequest.requester.firstName && lessonRequest.requester.lastName
+              ? `${lessonRequest.requester.firstName} ${lessonRequest.requester.lastName}`
+              : lessonRequest.requester.firstName || 
+                lessonRequest.requester.lastName || 
+                lessonRequest.requester.username || 
+                "Someone"
+          }
+          requesterId={lessonRequest.requester.id}
+        />
+      )}
     </div>
   );
 }

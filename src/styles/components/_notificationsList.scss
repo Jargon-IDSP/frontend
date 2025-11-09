@@ -25,6 +25,7 @@
   }
 
   &__badge {
+    margin-left: $spacing-sm;
     background: $color-secondary;
     color: white;
     font-size: $font-size-label;

@@ -20,7 +20,14 @@ export function ToastNotification({ notification, onClose, onRead }: ToastNotifi
 
     // Navigate if there's an action URL
     if (notification.actionUrl) {
-      navigate(notification.actionUrl);
+      // Fix LESSON_APPROVED notifications to use /profile/friends/ instead of /profile/
+      let url = notification.actionUrl;
+      if (notification.type === "LESSON_APPROVED" && url.startsWith("/profile/") && !url.startsWith("/profile/friends/")) {
+        // Extract userId from /profile/userId and convert to /profile/friends/userId
+        const userId = url.replace("/profile/", "");
+        url = `/profile/friends/${userId}`;
+      }
+      navigate(url);
     }
 
     // Close the toast

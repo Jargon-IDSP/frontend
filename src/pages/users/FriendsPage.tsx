@@ -461,7 +461,7 @@ export default function FriendsPage() {
                 </button>
                 <button
                   className="friends-view-button"
-                  onClick={() => navigate(`/profile/friends/${follower.id}`)}
+                  onClick={() => navigate(`/profile/friends/${follower.id}`, { state: { from: "/profile/friends" } })}
                 >
                   View Profile
                 </button>
@@ -537,7 +537,7 @@ export default function FriendsPage() {
               >
                 <div
                   className="friends-list-item-clickable"
-                  onClick={() => navigate(`/profile/friends/${friend.id}`)}
+                  onClick={() => navigate(`/profile/friends/${friend.id}`, { state: { from: "/profile/friends" } })}
                 >
                   <strong className="friends-user-name">{getUserDisplayName(friend)}</strong>
                   <p className="friends-user-score">

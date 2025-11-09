@@ -52,18 +52,29 @@
   }
 }
 
+.profile-notifications-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
 .profile-notifications-badge {
   position: absolute;
-  top: 2px;
-  right: 2px;
-  background: $color-secondary;
+  top: -6px;
+  right: -6px;
+  background-color: $color-error;
   color: white;
-  font-size: 10px;
-  font-weight: $font-weight-medium;
-  padding: 2px 6px;
-  border-radius: $border-radius-full;
+  border-radius: 10px;
   min-width: 18px;
-  text-align: center;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  padding: 0 4px;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
 }
 
 // Settings container with dropdown
