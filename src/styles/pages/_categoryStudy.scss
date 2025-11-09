@@ -128,6 +128,10 @@
     &--pending {
       background-color: #e5e7eb;
     }
+
+    &--failed {
+      background-color: $color-error;
+    }
   }
 
   &__step-label {
@@ -146,6 +150,11 @@
     &--pending {
       color: $color-quaternary-light;
       font-weight: 400;
+    }
+
+    &--failed {
+      color: $color-error;
+      font-weight: 500;
     }
   }
 

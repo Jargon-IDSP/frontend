@@ -34,6 +34,8 @@ export default function FilePreviewPage() {
       token,
       categoryId,
     }: UploadRequest & { categoryId?: number }): Promise<SaveResponse> => {
+      console.log("Starting upload process...");
+      
       const signRes = await fetch(`${BACKEND_URL}/documents/upload/sign`, {
         method: "POST",
         headers: {
@@ -51,6 +53,7 @@ export default function FilePreviewPage() {
       }
 
       const { uploadUrl, key }: SignResponse = await signRes.json();
+      console.log("Got signed URL, uploading to S3...");
 
       const uploadRes = await fetch(uploadUrl, {
         method: "PUT",
@@ -63,6 +66,8 @@ export default function FilePreviewPage() {
       if (!uploadRes.ok) {
         throw new Error("Failed to upload file");
       }
+
+      console.log("File uploaded to S3, saving document...");
 
       const saveRes = await fetch(`${BACKEND_URL}/documents`, {
         method: "POST",
@@ -80,19 +85,34 @@ export default function FilePreviewPage() {
       });
 
       if (!saveRes.ok) {
+        const errorText = await saveRes.text();
+        console.error("Save document failed:", errorText);
         throw new Error("Failed to save document");
       }
 
-      return await saveRes.json();
+      const savedData = await saveRes.json();
+      console.log("Document saved successfully:", savedData);
+      return savedData;
     },
     onSuccess: (data) => {
+      console.log("Upload mutation success, navigating...", data);
       const categoryName = selectedCategory?.name || "general";
+      const documentId = data.document?.id || data.documentId;
+      
+      console.log("Navigating to:", `/learning/custom/categories/${categoryName}`, {
+        documentId,
+        justUploaded: true,
+      });
+      
       navigate(`/learning/custom/categories/${categoryName}`, {
         state: {
           justUploaded: true,
-          documentId: data.document?.id || data.documentId,
+          documentId: documentId,
         },
       });
+    },
+    onError: (error) => {
+      console.error("Upload mutation error:", error);
     },
   });
 

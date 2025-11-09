@@ -2,6 +2,7 @@ import { useParams, useNavigate, useLocation } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { useDocumentsByCategory } from '../../hooks/useDocumentsByCategory';
 import { useDocumentProcessingStatus } from '../../hooks/useDocumentProcessingStatus';
+import { useDocumentJobStatus } from '../../hooks/useDocumentJobStatus';
 import { useQueryClient } from '@tanstack/react-query';
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
@@ -32,14 +33,61 @@ function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocu
   const [currentMessage, setCurrentMessage] = useState(0);
   const [currentItem, setCurrentItem] = useState(0);
 
+  // Fetch job status for detailed progress
+  const { data: jobStatus } = useDocumentJobStatus({
+    documentId: documentId || null,
+    pollingInterval: 1000,
+  });
+
   // If quick translation is available, user can start studying immediately
   const canStudy = status.quickTranslation && (status.flashcardCount > 0 || status.questionCount > 0);
 
+  // Enhanced steps with job progress (OCR + Translation run together, not shown separately)
+  const getStepState = (stepName: string) => {
+    switch (stepName) {
+      case 'Translation':
+        // Translation runs in OCR worker, use OCR job state if available
+        return jobStatus?.ocr?.state;
+      case 'Flashcards':
+      case 'Questions':
+        return jobStatus?.flashcards?.state;
+      default:
+        return undefined;
+    }
+  };
+
+  // Determine if translation is still in progress by checking if text exists but no translation yet
+  const translationInProgress = !status.hasTranslation && !status.quickTranslation;
+  const flashcardsInProgress = jobStatus?.flashcards?.state === 'active' || jobStatus?.flashcards?.state === 'waiting';
+
   const steps = [
-    { name: 'Translation', complete: status.hasTranslation || status.quickTranslation },
-    { name: 'Flashcards', complete: status.hasFlashcards || (status.quickTranslation && status.flashcardCount > 0) },
-    { name: 'Questions', complete: status.hasQuiz || (status.quickTranslation && status.questionCount > 0) },
-    { name: 'Saving to Profile', complete: status.hasTranslation && status.hasFlashcards && status.hasQuiz },
+    { 
+      name: 'Translation', 
+      complete: status.hasTranslation || status.quickTranslation,
+      state: getStepState('Translation'),
+      // Use real OCR job progress if available, otherwise undefined (will show as "in progress" without %)
+      progress: jobStatus?.ocr?.progress,
+    },
+    { 
+      name: 'Flashcards', 
+      complete: status.hasFlashcards || (status.quickTranslation && status.flashcardCount > 0),
+      state: getStepState('Flashcards'),
+      // Use real flashcard job progress
+      progress: jobStatus?.flashcards?.progress,
+    },
+    { 
+      name: 'Questions', 
+      complete: status.hasQuiz || (status.quickTranslation && status.questionCount > 0),
+      state: getStepState('Questions'),
+      // Questions are generated with flashcards, so use same progress
+      progress: jobStatus?.flashcards?.progress,
+    },
+    { 
+      name: 'Saving to Profile', 
+      complete: status.hasTranslation && status.hasFlashcards && status.hasQuiz,
+      state: undefined,
+      progress: undefined,
+    },
   ];
 
   const activeStepIndex = steps.findIndex(step => !step.complete);
@@ -121,14 +169,19 @@ function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocu
       <div className="processing-card__steps">
         {steps.map((step, index) => {
           const isActive = index === activeStepIndex && !step.complete;
+          const isFailed = step.state === 'failed';
           const indicatorClass = step.complete
             ? 'processing-card__step-indicator--complete'
+            : isFailed
+            ? 'processing-card__step-indicator--failed'
             : isActive
             ? 'processing-card__step-indicator--active'
             : 'processing-card__step-indicator--pending';
 
           const labelClass = step.complete
             ? 'processing-card__step-label--complete'
+            : isFailed
+            ? 'processing-card__step-label--failed'
             : isActive
             ? 'processing-card__step-label--active'
             : 'processing-card__step-label--pending';
@@ -136,11 +189,20 @@ function ProcessingDocumentCard({ filename, status, documentId }: ProcessingDocu
           return (
             <div key={step.name} className="processing-card__step">
               <div className={`processing-card__step-indicator ${indicatorClass}`}>
-                {step.complete ? '✓' : isActive ? '...' : ''}
+                {step.complete ? '✓' : isFailed ? '✗' : isActive ? '...' : ''}
               </div>
               <span className={`processing-card__step-label ${labelClass}`}>
                 {step.name}
-                {isActive && <span className="processing-card__progress-text">(in progress)</span>}
+                {isActive && (
+                  <span className="processing-card__progress-text">
+                    ({step.state === 'active' && step.progress !== undefined && step.progress > 0 
+                      ? `${step.progress}%` 
+                      : 'in progress'})
+                  </span>
+                )}
+                {isFailed && (
+                  <span className="processing-card__progress-text">(failed - retrying...)</span>
+                )}
               </span>
             </div>
           );
