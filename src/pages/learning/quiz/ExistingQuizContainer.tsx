@@ -36,6 +36,8 @@ export function ExistingQuizContainer({
       totalQuestions,
       levelId,
       quizId: `quiz-${levelId}-${Date.now()}`,
+      quizNumber: quizNumber ? parseInt(quizNumber) : undefined,
+      industryId: industryId ? parseInt(industryId) : undefined,
     });
   };
 

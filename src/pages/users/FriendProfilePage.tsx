@@ -3,9 +3,20 @@ import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import { FriendshipStatus } from "../../types/friend";
+import type { FriendProfile, FriendQuiz } from "../../types/friend";
 import "../../styles/pages/_friendProfile.scss";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
+import lockIcon from "../../assets/icons/lockIcon.svg";
 import rockyWhiteLogo from "/rockyWhite.svg";
+import { useMemo, useEffect } from "react";
+import { useNotificationContext } from "../../contexts/NotificationContext";
+import LoadingBar from "../../components/LoadingBar";
+
+// Eagerly import all badge images using glob
+const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
+  eager: true,
+  import: 'default'
+});
 
 const industryIdToName: { [key: number]: string } = {
   1: "Electrician",
@@ -15,21 +26,22 @@ const industryIdToName: { [key: number]: string } = {
   5: "Welder",
 };
 
-interface FriendProfile {
+interface Badge {
   id: string;
-  username: string | null;
-  firstName: string | null;
-  lastName: string | null;
-  email: string;
-  score: number;
+  code: string;
+  name: string;
+  description: string;
+  iconUrl: string | null;
+  levelId: number | null;
   industryId: number | null;
-  createdAt?: string;
-  // Add any other fields that might come from the backend
 }
 
-interface FriendQuiz {
+interface UserBadge {
   id: string;
-  name: string;
+  userId: string;
+  badgeId: string;
+  earnedAt: string;
+  badge: Badge;
 }
 
 export default function FriendProfilePage() {
@@ -38,6 +50,7 @@ export default function FriendProfilePage() {
   const location = useLocation();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
+  const { showToast } = useNotificationContext();
 
   // Fetch current user's profile to check if viewing own profile
   const { data: currentUserProfile } = useQuery({
@@ -62,7 +75,7 @@ export default function FriendProfilePage() {
       const token = await getToken();
 
       // Try to fetch from users endpoint first
-      let res = await fetch(`${BACKEND_URL}/users/${friendId}`, {
+      let res = await fetch(`${BACKEND_URL}/api/users/${friendId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
@@ -189,6 +202,44 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
+  // Fetch user badges
+  const { data: userBadges } = useQuery({
+    queryKey: ["userBadges", friendId],
+    queryFn: async (): Promise<UserBadge[]> => {
+      const token = await getToken();
+      const response = await fetch(`${BACKEND_URL}/prebuilt-quizzes/users/${friendId}/badges`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        return [];
+      }
+
+      const data = await response.json();
+      return data.badges || [];
+    },
+    enabled: !!friendId,
+  });
+
+  // Get badge icon URLs from glob imports
+  const badgeIcons = useMemo(() => {
+    if (!userBadges) return [];
+
+    return userBadges.map((userBadge) => {
+      if (userBadge.badge?.iconUrl) {
+        const iconPath = userBadge.badge.iconUrl;
+        const fullPath = `../../assets/badges/${iconPath}`;
+        const url = badgeModules[fullPath];
+        return {
+          id: userBadge.id,
+          name: userBadge.badge.name,
+          url: url || null
+        };
+      }
+      return null;
+    }).filter((icon): icon is { id: string; name: string; url: string } => icon !== null && icon.url !== null);
+  }, [userBadges]);
+
   // Check friendship status
   const { data: friendshipStatus } = useQuery({
     queryKey: ["friendshipStatus", friendId],
@@ -232,8 +283,9 @@ export default function FriendProfilePage() {
   });
 
   // Fetch lesson names (not full quiz data)
-  const { data: friendQuizzes = [] } = useQuery({
-    queryKey: ["friendLessons", friendId, lessonRequestStatus?.hasAccess],
+  // Always fetch - backend will handle privacy logic
+  const { data: friendQuizzes = [], isLoading: isLoadingQuizzes } = useQuery({
+    queryKey: ["friendLessons", friendId, lessonRequestStatus?.hasAccess, friendProfile?.defaultPrivacy, friendshipStatus?.isFriend],
     queryFn: async (): Promise<FriendQuiz[]> => {
       const token = await getToken();
 
@@ -246,13 +298,75 @@ export default function FriendProfilePage() {
 
       if (res.ok) {
         const data = await res.json();
+        console.log("Friend lessons fetched:", data.data);
+        return data.data || [];
+      }
+
+      console.log("Failed to fetch friend lessons:", res.status);
+      return [];
+    },
+    enabled: !!friendId, // Always fetch - let backend handle privacy
+  });
+
+  // Fetch pending quiz access requests (when viewing someone who requested access to your quizzes)
+  const { data: pendingRequests = [] } = useQuery({
+    queryKey: ["pendingRequests", friendId],
+    queryFn: async () => {
+      if (!friendId) return [];
+
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/quiz-shares/pending-requests/${friendId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
         return data.data || [];
       }
 
       return [];
     },
-    enabled: !!friendId && (isOwnProfile || friendshipStatus?.isFriend === true),
+    enabled: !!friendId && !isOwnProfile,
   });
+
+  // Fetch quiz IDs that current user has requested access to from this friend
+  const { data: myRequestedQuizIds = [], isLoading: isLoadingMyRequests } = useQuery({
+    queryKey: ["myRequests", friendId],
+    queryFn: async () => {
+      if (!friendId) return [];
+
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/quiz-shares/my-requests/${friendId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        return data.data || [];
+      }
+
+      return [];
+    },
+    enabled: !!friendId && !isOwnProfile,
+  });
+
+  // Debug logging
+  useEffect(() => {
+    console.log('🔍 Privacy Debug:', {
+      defaultPrivacy: friendProfile?.defaultPrivacy,
+      isOwnProfile,
+      friendQuizzesLength: friendQuizzes.length,
+      friendshipStatus,
+      friendQuizzes,
+      pendingRequests
+    });
+  }, [friendProfile?.defaultPrivacy, isOwnProfile, friendQuizzes.length, friendshipStatus, friendQuizzes, pendingRequests]);
 
   // Send friend request mutation
   const sendRequestMutation = useMutation({
@@ -278,9 +392,28 @@ export default function FriendProfilePage() {
       queryClient.invalidateQueries({ queryKey: ["friendshipStatus", friendId] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
       queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
+      showToast({
+        id: `follow-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Success",
+        message: `You are now following ${getUserDisplayName()}`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
     onError: (err: Error) => {
-      alert(err.message);
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
   });
 
@@ -308,9 +441,28 @@ export default function FriendProfilePage() {
       queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
       // Invalidate lesson requests so recipient sees the new request
       queryClient.invalidateQueries({ queryKey: ["lessonRequests"] });
+      showToast({
+        id: `lesson-request-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Request Sent",
+        message: `Lesson request sent to ${getUserDisplayName()}`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
     onError: (err: Error) => {
-      alert(err.message);
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
   });
 
@@ -336,9 +488,28 @@ export default function FriendProfilePage() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", friendId] });
+      showToast({
+        id: `cancel-request-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Request Cancelled",
+        message: `Lesson request cancelled`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
     onError: (err: Error) => {
-      alert(err.message);
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
   });
 
@@ -359,7 +530,7 @@ export default function FriendProfilePage() {
       );
 
       if (!res.ok) {
-        throw new Error("Failed to remove friend");
+        throw new Error("Failed to unfollow friend");
       }
 
       return await res.json();
@@ -367,10 +538,252 @@ export default function FriendProfilePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["friendshipStatus", friendId] });
       queryClient.invalidateQueries({ queryKey: ["friends"] });
+      showToast({
+        id: `unfollow-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Success",
+        message: `You have unfollowed ${getUserDisplayName()}`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
       navigate("/profile/friends");
     },
     onError: (err: Error) => {
-      alert(err.message);
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
+    },
+  });
+
+  // Request quiz access mutation
+  const requestQuizAccessMutation = useMutation({
+    mutationFn: async (quizId: string) => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/quiz-shares/request-access`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customQuizId: quizId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to request quiz access");
+      }
+
+      return await res.json();
+    },
+    onMutate: async (quizId: string) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["myRequests", friendId] });
+
+      // Snapshot previous value
+      const previousRequests = queryClient.getQueryData(["myRequests", friendId]);
+
+      // Optimistically add this quiz ID to the requested list
+      queryClient.setQueryData(["myRequests", friendId], (old: any) => {
+        if (!old) return [quizId];
+        return [...old, quizId];
+      });
+
+      // Return context with snapshot
+      return { previousRequests };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["friendQuizzes", friendId] });
+      queryClient.invalidateQueries({ queryKey: ["myRequests", friendId] });
+      showToast({
+        id: `quiz-access-request-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Request Sent",
+        message: `Access request sent to ${getUserDisplayName()}`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
+    },
+    onError: (err: Error, quizId: string, context: any) => {
+      // Rollback on error
+      if (context?.previousRequests) {
+        queryClient.setQueryData(["myRequests", friendId], context.previousRequests);
+      }
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
+    },
+  });
+
+  // Approve quiz access request mutation
+  const approveQuizAccessMutation = useMutation({
+    mutationFn: async (quizId: string) => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/quiz-shares`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customQuizId: quizId,
+          friendUserId: friendId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to approve request");
+      }
+
+      return await res.json();
+    },
+    onMutate: async (quizId: string) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["pendingRequests", friendId] });
+      await queryClient.cancelQueries({ queryKey: ["myRequests", friendId] });
+
+      // Snapshot previous values
+      const previousRequests = queryClient.getQueryData(["pendingRequests", friendId]);
+      const previousMyRequests = queryClient.getQueryData(["myRequests", friendId]);
+
+      // Optimistically remove the pending request
+      queryClient.setQueryData(["pendingRequests", friendId], (old: any) => {
+        if (!old) return [];
+        return old.filter((req: any) => req.quizId !== quizId);
+      });
+
+      // Optimistically remove from myRequests (for the requester viewing the owner's profile)
+      queryClient.setQueryData(["myRequests", friendId], (old: any) => {
+        if (!old) return [];
+        return old.filter((id: string) => id !== quizId);
+      });
+
+      // Return context with snapshots
+      return { previousRequests, previousMyRequests };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pendingRequests", friendId] });
+      queryClient.invalidateQueries({ queryKey: ["friendQuizzes", friendId] });
+      queryClient.invalidateQueries({ queryKey: ["myRequests", friendId] });
+      showToast({
+        id: `approve-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Access Granted",
+        message: `${getUserDisplayName()} now has access to the lesson`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
+    },
+    onError: (err: Error, quizId: string, context: any) => {
+      // Rollback on error
+      if (context?.previousRequests) {
+        queryClient.setQueryData(["pendingRequests", friendId], context.previousRequests);
+      }
+      if (context?.previousMyRequests) {
+        queryClient.setQueryData(["myRequests", friendId], context.previousMyRequests);
+      }
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
+    },
+  });
+
+  // Deny quiz access request mutation
+  const denyQuizAccessMutation = useMutation({
+    mutationFn: async (quizId: string) => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/quiz-shares/deny-access`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customQuizId: quizId,
+          requesterId: friendId,
+        }),
+      });
+
+      if (!res.ok) {
+        const errorData = await res.json();
+        throw new Error(errorData.error || "Failed to deny request");
+      }
+
+      return await res.json();
+    },
+    onMutate: async (quizId: string) => {
+      // Cancel outgoing refetches
+      await queryClient.cancelQueries({ queryKey: ["pendingRequests", friendId] });
+
+      // Snapshot previous value
+      const previousRequests = queryClient.getQueryData(["pendingRequests", friendId]);
+
+      // Optimistically update to remove the request
+      queryClient.setQueryData(["pendingRequests", friendId], (old: any) => {
+        if (!old) return [];
+        return old.filter((req: any) => req.quizId !== quizId);
+      });
+
+      // Return context with snapshot
+      return { previousRequests };
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["pendingRequests", friendId] });
+      showToast({
+        id: `deny-${Date.now()}`,
+        type: "SUCCESS" as any,
+        title: "Request Denied",
+        message: `Access request denied`,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
+    },
+    onError: (err: Error, quizId: string, context: any) => {
+      // Rollback on error
+      if (context?.previousRequests) {
+        queryClient.setQueryData(["pendingRequests", friendId], context.previousRequests);
+      }
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR" as any,
+        title: "Error",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
   });
 
@@ -426,7 +839,7 @@ export default function FriendProfilePage() {
       if (res.ok) {
         const data = await res.json();
         const lesson = data.data;
-        
+
         if (lesson?.documentId) {
           // Navigate to study page with location state indicating it's a friend's lesson
           navigate(`/learning/documents/${lesson.documentId}/study`, {
@@ -443,6 +856,9 @@ export default function FriendProfilePage() {
       alert("Failed to load lesson details.");
     }
   };
+
+  // Combine all loading states to prevent flickering
+  const isLoadingData = isLoading || isLoadingQuizzes || (isOwnProfile ? false : isLoadingMyRequests);
 
   return (
     <div className="friend-profile-page">
@@ -470,32 +886,41 @@ export default function FriendProfilePage() {
             Your Profile
           </button>
         ) : (
-          friendshipStatus && friendshipStatus.isFriend && (
+          friendshipStatus && (
             <button
-              className="friend-profile-friendship-button friend-profile-friendship-button--remove"
+              className={`friend-profile-friendship-button ${
+                friendshipStatus.isFriend
+                  ? "friend-profile-friendship-button--remove"
+                  : "friend-profile-friendship-button--add"
+              }`}
               onClick={handleFriendshipAction}
               disabled={sendRequestMutation.isPending || removeFriendMutation.isPending}
             >
-              {removeFriendMutation.isPending ? "..." : "Remove Friend"}
+              {friendshipStatus.isFriend
+                ? (removeFriendMutation.isPending ? "..." : "Unfollow")
+                : (sendRequestMutation.isPending ? "..." : "Follow")
+              }
             </button>
           )
         )}
       </div>
 
       {/* Loading State */}
-      {isLoading && (
-        <div className="friend-profile-loading">Loading profile...</div>
-      )}
+      <LoadingBar
+        isLoading={isLoadingData}
+        hasData={!!friendProfile && !isLoadingData}
+        text="Loading profile"
+      />
 
       {/* Error State */}
-      {error && (
+      {!isLoadingData && error && (
         <div className="friend-profile-error">
           Failed to load profile. Please try again.
         </div>
       )}
 
       {/* Blocked State */}
-      {friendProfile && friendshipStatus?.isBlocked && !isOwnProfile && (
+      {!isLoadingData && friendProfile && friendshipStatus?.isBlocked && !isOwnProfile && (
         <div className="friend-profile-not-friends">
           <div className="friend-profile-not-friends-content">
             <div className="friend-profile-avatar">
@@ -510,7 +935,7 @@ export default function FriendProfilePage() {
       )}
 
       {/* Profile Content - Show if not blocked (friends, not friends, or own profile) */}
-      {friendProfile && !friendshipStatus?.isBlocked && (
+      {!isLoadingData && friendProfile && !friendshipStatus?.isBlocked && (
         <>
           {/* Profile Card */}
           <div className="friend-profile-card">
@@ -543,12 +968,50 @@ export default function FriendProfilePage() {
             </div>
           </div>
 
+          {/* Pending Access Requests Banner */}
+          {!isOwnProfile && pendingRequests.length > 0 && (
+            <div className="friend-profile-pending-requests-banner">
+              <h3 className="friend-profile-pending-requests-title">
+                Pending Access Requests
+              </h3>
+              <p className="friend-profile-pending-requests-message">
+                {getUserDisplayName()} has requested access to the following lessons:
+              </p>
+              <div className="friend-profile-pending-requests-list">
+                {pendingRequests.map((request: any) => (
+                  <div
+                    key={request.quizId}
+                    className="friend-profile-pending-request-item"
+                  >
+                    <span className="friend-profile-pending-request-name">{request.quizName}</span>
+                    <div className="friend-profile-pending-request-actions">
+                      <button
+                        onClick={() => approveQuizAccessMutation.mutate(request.quizId)}
+                        disabled={approveQuizAccessMutation.isPending}
+                        className="friend-profile-request-button friend-profile-request-button--approve"
+                      >
+                        {approveQuizAccessMutation.isPending ? "..." : "Approve"}
+                      </button>
+                      <button
+                        onClick={() => denyQuizAccessMutation.mutate(request.quizId)}
+                        disabled={denyQuizAccessMutation.isPending}
+                        className="friend-profile-request-button friend-profile-request-button--deny"
+                      >
+                        {denyQuizAccessMutation.isPending ? "..." : "Deny"}
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
           {/* Lessons Section */}
           <div className="friend-profile-section">
             <h3 className="friend-profile-section-title">
               {getUserDisplayName()}'s Lessons
             </h3>
-            {/* Show different states based on friendship status */}
+            {/* Show different states based on privacy settings and friendship status */}
             {isOwnProfile ? (
               // Own profile - show lessons
               friendQuizzes.length === 0 ? (
@@ -571,20 +1034,64 @@ export default function FriendProfilePage() {
                   ))}
                 </div>
               )
-            ) : friendshipStatus ? (
-              // If following but not friends (pending approval)
-              friendshipStatus.isFollowing && !friendshipStatus.isFriend ? (
+            ) : friendProfile?.defaultPrivacy === "PUBLIC" ? (
+              // PUBLIC privacy - everyone can see lessons
+              friendQuizzes.length === 0 ? (
+                <div className="friend-profile-no-lessons">
+                  {getUserDisplayName()} hasn't created any lessons yet.
+                </div>
+              ) : (
+                <div className="friend-profile-lessons-list">
+                  {friendQuizzes.map((quiz) => (
+                    <div
+                      key={quiz.id}
+                      className="friend-profile-lesson-list-item"
+                      onClick={() => handleLessonClick(quiz.id)}
+                      style={{ cursor: "pointer" }}
+                    >
+                      <span className="friend-profile-lesson-list-name">
+                        {quiz.name}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              )
+            ) : friendProfile?.defaultPrivacy === "FRIENDS" ? (
+              // FRIENDS privacy - check if they are mutual friends
+              friendshipStatus?.isFriend ? (
+                // They are friends - show lessons
+                friendQuizzes.length === 0 ? (
+                  <div className="friend-profile-no-lessons">
+                    {getUserDisplayName()} hasn't created any lessons yet.
+                  </div>
+                ) : (
+                  <div className="friend-profile-lessons-list">
+                    {friendQuizzes.map((quiz) => (
+                      <div
+                        key={quiz.id}
+                        className="friend-profile-lesson-list-item"
+                        onClick={() => handleLessonClick(quiz.id)}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <span className="friend-profile-lesson-list-name">
+                          {quiz.name}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                )
+              ) : friendshipStatus?.isFollowing && !friendshipStatus.isFriend ? (
+                // Pending friend request
                 <div className="friend-profile-no-lessons">
                   <p className="friend-profile-lessons-message">
                     Waiting for {getUserDisplayName()} to accept your friend request
                   </p>
                 </div>
-              ) : 
-              // If not following at all
-              !friendshipStatus.isFollowing ? (
+              ) : (
+                // Not friends - prompt to follow
                 <div className="friend-profile-no-lessons">
                   <p className="friend-profile-lessons-message">
-                    Add {getUserDisplayName()} as a friend to request their lessons
+                    Follow {getUserDisplayName()} to view their lessons
                   </p>
                   <button
                     className="friend-profile-friendship-button friend-profile-friendship-button--add"
@@ -594,73 +1101,77 @@ export default function FriendProfilePage() {
                     {sendRequestMutation.isPending ? "..." : "Follow"}
                   </button>
                 </div>
-              ) : (
-                // If friends (mutual follow)
-                lessonRequestStatus?.hasAccess ? (
-                  // Has access - show lessons
-                  friendQuizzes.length === 0 ? (
-                    <div className="friend-profile-no-lessons">
-                      {getUserDisplayName()} hasn't created any lessons yet.
-                    </div>
-                  ) : (
-                    <div className="friend-profile-lessons-list">
-                      {friendQuizzes.map((quiz) => (
-                        <div
-                          key={quiz.id}
-                          className="friend-profile-lesson-list-item"
-                          onClick={() => handleLessonClick(quiz.id)}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <span className="friend-profile-lesson-list-name">
-                            {quiz.name}
-                          </span>
-                        </div>
-                      ))}
-                    </div>
-                  )
-                ) : lessonRequestStatus?.status === "PENDING" ? (
-                  // Request pending - show cancel button
+              )
+            ) : friendProfile?.defaultPrivacy === "PRIVATE" ? (
+              // PRIVATE privacy - behavior depends on friendship status
+              friendshipStatus?.isFriend ? (
+                // They are friends - show all lessons with lock icons for lessons that need access request
+                friendQuizzes.length === 0 ? (
                   <div className="friend-profile-no-lessons">
-                    <p className="friend-profile-lessons-message">
-                      Request to see all of {getUserDisplayName()}'s current lessons
-                    </p>
-                    <button
-                      className="friend-profile-friendship-button friend-profile-friendship-button--remove"
-                      onClick={() => cancelLessonRequestMutation.mutate()}
-                      disabled={cancelLessonRequestMutation.isPending}
-                    >
-                      {cancelLessonRequestMutation.isPending ? "..." : "Cancel Request"}
-                    </button>
+                    {getUserDisplayName()} hasn't created any lessons yet.
                   </div>
                 ) : (
-                  // No request or denied - show request button
-                  <div className="friend-profile-no-lessons">
-                    <p className="friend-profile-lessons-message">
-                      Request to see all of {getUserDisplayName()}'s current lessons
-                    </p>
-                    <button
-                      className="friend-profile-friendship-button friend-profile-friendship-button--add"
-                      onClick={() => createLessonRequestMutation.mutate()}
-                      disabled={createLessonRequestMutation.isPending}
-                    >
-                      {createLessonRequestMutation.isPending ? "..." : "Request"}
-                    </button>
+                  <div className="friend-profile-lessons-list">
+                    {friendQuizzes.map((quiz) => (
+                      <div
+                        key={quiz.id}
+                        className="friend-profile-lesson-list-item"
+                        onClick={() => !quiz.isLocked && handleLessonClick(quiz.id)}
+                        style={{ cursor: quiz.isLocked ? "default" : "pointer" }}
+                      >
+                        <span className="friend-profile-lesson-list-name">
+                          {quiz.name}
+                        </span>
+                        {/* Show lock icon or request pending status for locked lessons */}
+                        {quiz.isLocked && (
+                          myRequestedQuizIds.includes(quiz.id) ? (
+                            <span className="friend-profile-lesson-request-pending">
+                              Request Pending
+                            </span>
+                          ) : (
+                            <img
+                              src={lockIcon}
+                              alt="Locked"
+                              className="friend-profile-lesson-lock"
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                requestQuizAccessMutation.mutate(quiz.id);
+                              }}
+                            />
+                          )
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )
+              ) : friendshipStatus?.isFollowing && !friendshipStatus.isFriend ? (
+                // Pending friend request
+                <div className="friend-profile-no-lessons">
+                  <p className="friend-profile-lessons-message">
+                    Waiting for {getUserDisplayName()} to accept your friend request
+                  </p>
+                </div>
+              ) : (
+                // Not friends - show follow message with button
+                <div className="friend-profile-no-lessons">
+                  <p className="friend-profile-lessons-message">
+                    Follow {getUserDisplayName()} to view their lessons
+                  </p>
+                  <button
+                    className="friend-profile-friendship-button friend-profile-friendship-button--add"
+                    onClick={handleFriendshipAction}
+                    disabled={sendRequestMutation.isPending}
+                  >
+                    {sendRequestMutation.isPending ? "..." : "Follow"}
+                  </button>
+                </div>
               )
             ) : (
-              // Loading state - show default "not following" message
+              // Loading state or unknown privacy setting
               <div className="friend-profile-no-lessons">
                 <p className="friend-profile-lessons-message">
-                  Add {getUserDisplayName()} as a friend to request their lessons
+                  Loading...
                 </p>
-                <button
-                  className="friend-profile-friendship-button friend-profile-friendship-button--add"
-                  onClick={handleFriendshipAction}
-                  disabled={sendRequestMutation.isPending}
-                >
-                  {sendRequestMutation.isPending ? "..." : "Follow"}
-                </button>
               </div>
             )}
           </div>
@@ -670,16 +1181,30 @@ export default function FriendProfilePage() {
             <h3 className="friend-profile-section-title">Overview</h3>
             <div className="friend-profile-overview">
               <div className="friend-profile-overview-item">
-                <div className="friend-profile-overview-icon"></div>
-                <p className="friend-profile-overview-label">Badges:</p>
+                <p className="friend-profile-overview-label">Badges: {userBadges?.length || 0}</p>
               </div>
               <div className="friend-profile-overview-item">
-                <div className="friend-profile-overview-icon"></div>
                 <p className="friend-profile-overview-label">Joined: {formatDate(friendProfile?.createdAt)}</p>
               </div>
-              <div className="friend-profile-overview-item">
-                <div className="friend-profile-overview-icon"></div>
-                <p className="friend-profile-overview-label">Medals: 0</p>
+            </div>
+
+            {/* Badges Display */}
+            <div className="friend-profile-badges-section">
+              <h4 className="friend-profile-badges-subtitle">Badge Collection</h4>
+              <div className="friend-profile-badges-grid">
+                {badgeIcons.length > 0 ? (
+                  badgeIcons.map((badge) => (
+                    <div key={badge.id} className="friend-profile-badge-item" title={badge.name}>
+                      <img
+                        src={badge.url}
+                        alt={badge.name}
+                        className="friend-profile-badge-icon"
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="friend-profile-no-badges">No badges earned yet.</p>
+                )}
               </div>
             </div>
           </div>

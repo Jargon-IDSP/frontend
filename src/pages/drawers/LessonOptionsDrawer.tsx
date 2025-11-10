@@ -11,29 +11,30 @@ import editNameIcon from "@/assets/icons/editNameIcon.svg";
 import addToFolderIcon from "@/assets/icons/addToFolderIcon.svg";
 import uploadIcon from "@/assets/icons/uploadIcon.svg";
 import deleteIcon from "@/assets/icons/deleteIcon-brown.svg";
-// import { useNavigate } from "react-router-dom";
+import type { LessonOptionsDrawerProps } from "../../types/lessonOptionsDrawer";
 import DocumentDrawer from "./DocumentDrawer";
 import DeleteDrawer from "./DeleteDrawer";
 import AddToFolderDrawer from "./AddToFolderDrawer";
-
-interface DocumentDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import ShareDrawer from "./ShareDrawer";
+import EditNameDrawer from "./EditNameDrawer";
 
 export default function LessonOptionsDrawer({
   open,
   onOpenChange,
-}: DocumentDrawerProps) {
-  //   const navigate = useNavigate();
+  quizId,
+  documentId,
+  documentName,
+}: LessonOptionsDrawerProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isAddToFolderDrawerOpen, setIsAddToFolderDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+  const [isShareDrawerOpen, setIsShareDrawerOpen] = useState(false);
+  const [isEditNameDrawerOpen, setIsEditNameDrawerOpen] = useState(false);
 
-  const handleUpload = () => {
+  const handleEditName = () => {
     onOpenChange(false);
     setTimeout(() => {
-      setIsDrawerOpen(true);
+      setIsEditNameDrawerOpen(true);
     }, 200);
   };
 
@@ -59,6 +60,13 @@ export default function LessonOptionsDrawer({
     onOpenChange(true);
   };
 
+  const handleShare = () => {
+    onOpenChange(false);
+    setTimeout(() => {
+      setIsShareDrawerOpen(true);
+    }, 200);
+  };
+
   return (
     <>
       <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
@@ -71,12 +79,25 @@ export default function LessonOptionsDrawer({
         open={isDeleteDrawerOpen}
         onOpenChange={setIsDeleteDrawerOpen}
         onCancel={handleDeleteCancel}
+        documentId={documentId}
+        documentName={documentName}
+      />
+      <ShareDrawer
+        open={isShareDrawerOpen}
+        onOpenChange={setIsShareDrawerOpen}
+        quizId={quizId}
+      />
+      <EditNameDrawer
+        open={isEditNameDrawerOpen}
+        onOpenChange={setIsEditNameDrawerOpen}
+        documentId={documentId}
+        currentName={documentName}
       />
 
       <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
         <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
           <DrawerHeader>
-            <button className="button" onClick={handleUpload}>
+            <button className="button" onClick={handleEditName}>
               <img src={editNameIcon} alt="A book and a pen icon" />
               Edit name
             </button>
@@ -87,7 +108,7 @@ export default function LessonOptionsDrawer({
               />
               Add to folder
             </button>
-            <button>
+            <button onClick={handleShare}>
               <img src={uploadIcon} alt="Upload icon" />
               Share
             </button>

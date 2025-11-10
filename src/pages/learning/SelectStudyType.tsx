@@ -1,17 +1,23 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
 import DocumentNav from "../../components/DocumentNav";
 import DocumentSelector from "../../components/learning/DocumentSelector";
 import DocumentStudyOptions from "../../components/learning/DocumentStudyOptions";
 import WordOfTheDay from "../../components/WordOfTheDay";
+import LoadingBar from "../../components/LoadingBar";
 import type { Document } from "../../types/document";
 import { useDocument } from "../../hooks/useDocument";
 import { useDocumentAccess } from "../../hooks/useDocumentAccess";
 import LessonOptionsDrawer from "../drawers/LessonOptionsDrawer";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function SelectStudyType() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { getToken } = useAuth();
   const { documentId } = useParams<{ documentId: string }>();
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null
@@ -23,6 +29,22 @@ export default function SelectStudyType() {
 
   const { data: documentData, isLoading } = useDocument(documentId);
   const { isOwner } = useDocumentAccess(selectedDocument);
+
+  // Fetch quiz ID for the document
+  const { data: quizData } = useQuery({
+    queryKey: ["documentQuiz", documentId],
+    queryFn: async () => {
+      if (!documentId) return null;
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/learning/documents/${documentId}/overview`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!documentId,
+  });
 
   useEffect(() => {
     if (documentData?.document && !selectedDocument) {
@@ -53,17 +75,13 @@ export default function SelectStudyType() {
   };
 
   const handleOptionsClick = () => {
-    if (!isFriendLesson) {
-      setIsDrawerOpen(true); // Open drawer when three dots clicked (only for own lessons)
-    }
+    setIsDrawerOpen(true); // Open drawer when three dots clicked (only for own lessons)
   };
 
   if (isLoading) {
     return (
       <div className="fullTranslationOverview">
-        <div className="loading-container">
-          <h2 className="loading-title">Loading...</h2>
-        </div>
+        <LoadingBar isLoading={true} text="Loading document" />
       </div>
     );
   }
@@ -75,20 +93,26 @@ export default function SelectStudyType() {
 
   return (
     <>
-      <LessonOptionsDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <LessonOptionsDrawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        quizId={quizData?.id || null}
+        documentId={selectedDocument?.id || documentData?.document?.id || documentId || null}
+        documentName={selectedDocument?.filename || documentData?.document?.filename || ""}
+      />
 
       <div className="fullTranslationOverview">
         <div className="container demo">
           <DocumentNav
             activeTab="lesson"
             title={
-              selectedDocument ? selectedDocument.filename : 
+              selectedDocument ? selectedDocument.filename :
               (documentData?.document ? documentData.document.filename : "Select a Document")
             }
-            subtitle={!isFriendLesson && isOwner && (selectedDocument || documentData?.document) ? "..." : ""}
+            subtitle={isOwner && (selectedDocument || documentData?.document) ? "..." : ""}
             onDocumentClick={(selectedDocument || documentData?.document) ? handleDemoDocs : undefined}
             onBackClick={handleBackClick}
-            onSubtitleClick={!isFriendLesson ? handleOptionsClick : undefined}
+            onSubtitleClick={isOwner ? handleOptionsClick : undefined}
           />
 
           {(selectedDocument || documentData?.document) && <WordOfTheDay />}
@@ -108,11 +132,7 @@ export default function SelectStudyType() {
               quizColor="red"
             />
           ) : (
-            <div className="fullTranslationOverview">
-              <div className="loading-container">
-                <h2 className="loading-title">Loading document...</h2>
-              </div>
-            </div>
+            <LoadingBar isLoading={true} text="Loading document" />
           )}
         </div>
       </div>

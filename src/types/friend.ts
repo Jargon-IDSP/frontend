@@ -29,6 +29,24 @@ export interface SearchResult extends Friend {
   friendshipId: string | null;
 }
 
+export interface FriendProfile {
+  id: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  score: number;
+  industryId: number | null;
+  defaultPrivacy?: string;
+  createdAt?: string;
+}
+
+export interface FriendQuiz {
+  id: string;
+  name: string;
+  isLocked?: boolean;
+}
+
 // API Response interfaces
 export interface FriendsResponse {
   data: Friend[];

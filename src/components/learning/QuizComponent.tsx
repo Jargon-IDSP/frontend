@@ -13,6 +13,7 @@ import backButton from "../../assets/icons/backButton.svg";
 
 export default function QuizComponent({
   questions,
+  quizNumber,
   onComplete,
   onBack,
   preferredLanguage,
@@ -31,6 +32,7 @@ export default function QuizComponent({
   const [chatReply, setChatReply] = useState("");
 
   const currentQuestion = questions[currentQuestionIndex];
+  const isBossQuiz = quizType === 'existing' && quizNumber === 3;
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
@@ -103,16 +105,23 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
   const handleAnswerSelect = (choiceId: string) => {
     setSelectedAnswer(choiceId);
+
+    if (isBossQuiz) {
+      setTimeout(() => {
+        handleNext(choiceId);
+      }, 300);
+    }
   };
 
-  const handleNext = () => {
+  const handleNext = (answerOverride?: string | React.MouseEvent) => {
+    const answer = typeof answerOverride === 'string' ? answerOverride : selectedAnswer;
     let finalScore = score;
 
-    if (selectedAnswer) {
-      setAnswers({ ...answers, [currentQuestionIndex]: selectedAnswer });
+    if (answer) {
+      setAnswers({ ...answers, [currentQuestionIndex]: answer });
 
       const selectedChoice = currentQuestion.choices.find(
-        (c) => c.id === selectedAnswer
+        (c) => c.id === answer
       );
       if (selectedChoice?.isCorrect) {
         finalScore = score + 1;
@@ -177,6 +186,8 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         onRetry={handleRetry}
         onBack={onBack}
         quizType={quizType}
+        quizNumber={quizNumber}
+        isBossQuiz={isBossQuiz}
       />
     );
   }
@@ -220,21 +231,25 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       </div>
 
       <div className="quiz-question-section">
-        <div className="quiz-translate-button">
-          <TranslateButton
-            text={currentQuestion.prompt}
-            preferredLanguage={preferredLanguage}
-            onTranslate={(targetLanguage) =>
-              translateText(currentQuestion.prompt, targetLanguage)
-            }
-          />
-        </div>
+        {!isBossQuiz && (
+          <div className="quiz-translate-button">
+            <TranslateButton
+              text={currentQuestion.prompt}
+              preferredLanguage={preferredLanguage}
+              onTranslate={(targetLanguage) =>
+                translateText(currentQuestion.prompt, targetLanguage)
+              }
+            />
+          </div>
+        )}
+
+        <h2 className="quiz-question">{currentQuestion.prompt}</h2>
 
         <div className="quiz-choices-section">
           {currentQuestion.choices.map((choice) => {
             const isSelected = selectedAnswer === choice.id;
             const isCorrect = choice.isCorrect;
-            const showFeedback = selectedAnswer !== null;
+            const showFeedback = !isBossQuiz && selectedAnswer !== null;
 
             const buttonClasses = [
               "quiz-choices-button",
@@ -277,30 +292,37 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       </div>
 
       <div className="quiz-nav-buttons">
-        <button
-          className="back-previous-question-button"
-          onClick={handlePrevious}
-          disabled={currentQuestionIndex === 0}
-          aria-label="Previous question"
-        >
-          <img src={backButton} alt="Back" />
-        </button>
+        {!isBossQuiz && (
+          <button
+            className="back-previous-question-button"
+            onClick={handlePrevious}
+            disabled={currentQuestionIndex === 0}
+            aria-label="Previous question"
+          >
+            <img src={backButton} alt="Back" />
+          </button>
+        )}
 
-        <button className="quiz-chat-button" onClick={handleOpenChat}>
-          <span className="quiz-chat-button-text">Need Help? Ask Rocky!</span>
-        </button>
+        {!isBossQuiz && (
+          <button className="quiz-chat-button" onClick={handleOpenChat}>
+            <span className="quiz-chat-button-text">Need Help? Ask Rocky!</span>
+          </button>
+        )}
 
-        <button
-          className="next-question-button"
-          onClick={handleNext}
-          aria-label={
-            currentQuestionIndex === questions.length - 1
-              ? "Finish quiz"
-              : "Next question"
-          }
-        >
-          <img src={nextButton} alt="Next" />
-        </button>
+        {!isBossQuiz && (
+          <button
+            className="next-question-button"
+            onClick={handleNext}
+            disabled={!selectedAnswer}
+            aria-label={
+              currentQuestionIndex === questions.length - 1
+                ? "Finish quiz"
+                : "Next question"
+            }
+          >
+            <img src={nextButton} alt="Next" />
+          </button>
+        )}
       </div>
 
       <ChatModal

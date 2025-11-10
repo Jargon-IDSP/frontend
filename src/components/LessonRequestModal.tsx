@@ -4,15 +4,8 @@ import { useAuth } from "@clerk/clerk-react";
 import Modal from "./learning/ui/Modal";
 import { BACKEND_URL } from "../lib/api";
 import { useMarkAsRead } from "../hooks/useNotifications";
+import type { LessonRequestModalProps } from "../types/lessonRequestModal";
 import "../styles/components/_lessonRequestModal.scss";
-
-interface LessonRequestModalProps {
-  isOpen: boolean;
-  onClose: () => void;
-  notificationId: string;
-  requesterName: string;
-  requesterId: string;
-}
 
 export default function LessonRequestModal({
   isOpen,

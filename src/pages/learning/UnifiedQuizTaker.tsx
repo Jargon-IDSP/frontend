@@ -101,6 +101,8 @@ export default function UnifiedQuizTaker() {
         score,
         totalQuestions,
         levelId,
+        industryId: queryIndustryId ? parseInt(queryIndustryId) : undefined,
+        quizNumber,
         quizId: `quiz-${levelId}-${Date.now()}`,
       });
     } else if (quizType === 'category' && category) {

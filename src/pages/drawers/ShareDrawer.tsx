@@ -1,27 +1,34 @@
 import { useState, useEffect } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import {
+  Drawer,
+  DrawerContent,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
+  DrawerFooter,
+} from "@/components/ui/drawer";
+import { Button } from "@/components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { BACKEND_URL } from "../../lib/api";
-import Modal from "./ui/Modal";
-import Button from "./ui/Button";
-import LoadingBar from "../LoadingBar";
-import { getUserDisplayName } from "../../types/friend";
+import { useAuth } from "@clerk/clerk-react";
 import type { Friend } from "../../types/friend";
-import type { QuizShareModalProps } from "@/types/components/quiz";
-import type { FriendsResponse } from "@/types/api/friends";
-import "../../styles/components/_quizShareModal.scss";
+import type { ShareDrawerProps } from "../../types/shareDrawer";
+import { getUserDisplayName } from "../../types/friend";
 
-export default function QuizShareModal({
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
+export default function ShareDrawer({
+  open,
+  onOpenChange,
   quizId,
-  quizName,
-  onClose,
-  onShared,
-}: QuizShareModalProps) {
+  quizVisibility: quizVisibilityProp,
+}: ShareDrawerProps) {
+  console.log("🚀 ShareDrawer rendered with props:", { open, quizId, quizVisibility: quizVisibilityProp });
+
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
   const [selectedFriends, setSelectedFriends] = useState<Set<string>>(new Set());
 
-  // Fetch quiz data to get visibility
+  // Fetch quiz data to get visibility only if not provided as prop
   const { data: quizData } = useQuery({
     queryKey: ["quizVisibility", quizId],
     queryFn: async () => {
@@ -34,15 +41,15 @@ export default function QuizShareModal({
       const data = await res.json();
       return data.data;
     },
-    enabled: !!quizId,
+    enabled: open && !!quizId && !quizVisibilityProp,
   });
 
-  const quizVisibility = quizData?.visibility || "PRIVATE";
+  const quizVisibility = quizVisibilityProp || quizData?.visibility || "PRIVATE";
   const isPrivate = quizVisibility === "PRIVATE";
   const isFriendsOrPublic = quizVisibility === "FRIENDS" || quizVisibility === "PUBLIC";
 
   // Fetch friends list
-  const { data: friends = [], isLoading: loading } = useQuery({
+  const { data: friends = [] } = useQuery({
     queryKey: ["friends"],
     queryFn: async (): Promise<Friend[]> => {
       const token = await getToken();
@@ -50,10 +57,10 @@ export default function QuizShareModal({
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) return [];
-      const data: FriendsResponse = await res.json();
+      const data = await res.json();
       return data.data || [];
     },
-    staleTime: 5 * 60 * 1000,
+    enabled: open,
   });
 
   // Fetch current shares for this quiz
@@ -70,27 +77,41 @@ export default function QuizShareModal({
       );
       if (!res.ok) return [];
       const data = await res.json();
+      console.log("📊 Current shares data:", data);
       return data.data?.shares || [];
     },
-    enabled: !!quizId,
+    enabled: open && !!quizId,
   });
 
   // Initialize selected friends from current shares or all friends for FRIENDS/PUBLIC
   useEffect(() => {
-    if (quizId) {
+    console.log("🔄 ShareDrawer useEffect triggered", {
+      open,
+      quizId,
+      isFriendsOrPublic,
+      isPrivate,
+      currentSharesCount: currentShares.length,
+      friendsCount: friends.length,
+      quizVisibility,
+    });
+
+    if (open && quizId) {
       if (isFriendsOrPublic) {
         // For FRIENDS/PUBLIC visibility, all friends are selected (but disabled)
         const allFriendIds = new Set<string>(friends.map((f) => f.id));
+        console.log("✅ Setting all friends as selected (FRIENDS/PUBLIC mode):", allFriendIds);
         setSelectedFriends(allFriendIds);
       } else {
         // For PRIVATE, only show explicitly shared friends
         const sharedUserIds = new Set<string>(
           currentShares.map((share: any) => share.sharedWith.id as string)
         );
+        console.log("✅ Setting shared friends as selected (PRIVATE mode):", sharedUserIds);
+        console.log("📋 Current shares:", currentShares);
         setSelectedFriends(sharedUserIds);
       }
     }
-  }, [currentShares, quizId, friends, isFriendsOrPublic]);
+  }, [currentShares, open, quizId, friends, isFriendsOrPublic, isPrivate, quizVisibility]);
 
   // Share with friend mutation
   const shareMutation = useMutation({
@@ -114,8 +135,6 @@ export default function QuizShareModal({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["quizShares", quizId] });
-      queryClient.invalidateQueries({ queryKey: ["sharedQuizzes"] });
-      onShared?.();
     },
   });
 
@@ -144,8 +163,6 @@ export default function QuizShareModal({
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["quizShares", quizId] });
-      queryClient.invalidateQueries({ queryKey: ["sharedQuizzes"] });
-      onShared?.();
     },
   });
 
@@ -164,54 +181,56 @@ export default function QuizShareModal({
   };
 
   return (
-    <Modal isOpen={true} onClose={onClose} title={`Share "${quizName}"`}>
-      {loading ? (
-        <LoadingBar isLoading={true} text="Loading friends" />
-      ) : friends.length === 0 ? (
-        <p className="quiz-share-modal-empty-message">
-          You don't have any friends yet. Follow friends to share quizzes with
-          them!
-        </p>
-      ) : (
-        <>
-          <p className="quiz-share-modal-description">
+    <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
+      <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
+        <DrawerHeader>
+          <DrawerTitle>Share Lesson</DrawerTitle>
+          <DrawerDescription>
             {isPrivate
-              ? "Select friends who can access this quiz:"
+              ? "Select friends who can access this lesson"
               : "To control who can access your quiz, please change your profile privacy settings"}
-          </p>
-          <div className="quiz-share-modal-friends-list">
-            {friends.map((friend) => (
+          </DrawerDescription>
+        </DrawerHeader>
+
+        <div className="share-drawer-friends">
+          {friends.length === 0 ? (
+            <div className="share-drawer-no-friends">
+              <p>No friends to share with yet.</p>
+            </div>
+          ) : (
+            friends.map((friend) => (
               <label
                 key={friend.id}
-                className={`quiz-share-modal-friend-item ${!isPrivate ? "quiz-share-modal-friend-item-disabled" : ""}`}
+                className={`share-drawer-friend ${!isPrivate ? "share-drawer-friend-disabled" : ""}`}
               >
                 <input
                   type="checkbox"
                   checked={selectedFriends.has(friend.id)}
                   onChange={() => handleToggleFriend(friend.id)}
-                  className="quiz-share-modal-checkbox"
                   disabled={
                     !isPrivate ||
                     shareMutation.isPending ||
                     unshareMutation.isPending
                   }
                 />
-                <span>{getUserDisplayName(friend)}</span>
+                <span className="share-drawer-friend-name">
+                  {getUserDisplayName(friend)}
+                </span>
               </label>
-            ))}
-          </div>
+            ))
+          )}
+        </div>
 
-          <div className="quiz-share-modal-actions">
-            <Button
-              onClick={onClose}
-              variant="secondary"
-              disabled={shareMutation.isPending || unshareMutation.isPending}
-            >
-              Done
-            </Button>
-          </div>
-        </>
-      )}
-    </Modal>
+        <DrawerFooter>
+          <Button
+            variant="outline"
+            onClick={() => onOpenChange(false)}
+            className="w-full"
+          >
+            Done
+          </Button>
+        </DrawerFooter>
+      </DrawerContent>
+    </Drawer>
   );
 }

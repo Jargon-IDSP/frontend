@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "@clerk/clerk-react";
 import { useDocumentTranslation } from "../../hooks/useDocumentTranslation";
 import { useTranslatedText } from "../../hooks/useTranslatedText";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
@@ -9,9 +11,12 @@ import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import DocOptionsDrawer from "../drawers/DocOptionsDrawer";
 import LoadingBar from "../../components/LoadingBar";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function FullTranslationView() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const location = useLocation();
+  const { getToken } = useAuth();
 
   // Check if this is a friend's lesson from location state
   const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
@@ -30,6 +35,22 @@ export default function FullTranslationView() {
     documentId: id || null,
   });
   const translatedText = useTranslatedText(data?.translation);
+
+  // Fetch quiz ID for the document
+  const { data: quizData } = useQuery({
+    queryKey: ["documentQuiz", id],
+    queryFn: async () => {
+      if (!id) return null;
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/learning/documents/${id}/overview`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return null;
+      const data = await res.json();
+      return data.data;
+    },
+    enabled: !!id,
+  });
   
   // Check document ownership
   const document = data?.translation?.document || null;
@@ -126,7 +147,13 @@ export default function FullTranslationView() {
 
   return (
     <>
-      <DocOptionsDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <DocOptionsDrawer
+        open={isDrawerOpen}
+        onOpenChange={setIsDrawerOpen}
+        documentId={id || null}
+        documentName={document?.filename || ""}
+        quizId={quizData?.id || null}
+      />
 
       <div className="fullTranslationOverview">
         <div className="container demo">

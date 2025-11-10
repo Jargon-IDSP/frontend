@@ -4,6 +4,7 @@ import { useMyQuizzes } from "../../hooks/useMyQuizzes";
 import QuizShareModal from "../../components/learning/QuizShareModal";
 import Button from "../../components/learning/ui/Button";
 import Card from "../../components/learning/ui/Card";
+import LoadingBar from "../../components/LoadingBar";
 import { getUserDisplayName } from "../../types/friend";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
@@ -49,7 +50,7 @@ export default function MyQuizzesPage() {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <LoadingBar isLoading={true} text="Loading quizzes" />
       ) : quizzes.length === 0 ? (
         <div style={{ textAlign: "center", padding: "3rem", color: "#6b7280" }}>
           <p style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>

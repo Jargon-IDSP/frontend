@@ -10,6 +10,7 @@ import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
 import emptyBellIcon from '../assets/icons/emptyBell.svg';
+import solidBellIcon from '../assets/icons/notification.svg';
 
 type LeaderboardType = "general" | "friends";
 
@@ -147,7 +148,7 @@ const LeaderboardPage: React.FC = () => {
               aria-label="Notifications"
             >
               <div className="leaderboard-notifications-icon-wrapper">
-                <img src={emptyBellIcon} alt="Notifications" />
+                <img src={(unreadCount ?? 0) > 0 ? solidBellIcon : emptyBellIcon} alt="Notifications" />
                 {(unreadCount ?? 0) > 0 && (
                   <span className="leaderboard-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
                 )}
@@ -230,13 +231,13 @@ const LeaderboardPage: React.FC = () => {
               className="leaderboard-empty-avatar"
             />
             <p className="leaderboard-empty-message">
-              You don't have any friends yet. Add friends to see the friends leaderboard!
+              You don't have any friends yet. Follow friends to see the friends leaderboard!
             </p>
             <button
               className="leaderboard-start-button"
               onClick={() => navigate("/profile/friends")}
             >
-              Add Friends
+              Find Friends
             </button>
           </div>
         ) : (
@@ -285,7 +286,7 @@ const LeaderboardPage: React.FC = () => {
             {users.length === 0 && (
               <p className="leaderboard-empty-list">
                 {leaderboardType === "friends"
-                  ? "No friends found. Add friends to see the friends leaderboard!"
+                  ? "No friends found. Follow friends to see the friends leaderboard!"
                   : "No users found in the leaderboard."}
               </p>
             )}
@@ -303,7 +304,7 @@ const LeaderboardPage: React.FC = () => {
             className="leaderboard-friends-button"
             onClick={() => navigate("/profile/friends")}
           >
-            Add Friend
+            Find Friends
           </button>
         )}
       </div>

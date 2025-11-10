@@ -1,0 +1,81 @@
+@use '../variables' as *;
+
+.share-drawer-friends {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  padding: 0 $spacing-md $spacing-md $spacing-md;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.share-drawer-friend {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+  padding: $spacing-sm;
+  border: 2px solid $color-quaternary-light;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+  background: white;
+
+  &:hover {
+    border-color: $color-primary;
+    background: $color-second-neutral-light;
+  }
+
+  input[type="checkbox"] {
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+    accent-color: $color-primary;
+    flex-shrink: 0;
+  }
+
+  &-name {
+    flex: 1;
+    font-size: $font-size-body;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+  }
+}
+
+.share-drawer-friend:has(input[type="checkbox"]:checked) {
+  border-color: $color-primary;
+  background: $color-second-neutral-light;
+
+  .share-drawer-friend-name {
+    color: $color-primary;
+  }
+}
+
+.share-drawer-friend-disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+
+  &:hover {
+    border-color: $color-quaternary-light !important;
+    background: white !important;
+  }
+
+  input[type="checkbox"] {
+    cursor: not-allowed !important;
+  }
+
+  &:has(input[type="checkbox"]:checked) {
+    border-color: $color-quaternary-light !important;
+    background: $color-second-neutral-light !important;
+
+    .share-drawer-friend-name {
+      color: $color-quaternary-dark !important;
+    }
+  }
+}
+
+.share-drawer-no-friends {
+  text-align: center;
+  padding: $spacing-lg;
+  color: $color-neutral;
+  font-size: $font-size-body;
+}

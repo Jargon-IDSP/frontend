@@ -11,27 +11,33 @@ import bookAddIcon from "@/assets/icons/bookAdd.svg";
 import pdfIcon from "@/assets/icons/pdfIcon.svg";
 import uploadIcon from "@/assets/icons/uploadIcon.svg";
 import deleteIcon from "@/assets/icons/deleteIcon-brown.svg";
-// import { useNavigate } from "react-router-dom";
 import DocumentDrawer from "./DocumentDrawer";
 import DeleteDrawer from "./DeleteDrawer";
-
-interface DocumentDrawerProps {
-  open: boolean;
-  onOpenChange: (open: boolean) => void;
-}
+import ShareDrawer from "./ShareDrawer";
+import type { DocOptionsDrawerProps } from "../../types/docOptionsDrawer";
 
 export default function DocOptionsDrawer({
   open,
   onOpenChange,
-}: DocumentDrawerProps) {
-  // const navigate = useNavigate();
+  documentId,
+  documentName,
+  quizId,
+}: DocOptionsDrawerProps) {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
+  const [isShareDrawerOpen, setIsShareDrawerOpen] = useState(false);
 
   const handleUpload = () => {
     onOpenChange(false);
     setTimeout(() => {
       setIsDrawerOpen(true);
+    }, 200);
+  };
+
+  const handleShare = () => {
+    onOpenChange(false);
+    setTimeout(() => {
+      setIsShareDrawerOpen(true);
     }, 200);
   };
 
@@ -49,10 +55,17 @@ export default function DocOptionsDrawer({
   return (
     <>
       <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
+      <ShareDrawer
+        open={isShareDrawerOpen}
+        onOpenChange={setIsShareDrawerOpen}
+        quizId={quizId}
+      />
       <DeleteDrawer
         open={isDeleteDrawerOpen}
         onOpenChange={setIsDeleteDrawerOpen}
         onCancel={handleDeleteCancel}
+        documentId={documentId}
+        documentName={documentName}
       />
 
       <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
@@ -66,7 +79,7 @@ export default function DocOptionsDrawer({
               <img src={pdfIcon} alt="PDF icon" />
               Download to my device
             </button>
-            <button>
+            <button onClick={handleShare}>
               <img src={uploadIcon} alt="Upload icon" />
               Share
             </button>
@@ -76,7 +89,6 @@ export default function DocOptionsDrawer({
             </button>
           </DrawerHeader>
           <DrawerFooter>
-            {/* Horizontal divider */}
             <hr className="my-2 border-gray-200 mb-4" />
             <DrawerClose asChild>
               <Button

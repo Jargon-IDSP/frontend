@@ -18,7 +18,6 @@ export function NotificationsList() {
     lessonRequestId: string;
   } | null>(null);
 
-  // Fetch lesson request details when modal is opened
   const { data: lessonRequest } = useQuery({
     queryKey: ["lessonRequest", selectedNotification?.lessonRequestId],
     queryFn: async () => {
@@ -37,10 +36,8 @@ export function NotificationsList() {
     enabled: !!selectedNotification?.lessonRequestId,
   });
 
-  // Handle case where lesson request is already approved/denied
   useEffect(() => {
     if (selectedNotification && lessonRequest && lessonRequest.status !== "PENDING") {
-      // Request already handled - mark as read and navigate
       const notification = notifications?.find(n => n.id === selectedNotification.id);
       if (notification) {
         if (!notification.isRead) {
@@ -55,10 +52,7 @@ export function NotificationsList() {
   }, [selectedNotification, lessonRequest, notifications, navigate, markAsReadMutation]);
 
   const handleNotificationClick = (notification: any) => {
-    // Check if this is a lesson request notification
     if (notification.title === "New Lesson Request" && notification.lessonRequestId) {
-      // Set selected notification - the query will fetch and check status
-      // The modal will only show if status is PENDING (checked in render)
       setSelectedNotification({
         id: notification.id,
         lessonRequestId: notification.lessonRequestId,
@@ -66,16 +60,13 @@ export function NotificationsList() {
       return;
     }
 
-    // For other notifications, mark as read and navigate
     if (!notification.isRead) {
       markAsReadMutation.mutate(notification.id);
     }
 
     if (notification.actionUrl) {
-      // Fix LESSON_APPROVED notifications to use /profile/friends/ instead of /profile/
       let url = notification.actionUrl;
       if (notification.type === "LESSON_APPROVED" && url.startsWith("/profile/") && !url.startsWith("/profile/friends/")) {
-        // Extract userId from /profile/userId and convert to /profile/friends/userId
         const userId = url.replace("/profile/", "");
         url = `/profile/friends/${userId}`;
       }
@@ -158,7 +149,6 @@ export function NotificationsList() {
         ))}
       </div>
 
-      {/* Lesson Request Modal - Only show if request is still PENDING */}
       {selectedNotification && lessonRequest && lessonRequest.status === "PENDING" && (
         <LessonRequestModal
           isOpen={!!selectedNotification}

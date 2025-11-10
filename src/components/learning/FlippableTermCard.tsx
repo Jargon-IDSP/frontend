@@ -14,7 +14,6 @@ export default function FlippableTermCard({
   return (
     <div className="flip-card-container" onClick={handleClick}>
       <div className={`flip-card-inner ${isFlipped ? 'flipped' : ''}`}>
-        {/* Front side - shows English term */}
         <div className="flip-card-front">
           <div className="flip-card-content">
             {type === "existing" && term.industry && (
@@ -28,7 +27,6 @@ export default function FlippableTermCard({
           </div>
         </div>
 
-        {/* Back side - shows translation */}
         <div className="flip-card-back">
           <div className="flip-card-content">
             <div className="flip-card-label">Translation:</div>

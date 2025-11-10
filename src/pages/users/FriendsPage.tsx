@@ -9,6 +9,7 @@ import type {
   FriendsResponse,
   SearchResponse
 } from "../../types/friend";
+import LoadingBar from "../../components/LoadingBar";
 import "../../styles/pages/_friends.scss";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
@@ -229,7 +230,7 @@ export default function FriendsPage() {
       });
 
       if (!res.ok) {
-        throw new Error("Failed to remove friend");
+        throw new Error("Failed to unfollow friend");
       }
 
       return await res.json();
@@ -344,7 +345,7 @@ export default function FriendsPage() {
 
       {/* Search Section */}
       <div className="friends-search-section">
-        <h2 className="friends-search-title">Add Friends</h2>
+        <h2 className="friends-search-title">Find Friends</h2>
         <div className="friends-search-container">
           <input
             type="text"
@@ -519,10 +520,10 @@ export default function FriendsPage() {
       <div className="friends-list-section">
         <h2 className="friends-list-title">Friends - Mutual Follows ({friends.length})</h2>
         {loading ? (
-          <p className="friends-list-loading">Loading...</p>
+          <LoadingBar isLoading={true} text="Loading friends" />
         ) : friends.length === 0 ? (
           <p className="friends-list-empty">
-            No friends yet. Search for users to add friends!
+            No friends yet. Search for users to follow!
           </p>
         ) : (
           friends.map((friend) => {

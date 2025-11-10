@@ -72,6 +72,39 @@
   padding: 2rem 1.5rem;
 }
 
-.categoriesError {
+.categoriesError,
+.error-message {
   color: #dc2626;
+  text-align: center;
+  padding: 2rem;
+}
+
+// Level subtitle (description text under level name)
+.level-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0.25rem 0 0 0;
+}
+
+// Category folder header cursor styles
+.category-folder-header--locked {
+  cursor: not-allowed !important;
+}
+
+// Locked document/session item
+.document-item--locked {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+// Lock icon in session name
+.session-lock-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
 }
