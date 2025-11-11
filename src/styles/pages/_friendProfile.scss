@@ -279,7 +279,7 @@
 
 .friend-profile-badges-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: $spacing-sm;
   justify-items: center;
 }
@@ -306,10 +306,11 @@
 }
 
 .friend-profile-no-badges {
+  grid-column: 1 / -1; // Span all columns
   text-align: center;
-  color: $color-neutral;
-  font-size: $font-size-body;
-  padding: $spacing-md;
+  color: #393939;
+  font-size: 16px;
+  padding: 1rem;
   margin: 0;
 }
 

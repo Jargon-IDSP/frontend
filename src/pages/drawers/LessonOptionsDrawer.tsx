@@ -4,6 +4,8 @@ import {
   DrawerClose,
   DrawerContent,
   DrawerHeader,
+  DrawerTitle,
+  DrawerDescription,
   DrawerFooter,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
@@ -97,6 +99,8 @@ export default function LessonOptionsDrawer({
       <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
         <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
           <DrawerHeader>
+            <DrawerTitle>Lesson Options</DrawerTitle>
+            <DrawerDescription className="sr-only">Choose an action for this lesson</DrawerDescription>
             <button className="button" onClick={handleEditName}>
               <img src={editNameIcon} alt="A book and a pen icon" />
               Edit name

@@ -12,6 +12,9 @@ import type {
 import LoadingBar from "../../components/LoadingBar";
 import "../../styles/pages/_friends.scss";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
+import { getUserDisplayName } from "../../utils/userHelpers";
+import { useFriendshipActions } from "../../hooks/useFriendshipActions";
+import { useLessonRequests } from "../../hooks/useLessonRequests";
 
 export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -43,7 +46,7 @@ export default function FriendsPage() {
   });
 
   // Fetch followers (people who follow you)
-  const { data: allFollowers = [] } = useQuery({
+  const { data: allFollowers = [], isLoading: isLoadingFollowers } = useQuery({
     queryKey: ["followers"],
     queryFn: async (): Promise<Friend[]> => {
       const token = await getToken();
@@ -63,7 +66,7 @@ export default function FriendsPage() {
   });
 
   // Fetch following (people you follow)
-  const { data: allFollowing = [] } = useQuery({
+  const { data: allFollowing = [], isLoading: isLoadingFollowing } = useQuery({
     queryKey: ["following"],
     queryFn: async (): Promise<Friend[]> => {
       const token = await getToken();
@@ -83,7 +86,7 @@ export default function FriendsPage() {
   });
 
   // Fetch lesson requests
-  const { data: lessonRequests = [] } = useQuery({
+  const { data: lessonRequests = [], isLoading: isLoadingLessonRequests } = useQuery({
     queryKey: ["lessonRequests"],
     queryFn: async () => {
       const token = await getToken();
@@ -112,7 +115,14 @@ export default function FriendsPage() {
     (followedUser) => !allFollowers.some((follower) => follower.id === followedUser.id)
   );
 
-  // Search users mutation
+  // Use shared hooks for mutations
+  const { sendRequestMutation, removeFriendMutation } = useFriendshipActions({
+    navigateOnRemove: false,
+  });
+
+  const { acceptLessonRequestMutation, denyLessonRequestMutation } = useLessonRequests();
+
+  // Search users mutation (kept local as it's specific to this page)
   const searchUsersMutation = useMutation({
     mutationFn: async (query: string): Promise<SearchResult[]> => {
       if (query.length < 2) {
@@ -145,26 +155,11 @@ export default function FriendsPage() {
     },
   });
 
-  // Send friend request mutation
-  const sendRequestMutation = useMutation({
+  // Wrapper mutations for local state management
+  const sendFriendRequestWithState = useMutation({
     mutationFn: async (addresseeId: string) => {
       setFollowingUserId(addresseeId);
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ addresseeId }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to send friend request");
-      }
-
-      return await res.json();
+      return sendRequestMutation.mutateAsync(addresseeId);
     },
     onSuccess: async () => {
       setFollowingUserId(null);
@@ -183,26 +178,10 @@ export default function FriendsPage() {
     },
   });
 
-  // Follow back mutation (for following back a follower)
   const followBackMutation = useMutation({
     mutationFn: async (addresseeId: string) => {
       setFollowingUserId(addresseeId);
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ addresseeId }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to follow back");
-      }
-
-      return await res.json();
+      return sendRequestMutation.mutateAsync(addresseeId);
     },
     onSuccess: async () => {
       setFollowingUserId(null);
@@ -220,97 +199,13 @@ export default function FriendsPage() {
     },
   });
 
-  // Remove friend mutation
-  const removeFriendMutation = useMutation({
-    mutationFn: async (friendshipId: string) => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships/${friendshipId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to unfollow friend");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-      queryClient.invalidateQueries({ queryKey: ["following"] });
-    },
-    onError: (err: Error) => {
-      console.error("Error removing friend:", err);
-    },
-  });
-
-  // Accept lesson request mutation
-  const acceptLessonRequestMutation = useMutation({
-    mutationFn: async (requesterId: string) => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/lesson-requests/accept`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ requesterId }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to accept lesson request");
-      }
-
-      return await res.json();
-    },
-    onSuccess: (_, requesterId) => {
-      queryClient.invalidateQueries({ queryKey: ["lessonRequests"] });
-      // Invalidate the requester's lesson request status so they can see the lessons
-      queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", requesterId] });
-      // Invalidate their friend quizzes query so lessons appear
-      queryClient.invalidateQueries({ queryKey: ["friendQuizzes", requesterId] });
-    },
-    onError: (err: Error) => {
-      alert(err.message);
-    },
-  });
-
-  // Deny lesson request mutation
-  const denyLessonRequestMutation = useMutation({
-    mutationFn: async (requesterId: string) => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/lesson-requests/deny`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ requesterId }),
-      });
-
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to deny lesson request");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["lessonRequests"] });
-    },
-    onError: (err: Error) => {
-      alert(err.message);
-    },
-  });
-
   const searchUsers = () => {
     setError(null);
     searchUsersMutation.mutate(searchQuery);
   };
 
   const sendFriendRequest = (addresseeId: string) => {
-    sendRequestMutation.mutate(addresseeId);
+    sendFriendRequestWithState.mutate(addresseeId);
   };
 
   const followBack = (addresseeId: string) => {
@@ -321,13 +216,17 @@ export default function FriendsPage() {
     removeFriendMutation.mutate(friendshipId);
   };
 
-  const getUserDisplayName = (user: Friend | SearchResult) => {
-    if (user.username) return user.username;
-    if (user.firstName || user.lastName) {
-      return `${user.firstName || ""} ${user.lastName || ""}`.trim();
-    }
-    return user.email;
-  };
+  // Combine all loading states to prevent flickering
+  const isLoadingData = loading || isLoadingFollowers || isLoadingFollowing || isLoadingLessonRequests;
+
+  // Show only loading bar until all data is loaded
+  if (isLoadingData) {
+    return (
+      <div className="container">
+        <LoadingBar isLoading={true} text="Loading friends" />
+      </div>
+    );
+  }
 
   return (
     <div className="container">
@@ -519,9 +418,7 @@ export default function FriendsPage() {
       {/* Friends List (Mutual Follows) */}
       <div className="friends-list-section">
         <h2 className="friends-list-title">Friends - Mutual Follows ({friends.length})</h2>
-        {loading ? (
-          <LoadingBar isLoading={true} text="Loading friends" />
-        ) : friends.length === 0 ? (
+        {friends.length === 0 ? (
           <p className="friends-list-empty">
             No friends yet. Search for users to follow!
           </p>

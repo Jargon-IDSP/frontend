@@ -1,8 +1,5 @@
 // Friendship status constants
 export const FriendshipStatus = {
-  PENDING: "PENDING",
-  ACCEPTED: "ACCEPTED",
-  BLOCKED: "BLOCKED",
   FOLLOWING: "FOLLOWING",
 } as const;
 
@@ -17,7 +14,8 @@ export interface Friend {
   email: string;
   score: number;
   industryId?: number | null;
-  status?: FriendshipStatusType | string; // Optional for backward compatibility
+  status?: FriendshipStatusType | string;
+  isMutual?: boolean; // True if both users follow each other (friends)
 }
 
 export interface PendingRequest extends Friend {

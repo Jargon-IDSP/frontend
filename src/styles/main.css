@@ -3736,6 +3736,95 @@ button.back-button {
   text-decoration: underline;
 }
 
+.friend-profile-pending-requests-banner {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.friend-profile-pending-requests-title {
+  color: #856404;
+  margin-bottom: 0.5rem;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.friend-profile-pending-requests-message {
+  margin-bottom: 0.5rem;
+  color: #856404;
+  font-size: 16px;
+}
+
+.friend-profile-pending-requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.friend-profile-pending-request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem;
+  background-color: white;
+  border-radius: 4px;
+}
+
+.friend-profile-pending-request-name {
+  font-weight: 600;
+  color: #652a15;
+}
+
+.friend-profile-pending-request-actions {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.friend-profile-request-button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+.friend-profile-request-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.friend-profile-request-button--approve {
+  background-color: #28a745;
+  color: white;
+}
+.friend-profile-request-button--approve:hover:not(:disabled) {
+  background-color: rgb(30.1449275362, 125.8550724638, 52);
+}
+.friend-profile-request-button--deny {
+  background-color: #dc3545;
+  color: white;
+}
+.friend-profile-request-button--deny:hover:not(:disabled) {
+  background-color: rgb(189.2151898734, 32.7848101266, 47.7721518987);
+}
+
+.friend-profile-lesson-request-pending {
+  color: #856404;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  background-color: #fff3cd;
+  border-radius: 4px;
+  border: 1px solid #ffc107;
+}
+
+.friend-profile-lesson-lock {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}
+
 .learningOverview .learningOverviewHeader {
   display: grid;
   grid-template-columns: 2fr 1fr;
@@ -5683,6 +5772,13 @@ button.back-button {
   border-bottom: 1px solid #e5e7eb;
   cursor: pointer;
 }
+.quiz-share-modal-friend-item-disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+.quiz-share-modal-friend-item-disabled .quiz-share-modal-checkbox {
+  cursor: not-allowed !important;
+}
 .quiz-share-modal-checkbox {
   margin-right: 0.75rem;
   cursor: pointer;
@@ -6034,15 +6130,9 @@ button.back-button {
   background: #f1eae8;
   color: #652a15;
 }
-.privacy-settings-button--cancel:hover {
-  background: rgb(231.3513513514, 219.527027027, 216.1486486486);
-}
 .privacy-settings-button--save {
   background: #fe4d13;
   color: white;
-}
-.privacy-settings-button--save:hover:not(:disabled) {
-  background: rgb(221.0632911392, 55.2658227848, 0.9367088608);
 }
 .privacy-settings-button--save:disabled {
   opacity: 0.6;
@@ -6152,4 +6242,76 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   margin: 0;
   text-align: center;
   padding: 0 1rem;
+}
+
+.share-drawer-friends {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0 1rem 1rem 1rem;
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.share-drawer-friend {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 2px solid #f1eae8;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  background: white;
+}
+.share-drawer-friend:hover {
+  border-color: #fe4d13;
+  background: #fffdf4;
+}
+.share-drawer-friend input[type=checkbox] {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+  accent-color: #fe4d13;
+  flex-shrink: 0;
+}
+.share-drawer-friend-name {
+  flex: 1;
+  font-size: 16px;
+  font-weight: 700;
+  color: #652a15;
+}
+
+.share-drawer-friend:has(input[type=checkbox]:checked) {
+  border-color: #fe4d13;
+  background: #fffdf4;
+}
+.share-drawer-friend:has(input[type=checkbox]:checked) .share-drawer-friend-name {
+  color: #fe4d13;
+}
+
+.share-drawer-friend-disabled {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+}
+.share-drawer-friend-disabled:hover {
+  border-color: #f1eae8 !important;
+  background: white !important;
+}
+.share-drawer-friend-disabled input[type=checkbox] {
+  cursor: not-allowed !important;
+}
+.share-drawer-friend-disabled:has(input[type=checkbox]:checked) {
+  border-color: #f1eae8 !important;
+  background: #fffdf4 !important;
+}
+.share-drawer-friend-disabled:has(input[type=checkbox]:checked) .share-drawer-friend-name {
+  color: #652a15 !important;
+}
+
+.share-drawer-no-friends {
+  text-align: center;
+  padding: 1.5rem;
+  color: #393939;
+  font-size: 16px;
 }/*# sourceMappingURL=main.css.map */

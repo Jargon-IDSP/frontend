@@ -27,23 +27,34 @@ export default function SelectStudyType() {
   // Check if this is a friend's lesson from location state
   const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
-  const { data: documentData, isLoading } = useDocument(documentId);
+  const { data: documentData, isLoading, error: documentError } = useDocument(documentId);
   const { isOwner } = useDocumentAccess(selectedDocument);
 
-  // Fetch quiz ID for the document
-  const { data: quizData } = useQuery({
-    queryKey: ["documentQuiz", documentId],
+  // Fetch quizzes for the document
+  const { data: quizzesData, isLoading: isLoadingQuizzes } = useQuery({
+    queryKey: ["documentQuizzes", documentId],
     queryFn: async () => {
       if (!documentId) return null;
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/learning/documents/${documentId}/overview`, {
+      const res = await fetch(`${BACKEND_URL}/learning/documents/${documentId}/quizzes`, {
         headers: { Authorization: `Bearer ${token}` },
       });
       if (!res.ok) return null;
       const data = await res.json();
-      return data.data;
+      console.log('📊 Quizzes data for document:', { documentId, quizzes: data.data || data.quizzes });
+      return data.data || data.quizzes || [];
     },
     enabled: !!documentId,
+  });
+
+  const quizData = quizzesData?.[0]; // Get the first quiz
+
+  console.log('🎯 SelectStudyType state:', {
+    documentId,
+    quizzesData,
+    quizData,
+    quizId: quizData?.id,
+    hasQuizData: !!quizData
   });
 
   useEffect(() => {
@@ -86,6 +97,31 @@ export default function SelectStudyType() {
     );
   }
 
+  // Show error if user doesn't have access to the document
+  if (documentError && documentId) {
+    return (
+      <div className="fullTranslationOverview">
+        <div className="container demo">
+          <DocumentNav
+            activeTab="lesson"
+            title="Access Denied"
+            subtitle=""
+            onBackClick={handleBackClick}
+            onSubtitleClick={undefined}
+          />
+          <div style={{ padding: "2rem", textAlign: "center" }}>
+            <p style={{ fontSize: "1.1rem", marginBottom: "1rem", color: "#666" }}>
+              You don't have permission to access this lesson.
+            </p>
+            <p style={{ fontSize: "0.9rem", color: "#999" }}>
+              This lesson is private or you haven't been granted access by the owner.
+            </p>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // If we have a documentId in the URL (from friend's lesson), don't show DocumentSelector
   // Wait for the document to load or show error
   const shouldShowDocumentSelector = !documentId && !selectedDocument;
@@ -109,10 +145,10 @@ export default function SelectStudyType() {
               selectedDocument ? selectedDocument.filename :
               (documentData?.document ? documentData.document.filename : "Select a Document")
             }
-            subtitle={isOwner && (selectedDocument || documentData?.document) ? "..." : ""}
+            subtitle={isOwner && (selectedDocument || documentData?.document) && !isLoadingQuizzes && quizData ? "..." : ""}
             onDocumentClick={(selectedDocument || documentData?.document) ? handleDemoDocs : undefined}
             onBackClick={handleBackClick}
-            onSubtitleClick={isOwner ? handleOptionsClick : undefined}
+            onSubtitleClick={isOwner && !isLoadingQuizzes && quizData ? handleOptionsClick : undefined}
           />
 
           {(selectedDocument || documentData?.document) && <WordOfTheDay />}

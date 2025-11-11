@@ -87,18 +87,12 @@
       background: $color-quaternary-light;
       color: $color-quaternary-dark;
 
-      &:hover {
-        background: darken($color-quaternary-light, 5%);
-      }
+ 
     }
 
     &--save {
       background: $color-primary;
       color: white;
-
-      &:hover:not(:disabled) {
-        background: darken($color-primary, 10%);
-      }
 
       &:disabled {
         opacity: 0.6;

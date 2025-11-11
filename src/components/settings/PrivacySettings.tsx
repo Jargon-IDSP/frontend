@@ -23,7 +23,7 @@ export default function PrivacySettings({ onClose }: PrivacySettingsProps) {
   const updatePrivacyMutation = useMutation({
     mutationFn: async (privacy: PrivacySetting) => {
       const token = await getToken();
-      const response = await fetch(`${BACKEND_URL}/users/privacy`, {
+      const response = await fetch(`${BACKEND_URL}/api/users/privacy`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,

@@ -79,3 +79,18 @@
   color: $color-neutral;
   font-size: $font-size-body;
 }
+
+.share-drawer-info {
+  padding: $spacing-md;
+  background: $color-second-neutral-light;
+  border: 2px solid $color-quaternary-light;
+  border-radius: $border-radius-md;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: $color-neutral;
+    font-size: $font-size-body;
+    line-height: $line-height-normal;
+  }
+}

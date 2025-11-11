@@ -20,15 +20,12 @@ export default function ShareDrawer({
   open,
   onOpenChange,
   quizId,
-  quizVisibility: quizVisibilityProp,
 }: ShareDrawerProps) {
-  console.log("🚀 ShareDrawer rendered with props:", { open, quizId, quizVisibility: quizVisibilityProp });
-
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
   const [selectedFriends, setSelectedFriends] = useState<Set<string>>(new Set());
 
-  // Fetch quiz data to get visibility only if not provided as prop
+  // Fetch quiz data to get visibility
   const { data: quizData } = useQuery({
     queryKey: ["quizVisibility", quizId],
     queryFn: async () => {
@@ -41,12 +38,14 @@ export default function ShareDrawer({
       const data = await res.json();
       return data.data;
     },
-    enabled: open && !!quizId && !quizVisibilityProp,
+    enabled: open && !!quizId,
   });
 
-  const quizVisibility = quizVisibilityProp || quizData?.visibility || "PRIVATE";
+  const quizVisibility = quizData?.visibility || "PRIVATE";
   const isPrivate = quizVisibility === "PRIVATE";
-  const isFriendsOrPublic = quizVisibility === "FRIENDS" || quizVisibility === "PUBLIC";
+  const isFriends = quizVisibility === "FRIENDS";
+  const isPublic = quizVisibility === "PUBLIC";
+  const isFriendsOrPublic = isFriends || isPublic;
 
   // Fetch friends list
   const { data: friends = [] } = useQuery({
@@ -61,6 +60,7 @@ export default function ShareDrawer({
       return data.data || [];
     },
     enabled: open,
+    staleTime: 5 * 60 * 1000,
   });
 
   // Fetch current shares for this quiz
@@ -77,7 +77,6 @@ export default function ShareDrawer({
       );
       if (!res.ok) return [];
       const data = await res.json();
-      console.log("📊 Current shares data:", data);
       return data.data?.shares || [];
     },
     enabled: open && !!quizId,
@@ -85,33 +84,42 @@ export default function ShareDrawer({
 
   // Initialize selected friends from current shares or all friends for FRIENDS/PUBLIC
   useEffect(() => {
-    console.log("🔄 ShareDrawer useEffect triggered", {
-      open,
+    console.log('🔄 ShareDrawer useEffect:', {
       quizId,
       isFriendsOrPublic,
-      isPrivate,
-      currentSharesCount: currentShares.length,
       friendsCount: friends.length,
-      quizVisibility,
+      currentSharesCount: currentShares.length,
+      currentShares,
     });
 
-    if (open && quizId) {
+    if (!quizId) return;
+
+    setSelectedFriends((prevSelected) => {
+      let newSelectedIds: Set<string>;
+
       if (isFriendsOrPublic) {
         // For FRIENDS/PUBLIC visibility, all friends are selected (but disabled)
-        const allFriendIds = new Set<string>(friends.map((f) => f.id));
-        console.log("✅ Setting all friends as selected (FRIENDS/PUBLIC mode):", allFriendIds);
-        setSelectedFriends(allFriendIds);
+        newSelectedIds = new Set<string>(friends.map((f) => f.id));
       } else {
         // For PRIVATE, only show explicitly shared friends
-        const sharedUserIds = new Set<string>(
+        newSelectedIds = new Set<string>(
           currentShares.map((share: any) => share.sharedWith.id as string)
         );
-        console.log("✅ Setting shared friends as selected (PRIVATE mode):", sharedUserIds);
-        console.log("📋 Current shares:", currentShares);
-        setSelectedFriends(sharedUserIds);
       }
-    }
-  }, [currentShares, open, quizId, friends, isFriendsOrPublic, isPrivate, quizVisibility]);
+
+      // Check if the sets are actually different
+      if (
+        prevSelected.size === newSelectedIds.size &&
+        Array.from(newSelectedIds).every((id) => prevSelected.has(id))
+      ) {
+        // No changes needed, return same reference to prevent re-render
+        return prevSelected;
+      }
+
+      console.log('✅ Setting selected friends:', Array.from(newSelectedIds));
+      return newSelectedIds;
+    });
+  }, [currentShares, quizId, friends, isFriendsOrPublic]);
 
   // Share with friend mutation
   const shareMutation = useMutation({
@@ -188,7 +196,7 @@ export default function ShareDrawer({
           <DrawerDescription>
             {isPrivate
               ? "Select friends who can access this lesson"
-              : "To control who can access your quiz, please change your profile privacy settings"}
+              : "To control who can access your lesson, please change the lesson's visibility settings"}
           </DrawerDescription>
         </DrawerHeader>
 

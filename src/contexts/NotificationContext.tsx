@@ -24,24 +24,32 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   useEffect(() => {
     if (!notifications || notifications.length === 0) return;
 
-    const newUnreadNotifications = notifications.filter(
-      (notif) => !notif.isRead && !shownNotificationIds.has(notif.id)
-    );
+    setShownNotificationIds((prevShown) => {
+      const newUnreadNotifications = notifications.filter(
+        (notif) => !notif.isRead && !prevShown.has(notif.id)
+      );
 
-    if (newUnreadNotifications.length > 0) {
-      // Show the most recent notification as a toast
-      const latestNotification = newUnreadNotifications[0];
-      setActiveToasts((prev) => {
-        // Check if toast is already shown
-        if (prev.some(t => t.id === latestNotification.id)) {
-          return prev;
-        }
-        return [...prev, latestNotification];
-      });
-      setShownNotificationIds((prev) => new Set([...prev, latestNotification.id]));
+      if (newUnreadNotifications.length > 0) {
+        // Show the most recent notification as a toast
+        const latestNotification = newUnreadNotifications[0];
 
-      console.log('Showing toast for notification:', latestNotification.title);
-    }
+        console.log('Showing toast for notification:', latestNotification.title);
+
+        setActiveToasts((prev) => {
+          // Check if toast is already shown
+          if (prev.some(t => t.id === latestNotification.id)) {
+            return prev;
+          }
+          return [...prev, latestNotification];
+        });
+
+        // Add to shown set
+        return new Set([...prevShown, latestNotification.id]);
+      }
+
+      // No changes, return same set
+      return prevShown;
+    });
   }, [notifications]);
 
   const showToast = useCallback((notification: Notification) => {

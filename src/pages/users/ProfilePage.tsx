@@ -12,6 +12,7 @@ import emptyBellIcon from '../../assets/icons/emptyBell.svg';
 import solidBellIcon from '../../assets/icons/notification.svg';
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_profile.scss';
+import '../../styles/pages/_friendProfile.scss';
 
 // Eagerly import all badge images using glob
 const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
@@ -252,24 +253,24 @@ export default function ProfilePage() {
               </button>
             </div>
 
-            {/* Badges Section */}
-            <div className="profile-badges-section">
-              <h3 className="profile-badges-title">
-                Badges ({userBadges?.length || 0})
-              </h3>
-              <div className="profile-badges-grid">
+            {/* Badges Section - using friend profile styling */}
+            <div className="friend-profile-badges-section">
+              <h4 className="friend-profile-badges-subtitle">
+                Badge Collection
+              </h4>
+              <div className="friend-profile-badges-grid">
                 {badgeIcons.length > 0 ? (
                   badgeIcons.map((badge) => (
-                    <div key={badge.id} className="profile-badge-item" title={badge.name}>
+                    <div key={badge.id} className="friend-profile-badge-item" title={badge.name}>
                       <img
                         src={badge.url}
                         alt={badge.name}
-                        className="profile-badge-icon"
+                        className="friend-profile-badge-icon"
                       />
                     </div>
                   ))
                 ) : (
-                  <p className="profile-no-badges">No badges earned yet. Complete challenges to earn badges!</p>
+                  <p className="friend-profile-no-badges">No badges earned yet.</p>
                 )}
               </div>
             </div>
