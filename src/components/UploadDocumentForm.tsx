@@ -9,15 +9,6 @@ import { CategorySelectModal } from "./CategorySelectModal";
 import { useNotificationContext } from "../contexts/NotificationContext";
 import "../styles/components/_uploadDocumentForm.scss";
 
-const CATEGORY_MAP: Record<number, string> = {
-  1: "safety",
-  2: "technical",
-  3: "training",
-  4: "workplace",
-  5: "professional",
-  6: "general",
-};
-
 export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const { getToken } = useAuth();
   const navigate = useNavigate();
@@ -26,6 +17,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [uploadedData, setUploadedData] = useState<{ key: string; filename: string; fileType: string; fileSize: number; documentId: string } | null>(null);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
 
   const uploadMutation = useMutation({
     mutationFn: async ({ file, token }: UploadData) => {
@@ -95,7 +87,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     },
     onError: (error) => {
       console.error("Upload error:", error);
-      showErrorToast("Creating study materials failed, please upload again");
+      showErrorToast("Creating study materials failed, please upload again", "Upload Failed");
     },
   });
 
@@ -133,7 +125,8 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       setShowCategoryModal(false);
       onSuccess();
 
-      const categoryName = CATEGORY_MAP[variables.categoryId] || "general";
+      // Use stored category name or fallback to "general"
+      const categoryName = selectedCategoryName?.toLowerCase() || "general";
       navigate(`/learning/custom/categories/${categoryName}`, {
         state: {
           documentId: variables.documentId,
@@ -143,11 +136,11 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     },
     onError: (error) => {
       console.error("Finalize error:", error);
-      showErrorToast("Creating study materials failed, please upload again");
+      showErrorToast("Creating study materials failed, please upload again", "Upload Failed");
     },
   });
 
-  const handleCategorySelect = async (categoryId: number) => {
+  const handleCategorySelect = async (categoryId: number, categoryName: string) => {
     if (!uploadedData) return;
     if (finalizeDocumentMutation.isPending) return;
 
@@ -155,6 +148,12 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     if (!token) throw new Error("Authentication required");
 
     const documentId = uploadedData.documentId;
+
+    // Store category name for navigation
+    setSelectedCategoryName(categoryName);
+
+    // Convert category name to lowercase for URL
+    const categoryNameLower = categoryName.toLowerCase();
 
     try {
       // Wait for finalize to complete before navigating
@@ -177,8 +176,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       setShowCategoryModal(false);
       onSuccess();
 
-      const categoryName = CATEGORY_MAP[categoryId] || "general";
-      navigate(`/learning/custom/categories/${categoryName}`, {
+      navigate(`/learning/custom/categories/${categoryNameLower}`, {
         state: { documentId, justUploaded: true },
       });
     } catch (err) {
@@ -189,8 +187,7 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
       setShowCategoryModal(false);
       onSuccess();
 
-      const categoryName = CATEGORY_MAP[categoryId] || "general";
-      navigate(`/learning/custom/categories/${categoryName}`, {
+      navigate(`/learning/custom/categories/${categoryNameLower}`, {
         state: { documentId, justUploaded: true },
       });
     }

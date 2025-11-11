@@ -218,6 +218,7 @@ export interface ApiResponse<T> {
     categoryId: number;
     categoryName: string;
     documentCount: number;
+    isDefault: boolean;
   }
 
 export type StudySessionType = "flashcards" | "quiz";

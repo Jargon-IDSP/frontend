@@ -1,6 +1,6 @@
 export interface CategorySelectModalProps {
   isOpen: boolean;
-  onSelect: (categoryId: number) => void;
+  onSelect: (categoryId: number, categoryName: string) => void;
   onClose: () => void;
   filename: string;
   isSubmitting?: boolean;

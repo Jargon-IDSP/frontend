@@ -19,8 +19,12 @@ export function useDocumentsByCategory(category: QuizCategory | string) {
     queryKey: ["documents", "by-category", category],
     queryFn: async (): Promise<DocumentWithCategory[]> => {
       const token = await getToken();
+      // Convert to lowercase for URL (backend handles both default and custom categories)
+      const categoryParam = typeof category === 'string' 
+        ? category.toLowerCase() 
+        : category.toLowerCase();
       const res = await fetch(
-        `${BACKEND_URL}/learning/custom/quizzes/by-category/${category.toUpperCase()}`,
+        `${BACKEND_URL}/learning/custom/quizzes/by-category/${categoryParam}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

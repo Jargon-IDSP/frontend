@@ -76,6 +76,7 @@ export default function LessonOptionsDrawer({
         open={isAddToFolderDrawerOpen}
         onOpenChange={setIsAddToFolderDrawerOpen}
         onCancel={handleAddToFolderCancel}
+        documentId={documentId}
       />
       <DeleteDrawer
         open={isDeleteDrawerOpen}

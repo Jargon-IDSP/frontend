@@ -133,18 +133,10 @@ export default function FilePreviewPage() {
     navigate("/learning");
   };
 
-  const CATEGORY_MAP: Record<number, string> = {
-    1: "safety",
-    2: "technical",
-    3: "training",
-    4: "workplace",
-    5: "professional",
-    6: "general",
-  };
-
-  const handleCategorySelect = async (categoryId: number) => {
-    const categoryName = CATEGORY_MAP[categoryId] || "general";
-    setSelectedCategory({ id: categoryId, name: categoryName });
+  const handleCategorySelect = async (categoryId: number, categoryName: string) => {
+    // Convert category name to lowercase for URL
+    const categoryNameLower = categoryName.toLowerCase();
+    setSelectedCategory({ id: categoryId, name: categoryNameLower });
     setShowCategoryModal(false);
 
     try {

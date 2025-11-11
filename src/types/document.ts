@@ -82,6 +82,7 @@ export interface Category {
   id: number;
   name: string;
   documentCount: number;
+  isDefault: boolean;
 }
 
 export interface CategoriesResponse {

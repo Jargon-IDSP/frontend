@@ -76,11 +76,11 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
     setActiveToasts((prev) => [...prev, notification]);
   }, []);
 
-  const showErrorToast = useCallback((message: string) => {
+  const showErrorToast = useCallback((message: string, title: string = "Error") => {
     const errorNotification: Notification = {
       id: `error-${Date.now()}`,
       type: "ERROR",
-      title: "Upload Failed",
+      title: title,
       message: message,
       isRead: false,
       createdAt: new Date().toISOString(),
@@ -88,6 +88,20 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
       actionUrl: undefined,
     };
     setActiveToasts((prev) => [...prev, errorNotification]);
+  }, []);
+
+  const showSuccessToast = useCallback((message: string) => {
+    const successNotification: Notification = {
+      id: `success-${Date.now()}`,
+      type: "SUCCESS",
+      title: "Success",
+      message: message,
+      isRead: false,
+      createdAt: new Date().toISOString(),
+      userId: "",
+      actionUrl: undefined,
+    };
+    setActiveToasts((prev) => [...prev, successNotification]);
   }, []);
 
   const hideToast = useCallback((id: string) => {
@@ -102,7 +116,7 @@ export function NotificationProvider({ children }: NotificationProviderProps) {
   );
 
   return (
-    <NotificationContext.Provider value={{ showToast, showErrorToast, hideToast, activeToasts }}>
+    <NotificationContext.Provider value={{ showToast, showErrorToast, showSuccessToast, hideToast, activeToasts }}>
       {children}
       <ToastContainer toasts={activeToasts} onClose={hideToast} onRead={handleRead} />
     </NotificationContext.Provider>
