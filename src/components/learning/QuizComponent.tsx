@@ -28,6 +28,7 @@ export default function QuizComponent({
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [passed, setPassed] = useState(true);
 
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatPrompt, setChatPrompt] = useState("");
@@ -35,6 +36,7 @@ export default function QuizComponent({
 
   const currentQuestion = questions[currentQuestionIndex];
   const isBossQuiz = quizType === 'existing' && quizNumber === 3;
+  const BOSS_QUIZ_PASSING_SCORE = 70; // 70% required to pass boss quiz
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
@@ -155,6 +157,11 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         return;
       }
 
+      // Calculate if user passed (for boss quizzes, need 70% or higher)
+      const percentCorrect = (finalScore / questions.length) * 100;
+      const userPassed = isBossQuiz ? percentCorrect >= BOSS_QUIZ_PASSING_SCORE : true;
+      setPassed(userPassed);
+
       setIsComplete(true);
       onComplete(finalScore, questions.length);
     }
@@ -174,6 +181,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     setSelectedAnswer(null);
     setAnswers({});
     setScore(0);
+    setPassed(true);
     resetChatState();
   };
 
@@ -209,6 +217,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         quizType={quizType}
         quizNumber={quizNumber}
         isBossQuiz={isBossQuiz}
+        passed={passed}
       />
     );
   }

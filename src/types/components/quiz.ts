@@ -25,6 +25,7 @@ export interface QuizCompletionProps {
   quizType?: 'custom' | 'existing' | 'category';
   quizNumber?: number;
   isBossQuiz?: boolean;
+  passed?: boolean;
 }
 
 export interface ChatModalProps {

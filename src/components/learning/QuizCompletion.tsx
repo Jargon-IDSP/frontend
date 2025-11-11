@@ -11,13 +11,20 @@ const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
 
 export default function QuizCompletion({
   score,
+  totalQuestions,
   onBack,
   quizType = 'custom',
   isBossQuiz = false,
+  passed = true,
 }: QuizCompletionProps) {
   const { data: userBadges } = useUserBadges();
 
-  const completionMessage = isBossQuiz
+  // Determine if this is a failed boss quiz
+  const failedBossQuiz = isBossQuiz && !passed;
+
+  const completionMessage = failedBossQuiz
+    ? 'So close! Your badge is waiting for you on your next attempt.'
+    : isBossQuiz
     ? 'You earned a new badge!'
     : quizType === 'existing'
     ? 'You completed your Red Seal practice quiz!'
@@ -58,12 +65,16 @@ export default function QuizCompletion({
                 <img className="hatIcon" src={Hat} alt="Celebration" />
               )}
 
-              {isBossQuiz && badgeIconUrl && (
+              {isBossQuiz && !failedBossQuiz && badgeIconUrl && (
                 <>
                   <img className="badgeIcon" src={badgeIconUrl} alt="Badge" />
                   <p>You got a new badge to your collection!</p>
                   <p className="smallNote">You can view all your achievements on your profile page.</p>
                 </>
+              )}
+
+              {failedBossQuiz && (
+                <img className="hatIcon" src={Hat} alt="Keep trying!" />
               )}
 
       </div>

@@ -5,7 +5,8 @@ import type { StudySession } from "@/types/learning";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import lockIcon from "../../assets/icons/lockIcon.svg";
 import { useLevels } from "@/hooks/useLevels";
-import { useApprenticeshipProgress } from "@/hooks/useApprenticeshipProgress";
+import LoadingBar from "@/components/LoadingBar";
+import NotificationBell from "../../components/NotificationBell";
 
 const levelDescriptions: Record<number, string> = {
   1: "Basic trades terminology",
@@ -29,36 +30,20 @@ export default function ExistingLevels() {
   const { data: levelsData, isLoading, error } = useLevels(profile?.industryId);
   const levels = levelsData || DEFAULT_LEVELS;
 
-  // Get apprenticeship progress to check quiz completion
-  const { data: progressData } = useApprenticeshipProgress();
-
-  // Check if a level is locked (all previous levels must be completed)
+  // Check if a level is locked using backend-provided status
   const isLevelLocked = (levelId: number): boolean => {
-    if (levelId === 1) return false; // Level 1 is always unlocked
-
-    // Check if all previous levels are completed
-    for (let i = 1; i < levelId; i++) {
-      const prevLevel = levels.find((l) => l.id === i);
-      if (!prevLevel || !prevLevel.completed) {
-        return true; // Lock if any previous level is not completed
-      }
-    }
-    return false;
+    const level = levels.find((l) => l.id === levelId);
+    // Use backend's unlocked status (if available), otherwise default to locked for levels > 1
+    return level?.unlocked === false || (level?.unlocked === undefined && levelId > 1);
   };
 
   // Check if boss quiz (quiz 3) should be locked
   const isBossQuizLocked = (levelId: number): boolean => {
-    if (!progressData || !profile?.industryId) {
-      return true;
-    }
-
-    // Find progress for this level and industry
-    const progress = progressData.find(
-      (p) => p.levelId === levelId && p.industryId === profile.industryId
-    );
+    const level = levels.find((l) => l.id === levelId);
 
     // Lock if less than 2 quizzes completed (need quizzes 1 and 2)
-    return !progress || progress.quizzesCompleted < 2;
+    // Backend provides quizzesCompleted in the level data
+    return !level || (level.quizzesCompleted ?? 0) < 2;
   };
 
   // Generate study sessions for each level (2 flashcard sessions + 3 quiz sessions)
@@ -149,8 +134,9 @@ export default function ExistingLevels() {
             onClick={() => navigate(-1)}
           />
           <h1>Red Seal Levels</h1>
+          <NotificationBell />
         </div>
-        <div className="categoriesLoading">Loading levels...</div>
+        <LoadingBar isLoading={isLoading} text="Loading levels" />
       </div>
     );
   }
@@ -166,6 +152,7 @@ export default function ExistingLevels() {
             onClick={() => navigate(-1)}
           />
           <h1>Red Seal Levels</h1>
+          <NotificationBell />
         </div>
         <div className="error-message">
           {error instanceof Error ? error.message : "Failed to load levels"}
@@ -184,6 +171,7 @@ export default function ExistingLevels() {
           onClick={() => navigate(-1)}
         />
         <h1>Red Seal Levels</h1>
+        <NotificationBell />
       </div>
 
       <div className="categoriesList">
