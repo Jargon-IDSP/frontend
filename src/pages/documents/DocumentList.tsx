@@ -5,7 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useDocuments } from "../../hooks/useDocuments";
 import { useDeleteDocument } from "../../hooks/useDeleteDocument";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
-import QuizShareModal from "../../components/learning/QuizShareModal";
+import ShareModal from "../../components/learning/ShareModal";
 import { BACKEND_URL } from "../../lib/api";
 import type { Document, DocumentsListProps } from "../../types/document";
 import "../../styles/components/_documentList.scss";
@@ -242,11 +242,11 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
       </div>
 
       {shareModalQuiz && (
-        <QuizShareModal
+        <ShareModal
+          isOpen={true}
           quizId={shareModalQuiz.id}
           quizName={shareModalQuiz.name}
           onClose={() => setShareModalQuiz(null)}
-          onShared={() => setShareModalQuiz(null)}
         />
       )}
     </div>

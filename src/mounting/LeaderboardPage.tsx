@@ -72,10 +72,14 @@ const LeaderboardPage: React.FC = () => {
     }
   };
 
-  const hasNoFriends = 
-    leaderboardType === "friends" && 
-    users.length === 1 && 
+  const hasNoFriends =
+    leaderboardType === "friends" &&
+    users.length === 1 &&
     users[0]?.id === profile?.id;
+
+  const hasInsufficientFriends =
+    leaderboardType === "friends" &&
+    users.length < 3;
 
   if (loading || profileLoading) {
     return (
@@ -208,7 +212,7 @@ const LeaderboardPage: React.FC = () => {
           </button>
         </div>
 
-        {hasNoFriends ? (
+        {hasInsufficientFriends ? (
           <div className="leaderboard-empty-state">
             <img
               src={LeaderboardConnectAvatar}
@@ -216,7 +220,9 @@ const LeaderboardPage: React.FC = () => {
               className="leaderboard-empty-avatar"
             />
             <p className="leaderboard-empty-message">
-              You don't have any friends yet. Follow friends to see the friends leaderboard!
+              {hasNoFriends
+                ? "You don't have any friends yet. Follow friends to see the friends leaderboard!"
+                : "You need at least 2 friends to see the friends leaderboard!"}
             </p>
             <button
               className="leaderboard-start-button"
@@ -275,16 +281,10 @@ const LeaderboardPage: React.FC = () => {
                   : "No users found in the leaderboard."}
               </p>
             )}
-
-            {users.length > 0 && users.length <= 3 && (
-          <p className="leaderboard-empty-list">
-            Only top {users.length} {users.length === 1 ? "user" : "users"} in the leaderboard.
-          </p>
-          )}
           </>
         )}
 
-        {leaderboardType === "friends" && !hasNoFriends && (
+        {leaderboardType === "friends" && !hasInsufficientFriends && (
           <button
             className="leaderboard-friends-button"
             onClick={() => navigate("/profile/friends")}

@@ -4,3 +4,10 @@ export interface ShareDrawerProps {
   quizId: string | null;
   quizVisibility?: string;
 }
+
+export interface ShareModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  quizId: string;
+  quizName: string;
+}
