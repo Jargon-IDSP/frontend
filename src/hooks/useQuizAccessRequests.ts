@@ -65,7 +65,7 @@ export function useQuizAccessRequests(options: UseQuizAccessRequestsOptions = {}
         actionUrl: undefined,
       });
     },
-    onError: (err: Error, quizId: string, context: any) => {
+    onError: (err: Error, _quizId: string, context: any) => {
       if (context?.previousRequests && friendId) {
         queryClient.setQueryData(["myRequests", friendId], context.previousRequests);
       }
@@ -143,7 +143,7 @@ export function useQuizAccessRequests(options: UseQuizAccessRequestsOptions = {}
         actionUrl: undefined,
       });
     },
-    onError: (err: Error, quizId: string, context: any) => {
+    onError: (err: Error, _quizId: string, context: any) => {
       if (context?.previousRequests && friendId) {
         queryClient.setQueryData(["pendingRequests", friendId], context.previousRequests);
       }
@@ -215,7 +215,7 @@ export function useQuizAccessRequests(options: UseQuizAccessRequestsOptions = {}
         actionUrl: undefined,
       });
     },
-    onError: (err: Error, quizId: string, context: any) => {
+    onError: (err: Error, _quizId: string, context: any) => {
       if (context?.previousRequests && friendId) {
         queryClient.setQueryData(["pendingRequests", friendId], context.previousRequests);
       }

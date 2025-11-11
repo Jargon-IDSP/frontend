@@ -1,4 +1,4 @@
-export type NotificationType = "DOCUMENT_READY" | "FRIEND_REQUEST" | "LESSON_APPROVED" | "QUIZ_SHARED" | "ERROR";
+export type NotificationType = "DOCUMENT_READY" | "FRIEND_REQUEST" | "LESSON_APPROVED" | "QUIZ_SHARED" | "ERROR" | "SUCCESS";
 
 export interface Notification {
   id: string;

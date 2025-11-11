@@ -16,9 +16,9 @@ const levelDescriptions: Record<number, string> = {
 
 // Default levels in case API fails
 const DEFAULT_LEVELS = [
-  { id: 1, name: "Foundation", completed: false },
-  { id: 2, name: "Intermediate", completed: false },
-  { id: 3, name: "Advanced", completed: false },
+  { id: 1, name: "Foundation", completed: false, unlocked: true, quizzesCompleted: 0 },
+  { id: 2, name: "Intermediate", completed: false, unlocked: false, quizzesCompleted: 0 },
+  { id: 3, name: "Advanced", completed: false, unlocked: false, quizzesCompleted: 0 },
 ];
 
 export default function ExistingLevels() {
