@@ -10,7 +10,7 @@ import type { UseFriendshipActionsOptions } from "../types/hooks";
  * Consolidates duplicate mutation logic from FriendsPage and FriendProfilePage
  */
 export function useFriendshipActions(options: UseFriendshipActionsOptions = {}) {
-  const { friendId, friendName, navigateOnRemove = false } = options;
+  const { friendId, friendName, navigateOnRemove = false, skipFollowToast = false } = options;
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
   const { showToast } = useNotificationContext();
@@ -46,16 +46,19 @@ export function useFriendshipActions(options: UseFriendshipActionsOptions = {}) 
         queryClient.invalidateQueries({ queryKey: ["lessonRequestStatus", addresseeId] }),
       ]);
 
-      showToast({
-        id: `follow-${Date.now()}`,
-        type: "SUCCESS" as any,
-        title: "Success",
-        message: `You are now following ${friendName || "this user"}`,
-        isRead: false,
-        createdAt: new Date().toISOString(),
-        userId: "",
-        actionUrl: undefined,
-      });
+      // Only show toast if not skipped (allows custom toast from calling component)
+      if (!skipFollowToast) {
+        showToast({
+          id: `follow-${Date.now()}`,
+          type: "SUCCESS" as any,
+          title: "Success",
+          message: `You are now following ${friendName || "this user"}`,
+          isRead: false,
+          createdAt: new Date().toISOString(),
+          userId: "",
+          actionUrl: undefined,
+        });
+      }
     },
     onError: (err: Error) => {
       showToast({

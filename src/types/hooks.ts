@@ -6,6 +6,7 @@ export interface UseFriendshipActionsOptions {
   friendId?: string;
   friendName?: string;
   navigateOnRemove?: boolean;
+  skipFollowToast?: boolean;
 }
 
 export interface UseLessonRequestsOptions {

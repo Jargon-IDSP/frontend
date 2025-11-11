@@ -1,5 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import goBackIcon from "../assets/icons/goBackIcon.svg";
+import NotificationBell from "./NotificationBell";
 import type { ProfileHeaderProps } from "../types/profile";
 
 export default function ProfileHeader({
@@ -13,7 +14,6 @@ export default function ProfileHeader({
 }: ProfileHeaderProps) {
   const navigate = useNavigate();
 
-  // Show unfollow/remove button if following (one-way) or friends (mutual)
   const showUnfollowButton = isFriend || isFollowing;
 
   return (
@@ -30,29 +30,34 @@ export default function ProfileHeader({
       >
         <img src={goBackIcon} alt="Back" />
       </button>
-      {isOwnProfile ? (
-        <button
-          className="friend-profile-friendship-button friend-profile-friendship-button--own"
-          onClick={() => navigate('/profile')}
-        >
-          Your Profile
-        </button>
-      ) : (
-        <button
-          className={`friend-profile-friendship-button ${
-            showUnfollowButton
-              ? "friend-profile-friendship-button--remove"
-              : "friend-profile-friendship-button--add"
-          }`}
-          onClick={onFriendshipAction}
-          disabled={isSendRequestPending || isRemoveFriendPending}
-        >
-          {showUnfollowButton
-            ? (isRemoveFriendPending ? "..." : "Unfollow")
-            : (isSendRequestPending ? "..." : "Follow")
-          }
-        </button>
-      )}
+
+      <div className="friend-profile-header-actions">
+        <NotificationBell />
+
+        {isOwnProfile ? (
+          <button
+            className="friend-profile-friendship-button friend-profile-friendship-button--own"
+            onClick={() => navigate('/profile')}
+          >
+            Your Profile
+          </button>
+        ) : (
+          <button
+            className={`friend-profile-friendship-button ${
+              showUnfollowButton
+                ? "friend-profile-friendship-button--remove"
+                : "friend-profile-friendship-button--add"
+            }`}
+            onClick={onFriendshipAction}
+            disabled={isSendRequestPending || isRemoveFriendPending}
+          >
+            {showUnfollowButton
+              ? (isRemoveFriendPending ? "..." : "Unfollow")
+              : (isSendRequestPending ? "..." : "Follow")
+            }
+          </button>
+        )}
+      </div>
     </div>
   );
 }

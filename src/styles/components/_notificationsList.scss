@@ -34,7 +34,13 @@
     font-weight: $font-weight-medium;
   }
 
-  &__mark-all {
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__mark-all,
+  &__clear-all {
     background: none;
     border: none;
     color: $color-primary;
@@ -50,6 +56,19 @@
 
     &:active {
       transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__clear-all {
+    color: $color-error;
+
+    &:hover {
+      background: rgba($color-error, 0.1);
     }
   }
 
@@ -110,6 +129,13 @@
     font-size: $font-size-tag;
   }
 
+  &__item-actions {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    flex-shrink: 0;
+  }
+
   &__item-dot {
     width: 8px;
     height: 8px;
@@ -117,6 +143,37 @@
     border-radius: $border-radius-full;
     flex-shrink: 0;
     margin-top: $spacing-sm;
+  }
+
+  &__item-delete {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-sm;
+    transition: all $transition-fast;
+    opacity: 0;
+
+    .notifications-list__item:hover & {
+      opacity: 1;
+    }
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
   }
 
   &__loading,

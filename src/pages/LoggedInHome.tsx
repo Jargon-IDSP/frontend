@@ -2,22 +2,20 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../hooks/useProfile';
-import { useUnreadCount } from '../hooks/useNotifications';
 import TopLeaderboard from '../components/TopLeaderboard';
 import UploadFileCard from '../components/UploadFileCard';
 import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
 import WordOfTheDay from '../components/WordOfTheDay';
+import NotificationBell from '../components/NotificationBell';
 // import JargonLogo from '../components/Wordmark';
 import rockyWhiteLogo from '/rockyWhite.svg';
-import emptyBellIcon from '../assets/icons/emptyBell.svg';
 
 export default function LoggedInHome() {
   const { user } = useUser();
   const { signOut } = useAuth();
   const navigate = useNavigate();
   const { data: profile, isLoading } = useProfile();
-  const { data: unreadCount } = useUnreadCount();
   const [isCheckingRedirect, setIsCheckingRedirect] = useState(true);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
@@ -118,18 +116,7 @@ export default function LoggedInHome() {
             {user?.firstName || user?.username || 'User'}
           </h1>
         </div>
-        <button
-          className="home-notifications-icon"
-          onClick={() => navigate("/notifications")}
-          aria-label="Notifications"
-        >
-          <div className="home-notifications-icon-wrapper">
-            <img src={emptyBellIcon} alt="Notifications" />
-            {(unreadCount ?? 0) > 0 && (
-              <span className="home-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
-            )}
-          </div>
-        </button>
+        <NotificationBell />
         <div className="home-settings-container" ref={dropdownRef}>
           <button
             className="rocky-logo-section"

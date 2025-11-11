@@ -34,6 +34,56 @@
   }
 }
 
+.friend-profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.friend-profile-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-normal;
+
+  &:hover {
+    background-color: #f1eae8;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.friend-profile-notifications-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.friend-profile-notifications-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: $color-error;
+  color: white;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: $font-weight-bold;
+  padding: 0 4px;
+}
+
 .friend-profile-friendship-button {
   // padding: $spacing-sm $spacing-lg;
   border: none;

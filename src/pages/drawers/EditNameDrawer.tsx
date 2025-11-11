@@ -46,10 +46,21 @@ export default function EditNameDrawer({
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate all document-related queries
       queryClient.invalidateQueries({ queryKey: ["documents"] });
       queryClient.invalidateQueries({ queryKey: ["document", documentId] });
-      queryClient.invalidateQueries({ queryKey: ["documentQuiz", documentId] });
+      queryClient.invalidateQueries({ queryKey: ["documentQuizzes", documentId] });
       queryClient.invalidateQueries({ queryKey: ["documentTranslation", documentId] });
+
+      // Invalidate profile queries (shows user's documents)
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+
+      // Invalidate friend lesson queries (in case viewing as friend)
+      queryClient.invalidateQueries({ queryKey: ["friendLessons"] });
+
+      // Invalidate any quiz-related queries that might show document name
+      queryClient.invalidateQueries({ queryKey: ["customQuizzes"] });
+
       setError("");
       onOpenChange(false);
     },

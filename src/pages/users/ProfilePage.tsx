@@ -4,12 +4,10 @@ import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
-import { useUnreadCount } from "../../hooks/useNotifications";
 import { useUserBadges } from "../../hooks/useUserBadges";
 import PrivacyDrawer from "../drawers/PrivacyDrawer";
+import NotificationBell from "../../components/NotificationBell";
 import editIcon from '../../assets/icons/editIcon.svg';
-import emptyBellIcon from '../../assets/icons/emptyBell.svg';
-import solidBellIcon from '../../assets/icons/notification.svg';
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_profile.scss';
 import '../../styles/pages/_friendProfile.scss';
@@ -36,7 +34,6 @@ export default function ProfilePage() {
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isPrivacyDrawerOpen, setIsPrivacyDrawerOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { data: unreadCount } = useUnreadCount();
   const { data: userBadges } = useUserBadges();
 
   const error = queryError ? (queryError as Error).message : null;
@@ -141,18 +138,7 @@ export default function ProfilePage() {
           <div className="profile-header">
           <h1 className="profile-header-title">Profile</h1>
           <div className="profile-header-actions">
-            <button
-              className="profile-notifications-icon"
-              onClick={() => navigate("/notifications")}
-              aria-label="Notifications"
-            >
-              <div className="profile-notifications-icon-wrapper">
-                <img src={(unreadCount ?? 0) > 0 ? solidBellIcon : emptyBellIcon} alt="Notifications" />
-                {(unreadCount ?? 0) > 0 && (
-                  <span className="profile-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
-                )}
-              </div>
-            </button>
+            <NotificationBell />
             <div className="profile-settings-container" ref={dropdownRef}>
               <button
                 className="profile-settings-icon"

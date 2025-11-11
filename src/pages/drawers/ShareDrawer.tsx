@@ -25,7 +25,6 @@ export default function ShareDrawer({
   const queryClient = useQueryClient();
   const [selectedFriends, setSelectedFriends] = useState<Set<string>>(new Set());
 
-  // Fetch quiz data to get visibility
   const { data: quizData } = useQuery({
     queryKey: ["quizVisibility", quizId],
     queryFn: async () => {
@@ -47,7 +46,6 @@ export default function ShareDrawer({
   const isPublic = quizVisibility === "PUBLIC";
   const isFriendsOrPublic = isFriends || isPublic;
 
-  // Fetch friends list
   const { data: friends = [] } = useQuery({
     queryKey: ["friends"],
     queryFn: async (): Promise<Friend[]> => {
@@ -63,7 +61,6 @@ export default function ShareDrawer({
     staleTime: 5 * 60 * 1000,
   });
 
-  // Fetch current shares for this quiz
   const { data: currentShares = [] } = useQuery({
     queryKey: ["quizShares", quizId],
     queryFn: async () => {
@@ -82,7 +79,6 @@ export default function ShareDrawer({
     enabled: open && !!quizId,
   });
 
-  // Initialize selected friends from current shares or all friends for FRIENDS/PUBLIC
   useEffect(() => {
     console.log('🔄 ShareDrawer useEffect:', {
       quizId,
@@ -98,21 +94,17 @@ export default function ShareDrawer({
       let newSelectedIds: Set<string>;
 
       if (isFriendsOrPublic) {
-        // For FRIENDS/PUBLIC visibility, all friends are selected (but disabled)
         newSelectedIds = new Set<string>(friends.map((f) => f.id));
       } else {
-        // For PRIVATE, only show explicitly shared friends
         newSelectedIds = new Set<string>(
           currentShares.map((share: any) => share.sharedWith.id as string)
         );
       }
 
-      // Check if the sets are actually different
       if (
         prevSelected.size === newSelectedIds.size &&
         Array.from(newSelectedIds).every((id) => prevSelected.has(id))
       ) {
-        // No changes needed, return same reference to prevent re-render
         return prevSelected;
       }
 
@@ -121,7 +113,6 @@ export default function ShareDrawer({
     });
   }, [currentShares, quizId, friends, isFriendsOrPublic]);
 
-  // Share with friend mutation
   const shareMutation = useMutation({
     mutationFn: async (friendId: string) => {
       const token = await getToken();
@@ -146,7 +137,6 @@ export default function ShareDrawer({
     },
   });
 
-  // Unshare mutation
   const unshareMutation = useMutation({
     mutationFn: async (friendId: string) => {
       const token = await getToken();
@@ -175,7 +165,7 @@ export default function ShareDrawer({
   });
 
   const handleToggleFriend = (friendId: string) => {
-    if (!isPrivate) return; // Don't allow changes for FRIENDS/PUBLIC
+    if (!isPrivate) return; 
 
     const newSelected = new Set(selectedFriends);
     if (newSelected.has(friendId)) {

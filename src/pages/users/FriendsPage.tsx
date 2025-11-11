@@ -10,11 +10,13 @@ import type {
   SearchResponse
 } from "../../types/friend";
 import LoadingBar from "../../components/LoadingBar";
+import NotificationBell from "../../components/NotificationBell";
 import "../../styles/pages/_friends.scss";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import { getUserDisplayName } from "../../utils/userHelpers";
 import { useFriendshipActions } from "../../hooks/useFriendshipActions";
 import { useLessonRequests } from "../../hooks/useLessonRequests";
+import { useNotificationContext } from "../../contexts/NotificationContext";
 
 export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,6 +26,7 @@ export default function FriendsPage() {
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const { showToast } = useNotificationContext();
 
   // Fetch friends
   const { data: friends = [], isLoading: loading } = useQuery({
@@ -118,6 +121,7 @@ export default function FriendsPage() {
   // Use shared hooks for mutations
   const { sendRequestMutation, removeFriendMutation } = useFriendshipActions({
     navigateOnRemove: false,
+    skipFollowToast: true, // We'll show custom toast for mutual friends
   });
 
   const { acceptLessonRequestMutation, denyLessonRequestMutation } = useLessonRequests();
@@ -165,6 +169,16 @@ export default function FriendsPage() {
       setFollowingUserId(null);
       setSearchResults([]);
       setSearchQuery("");
+      showToast({
+        id: `follow-${Date.now()}`,
+        type: "SUCCESS",
+        title: "Success",
+        message: "You are now following this user",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
       // Refetch all queries immediately to update the UI
       await Promise.all([
         queryClient.refetchQueries({ queryKey: ["friends"] }),
@@ -174,7 +188,16 @@ export default function FriendsPage() {
     },
     onError: (err: Error) => {
       setFollowingUserId(null);
-      alert(err.message);
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR",
+        title: "Failed to follow",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
   });
 
@@ -185,7 +208,16 @@ export default function FriendsPage() {
     },
     onSuccess: async () => {
       setFollowingUserId(null);
-      alert("You are now friends!");
+      showToast({
+        id: `friends-${Date.now()}`,
+        type: "SUCCESS",
+        title: "You are now friends!",
+        message: "You can now view their lessons and share yours with them.",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
       // Refetch all queries immediately to update the UI
       await Promise.all([
         queryClient.refetchQueries({ queryKey: ["friends"] }),
@@ -195,7 +227,16 @@ export default function FriendsPage() {
     },
     onError: (err: Error) => {
       setFollowingUserId(null);
-      alert(err.message);
+      showToast({
+        id: `error-${Date.now()}`,
+        type: "ERROR",
+        title: "Failed to follow",
+        message: err.message,
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: undefined,
+      });
     },
   });
 
@@ -239,6 +280,7 @@ export default function FriendsPage() {
           <img src={goBackIcon} alt="Back Button" />
         </button>
         <h1 className="friends-title">Friends</h1>
+        <NotificationBell />
       </div>
 
 

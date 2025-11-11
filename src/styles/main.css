@@ -3430,6 +3430,54 @@ button.back-button {
   height: 24px;
 }
 
+.friend-profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.friend-profile-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: 8px;
+  transition: background-color 0.3s ease;
+}
+.friend-profile-notifications-icon:hover {
+  background-color: #f1eae8;
+}
+.friend-profile-notifications-icon img {
+  width: 24px;
+  height: 24px;
+}
+
+.friend-profile-notifications-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.friend-profile-notifications-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: #c40000;
+  color: white;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 0 4px;
+}
+
 .friend-profile-friendship-button {
   border: none;
   border-radius: 8px;
@@ -3661,7 +3709,7 @@ button.back-button {
 
 .friend-profile-badges-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(60px, 1fr));
+  grid-template-columns: repeat(5, 1fr);
   gap: 0.5rem;
   justify-items: center;
 }
@@ -3688,6 +3736,7 @@ button.back-button {
 }
 
 .friend-profile-no-badges {
+  grid-column: 1/-1;
   text-align: center;
   color: #393939;
   font-size: 16px;
@@ -5850,7 +5899,11 @@ button.back-button {
   border-radius: 50%;
   font-weight: 600;
 }
-.notifications-list__mark-all {
+.notifications-list__actions {
+  display: flex;
+  gap: 0.5rem;
+}
+.notifications-list__mark-all, .notifications-list__clear-all {
   background: none;
   border: none;
   color: #fe4d13;
@@ -5860,11 +5913,21 @@ button.back-button {
   border-radius: 4px;
   transition: background-color 0.15s ease;
 }
-.notifications-list__mark-all:hover {
+.notifications-list__mark-all:hover, .notifications-list__clear-all:hover {
   background: rgba(254, 77, 19, 0.1);
 }
-.notifications-list__mark-all:active {
+.notifications-list__mark-all:active, .notifications-list__clear-all:active {
   transform: scale(0.98);
+}
+.notifications-list__mark-all:disabled, .notifications-list__clear-all:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.notifications-list__clear-all {
+  color: #c40000;
+}
+.notifications-list__clear-all:hover {
+  background: rgba(196, 0, 0, 0.1);
 }
 .notifications-list__items {
   display: flex;
@@ -5913,6 +5976,12 @@ button.back-button {
   color: #9ca3af;
   font-size: 10px;
 }
+.notifications-list__item-actions {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
 .notifications-list__item-dot {
   width: 8px;
   height: 8px;
@@ -5920,6 +5989,33 @@ button.back-button {
   border-radius: 50%;
   flex-shrink: 0;
   margin-top: 0.5rem;
+}
+.notifications-list__item-delete {
+  background: none;
+  border: none;
+  color: #9ca3af;
+  font-size: 1.5rem;
+  line-height: 1;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: all 0.15s ease;
+  opacity: 0;
+}
+.notifications-list__item:hover .notifications-list__item-delete {
+  opacity: 1;
+}
+.notifications-list__item-delete:hover {
+  background: rgba(196, 0, 0, 0.1);
+  color: #c40000;
+}
+.notifications-list__item-delete:active {
+  transform: scale(0.9);
 }
 .notifications-list__loading, .notifications-list__empty {
   text-align: center;
@@ -6314,4 +6410,18 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   padding: 1.5rem;
   color: #393939;
   font-size: 16px;
+}
+
+.share-drawer-info {
+  padding: 1rem;
+  background: #fffdf4;
+  border: 2px solid #f1eae8;
+  border-radius: 8px;
+  text-align: center;
+}
+.share-drawer-info p {
+  margin: 0;
+  color: #393939;
+  font-size: 16px;
+  line-height: 1.5;
 }/*# sourceMappingURL=main.css.map */

@@ -5,12 +5,10 @@ import rockyLogo from "/rocky.svg";
 import rockyWhiteLogo from '/rockyWhite.svg';
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
-import { useUnreadCount } from "../hooks/useNotifications";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
-import emptyBellIcon from '../assets/icons/emptyBell.svg';
-import solidBellIcon from '../assets/icons/notification.svg';
+import NotificationBell from "../components/NotificationBell";
 
 type LeaderboardType = "general" | "friends";
 
@@ -27,7 +25,6 @@ const LeaderboardPage: React.FC = () => {
     refetch,
   } = useLeaderboard(leaderboardType);
   const { data: profile, isLoading: profileLoading } = useProfile();
-  const { data: unreadCount } = useUnreadCount();
 
   const userScore = profile?.score ?? 0;
   const hasNoPoints = userScore === 0;
@@ -141,18 +138,7 @@ const LeaderboardPage: React.FC = () => {
         <div className="leaderboard-header">
           <h1 className="leaderboard-title">Leaderboard</h1>
           <div className="leaderboard-header-actions">
-            <button
-              className="leaderboard-notifications-icon"
-              onClick={() => navigate("/notifications")}
-              aria-label="Notifications"
-            >
-              <div className="leaderboard-notifications-icon-wrapper">
-                <img src={(unreadCount ?? 0) > 0 ? solidBellIcon : emptyBellIcon} alt="Notifications" />
-                {(unreadCount ?? 0) > 0 && (
-                  <span className="leaderboard-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
-                )}
-              </div>
-            </button>
+            <NotificationBell />
             <div className="leaderboard-settings-container" ref={dropdownRef}>
               <button
                 className="leaderboard-settings-icon"

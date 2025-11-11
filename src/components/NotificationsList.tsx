@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
-import { useNotifications, useMarkAsRead, useMarkAllAsRead } from "@/hooks/useNotifications";
+import { useNotifications, useMarkAsRead, useMarkAllAsRead, useClearAllNotifications, useDeleteNotification } from "@/hooks/useNotifications";
 import { formatDistanceToNow } from "date-fns";
 import { BACKEND_URL } from "@/lib/api";
 import LessonRequestModal from "./LessonRequestModal";
@@ -13,6 +13,8 @@ export function NotificationsList() {
   const { data: notifications, isLoading } = useNotifications();
   const markAsReadMutation = useMarkAsRead();
   const markAllAsReadMutation = useMarkAllAsRead();
+  const clearAllMutation = useClearAllNotifications();
+  const deleteNotificationMutation = useDeleteNotification();
   const [selectedNotification, setSelectedNotification] = useState<{
     id: string;
     lessonRequestId: string;
@@ -86,6 +88,23 @@ export function NotificationsList() {
     });
   };
 
+  const handleClearAll = () => {
+    console.log('Clear all notifications clicked');
+    clearAllMutation.mutate(undefined, {
+      onSuccess: (data) => {
+        console.log('Clear all success:', data);
+      },
+      onError: (error) => {
+        console.error('Clear all error:', error);
+      },
+    });
+  };
+
+  const handleDeleteNotification = (e: React.MouseEvent, notificationId: string) => {
+    e.stopPropagation(); // Prevent notification click handler
+    deleteNotificationMutation.mutate(notificationId);
+  };
+
   if (isLoading) {
     return (
       <div className="notifications-list">
@@ -119,15 +138,26 @@ export function NotificationsList() {
           Notifications
           {unreadCount > 0 && <span className="notifications-list__badge">{unreadCount}</span>}
         </h3>
-        {unreadCount > 0 && (
-          <button
-            className="notifications-list__mark-all"
-            onClick={handleMarkAllAsRead}
-            disabled={markAllAsReadMutation.isPending}
-          >
-            {markAllAsReadMutation.isPending ? 'Marking...' : 'Mark all as read'}
-          </button>
-        )}
+        <div className="notifications-list__actions">
+          {unreadCount > 0 && (
+            <button
+              className="notifications-list__mark-all"
+              onClick={handleMarkAllAsRead}
+              disabled={markAllAsReadMutation.isPending}
+            >
+              {markAllAsReadMutation.isPending ? 'Marking...' : 'Mark all as read'}
+            </button>
+          )}
+          {notifications.length > 0 && (
+            <button
+              className="notifications-list__clear-all"
+              onClick={handleClearAll}
+              disabled={clearAllMutation.isPending}
+            >
+              {clearAllMutation.isPending ? 'Clearing...' : 'Clear all'}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="notifications-list__items">
@@ -144,7 +174,16 @@ export function NotificationsList() {
                 {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
               </div>
             </div>
-            {!notification.isRead && <div className="notifications-list__item-dot"></div>}
+            <div className="notifications-list__item-actions">
+              {!notification.isRead && <div className="notifications-list__item-dot"></div>}
+              <button
+                className="notifications-list__item-delete"
+                onClick={(e) => handleDeleteNotification(e, notification.id)}
+                aria-label="Delete notification"
+              >
+                ×
+              </button>
+            </div>
           </div>
         ))}
       </div>
