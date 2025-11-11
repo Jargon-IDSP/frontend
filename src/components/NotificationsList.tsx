@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
-import { useNotifications, useMarkAsRead, useMarkAllAsRead } from "@/hooks/useNotifications";
+import { useNotifications, useMarkAsRead, useMarkAllAsRead, useClearAllNotifications, useDeleteNotification } from "@/hooks/useNotifications";
 import { formatDistanceToNow } from "date-fns";
 import { BACKEND_URL } from "@/lib/api";
 import LessonRequestModal from "./LessonRequestModal";
@@ -13,12 +13,13 @@ export function NotificationsList() {
   const { data: notifications, isLoading } = useNotifications();
   const markAsReadMutation = useMarkAsRead();
   const markAllAsReadMutation = useMarkAllAsRead();
+  const clearAllMutation = useClearAllNotifications();
+  const deleteNotificationMutation = useDeleteNotification();
   const [selectedNotification, setSelectedNotification] = useState<{
     id: string;
     lessonRequestId: string;
   } | null>(null);
 
-  // Fetch lesson request details when modal is opened
   const { data: lessonRequest } = useQuery({
     queryKey: ["lessonRequest", selectedNotification?.lessonRequestId],
     queryFn: async () => {
@@ -37,10 +38,8 @@ export function NotificationsList() {
     enabled: !!selectedNotification?.lessonRequestId,
   });
 
-  // Handle case where lesson request is already approved/denied
   useEffect(() => {
     if (selectedNotification && lessonRequest && lessonRequest.status !== "PENDING") {
-      // Request already handled - mark as read and navigate
       const notification = notifications?.find(n => n.id === selectedNotification.id);
       if (notification) {
         if (!notification.isRead) {
@@ -55,10 +54,7 @@ export function NotificationsList() {
   }, [selectedNotification, lessonRequest, notifications, navigate, markAsReadMutation]);
 
   const handleNotificationClick = (notification: any) => {
-    // Check if this is a lesson request notification
     if (notification.title === "New Lesson Request" && notification.lessonRequestId) {
-      // Set selected notification - the query will fetch and check status
-      // The modal will only show if status is PENDING (checked in render)
       setSelectedNotification({
         id: notification.id,
         lessonRequestId: notification.lessonRequestId,
@@ -66,16 +62,13 @@ export function NotificationsList() {
       return;
     }
 
-    // For other notifications, mark as read and navigate
     if (!notification.isRead) {
       markAsReadMutation.mutate(notification.id);
     }
 
     if (notification.actionUrl) {
-      // Fix LESSON_APPROVED notifications to use /profile/friends/ instead of /profile/
       let url = notification.actionUrl;
       if (notification.type === "LESSON_APPROVED" && url.startsWith("/profile/") && !url.startsWith("/profile/friends/")) {
-        // Extract userId from /profile/userId and convert to /profile/friends/userId
         const userId = url.replace("/profile/", "");
         url = `/profile/friends/${userId}`;
       }
@@ -93,6 +86,23 @@ export function NotificationsList() {
         console.error('Mark all as read error:', error);
       },
     });
+  };
+
+  const handleClearAll = () => {
+    console.log('Clear all notifications clicked');
+    clearAllMutation.mutate(undefined, {
+      onSuccess: (data) => {
+        console.log('Clear all success:', data);
+      },
+      onError: (error) => {
+        console.error('Clear all error:', error);
+      },
+    });
+  };
+
+  const handleDeleteNotification = (e: React.MouseEvent, notificationId: string) => {
+    e.stopPropagation(); // Prevent notification click handler
+    deleteNotificationMutation.mutate(notificationId);
   };
 
   if (isLoading) {
@@ -128,15 +138,26 @@ export function NotificationsList() {
           Notifications
           {unreadCount > 0 && <span className="notifications-list__badge">{unreadCount}</span>}
         </h3>
-        {unreadCount > 0 && (
-          <button
-            className="notifications-list__mark-all"
-            onClick={handleMarkAllAsRead}
-            disabled={markAllAsReadMutation.isPending}
-          >
-            {markAllAsReadMutation.isPending ? 'Marking...' : 'Mark all as read'}
-          </button>
-        )}
+        <div className="notifications-list__actions">
+          {unreadCount > 0 && (
+            <button
+              className="notifications-list__mark-all"
+              onClick={handleMarkAllAsRead}
+              disabled={markAllAsReadMutation.isPending}
+            >
+              {markAllAsReadMutation.isPending ? 'Marking...' : 'Mark all as read'}
+            </button>
+          )}
+          {notifications.length > 0 && (
+            <button
+              className="notifications-list__clear-all"
+              onClick={handleClearAll}
+              disabled={clearAllMutation.isPending}
+            >
+              {clearAllMutation.isPending ? 'Clearing...' : 'Clear all'}
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="notifications-list__items">
@@ -153,12 +174,20 @@ export function NotificationsList() {
                 {formatDistanceToNow(new Date(notification.createdAt), { addSuffix: true })}
               </div>
             </div>
-            {!notification.isRead && <div className="notifications-list__item-dot"></div>}
+            <div className="notifications-list__item-actions">
+              {!notification.isRead && <div className="notifications-list__item-dot"></div>}
+              <button
+                className="notifications-list__item-delete"
+                onClick={(e) => handleDeleteNotification(e, notification.id)}
+                aria-label="Delete notification"
+              >
+                ×
+              </button>
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Lesson Request Modal - Only show if request is still PENDING */}
       {selectedNotification && lessonRequest && lessonRequest.status === "PENDING" && (
         <LessonRequestModal
           isOpen={!!selectedNotification}

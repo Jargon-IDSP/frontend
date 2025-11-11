@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
+import { useNotificationContext } from "../../contexts/NotificationContext";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
@@ -13,24 +14,29 @@ import backButton from "../../assets/icons/backButton.svg";
 
 export default function QuizComponent({
   questions,
+  quizNumber,
   onComplete,
   onBack,
   preferredLanguage,
   quizType,
 }: QuizComponentProps) {
   const { getToken } = useAuth();
+  const { showToast } = useNotificationContext();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
   const [answers, setAnswers] = useState<{ [key: number]: string }>({});
   const [score, setScore] = useState(0);
   const [isComplete, setIsComplete] = useState(false);
+  const [passed, setPassed] = useState(true);
 
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatPrompt, setChatPrompt] = useState("");
   const [chatReply, setChatReply] = useState("");
 
   const currentQuestion = questions[currentQuestionIndex];
+  const isBossQuiz = quizType === 'existing' && quizNumber === 3;
+  const BOSS_QUIZ_PASSING_SCORE = 70; // 70% required to pass boss quiz
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
@@ -103,16 +109,24 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
   const handleAnswerSelect = (choiceId: string) => {
     setSelectedAnswer(choiceId);
+
+    if (isBossQuiz) {
+      setTimeout(() => {
+        handleNext(choiceId);
+      }, 300);
+    }
   };
 
-  const handleNext = () => {
+  const handleNext = (answerOverride?: string | React.MouseEvent) => {
+    const answer = typeof answerOverride === 'string' ? answerOverride : selectedAnswer;
     let finalScore = score;
+    const updatedAnswers = answer ? { ...answers, [currentQuestionIndex]: answer } : answers;
 
-    if (selectedAnswer) {
-      setAnswers({ ...answers, [currentQuestionIndex]: selectedAnswer });
+    if (answer) {
+      setAnswers(updatedAnswers);
 
       const selectedChoice = currentQuestion.choices.find(
-        (c) => c.id === selectedAnswer
+        (c) => c.id === answer
       );
       if (selectedChoice?.isCorrect) {
         finalScore = score + 1;
@@ -121,10 +135,33 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     }
 
     if (currentQuestionIndex < questions.length - 1) {
+      // Navigate to next question
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
+      setSelectedAnswer(answers[currentQuestionIndex + 1] || null);
       resetChatState();
     } else {
+      // On last question - check if all questions are answered before finishing
+      const allAnswered = Object.keys(updatedAnswers).length === questions.length;
+
+      if (!allAnswered) {
+        showToast({
+          id: `unanswered-${Date.now()}`,
+          type: "ERROR",
+          title: "Incomplete Quiz",
+          message: "Please answer all questions before submitting the quiz.",
+          isRead: false,
+          createdAt: new Date().toISOString(),
+          userId: "",
+          actionUrl: undefined,
+        });
+        return;
+      }
+
+      // Calculate if user passed (for boss quizzes, need 70% or higher)
+      const percentCorrect = (finalScore / questions.length) * 100;
+      const userPassed = isBossQuiz ? percentCorrect >= BOSS_QUIZ_PASSING_SCORE : true;
+      setPassed(userPassed);
+
       setIsComplete(true);
       onComplete(finalScore, questions.length);
     }
@@ -144,6 +181,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     setSelectedAnswer(null);
     setAnswers({});
     setScore(0);
+    setPassed(true);
     resetChatState();
   };
 
@@ -177,6 +215,9 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         onRetry={handleRetry}
         onBack={onBack}
         quizType={quizType}
+        quizNumber={quizNumber}
+        isBossQuiz={isBossQuiz}
+        passed={passed}
       />
     );
   }
@@ -220,21 +261,25 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       </div>
 
       <div className="quiz-question-section">
-        <div className="quiz-translate-button">
-          <TranslateButton
-            text={currentQuestion.prompt}
-            preferredLanguage={preferredLanguage}
-            onTranslate={(targetLanguage) =>
-              translateText(currentQuestion.prompt, targetLanguage)
-            }
-          />
-        </div>
+        {!isBossQuiz ? (
+          <div className="quiz-translate-button">
+            <TranslateButton
+              text={currentQuestion.prompt}
+              preferredLanguage={preferredLanguage}
+              onTranslate={(targetLanguage) =>
+                translateText(currentQuestion.prompt, targetLanguage)
+              }
+            />
+          </div>
+        ) : (
+          <p className="translate-button-text">{currentQuestion.prompt}</p>
+        )}
 
         <div className="quiz-choices-section">
           {currentQuestion.choices.map((choice) => {
             const isSelected = selectedAnswer === choice.id;
             const isCorrect = choice.isCorrect;
-            const showFeedback = selectedAnswer !== null;
+            const showFeedback = !isBossQuiz && selectedAnswer !== null;
 
             const buttonClasses = [
               "quiz-choices-button",
@@ -277,30 +322,43 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       </div>
 
       <div className="quiz-nav-buttons">
-        <button
-          className="back-previous-question-button"
-          onClick={handlePrevious}
-          disabled={currentQuestionIndex === 0}
-          aria-label="Previous question"
-        >
-          <img src={backButton} alt="Back" />
-        </button>
+        {!isBossQuiz && (
+          <button
+            className="back-previous-question-button"
+            onClick={handlePrevious}
+            disabled={currentQuestionIndex === 0}
+            aria-label="Previous question"
+          >
+            <img src={backButton} alt="Back" />
+          </button>
+        )}
 
-        <button className="quiz-chat-button" onClick={handleOpenChat}>
-          <span className="quiz-chat-button-text">Need Help? Ask Rocky!</span>
-        </button>
+        {!isBossQuiz && (
+          <button className="quiz-chat-button" onClick={handleOpenChat}>
+            <span className="quiz-chat-button-text">Need Help? Ask Rocky!</span>
+          </button>
+        )}
 
-        <button
-          className="next-question-button"
-          onClick={handleNext}
-          aria-label={
-            currentQuestionIndex === questions.length - 1
-              ? "Finish quiz"
-              : "Next question"
-          }
-        >
-          <img src={nextButton} alt="Next" />
-        </button>
+        {!isBossQuiz && (
+          <button
+            className={`next-question-button ${currentQuestionIndex === questions.length - 1 ? 'next-question-button--submit' : ''}`}
+            onClick={handleNext}
+            aria-label={
+              currentQuestionIndex === questions.length - 1
+                ? "Finish quiz"
+                : "Next question"
+            }
+          >
+            {currentQuestionIndex === questions.length - 1 ? (
+              <>
+                <span style={{ marginRight: '8px' }}>Submit</span>
+                <img src={nextButton} alt="Next" />
+              </>
+            ) : (
+              <img src={nextButton} alt="Next" />
+            )}
+          </button>
+        )}
       </div>
 
       <ChatModal

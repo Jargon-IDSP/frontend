@@ -6,7 +6,6 @@ export function ToastNotification({ notification, onClose, onRead }: ToastNotifi
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Auto-dismiss after 5 seconds
     const timer = setTimeout(() => {
       onClose();
     }, 5000);
@@ -15,23 +14,17 @@ export function ToastNotification({ notification, onClose, onRead }: ToastNotifi
   }, [onClose]);
 
   const handleClick = () => {
-    // Mark as read
     onRead(notification.id);
 
-    // Navigate if there's an action URL
     if (notification.actionUrl) {
-      // Fix LESSON_APPROVED notifications to use /profile/friends/ instead of /profile/
       let url = notification.actionUrl;
       if (notification.type === "LESSON_APPROVED" && url.startsWith("/profile/") && !url.startsWith("/profile/friends/")) {
-        // Extract userId from /profile/userId and convert to /profile/friends/userId
         const userId = url.replace("/profile/", "");
         url = `/profile/friends/${userId}`;
       }
       navigate(url);
     }
-
-    // Close the toast
-    onClose();
+        onClose();
   };
 
   return (

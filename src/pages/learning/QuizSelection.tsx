@@ -51,16 +51,20 @@ function buildQuizUrl(metadata: QuizMetadata): string {
 export default function QuizSelection() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { levelId, quizNumber } = useParams<{ 
+  const { levelId, quizNumber, sessionNumber } = useParams<{
     levelId?: string;
     quizNumber?: string;
+    sessionNumber?: string;
   }>();
-  
+
   const { industryId } = useUserPreferences();
   const type: QuizType = location.pathname.includes('/existing/') ? 'existing' : 'custom';
 
+  // Use sessionNumber for existing quizzes (Red Seal), quizNumber for custom quizzes
+  const actualQuizNumber = sessionNumber || quizNumber || '1';
+
   const metadata: QuizMetadata = {
-    quizNumber: quizNumber || '1',
+    quizNumber: actualQuizNumber,
     type,
     levelId,
     industryId: industryId ?? undefined,

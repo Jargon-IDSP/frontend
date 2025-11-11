@@ -8,40 +8,68 @@ const NotificationContext = createContext<NotificationContextType | undefined>(u
 
 export function NotificationProvider({ children }: NotificationProviderProps) {
   const [activeToasts, setActiveToasts] = useState<Notification[]>([]);
-  const [shownNotificationIds, setShownNotificationIds] = useState<Set<string>>(new Set());
+  const [shownNotificationIds, setShownNotificationIds] = useState<Set<string>>(() => {
+    // Initialize from localStorage to persist across page reloads
+    const stored = localStorage.getItem('shownNotificationIds');
+    if (stored) {
+      try {
+        return new Set(JSON.parse(stored));
+      } catch {
+        return new Set();
+      }
+    }
+    return new Set();
+  });
 
   const { data: notifications } = useNotifications();
   const markAsReadMutation = useMarkAsRead();
 
-  // Debug logging
+  // Persist shownNotificationIds to localStorage whenever it changes
   useEffect(() => {
-    console.log('Notifications updated:', notifications?.length || 0, notifications);
-    console.log('Active toasts:', activeToasts.length);
-    console.log('Shown notification IDs:', Array.from(shownNotificationIds));
-  }, [notifications, activeToasts, shownNotificationIds]);
+    localStorage.setItem('shownNotificationIds', JSON.stringify(Array.from(shownNotificationIds)));
+  }, [shownNotificationIds]);
 
-  // Show new unread notifications as toasts
+  // Handle notifications: cleanup old IDs and show new toasts
   useEffect(() => {
     if (!notifications || notifications.length === 0) return;
 
-    const newUnreadNotifications = notifications.filter(
-      (notif) => !notif.isRead && !shownNotificationIds.has(notif.id)
-    );
+    const currentNotificationIds = new Set(notifications.map(n => n.id));
 
-    if (newUnreadNotifications.length > 0) {
-      // Show the most recent notification as a toast
-      const latestNotification = newUnreadNotifications[0];
-      setActiveToasts((prev) => {
-        // Check if toast is already shown
-        if (prev.some(t => t.id === latestNotification.id)) {
-          return prev;
-        }
-        return [...prev, latestNotification];
-      });
-      setShownNotificationIds((prev) => new Set([...prev, latestNotification.id]));
+    setShownNotificationIds((prevShown) => {
+      // First, clean up IDs that are no longer in the notifications list
+      const cleanedIds = new Set(
+        Array.from(prevShown).filter(id => currentNotificationIds.has(id))
+      );
 
-      console.log('Showing toast for notification:', latestNotification.title);
-    }
+      // Find new unread notifications that haven't been shown
+      const newUnreadNotifications = notifications.filter(
+        (notif) => !notif.isRead && !cleanedIds.has(notif.id)
+      );
+
+      if (newUnreadNotifications.length > 0) {
+        // Show the most recent notification as a toast
+        const latestNotification = newUnreadNotifications[0];
+
+        setActiveToasts((prev) => {
+          // Check if toast is already shown
+          if (prev.some(t => t.id === latestNotification.id)) {
+            return prev;
+          }
+          return [...prev, latestNotification];
+        });
+
+        // Add to shown set
+        return new Set([...cleanedIds, latestNotification.id]);
+      }
+
+      // If we cleaned up some IDs, return the cleaned set
+      if (cleanedIds.size !== prevShown.size) {
+        return cleanedIds;
+      }
+
+      // No changes, return same set reference
+      return prevShown;
+    });
   }, [notifications]);
 
   const showToast = useCallback((notification: Notification) => {

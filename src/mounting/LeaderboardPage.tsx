@@ -5,11 +5,10 @@ import rockyLogo from "/rocky.svg";
 import rockyWhiteLogo from '/rockyWhite.svg';
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
-import { useUnreadCount } from "../hooks/useNotifications";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
-import emptyBellIcon from '../assets/icons/emptyBell.svg';
+import NotificationBell from "../components/NotificationBell";
 
 type LeaderboardType = "general" | "friends";
 
@@ -26,12 +25,10 @@ const LeaderboardPage: React.FC = () => {
     refetch,
   } = useLeaderboard(leaderboardType);
   const { data: profile, isLoading: profileLoading } = useProfile();
-  const { data: unreadCount } = useUnreadCount();
 
   const userScore = profile?.score ?? 0;
   const hasNoPoints = userScore === 0;
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -75,10 +72,14 @@ const LeaderboardPage: React.FC = () => {
     }
   };
 
-  const hasNoFriends = 
-    leaderboardType === "friends" && 
-    users.length === 1 && 
+  const hasNoFriends =
+    leaderboardType === "friends" &&
+    users.length === 1 &&
     users[0]?.id === profile?.id;
+
+  const hasInsufficientFriends =
+    leaderboardType === "friends" &&
+    users.length < 3;
 
   if (loading || profileLoading) {
     return (
@@ -141,18 +142,7 @@ const LeaderboardPage: React.FC = () => {
         <div className="leaderboard-header">
           <h1 className="leaderboard-title">Leaderboard</h1>
           <div className="leaderboard-header-actions">
-            <button
-              className="leaderboard-notifications-icon"
-              onClick={() => navigate("/notifications")}
-              aria-label="Notifications"
-            >
-              <div className="leaderboard-notifications-icon-wrapper">
-                <img src={emptyBellIcon} alt="Notifications" />
-                {(unreadCount ?? 0) > 0 && (
-                  <span className="leaderboard-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
-                )}
-              </div>
-            </button>
+            <NotificationBell />
             <div className="leaderboard-settings-container" ref={dropdownRef}>
               <button
                 className="leaderboard-settings-icon"
@@ -222,7 +212,7 @@ const LeaderboardPage: React.FC = () => {
           </button>
         </div>
 
-        {hasNoFriends ? (
+        {hasInsufficientFriends ? (
           <div className="leaderboard-empty-state">
             <img
               src={LeaderboardConnectAvatar}
@@ -230,13 +220,15 @@ const LeaderboardPage: React.FC = () => {
               className="leaderboard-empty-avatar"
             />
             <p className="leaderboard-empty-message">
-              You don't have any friends yet. Add friends to see the friends leaderboard!
+              {hasNoFriends
+                ? "You don't have any friends yet. Follow friends to see the friends leaderboard!"
+                : "You need at least 2 friends to see the friends leaderboard!"}
             </p>
             <button
               className="leaderboard-start-button"
               onClick={() => navigate("/profile/friends")}
             >
-              Add Friends
+              Find Friends
             </button>
           </div>
         ) : (
@@ -285,25 +277,19 @@ const LeaderboardPage: React.FC = () => {
             {users.length === 0 && (
               <p className="leaderboard-empty-list">
                 {leaderboardType === "friends"
-                  ? "No friends found. Add friends to see the friends leaderboard!"
+                  ? "No friends found. Follow friends to see the friends leaderboard!"
                   : "No users found in the leaderboard."}
               </p>
             )}
-
-            {users.length > 0 && users.length <= 3 && (
-          <p className="leaderboard-empty-list">
-            Only top {users.length} {users.length === 1 ? "user" : "users"} in the leaderboard.
-          </p>
-          )}
           </>
         )}
 
-        {leaderboardType === "friends" && !hasNoFriends && (
+        {leaderboardType === "friends" && !hasInsufficientFriends && (
           <button
             className="leaderboard-friends-button"
             onClick={() => navigate("/profile/friends")}
           >
-            Add Friend
+            Find Friends
           </button>
         )}
       </div>

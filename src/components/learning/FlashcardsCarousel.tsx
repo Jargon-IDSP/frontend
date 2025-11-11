@@ -20,11 +20,10 @@ export default function FlashcardsCarousel({
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
-  // Minimum swipe distance (in px) to trigger a swipe
   const minSwipeDistance = 50;
 
   const onTouchStart = (e: React.TouchEvent) => {
-    setTouchEnd(null); // Reset end position
+    setTouchEnd(null); 
     setTouchStart(e.targetTouches[0].clientX);
   };
 
@@ -40,12 +39,10 @@ export default function FlashcardsCarousel({
     const isRightSwipe = distance < -minSwipeDistance;
 
     if (isLeftSwipe && currentIndex < terms.length - 1) {
-      // Swipe left = next card
       onNext();
     }
 
     if (isRightSwipe && currentIndex > 0) {
-      // Swipe right = previous card
       onPrevious();
     }
   };

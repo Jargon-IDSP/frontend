@@ -24,7 +24,7 @@ export default function NavBar() {
     { path: "/learning", icon: Course, iconBold: CourseB, alt: "Course" },
     {
       className: "nav-item-ai",
-      path: "drawer", // Special identifier
+      path: "drawer",
       icon: AI,
       iconBold: AI,
       alt: "AI",

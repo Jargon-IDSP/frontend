@@ -247,6 +247,59 @@
     }
   }
 
+  // Badges Section
+  &-badges-section {
+    margin: $spacing-lg 0;
+    padding: $spacing-lg;
+    background: $color-second-neutral-light;
+    border: 1px solid $color-quaternary;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &-badges-title {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0 0 $spacing-md 0;
+  }
+
+  &-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: $spacing-md;
+    justify-items: center;
+  }
+
+  &-badge-item {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-md;
+    padding: $spacing-sm;
+    transition: transform $transition-fast;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &-badge-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &-no-badges {
+    text-align: center;
+    color: $color-neutral;
+    font-size: $font-size-body;
+    padding: $spacing-lg;
+    margin: 0;
+  }
+
   // Profile Card
   &-card {
     display: flex;

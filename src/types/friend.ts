@@ -1,8 +1,5 @@
 // Friendship status constants
 export const FriendshipStatus = {
-  PENDING: "PENDING",
-  ACCEPTED: "ACCEPTED",
-  BLOCKED: "BLOCKED",
   FOLLOWING: "FOLLOWING",
 } as const;
 
@@ -17,7 +14,8 @@ export interface Friend {
   email: string;
   score: number;
   industryId?: number | null;
-  status?: FriendshipStatusType | string; // Optional for backward compatibility
+  status?: FriendshipStatusType | string;
+  isMutual?: boolean; // True if both users follow each other (friends)
 }
 
 export interface PendingRequest extends Friend {
@@ -27,6 +25,24 @@ export interface PendingRequest extends Friend {
 export interface SearchResult extends Friend {
   friendshipStatus: string;
   friendshipId: string | null;
+}
+
+export interface FriendProfile {
+  id: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  score: number;
+  industryId: number | null;
+  defaultPrivacy?: string;
+  createdAt?: string;
+}
+
+export interface FriendQuiz {
+  id: string;
+  name: string;
+  isLocked?: boolean;
 }
 
 // API Response interfaces

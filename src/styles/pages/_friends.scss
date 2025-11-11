@@ -12,6 +12,11 @@
   align-items: center;
   gap: $spacing-md;
   margin-bottom: $spacing-xl;
+
+  // Push notification bell to the right
+  .notification-bell {
+    margin-left: auto;
+  }
 }
 
 .friends-back-button {

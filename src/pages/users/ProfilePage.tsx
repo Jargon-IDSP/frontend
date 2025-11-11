@@ -1,14 +1,22 @@
 import { useAuth } from "@clerk/clerk-react";
 import { UserProfile } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
-import { useUnreadCount } from "../../hooks/useNotifications";
+import { useUserBadges } from "../../hooks/useUserBadges";
+import PrivacyDrawer from "../drawers/PrivacyDrawer";
+import NotificationBell from "../../components/NotificationBell";
 import editIcon from '../../assets/icons/editIcon.svg';
-import emptyBellIcon from '../../assets/icons/emptyBell.svg';
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_profile.scss';
+import '../../styles/pages/_friendProfile.scss';
+
+// Eagerly import all badge images using glob
+const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
+  eager: true,
+  import: 'default'
+});
 
 const industryIdToName: { [key: number]: string } = {
   1: 'Electrician',
@@ -24,10 +32,30 @@ export default function ProfilePage() {
   const { data, error: queryError, isLoading } = useProfile();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
+  const [isPrivacyDrawerOpen, setIsPrivacyDrawerOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { data: unreadCount } = useUnreadCount();
+  const { data: userBadges } = useUserBadges();
 
   const error = queryError ? (queryError as Error).message : null;
+
+  // Get badge icon URLs from glob imports
+  const badgeIcons = useMemo(() => {
+    if (!userBadges) return [];
+
+    return userBadges.map((userBadge) => {
+      if (userBadge.badge?.iconUrl) {
+        const iconPath = userBadge.badge.iconUrl;
+        const fullPath = `../../assets/badges/${iconPath}`;
+        const url = badgeModules[fullPath];
+        return {
+          id: userBadge.id,
+          name: userBadge.badge.name,
+          url: url || null
+        };
+      }
+      return null;
+    }).filter((icon): icon is { id: string; name: string; url: string } => icon !== null && icon.url !== null);
+  }, [userBadges]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -59,6 +87,11 @@ export default function ProfilePage() {
 
   const handleCloseAccountModal = () => {
     setIsAccountModalOpen(false);
+  };
+
+  const handlePrivacyClick = () => {
+    setIsDropdownOpen(false);
+    setIsPrivacyDrawerOpen(true);
   };
 
   const handleLanguagesClick = () => {
@@ -93,24 +126,19 @@ export default function ProfilePage() {
         </div>
       )}
 
+      {/* Privacy Settings Drawer */}
+      <PrivacyDrawer
+        open={isPrivacyDrawerOpen}
+        onOpenChange={setIsPrivacyDrawerOpen}
+      />
+
       <div className="container">
         <div className="profile-page">
           {/* Header with title and settings icon */}
           <div className="profile-header">
           <h1 className="profile-header-title">Profile</h1>
           <div className="profile-header-actions">
-            <button
-              className="profile-notifications-icon"
-              onClick={() => navigate("/notifications")}
-              aria-label="Notifications"
-            >
-              <div className="profile-notifications-icon-wrapper">
-                <img src={emptyBellIcon} alt="Notifications" />
-                {(unreadCount ?? 0) > 0 && (
-                  <span className="profile-notifications-badge">{(unreadCount ?? 0) > 99 ? '99+' : (unreadCount ?? 0)}</span>
-                )}
-              </div>
-            </button>
+            <NotificationBell />
             <div className="profile-settings-container" ref={dropdownRef}>
               <button
                 className="profile-settings-icon"
@@ -139,9 +167,9 @@ export default function ProfilePage() {
                 </button>
                 <button
                   className="profile-settings-item"
-                  onClick={handleAccountClick}
+                  onClick={handlePrivacyClick}
                 >
-                  Account
+                  Privacy
                 </button>
                 <button
                   className="profile-settings-item"
@@ -209,6 +237,28 @@ export default function ProfilePage() {
               >
                 View Friends
               </button>
+            </div>
+
+            {/* Badges Section - using friend profile styling */}
+            <div className="friend-profile-badges-section">
+              <h4 className="friend-profile-badges-subtitle">
+                Badge Collection
+              </h4>
+              <div className="friend-profile-badges-grid">
+                {badgeIcons.length > 0 ? (
+                  badgeIcons.map((badge) => (
+                    <div key={badge.id} className="friend-profile-badge-item" title={badge.name}>
+                      <img
+                        src={badge.url}
+                        alt={badge.name}
+                        className="friend-profile-badge-icon"
+                      />
+                    </div>
+                  ))
+                ) : (
+                  <p className="friend-profile-no-badges">No badges earned yet.</p>
+                )}
+              </div>
             </div>
 
             {/* Documents Section */}

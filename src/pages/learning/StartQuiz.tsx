@@ -8,6 +8,7 @@ import { useSharedQuizzes } from "../../hooks/useSharedQuizzes";
 import { useQuizAttempts } from "../../hooks/useQuizAttempts";
 import QuizCard from "../../components/learning/QuizCard";
 import EmptyState from "../../components/learning/EmptyState";
+import LoadingBar from "../../components/LoadingBar";
 import type { Quiz, CustomQuiz, SharedQuiz } from "../../types/learning";
 
 // Helper function to check document access
@@ -143,15 +144,7 @@ export default function Quizzes() {
   if (showLoading) {
     return (
       <div style={{ padding: "2rem" }}>
-        <div
-          style={{
-            padding: "3rem 2rem",
-            textAlign: "center",
-            color: "#666",
-          }}
-        >
-          <p style={{ margin: 0, fontSize: "1rem" }}>Loading...</p>
-        </div>
+        <LoadingBar isLoading={true} text="Loading quiz" />
       </div>
     );
   }

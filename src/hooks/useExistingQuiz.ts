@@ -22,6 +22,11 @@ export function useExistingQuiz(
         throw new Error("No level ID provided");
       }
 
+      // Validate quiz number (only 1-3 exist)
+      if (quizNumber < 1 || quizNumber > 3) {
+        throw new Error(`Invalid quiz number: ${quizNumber}. Only quizzes 1-3 are available.`);
+      }
+
       const token = await getToken();
 
       let url = `${BACKEND_URL}/learning/existing/levels/${levelId}/quiz/generate?quiz_number=${quizNumber}&language=${language}`;

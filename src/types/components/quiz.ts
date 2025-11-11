@@ -23,6 +23,9 @@ export interface QuizCompletionProps {
   onRetry: () => void;
   onBack: () => void;
   quizType?: 'custom' | 'existing' | 'category';
+  quizNumber?: number;
+  isBossQuiz?: boolean;
+  passed?: boolean;
 }
 
 export interface ChatModalProps {
