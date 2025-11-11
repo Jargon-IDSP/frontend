@@ -109,7 +109,7 @@ export default function LessonOptionsDrawer({
                 src={editNameIcon}
                 alt="A book and a pen icon"
               />
-              Edit name
+              Edit document name
             </button>
             <button className="button-drawer" onClick={handleAddToFolder}>
               <img

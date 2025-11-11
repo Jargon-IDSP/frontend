@@ -67,6 +67,9 @@ export default function EditNameDrawer({
 
       setError("");
       onOpenChange(false);
+
+      // Refresh the page to show updated document name
+      window.location.reload();
     },
     onError: (err: Error) => {
       setError(err.message);
