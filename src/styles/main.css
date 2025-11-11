@@ -244,49 +244,6 @@ body {
   height: 48px;
 }
 
-.home-notifications-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity 0.15s ease;
-}
-.home-notifications-icon:hover {
-  opacity: 0.7;
-}
-.home-notifications-icon img {
-  width: 24px;
-  height: 24px;
-}
-
-.home-notifications-icon-wrapper {
-  position: relative;
-  display: inline-block;
-}
-
-.home-notifications-badge {
-  position: absolute;
-  top: -6px;
-  right: -6px;
-  background-color: #c40000;
-  color: white;
-  border-radius: 10px;
-  min-width: 18px;
-  height: 18px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 10px;
-  font-weight: 700;
-  padding: 0 4px;
-  line-height: 1;
-  border: 2px solid white;
-  box-sizing: border-box;
-}
-
 .home-settings-container {
   position: relative;
 }
@@ -3128,6 +3085,9 @@ button.back-button {
   gap: 1rem;
   margin-bottom: 2.5rem;
 }
+.friends-header .notification-bell {
+  margin-left: auto;
+}
 
 .friends-back-button {
   padding: 0.5rem;
@@ -5652,9 +5612,15 @@ button.back-button {
   color: white;
   font-size: 1rem;
 }
-.quizContainer .next-question-button:disabled {
-  background-color: #e5e7eb;
-  color: #9ca3af;
+.quizContainer .next-question-button--submit {
+  background-color: #fe4d13;
+  padding: 1rem;
+  height: 50%;
+  width: auto;
+  max-width: 100%;
+  align-self: center;
+  flex: 0 0 auto;
+  border-radius: 60px;
 }
 .quizContainer .quiz-chat-button {
   width: 90%;

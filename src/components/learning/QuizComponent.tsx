@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
+import { useNotificationContext } from "../../contexts/NotificationContext";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
@@ -20,6 +21,7 @@ export default function QuizComponent({
   quizType,
 }: QuizComponentProps) {
   const { getToken } = useAuth();
+  const { showToast } = useNotificationContext();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -116,9 +118,10 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   const handleNext = (answerOverride?: string | React.MouseEvent) => {
     const answer = typeof answerOverride === 'string' ? answerOverride : selectedAnswer;
     let finalScore = score;
+    const updatedAnswers = answer ? { ...answers, [currentQuestionIndex]: answer } : answers;
 
     if (answer) {
-      setAnswers({ ...answers, [currentQuestionIndex]: answer });
+      setAnswers(updatedAnswers);
 
       const selectedChoice = currentQuestion.choices.find(
         (c) => c.id === answer
@@ -130,10 +133,28 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     }
 
     if (currentQuestionIndex < questions.length - 1) {
+      // Navigate to next question
       setCurrentQuestionIndex(currentQuestionIndex + 1);
-      setSelectedAnswer(null);
+      setSelectedAnswer(answers[currentQuestionIndex + 1] || null);
       resetChatState();
     } else {
+      // On last question - check if all questions are answered before finishing
+      const allAnswered = Object.keys(updatedAnswers).length === questions.length;
+
+      if (!allAnswered) {
+        showToast({
+          id: `unanswered-${Date.now()}`,
+          type: "ERROR",
+          title: "Incomplete Quiz",
+          message: "Please answer all questions before submitting the quiz.",
+          isRead: false,
+          createdAt: new Date().toISOString(),
+          userId: "",
+          actionUrl: undefined,
+        });
+        return;
+      }
+
       setIsComplete(true);
       onComplete(finalScore, questions.length);
     }
@@ -231,7 +252,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       </div>
 
       <div className="quiz-question-section">
-        {!isBossQuiz && (
+        {!isBossQuiz ? (
           <div className="quiz-translate-button">
             <TranslateButton
               text={currentQuestion.prompt}
@@ -241,9 +262,9 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
               }
             />
           </div>
+        ) : (
+          <p className="translate-button-text">{currentQuestion.prompt}</p>
         )}
-
-        <h2 className="quiz-question">{currentQuestion.prompt}</h2>
 
         <div className="quiz-choices-section">
           {currentQuestion.choices.map((choice) => {
@@ -311,16 +332,22 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
         {!isBossQuiz && (
           <button
-            className="next-question-button"
+            className={`next-question-button ${currentQuestionIndex === questions.length - 1 ? 'next-question-button--submit' : ''}`}
             onClick={handleNext}
-            disabled={!selectedAnswer}
             aria-label={
               currentQuestionIndex === questions.length - 1
                 ? "Finish quiz"
                 : "Next question"
             }
           >
-            <img src={nextButton} alt="Next" />
+            {currentQuestionIndex === questions.length - 1 ? (
+              <>
+                <span style={{ marginRight: '8px' }}>Submit</span>
+                <img src={nextButton} alt="Next" />
+              </>
+            ) : (
+              <img src={nextButton} alt="Next" />
+            )}
           </button>
         )}
       </div>
