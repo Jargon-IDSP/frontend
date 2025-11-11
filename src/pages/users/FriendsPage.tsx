@@ -171,7 +171,7 @@ export default function FriendsPage() {
       setSearchQuery("");
       showToast({
         id: `follow-${Date.now()}`,
-        type: "SUCCESS",
+        type: "SUCCESS" as const,
         title: "Success",
         message: "You are now following this user",
         isRead: false,
@@ -210,7 +210,7 @@ export default function FriendsPage() {
       setFollowingUserId(null);
       showToast({
         id: `friends-${Date.now()}`,
-        type: "SUCCESS",
+        type: "SUCCESS" as const,
         title: "You are now friends!",
         message: "You can now view their lessons and share yours with them.",
         isRead: false,

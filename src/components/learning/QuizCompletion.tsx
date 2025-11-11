@@ -11,7 +11,7 @@ const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
 
 export default function QuizCompletion({
   score,
-  totalQuestions,
+  totalQuestions: _totalQuestions,
   onBack,
   quizType = 'custom',
   isBossQuiz = false,

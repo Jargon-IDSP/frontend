@@ -80,7 +80,7 @@ export default function ProfilePage() {
     navigate("/profile");
   };
 
-  const handleAccountClick = () => {
+  const _handleAccountClick = () => {
     setIsDropdownOpen(false);
     setIsAccountModalOpen(true);
   };
