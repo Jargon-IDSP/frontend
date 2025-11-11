@@ -1,5 +1,4 @@
 import { useAuth } from "@clerk/clerk-react";
-import { UserProfile } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useMemo } from "react";
 import { useProfile } from "../../hooks/useProfile";
@@ -31,7 +30,6 @@ export default function ProfilePage() {
   const { signOut } = useAuth();
   const { data, error: queryError, isLoading } = useProfile();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [isAccountModalOpen, setIsAccountModalOpen] = useState(false);
   const [isPrivacyDrawerOpen, setIsPrivacyDrawerOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { data: userBadges } = useUserBadges();
@@ -80,15 +78,6 @@ export default function ProfilePage() {
     navigate("/profile");
   };
 
-  const _handleAccountClick = () => {
-    setIsDropdownOpen(false);
-    setIsAccountModalOpen(true);
-  };
-
-  const handleCloseAccountModal = () => {
-    setIsAccountModalOpen(false);
-  };
-
   const handlePrivacyClick = () => {
     setIsDropdownOpen(false);
     setIsPrivacyDrawerOpen(true);
@@ -117,15 +106,6 @@ export default function ProfilePage() {
 
   return (
     <>
-      {/* Clerk UserProfile Modal */}
-      {isAccountModalOpen && (
-        <div className="profile-account-modal-wrapper" onClick={handleCloseAccountModal}>
-          <div onClick={(e) => e.stopPropagation()}>
-            <UserProfile />
-          </div>
-        </div>
-      )}
-
       {/* Privacy Settings Drawer */}
       <PrivacyDrawer
         open={isPrivacyDrawerOpen}
