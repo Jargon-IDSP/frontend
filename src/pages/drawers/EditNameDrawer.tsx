@@ -49,8 +49,12 @@ export default function EditNameDrawer({
       // Invalidate all document-related queries
       queryClient.invalidateQueries({ queryKey: ["documents"] });
       queryClient.invalidateQueries({ queryKey: ["document", documentId] });
-      queryClient.invalidateQueries({ queryKey: ["documentQuizzes", documentId] });
-      queryClient.invalidateQueries({ queryKey: ["documentTranslation", documentId] });
+      queryClient.invalidateQueries({
+        queryKey: ["documentQuizzes", documentId],
+      });
+      queryClient.invalidateQueries({
+        queryKey: ["documentTranslation", documentId],
+      });
 
       // Invalidate profile queries (shows user's documents)
       queryClient.invalidateQueries({ queryKey: ["profile"] });
@@ -91,23 +95,23 @@ export default function EditNameDrawer({
           <DrawerDescription>
             Enter a new name for your document
           </DrawerDescription>
-        </DrawerHeader>
 
-        <div className="edit-name-drawer-content">
-          <input
-            type="text"
-            value={newName}
-            onChange={(e) => {
-              setNewName(e.target.value);
-              setError("");
-            }}
-            placeholder="Document name"
-            className="edit-name-drawer-input"
-            disabled={updateNameMutation.isPending}
-            autoFocus
-          />
-          {error && <p className="edit-name-drawer-error">{error}</p>}
-        </div>
+          <div className="edit-name-drawer-content">
+            <input
+              type="text"
+              value={newName}
+              onChange={(e) => {
+                setNewName(e.target.value);
+                setError("");
+              }}
+              placeholder="Document name"
+              className="edit-name-drawer-input"
+              disabled={updateNameMutation.isPending}
+              autoFocus
+            />
+            {error && <p className="edit-name-drawer-error">{error}</p>}
+          </div>
+        </DrawerHeader>
 
         <DrawerFooter>
           <Button
