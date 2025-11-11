@@ -152,3 +152,32 @@
   transition: all 0.2s ease;
   padding-left: 0;
 }
+
+.button-drawer {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  margin-left: $spacing-lg;
+  text-align: left;
+}
+
+.button-img-drawer {
+  display: block;
+  margin: 0 auto;
+}
+
+.button-options {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  margin-left: auto;
+}

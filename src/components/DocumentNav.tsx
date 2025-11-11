@@ -5,11 +5,11 @@ import fileIconB from "../assets/icons/fileIconB.svg";
 import lessonIcon from "../assets/icons/lessonIcon.svg";
 import lessonIconB from "../assets/icons/lessonIconB.svg";
 import goBackIcon from "../assets/icons/goBackIcon.svg";
+import optionsIcon from "../assets/icons/optionsIcon.svg";
 
 const DocumentNav: React.FC<DocumentNavProps> = ({
   activeTab,
   title,
-  subtitle = "...",
   onLessonClick,
   onDocumentClick,
   onBackClick,
@@ -28,11 +28,12 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
         />
         <h1>{title}</h1>
         <button
-          className="subtitle-button"
+          // className="subtitle-button"
+          className="button-options"
           onClick={onSubtitleClick}
           disabled={!onSubtitleClick}
         >
-          {subtitle}
+          <img src={optionsIcon} alt="options" />
         </button>
       </div>
 

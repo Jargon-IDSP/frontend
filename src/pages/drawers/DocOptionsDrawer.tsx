@@ -10,8 +10,8 @@ import {
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
 import bookAddIcon from "@/assets/icons/bookAdd.svg";
-import pdfIcon from "@/assets/icons/pdfIcon.svg";
-import uploadIcon from "@/assets/icons/uploadIcon.svg";
+import pdfIconDrawer from "@/assets/icons/pdfIcon-drawer.svg";
+import shareIconDrawer from "@/assets/icons/shareIcon-drawer.svg";
 import deleteIcon from "@/assets/icons/deleteIcon-brown.svg";
 import DocumentDrawer from "./DocumentDrawer";
 import DeleteDrawer from "./DeleteDrawer";
@@ -74,20 +74,22 @@ export default function DocOptionsDrawer({
         <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
           <DrawerHeader>
             <DrawerTitle>Document Options</DrawerTitle>
-            <DrawerDescription className="sr-only">Choose an action for this document</DrawerDescription>
-            <button className="button" onClick={handleUpload}>
+            <DrawerDescription className="sr-only">
+              Choose an action for this document
+            </DrawerDescription>
+            <button className="button-drawer" onClick={handleUpload}>
               <img src={bookAddIcon} alt="Book with a plus icon" />
               Generate a lesson
             </button>
-            <button>
-              <img src={pdfIcon} alt="PDF icon" />
+            <button className="button-drawer">
+              <img src={pdfIconDrawer} alt="PDF icon" />
               Download to my device
             </button>
-            <button onClick={handleShare}>
-              <img src={uploadIcon} alt="Upload icon" />
+            <button className="button-drawer" onClick={handleShare}>
+              <img src={shareIconDrawer} alt="Upload icon" />
               Share
             </button>
-            <button onClick={handleDelete}>
+            <button className="button-drawer" onClick={handleDelete}>
               <img src={deleteIcon} alt="Trash can icon" />
               Delete
             </button>
