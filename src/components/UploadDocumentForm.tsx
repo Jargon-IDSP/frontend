@@ -4,7 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../lib/api";
 import type { UploadDocumentFormProps } from "@/types/components/forms";
-import type { UploadData, SignResponse, SaveResponse } from "@/types/api/upload";
+import type {
+  UploadData,
+  SignResponse,
+  SaveResponse,
+} from "@/types/api/upload";
 import { CategorySelectModal } from "./CategorySelectModal";
 import { useNotificationContext } from "../contexts/NotificationContext";
 import "../styles/components/_uploadDocumentForm.scss";
@@ -16,8 +20,16 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   const [file, setFile] = useState<File | null>(null);
   const [uploadProgress, setUploadProgress] = useState(0);
   const [showCategoryModal, setShowCategoryModal] = useState(false);
-  const [uploadedData, setUploadedData] = useState<{ key: string; filename: string; fileType: string; fileSize: number; documentId: string } | null>(null);
-  const [selectedCategoryName, setSelectedCategoryName] = useState<string | null>(null);
+  const [uploadedData, setUploadedData] = useState<{
+    key: string;
+    filename: string;
+    fileType: string;
+    fileSize: number;
+    documentId: string;
+  } | null>(null);
+  const [selectedCategoryName, setSelectedCategoryName] = useState<
+    string | null
+  >(null);
 
   const uploadMutation = useMutation({
     mutationFn: async ({ file, token }: UploadData) => {
@@ -87,7 +99,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     },
     onError: (error) => {
       console.error("Upload error:", error);
-      showErrorToast("Creating study materials failed, please upload again", "Upload Failed");
+      showErrorToast(
+        "Creating study materials failed, please upload again",
+        "Upload Failed"
+      );
     },
   });
 
@@ -95,22 +110,25 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     mutationFn: async ({
       documentId,
       categoryId,
-      token
+      token,
     }: {
       documentId: string;
       categoryId: number;
       token: string;
     }) => {
-      const finalizeRes = await fetch(`${BACKEND_URL}/documents/${documentId}/finalize`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          categoryId,
-        }),
-      });
+      const finalizeRes = await fetch(
+        `${BACKEND_URL}/documents/${documentId}/finalize`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            categoryId,
+          }),
+        }
+      );
 
       if (!finalizeRes.ok) {
         throw new Error("Failed to finalize document");
@@ -136,11 +154,17 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     },
     onError: (error) => {
       console.error("Finalize error:", error);
-      showErrorToast("Creating study materials failed, please upload again", "Upload Failed");
+      showErrorToast(
+        "Creating study materials failed, please upload again",
+        "Upload Failed"
+      );
     },
   });
 
-  const handleCategorySelect = async (categoryId: number, categoryName: string) => {
+  const handleCategorySelect = async (
+    categoryId: number,
+    categoryName: string
+  ) => {
     if (!uploadedData) return;
     if (finalizeDocumentMutation.isPending) return;
 
@@ -157,14 +181,17 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
     try {
       // Wait for finalize to complete before navigating
-      const response = await fetch(`${BACKEND_URL}/documents/${documentId}/finalize`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ categoryId }),
-      });
+      const response = await fetch(
+        `${BACKEND_URL}/documents/${documentId}/finalize`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ categoryId }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`Finalize failed: ${response.statusText}`);
@@ -200,8 +227,10 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
   };
 
   useEffect(() => {
-    const isPending = uploadMutation.isPending || finalizeDocumentMutation.isPending;
-    const isSuccess = uploadMutation.isSuccess || finalizeDocumentMutation.isSuccess;
+    const isPending =
+      uploadMutation.isPending || finalizeDocumentMutation.isPending;
+    const isSuccess =
+      uploadMutation.isSuccess || finalizeDocumentMutation.isSuccess;
     const isError = uploadMutation.isError || finalizeDocumentMutation.isError;
 
     if (isPending) {
@@ -253,7 +282,8 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
     uploadMutation.mutate({ file, token });
   };
 
-  const isLoading = uploadMutation.isPending || finalizeDocumentMutation.isPending;
+  const isLoading =
+    uploadMutation.isPending || finalizeDocumentMutation.isPending;
   const error = uploadMutation.error || finalizeDocumentMutation.error;
 
   return (
@@ -313,7 +343,9 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
 
       <CategorySelectModal
         isOpen={showCategoryModal}
-        onSelect={(categoryId) => handleCategorySelect(categoryId)}
+        onSelect={(categoryId, categoryName) =>
+          handleCategorySelect(categoryId, categoryName)
+        }
         onClose={handleCategoryModalClose}
         filename={uploadedData?.filename || ""}
         isSubmitting={finalizeDocumentMutation.isPending}
