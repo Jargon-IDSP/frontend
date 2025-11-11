@@ -63,7 +63,7 @@ export default function PrivacyDrawer({
 
   return (
     <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
-      <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
+      <DrawerContent className="mx-auto w-[100vw] max-w-[480px] privacy-drawer">
         <DrawerHeader>
           <DrawerTitle>Privacy Settings</DrawerTitle>
           <DrawerDescription>
@@ -81,11 +81,14 @@ export default function PrivacyDrawer({
               onChange={(e) =>
                 setSelectedPrivacy(e.target.value as PrivacySetting)
               }
+              className="radio-button-custom"
             />
             <div className="privacy-drawer-option-content">
               <h3>Private</h3>
               <p>
-                By default, documents are only visible to you. Individual friends can request to see your documents, which you can choose to approve.
+                By default, documents are only visible to you. Individual
+                friends can request to see your documents, which you can choose
+                to approve.
               </p>
             </div>
           </label>
@@ -99,6 +102,7 @@ export default function PrivacyDrawer({
               onChange={(e) =>
                 setSelectedPrivacy(e.target.value as PrivacySetting)
               }
+              className="radio-button-custom"
             />
             <div className="privacy-drawer-option-content">
               <h3>Friends</h3>
@@ -115,10 +119,13 @@ export default function PrivacyDrawer({
               onChange={(e) =>
                 setSelectedPrivacy(e.target.value as PrivacySetting)
               }
+              className="radio-button-custom"
             />
             <div className="privacy-drawer-option-content">
               <h3>Everyone</h3>
-              <p>No restrictions - anyone can view your quizzes and documents.</p>
+              <p>
+                No restrictions - anyone can view your quizzes and documents.
+              </p>
             </div>
           </label>
         </div>
