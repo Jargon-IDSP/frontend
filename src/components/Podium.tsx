@@ -1,8 +1,9 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { PodiumProps } from "../types/podium";
-import rockyYellowLogo from "/rockyYellow.svg";
-import { getUserDisplayName } from "../utils/userHelpers";
+import rockyLogo from "/rocky.svg";
+import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
+import { getLanguageFlag } from "../utils/languageFlagHelpers";
 
 const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
   const navigate = useNavigate();
@@ -19,12 +20,14 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
       {podiumUsers.map((user, index) => {
         const rank = index + 1;
         const isCurrentUser = user?.id === currentUserId;
+        const languageFlag = user ? getLanguageFlag(user.language) : undefined;
+        const languageCode = user ? getLanguageCode(user.language) : undefined;
 
         if (!user) {
           return (
             <div key={`empty-${rank}`} className={`podium-item rank-${rank}`}>
               <div className="podium-block">
-                <div className="rank-label">#{rank}</div>
+                <div className="rank-label">{rank}</div>
               </div>
             </div>
           );
@@ -38,18 +41,30 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
           >
             <div className="rocky-avatar">
               <img
-                src={rockyYellowLogo}
+                src={rockyLogo}
                 alt="Rocky"
                 className={`rocky-logo rank-${rank}`}
               />
+              {languageFlag && (
+                <span
+                  className={`podium-flag podium-flag--rank-${rank}`}
+                  title={languageCode}
+                >
+                  <img
+                    src={languageFlag.src}
+                    alt={languageFlag.alt}
+                    className="podium-flag-icon"
+                  />
+                </span>
+              )}
             </div>
             <div className="user-name">
               {getUserDisplayName(user)}
               {isCurrentUser && <span className="podium-you"> (You)</span>}
             </div>
-            <div className="user-score">{user.score.toLocaleString()}</div>
+            <div className="user-score">{user.score.toLocaleString()} pts</div>
             <div className="podium-block">
-              <div className="rank-label">#{rank}</div>
+              <div className="rank-label">{rank}</div>
             </div>
           </div>
         );
