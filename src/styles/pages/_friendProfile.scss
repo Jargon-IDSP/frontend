@@ -159,7 +159,7 @@
 
 // Profile Card
 .friend-profile-card {
-  background: linear-gradient(180deg, #E8E8E8 0%, #F5F5F5 100%);
+  background: $color-secondary-400;
   border-radius: $border-radius-lg;
   padding: $spacing-xl;
   text-align: center;
@@ -171,7 +171,8 @@
   width: 100px;
   height: 100px;
   margin: 0 auto $spacing-md;
-  background-color: $color-secondary;
+  background-color: $color-second-neutral-50;
+  border: 1px solid $color-quaternary-dark;
   border-radius: $border-radius-full;
   display: flex;
   align-items: center;
@@ -187,13 +188,13 @@
 .friend-profile-name {
   font-size: $font-size-h1;
   font-weight: $font-weight-bold;
-  color: $color-quaternary-dark;
+  color: $color-quaternary-800;
   margin: 0 0 $spacing-xs 0;
 }
 
 .friend-profile-industry {
   font-size: $font-size-body;
-  color: $color-neutral;
+  color: $color-quaternary-700;
   margin: 0 0 $spacing-lg 0;
 }
 
@@ -214,12 +215,13 @@
 .friend-profile-stat-value {
   font-size: $font-size-h1;
   font-weight: $font-weight-bold;
-  color: $color-quaternary-dark;
+  color: $color-quaternary-700;
 }
 
 .friend-profile-stat-label {
+  font-weight: $font-weight-medium;
   font-size: $font-size-label;
-  color: $color-neutral;
+  color: $color-quaternary-700;
   margin-top: $spacing-xs;
 }
 
