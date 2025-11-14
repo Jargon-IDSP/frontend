@@ -20,6 +20,7 @@ export default function DeleteDrawer({
   onCancel,
   documentId,
   documentName,
+  navigateOnSuccess = true,
 }: DeleteDrawerProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -42,7 +43,9 @@ export default function DeleteDrawer({
       queryClient.invalidateQueries({ queryKey: ["documents"] });
       queryClient.invalidateQueries({ queryKey: ["documentQuiz", documentId] });
       onOpenChange(false);
-      navigate("/learning/custom");
+      if (navigateOnSuccess) {
+        navigate("/learning/custom");
+      }
     },
   });
 

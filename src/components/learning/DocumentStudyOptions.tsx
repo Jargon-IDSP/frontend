@@ -16,7 +16,7 @@ export default function DocumentStudyOptions({
   const { data: quizzes = [], isLoading } = useDocumentQuizzes(documentId);
 
   const handleTerminology = () => {
-    navigate(`/learning/documents/${documentId}/terms`);
+    navigate(`/learning/documents/${documentId}/terminology`);
   };
 
   const handleStartQuiz = () => {

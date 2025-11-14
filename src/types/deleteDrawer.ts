@@ -4,4 +4,5 @@ export interface DeleteDrawerProps {
   onCancel?: () => void;
   documentId: string | null;
   documentName?: string;
+  navigateOnSuccess?: boolean;
 }

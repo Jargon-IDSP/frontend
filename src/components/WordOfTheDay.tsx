@@ -1,12 +1,15 @@
 import { useAuth } from "@clerk/clerk-react";
+import { useNavigate } from "react-router-dom";
 import { useUserPreferences } from "../hooks/useUserPreferences";
 import { useRandomWord } from "../hooks/useRandomWord";
+import type { WordOfTheDayProps } from "../types/wordOfTheDay";
 import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
 import LoadingBar from "./LoadingBar";
 
-export default function WordOfTheDay() {
+export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   const { isSignedIn, isLoaded } = useAuth();
+  const navigate = useNavigate();
   const { language: userLanguage, loading: preferencesLoading } =
     useUserPreferences();
 
@@ -24,11 +27,16 @@ export default function WordOfTheDay() {
   const shouldShowLoading = isLoaded && isSignedIn && !preferencesLoading && !!userLanguage && isLoading;
 
   const handleCardClick = () => {
-    // Clear the cached word for this language
+    // If documentId is present, navigate to flashcards
+    if (documentId) {
+      navigate(`/learning/documents/${documentId}/flashcards`);
+      return;
+    }
+
+    // Otherwise, clear the cached word and refetch for homepage
     if (userLanguage) {
       localStorage.removeItem(`wordOfTheDay_${userLanguage}`);
     }
-    // Refetch to get a new word
     refetch();
   };
 

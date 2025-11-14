@@ -151,7 +151,11 @@ export default function SelectStudyType() {
             onSubtitleClick={isOwner && !isLoadingQuizzes && quizData ? handleOptionsClick : undefined}
           />
 
-          {(selectedDocument || documentData?.document) && <WordOfTheDay />}
+          {(selectedDocument || documentData?.document) && (
+            <WordOfTheDay
+              documentId={selectedDocument?.id || documentData?.document?.id || documentId}
+            />
+          )}
 
           {shouldShowDocumentSelector ? (
             <div style={{ padding: "1rem" }}>
