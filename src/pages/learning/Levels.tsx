@@ -111,7 +111,14 @@ export default function ExistingLevels() {
       navigate(
         `/learning/existing/levels/${levelId}/flashcards/${
           session.sessionNumber
-        }${industryId ? `?industry=${industryId}` : ""}`
+        }${industryId ? `?industry_id=${industryId}` : ""}`
+      );
+    } else if (session.sessionNumber === 3) {
+      // Navigate to boss page for quiz 3
+      navigate(
+        `/learning/existing/levels/${levelId}/boss${
+          industryId ? `?industry_id=${industryId}` : ""
+        }`
       );
     } else {
       // Navigate directly to quiz (skip the Start Quiz page)

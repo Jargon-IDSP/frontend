@@ -5,7 +5,7 @@ import { useMutation } from "@tanstack/react-query";
 import fileIcon from "../../assets/icons/fileIcon.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import { BACKEND_URL } from "../../lib/api";
-import { CategorySelectModal } from "../../components/CategorySelectModal";
+import CategorySelectDrawer from "@/pages/drawers/CategorySelectDrawer";
 import DocumentDrawer from "@/pages/drawers/DocumentDrawer";
 import type {
   FileInfo,
@@ -169,11 +169,12 @@ export default function FilePreviewPage() {
 
   return (
     <>
-      <CategorySelectModal
+      <CategorySelectDrawer
         isOpen={showCategoryModal}
         onSelect={handleCategorySelect}
         onClose={() => setShowCategoryModal(false)}
         filename={fileInfo?.fileName || ""}
+        isSubmitting={uploadMutation.isPending}
       />
 
       <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />

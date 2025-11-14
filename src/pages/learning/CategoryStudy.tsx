@@ -49,7 +49,7 @@ function ProcessingDocumentCard({
   // Delay the costumed class to sync with bounce animation (happens at bottom of bounce)
   useEffect(() => {
     if (currentItem > 0) {
-      const timeout = setTimeout(() => setShowCostumed(true), 500);
+      const timeout = setTimeout(() => setShowCostumed(true), 100);
       return () => clearTimeout(timeout);
     } else {
       setShowCostumed(false);

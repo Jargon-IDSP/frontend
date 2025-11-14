@@ -1,0 +1,101 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.termlist-page {
+  min-height: 100vh;
+  padding-top: $spacing-xl;
+
+  .container {
+    padding: 0 $spacing-xl $spacing-xl;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    margin-bottom: $spacing-lg;
+
+    button {
+      display: flex;
+      align-items: center;
+      gap: $spacing-xs;
+      background-color: transparent;
+    }
+  }
+
+  &-title {
+    font-size: $font-size-h1;
+    font-weight: $font-weight-medium;
+    color: $color-quaternary-dark;
+  }
+
+  &-error {
+    background-color: #fee;
+    padding: $spacing-md;
+    border-radius: 6px;
+    border: 1px solid #fcc;
+    margin-top: $spacing-md;
+
+    strong {
+      display: block;
+      margin-bottom: $spacing-xs;
+    }
+
+    p {
+      margin: 0;
+      color: $color-error;
+    }
+  }
+
+  &-content {
+    margin-top: $spacing-lg;
+  }
+
+  &-empty {
+    padding: $spacing-lg;
+
+    p {
+      color: $color-tertiary;
+      font-size: $font-size-body;
+    }
+  }
+
+  &-items {
+    list-style-type: disc;
+    padding-left: $spacing-xl;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+  }
+}
+
+.termlist-item {
+  margin-top: 3rem;
+  &-term {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-medium;
+    color: $color-quaternary-dark;
+    margin-bottom: 0.5rem;
+  }
+
+  &-translation {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-medium;
+    color: $color-primary;
+    margin-bottom: 1rem;
+  }
+
+  &-definition {
+    font-size: $font-size-body;
+    color: $color-tertiary;
+    line-height: 1.6;
+    margin-bottom: 0.5rem;
+  }
+
+  &-definition-translation {
+    font-size: $font-size-body;
+    color: $color-primary;
+    line-height: 1.6;
+  }
+}

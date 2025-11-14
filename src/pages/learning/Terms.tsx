@@ -34,6 +34,7 @@ export default function Terms() {
   const queryLanguage = searchParams.get("language") || language;
   const queryIndustryId =
     searchParams.get("industry_id") || industryId?.toString();
+  const showAll = searchParams.get("all") === "true";
 
   // Determine type and endpoint
   let type: "existing" | "custom" = "custom";
@@ -41,7 +42,12 @@ export default function Terms() {
 
   if (location.pathname.includes("/existing/")) {
     type = "existing";
-    endpoint = `levels/${levelId}/terms`;
+    // If showAll flag is set, use industry-only endpoint (same as terminology page)
+    if (showAll && queryIndustryId) {
+      endpoint = `levels/${levelId}/industry/${queryIndustryId}/terms`;
+    } else {
+      endpoint = `levels/${levelId}/terms`;
+    }
   } else if (location.pathname.includes("/learning/documents/")) {
     type = "custom";
     endpoint = `documents/${documentId}/terms`;
@@ -58,9 +64,10 @@ export default function Terms() {
     endpoint,
     params: {
       language: queryLanguage,
+      // Only pass industry_id as param when NOT using showAll (industry-only endpoint already has it in path)
       ...(queryIndustryId &&
-        type === "existing" && { industry_id: queryIndustryId }),
-      ...(sessionNumber && { limit: "10" }),
+        type === "existing" && !showAll && { industry_id: queryIndustryId }),
+      ...(sessionNumber && { limit: "10", session: sessionNumber }),
     },
     enabled: !preferencesLoading,
   });

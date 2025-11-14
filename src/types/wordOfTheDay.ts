@@ -28,3 +28,7 @@ export interface FlashcardResponse {
     };
   };
 }
+
+export interface WordOfTheDayProps {
+  documentId?: string;
+}

@@ -6,6 +6,7 @@ import { useDocuments } from "../../hooks/useDocuments";
 import { useDeleteDocument } from "../../hooks/useDeleteDocument";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
 import ShareModal from "../../components/learning/ShareModal";
+import DeleteDrawer from "../drawers/DeleteDrawer";
 import { BACKEND_URL } from "../../lib/api";
 import type { Document, DocumentsListProps } from "../../types/document";
 import "../../styles/components/_documentList.scss";
@@ -23,6 +24,10 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     id: string;
     name: string;
     documentId: string;
+  } | null>(null);
+  const [deleteDrawerDoc, setDeleteDrawerDoc] = useState<{
+    id: string;
+    name: string;
   } | null>(null);
 
   useEffect(() => {
@@ -70,16 +75,8 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     }
   }, [processingStatus?.status.status, queryClient]);
 
-  const handleDelete = async (documentId: string) => {
-    if (
-      !confirm(
-        "Are you sure you want to delete this document? This will also delete all associated flashcards and quizzes."
-      )
-    ) {
-      return;
-    }
-
-    deleteMutation.mutate(documentId);
+  const handleDelete = (documentId: string, documentName: string) => {
+    setDeleteDrawerDoc({ id: documentId, name: documentName });
   };
 
   const handleShare = async (e: React.MouseEvent, documentId: string) => {
@@ -131,9 +128,9 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     }
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, documentId: string) => {
+  const handleDeleteClick = (e: React.MouseEvent, documentId: string, documentName: string) => {
     e.stopPropagation();
-    handleDelete(documentId);
+    handleDelete(documentId, documentName);
   };
 
   const getStatusBadge = (doc: Document) => {
@@ -222,7 +219,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
                     {isEditMode && (
                       <button
                         className="documents-list-action-button documents-list-action-button-delete"
-                        onClick={(e) => handleDeleteClick(e, doc.id)}
+                        onClick={(e) => handleDeleteClick(e, doc.id, doc.filename)}
                         disabled={deleteMutation.isPending}
                         aria-label="Delete document"
                       >
@@ -249,6 +246,14 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
           onClose={() => setShareModalQuiz(null)}
         />
       )}
+
+      <DeleteDrawer
+        open={deleteDrawerDoc !== null}
+        onOpenChange={(open) => !open && setDeleteDrawerDoc(null)}
+        documentId={deleteDrawerDoc?.id || ""}
+        documentName={deleteDrawerDoc?.name || ""}
+        navigateOnSuccess={false}
+      />
     </div>
   );
 }

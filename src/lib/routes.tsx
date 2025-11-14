@@ -18,6 +18,7 @@ import ExistingSelect from "../pages/learning/ExistingSelect";
 import Categories from "../pages/learning/Categories";
 import CategoryStudy from "../pages/learning/CategoryStudy";
 import Terms from "../pages/learning/Terms";
+import TermList from "../pages/learning/Termlist";
 import Questions from "../pages/learning/Questions";
 import Quizzes from "../pages/learning/StartQuiz";
 import UnifiedQuizTaker from "../pages/learning/UnifiedQuizTaker";
@@ -33,6 +34,7 @@ import IntroductionPage from "../pages/onboarding/IntroductionPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
 import LearnJargon from "../pages/learning/LearnJargon";
+import BossPage from "../pages/learning/BossPage";
 
 const protect = (element: ReactElement) => (
   <ProtectedRoute>{element}</ProtectedRoute>
@@ -145,6 +147,10 @@ export const routes: RouteObject[] = [
     element: protect(<ExistingSelect />),
   },
   {
+    path: "/learning/existing/levels/:levelId/boss",
+    element: protect(<BossPage />),
+  },
+  {
     path: "/learning/custom",
     element: protect(<LearnJargon />),
   },
@@ -179,7 +185,15 @@ export const routes: RouteObject[] = [
     element: protect(<Terms />),
   },
   {
+    path: "/learning/existing/levels/:levelId/terminology",
+    element: protect(<TermList />),
+  },
+  {
     path: "/learning/documents/:documentId/terms",
+    element: protect(<Terms />),
+  },
+  {
+    path: "/learning/documents/:documentId/flashcards",
     element: protect(<Terms />),
   },
   {
@@ -189,6 +203,16 @@ export const routes: RouteObject[] = [
   {
     path: "/learning/custom/terms",
     element: protect(<Terms />),
+  },
+
+  // Full Terms List
+  {
+    path: "/learning/documents/:documentId/fullTerms",
+    element: protect(<TermList />),
+  },
+  {
+    path: "/learning/documents/:documentId/terminology",
+    element: protect(<TermList />),
   },
 
   // Questions
