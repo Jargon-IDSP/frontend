@@ -44,6 +44,17 @@ function ProcessingDocumentCard({
 }: ProcessingDocumentCardProps) {
   const navigate = useNavigate();
   const [currentItem, setCurrentItem] = useState(0);
+  const [showCostumed, setShowCostumed] = useState(false);
+
+  // Delay the costumed class by 0.2s to prevent visual jump
+  useEffect(() => {
+    if (currentItem > 0) {
+      const timeout = setTimeout(() => setShowCostumed(true), 120);
+      return () => clearTimeout(timeout);
+    } else {
+      setShowCostumed(false);
+    }
+  }, [currentItem]);
   const [hasShownSneakPeekToast, setHasShownSneakPeekToast] = useState(false);
   const { showToast } = useNotificationContext();
 
@@ -224,7 +235,7 @@ function ProcessingDocumentCard({
           )}
 
           {/* Rocky Walking */}
-          <div className={`rocky-animation__rocky ${currentItem > 0 ? 'rocky-animation__rocky--costumed' : ''}`}>
+          <div className={`rocky-animation__rocky ${showCostumed ? 'rocky-animation__rocky--costumed' : ''}`}>
             <img src={getRockyImage()} alt="Rocky" />
           </div>
 
