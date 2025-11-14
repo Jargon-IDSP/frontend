@@ -5198,7 +5198,6 @@ button.back-button {
   height: 75px;
   animation: walk 16s linear infinite;
   z-index: 2;
-  transition: width 0.3s ease, height 0.3s ease;
 }
 .rocky-animation__rocky img {
   width: 100%;
@@ -5208,8 +5207,8 @@ button.back-button {
   animation: bounce 0.5s ease-in-out infinite;
 }
 .rocky-animation__rocky--costumed {
-  width: 90px;
-  height: 90px;
+  width: 87px;
+  height: 87px;
 }
 .rocky-animation__items {
   position: absolute;
