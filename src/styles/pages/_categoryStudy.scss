@@ -352,10 +352,11 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
+      object-position: bottom center;
       animation: bounce 0.5s ease-in-out infinite;
     }
 
-    // Costumed Rockys are slightly larger to accommodate the hardhat
+    // Costumed Rockys are larger to accommodate the hardhat
     &--costumed {
       width: 87px;
       height: 87px;
