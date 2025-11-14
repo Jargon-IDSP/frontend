@@ -8,6 +8,7 @@ import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
 import WordOfTheDay from '../components/WordOfTheDay';
 import NotificationBell from '../components/NotificationBell';
+import LoadingBar from '../components/LoadingBar';
 // import JargonLogo from '../components/Wordmark';
 import rockyWhiteLogo from '/rockyWhite.svg';
 
@@ -103,7 +104,13 @@ export default function LoggedInHome() {
 
   // Show loading state while checking for redirects or while profile is loading
   if (isLoading || isCheckingRedirect || !user || !profile) {
-    return null; // Return null to prevent flash, the redirect will happen
+    return (
+      <div className="home-page">
+        <div className="loading-container">
+          <LoadingBar isLoading={true} />
+        </div>
+      </div>
+    );
   }
 
   return (

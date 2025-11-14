@@ -4458,9 +4458,8 @@ button.back-button {
   transition: all 0.5s ease;
   opacity: 1;
   transform: scale(2) rotate(0deg);
-  width: 80%;
-  height: 80%;
-  margin-top: 4rem;
+  width: 100px;
+  height: 100px;
 }
 .rocky-animation__item img {
   width: 100%;

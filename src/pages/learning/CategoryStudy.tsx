@@ -180,8 +180,8 @@ function ProcessingDocumentCard({
       }}
       style={{ cursor: canStudy || isFullyComplete ? "pointer" : "default" }}
     >
-      <h3 className="processing-card__header">
-        {filename}
+      <div className="processing-card__header">
+        <h3>{filename}</h3>
         <span
           className={`processing-card__badge ${
             canStudy || isFullyComplete ? "processing-card__badge--ready" : ""
@@ -193,7 +193,7 @@ function ProcessingDocumentCard({
             ? "SNEAK PEEK READY"
             : "PROCESSING"}
         </span>
-      </h3>
+        </div>
 
       {/* Rocky Animation Section */}
       <div className="rocky-animation">
