@@ -347,6 +347,8 @@
     height: 75px;
     animation: walk 16s linear infinite;
     z-index: 2;
+    transform: translateZ(0);
+    will-change: width, height;
 
     img {
       width: 100%;
@@ -354,6 +356,8 @@
       object-fit: contain;
       object-position: bottom center;
       animation: bounce 0.5s ease-in-out infinite;
+      image-rendering: -webkit-optimize-contrast;
+      image-rendering: crisp-edges;
     }
 
     // Costumed Rockys are larger to accommodate the hardhat
