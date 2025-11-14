@@ -1,3 +1,17 @@
+export interface ProfileData {
+  id: string;
+  email: string;
+  username?: string;
+  firstName?: string;
+  lastName?: string;
+  score?: number;
+  language?: string;
+  industryId?: number | null;
+  introductionViewed?: boolean;
+  onboardingCompleted?: boolean;
+  [key: string]: any;
+}
+
 export interface BadgeIcon {
   id: string;
   name: string;
