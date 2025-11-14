@@ -30,11 +30,8 @@
 
 .navCardWrapper {
   display: flex;
-  background-color: #CDCDCD;
-  padding: 0.5rem;
   border-radius: 15px;
   flex-direction: column;
-  gap: 0.5rem;
   transition: all 0.2s;
   margin-bottom: 2rem;
 
@@ -58,7 +55,17 @@
   border: 1px solid #e5e7eb;
   padding: 1.5rem;
   transition: all 0.2s;
-  height: 7rem;
+  min-height: 7rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.cardBadges {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+  flex-wrap: wrap;
 }
 
 .NavCardDescription {
@@ -87,4 +94,58 @@
     cursor: not-allowed;
     opacity: 0.6;
   }
+}
+
+// Navigation Card Variants
+.navCardWrapper {
+  // Industry variant
+  &.industry {
+    .tabColor {
+      background-color: $industry-tab;
+      color: $industry-text;
+    }
+
+    .folderColor {
+      background-color: $industry-folder;
+      color: $industry-text;
+    }
+  }
+
+  // Generated variant
+  &.generated {
+    .tabColor {
+      background-color: $generated-tab;
+      color: $generated-text;
+    }
+
+    .folderColor {
+      background-color: $generated-folder;
+      color: $generated-text;
+    }
+  }
+
+  // Friends variant
+  &.friends {
+    .tabColor {
+      background-color: $friends-tab;
+      color: $friends-text;
+    }
+
+    .folderColor {
+      background-color: $friends-folder;
+      color: $friends-text;
+    }
+  }
+}
+
+// Card color elements
+.tabColor,
+.folderColor {
+  height: 2rem;
+  border-radius: $border-radius-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: $font-weight-medium;
+  font-size: $font-size-label;
 }

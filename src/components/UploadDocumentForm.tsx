@@ -197,14 +197,33 @@ export function UploadDocumentForm({ onSuccess }: UploadDocumentFormProps) {
         throw new Error(`Finalize failed: ${response.statusText}`);
       }
 
-      // Navigate only after successful finalization
+      // Fetch initial processing status before navigating
+      const statusResponse = await fetch(
+        `${BACKEND_URL}/documents/${documentId}/processing-status`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      let initialStatusData = null;
+      if (statusResponse.ok) {
+        initialStatusData = await statusResponse.json();
+      }
+
+      // Navigate only after successful finalization and status fetch
       setFile(null);
       setUploadedData(null);
       setShowCategoryModal(false);
       onSuccess();
 
       navigate(`/learning/custom/categories/${categoryNameLower}`, {
-        state: { documentId, justUploaded: true },
+        state: {
+          documentId,
+          justUploaded: true,
+          initialStatusData, // Pass the initial status data
+        },
       });
     } catch (err) {
       console.error("Finalize error:", err);
