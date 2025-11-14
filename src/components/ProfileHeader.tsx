@@ -24,7 +24,7 @@ export default function ProfileHeader({
           if (from) {
             navigate(from);
           } else {
-            navigate("/leaderboard");
+            navigate("/leaderboard/full");
           }
         }}
       >

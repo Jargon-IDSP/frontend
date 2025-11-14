@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import rockyLogo from "/rocky.svg";
 import rockyWhiteLogo from '/rockyWhite.svg';
+import goBackIcon from "../assets/icons/goBackIcon.svg";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
@@ -91,7 +92,19 @@ const LeaderboardPage: React.FC = () => {
     return (
       <div className={containerClass}>
         <div className="leaderboard-page leaderboard-error">
-          <h1 className="leaderboard-title">Leaderboard</h1>
+          <div className="leaderboard-header">
+            <button
+              className="leaderboard-back-button"
+              onClick={() => navigate("/community")}
+            >
+              <img src={goBackIcon} alt="Back" />
+            </button>
+            <h1 className="leaderboard-title">Leaderboard</h1>
+            <div className="leaderboard-header-actions">
+              {/* Empty div for spacing */}
+              <div></div>
+            </div>
+          </div>
           <p>Loading...</p>
         </div>
       </div>
@@ -102,7 +115,19 @@ const LeaderboardPage: React.FC = () => {
     return (
       <div className={containerClass}>
         <div className="leaderboard-page leaderboard-error">
-          <h1 className="leaderboard-title">Leaderboard</h1>
+          <div className="leaderboard-header">
+            <button
+              className="leaderboard-back-button"
+              onClick={() => navigate("/community")}
+            >
+              <img src={goBackIcon} alt="Back" />
+            </button>
+            <h1 className="leaderboard-title">Leaderboard</h1>
+            <div className="leaderboard-header-actions">
+              {/* Empty div for spacing */}
+              <div></div>
+            </div>
+          </div>
           <p className="leaderboard-error-message">
             Error:{" "}
             {error instanceof Error
@@ -124,7 +149,19 @@ const LeaderboardPage: React.FC = () => {
     return (
       <div className={containerClass}>
         <div className="leaderboard-page">
-          <h1 className="leaderboard-title">Leaderboard</h1>
+          <div className="leaderboard-header">
+            <button
+              className="leaderboard-back-button"
+              onClick={() => navigate("/community")}
+            >
+              <img src={goBackIcon} alt="Back" />
+            </button>
+            <h1 className="leaderboard-title">Leaderboard</h1>
+            <div className="leaderboard-header-actions">
+              {/* Empty div for spacing */}
+              <div></div>
+            </div>
+          </div>
           <div className="leaderboard-empty-state">
             <img src={LeaderboardConnectAvatar} alt="Leaderboard Connect Avatar" className="leaderboard-empty-avatar" />
             <p className="leaderboard-empty-message">
@@ -147,6 +184,12 @@ const LeaderboardPage: React.FC = () => {
       <div className="leaderboard-page">
         <div className="leaderboard-hero">
           <div className="leaderboard-header">
+            <button
+              className="leaderboard-back-button"
+              onClick={() => navigate("/community")}
+            >
+              <img src={goBackIcon} alt="Back" />
+            </button>
             <h1 className="leaderboard-title">Leaderboard</h1>
             <div className="leaderboard-header-actions">
               <NotificationBell />
@@ -280,7 +323,7 @@ const LeaderboardPage: React.FC = () => {
                         className={`leaderboard-item leaderboard-item--regular ${
                           isCurrentUser ? "leaderboard-item--current-user" : ""
                         } leaderboard-item--clickable`}
-                        onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/leaderboard" } })}
+                        onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/community" } })}
                       >
                         <div className="leaderboard-item-content leaderboard-item-content--regular">
                           <span className="leaderboard-item-rank">{actualRank}</span>

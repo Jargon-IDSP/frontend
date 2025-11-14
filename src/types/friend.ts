@@ -14,6 +14,7 @@ export interface Friend {
   email: string;
   score: number;
   industryId?: number | null;
+  language?: string | null;
   status?: FriendshipStatusType | string;
   isMutual?: boolean; // True if both users follow each other (friends)
 }

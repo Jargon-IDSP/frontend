@@ -5,9 +5,7 @@ import { BACKEND_URL } from "../../lib/api";
 import { FriendshipStatus } from "../../types/friend";
 import type { FriendProfile, FriendQuiz } from "../../types/friend";
 import type { UserBadge } from "../../types/badge";
-import type { BadgeIcon } from "../../types/profile";
 import "../../styles/pages/_friendProfile.scss";
-import { useMemo } from "react";
 import LoadingBar from "../../components/LoadingBar";
 import FriendLessonsSection from "../../components/FriendLessonsSection";
 import PendingAccessRequestsBanner from "../../components/PendingAccessRequestsBanner";
@@ -18,12 +16,6 @@ import { getUserDisplayName, getIndustryName, formatDate } from "../../utils/use
 import { useFriendshipActions } from "../../hooks/useFriendshipActions";
 import { useQuizAccessRequests } from "../../hooks/useQuizAccessRequests";
 import { useNotificationContext } from "../../contexts/NotificationContext";
-
-// Eagerly import all badge images using glob
-const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
-  eager: true,
-  import: 'default'
-});
 
 export default function FriendProfilePage() {
   const { friendId } = useParams<{ friendId: string }>();
@@ -201,24 +193,6 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
-  // Get badge icon URLs from glob imports
-  const badgeIcons: BadgeIcon[] = useMemo(() => {
-    if (!userBadges) return [];
-
-    return userBadges.map((userBadge) => {
-      if (userBadge.badge?.iconUrl) {
-        const iconPath = userBadge.badge.iconUrl;
-        const fullPath = `../../assets/badges/${iconPath}`;
-        const url = badgeModules[fullPath];
-        return {
-          id: userBadge.id,
-          name: userBadge.badge.name,
-          url: url || null
-        };
-      }
-      return null;
-    }).filter((icon): icon is BadgeIcon => icon !== null && icon.url !== null);
-  }, [userBadges]);
 
   // Check friendship status
   const { data: friendshipStatus, isLoading: isLoadingFriendship } = useQuery({
@@ -431,7 +405,8 @@ export default function FriendProfilePage() {
     (isOwnProfile ? false : isLoadingFriendship);
 
   return (
-    <div className="friend-profile-page">
+    <div className="container container--friend-profile">
+      <div className="friend-profile-page">
       {/* Header - only show after key data is loaded to prevent flicker */}
       {!isLoadingData && (
         <ProfileHeader
@@ -501,10 +476,10 @@ export default function FriendProfilePage() {
           <ProfileOverview
             badgeCount={userBadges?.length || 0}
             joinedDate={formatDate(friendProfile?.createdAt)}
-            badges={badgeIcons}
           />
         </>
       )}
+      </div>
     </div>
   );
 }

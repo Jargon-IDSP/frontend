@@ -1,39 +1,42 @@
+import badgeIcon from "../assets/icons/badge.svg";
+import calendarIcon from "../assets/icons/calendarIcon.svg";
+import medalIcon from "../assets/icons/medalIcon.svg";
 import type { ProfileOverviewProps } from "../types/profile";
 
 export default function ProfileOverview({
   badgeCount,
   joinedDate,
-  badges,
 }: ProfileOverviewProps) {
   return (
     <div className="friend-profile-section">
       <h3 className="friend-profile-section-title">Overview</h3>
       <div className="friend-profile-overview">
-        <div className="friend-profile-overview-item">
-          <p className="friend-profile-overview-label">Badges: {badgeCount}</p>
+        <div className="friend-profile-overview-item-1">
+          <img
+            src={badgeIcon}
+            alt="Badges"
+            className="friend-profile-overview-icon"
+          />
+          <p className="friend-profile-overview-label">Badges:</p>
+          <p className="friend-profile-overview-value">{badgeCount}</p>
         </div>
-        <div className="friend-profile-overview-item">
-          <p className="friend-profile-overview-label">Joined: {joinedDate}</p>
+        <div className="friend-profile-overview-item-2">
+          <img
+            src={calendarIcon}
+            alt="Joined"
+            className="friend-profile-overview-icon"
+          />
+          <p className="friend-profile-overview-label">Joined:</p>
+          <p className="friend-profile-overview-value">{joinedDate}</p>
         </div>
-      </div>
-
-      {/* Badges Display */}
-      <div className="friend-profile-badges-section">
-        <h4 className="friend-profile-badges-subtitle">Badge Collection</h4>
-        <div className="friend-profile-badges-grid">
-          {badges.length > 0 ? (
-            badges.map((badge) => (
-              <div key={badge.id} className="friend-profile-badge-item" title={badge.name}>
-                <img
-                  src={badge.url}
-                  alt={badge.name}
-                  className="friend-profile-badge-icon"
-                />
-              </div>
-            ))
-          ) : (
-            <p className="friend-profile-no-badges">No badges earned yet.</p>
-          )}
+        <div className="friend-profile-overview-item-3">
+          <img
+            src={medalIcon}
+            alt="Medals"
+            className="friend-profile-overview-icon"
+          />
+          <p className="friend-profile-overview-label">Medals:</p>
+          <p className="friend-profile-overview-value">0</p>
         </div>
       </div>
     </div>

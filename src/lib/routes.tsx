@@ -7,9 +7,12 @@ import ProfilePage from "../pages/users/ProfilePage";
 import AvatarPage from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import FriendProfilePage from "../pages/users/FriendProfilePage";
+import EditLessonPage from "../pages/users/EditLessonPage";
 import ManageProfilePage from "../pages/users/ManageProfilePage";
 import NotificationsPage from "../pages/notifications/NotificationsPage";
 import LeaderboardPage from "../mounting/LeaderboardPage";
+import CommunityPage from "../pages/community/CommunityPage";
+import ViewFriendsPage from "../pages/community/ViewFriendsPage";
 import Levels from "../pages/learning/Levels";
 import ExistingSelect from "../pages/learning/ExistingSelect";
 import Categories from "../pages/learning/Categories";
@@ -73,6 +76,10 @@ export const routes: RouteObject[] = [
     element: protect(<FriendProfilePage />),
   },
   {
+    path: "/profile/lessons/:lessonId/edit",
+    element: protect(<EditLessonPage />),
+  },
+  {
     path: "/profile/manage",
     element: protect(<ManageProfilePage />),
   },
@@ -103,7 +110,15 @@ export const routes: RouteObject[] = [
     element: protect(<FullTranslationView />),
   },
   {
-    path: "/leaderboard",
+    path: "/community",
+    element: protect(<CommunityPage />),
+  },
+  {
+    path: "/community/friends",
+    element: protect(<ViewFriendsPage />),
+  },
+  {
+    path: "/leaderboard/full",
     element: protect(<LeaderboardPage />),
   },
 

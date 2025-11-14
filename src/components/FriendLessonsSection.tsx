@@ -1,8 +1,13 @@
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { BACKEND_URL } from "../lib/api";
 import type { FriendQuiz } from "../types/friend";
 import lockIcon from "../assets/icons/lockIcon.svg";
+import lessonIconWrench from "../assets/icons/lessonIconWrench.svg";
+import editIconRed from "../assets/icons/editIconRed.svg";
+import downArrow from "../assets/icons/downArrow.svg";
 import { useNotificationContext } from "../contexts/NotificationContext";
 
 interface FriendLessonsSectionProps {
@@ -129,9 +134,11 @@ export default function FriendLessonsSection({
   sendRequestMutationPending,
   onLessonClick,
 }: FriendLessonsSectionProps) {
+  const navigate = useNavigate();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
   const { showToast } = useNotificationContext();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   // Request quiz access mutation
   const requestQuizAccessMutation = useMutation({
@@ -218,9 +225,13 @@ export default function FriendLessonsSection({
       );
     }
 
+    const displayLimit = 3;
+    const hasMoreLessons = friendQuizzes.length > displayLimit;
+    const lessonsToShow = isExpanded ? friendQuizzes : friendQuizzes.slice(0, displayLimit);
+
     return (
       <div className="friend-profile-lessons-list">
-        {friendQuizzes.map((quiz) => {
+        {lessonsToShow.map((quiz) => {
           const { showLock, showPending } = shouldShowLockIcon(
             quiz,
             displayMode.mode,
@@ -235,6 +246,11 @@ export default function FriendLessonsSection({
               onClick={() => isClickable && onLessonClick(quiz.id)}
               style={{ cursor: isClickable ? "pointer" : "default" }}
             >
+              <img
+                src={lessonIconWrench}
+                alt="Lesson"
+                className="friend-profile-lesson-wrench-icon"
+              />
               <span className="friend-profile-lesson-list-name">{quiz.name}</span>
 
               {showPending && (
@@ -254,9 +270,49 @@ export default function FriendLessonsSection({
                   }}
                 />
               )}
+
+              {isOwnProfile && (
+                <img
+                  src={editIconRed}
+                  alt="Edit"
+                  className="friend-profile-lesson-edit-icon"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    // Navigate to edit lesson page
+                    const currentPath = window.location.pathname;
+                    const userId = currentPath.includes("/profile/friends/") 
+                      ? currentPath.split("/profile/friends/")[1] 
+                      : "me";
+                    navigate(`/profile/lessons/${quiz.id}/edit`, {
+                      state: { 
+                        from: currentPath,
+                        userId: userId !== "me" ? userId : undefined,
+                        lessonName: quiz.name
+                      }
+                    });
+                  }}
+                />
+              )}
             </div>
           );
         })}
+        {hasMoreLessons && (
+          <button
+            className="friend-profile-lessons-view-more"
+            onClick={() => setIsExpanded(!isExpanded)}
+          >
+            <span className="friend-profile-lessons-view-more-text">
+              {isExpanded ? "View Less" : "View More"}
+            </span>
+            <img
+              src={downArrow}
+              alt={isExpanded ? "Collapse" : "Expand"}
+              className={`friend-profile-lessons-view-more-icon ${
+                isExpanded ? "friend-profile-lessons-view-more-icon--expanded" : ""
+              }`}
+            />
+          </button>
+        )}
       </div>
     );
   };
