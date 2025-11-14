@@ -25,7 +25,6 @@ export interface ProfileCardProps {
 export interface ProfileOverviewProps {
   badgeCount: number;
   joinedDate: string;
-  badges: BadgeIcon[];
 }
 
 export interface BlockedUserViewProps {

@@ -2,11 +2,15 @@
 @use '../mixins' as *;
 @use 'sass:color';
 
+.container--friend-profile {
+  padding: 0;
+  padding-bottom: calc(70px + #{$spacing-md});
+}
+
 .friend-profile-page {
-  padding: $spacing-md;
-  max-width: 600px;
+  padding: $spacing-lg;
+  max-width: 1200px;
   margin: 0 auto;
-  padding-bottom: 100px; // Space for bottom nav;
   width: 100%;
   box-sizing: border-box;
 }
@@ -161,7 +165,7 @@
 .friend-profile-card {
   background: $color-secondary-400;
   border-radius: $border-radius-lg;
-  padding: $spacing-xl;
+  padding: $spacing-lg;
   text-align: center;
   margin-bottom: $spacing-lg;
   position: relative;
@@ -202,7 +206,7 @@
 .friend-profile-stats {
   display: flex;
   justify-content: space-around;
-  gap: $spacing-md;
+  gap: 0;
   margin-top: $spacing-lg;
 }
 
@@ -219,7 +223,7 @@
 }
 
 .friend-profile-stat-label {
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-bold;
   font-size: $font-size-label;
   color: $color-quaternary-700;
   margin-top: $spacing-xs;
@@ -270,46 +274,130 @@
   background: white;
   border: 1px solid $color-quaternary;
   border-radius: $border-radius-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.friend-profile-lesson-wrench-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 }
 
 .friend-profile-lesson-list-name {
   font-size: $font-size-body;
-  font-weight: $font-weight-medium;
+  font-weight: $font-weight-bold;
   color: $color-quaternary-dark;
+  flex: 1;
+}
+
+.friend-profile-lesson-edit-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+  margin-left: auto;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.friend-profile-lessons-view-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $color-quaternary-700;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  transition: color $transition-fast;
+  margin-top: $spacing-xs;
+
+  &:hover {
+    color: $color-quaternary-dark;
+  }
+}
+
+.friend-profile-lessons-view-more-text {
+  font-size: $font-size-body;
+}
+
+.friend-profile-lessons-view-more-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform $transition-normal;
+
+  &--expanded {
+    transform: rotate(180deg);
+  }
 }
 
 // Overview
 .friend-profile-overview {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: $spacing-md;
   margin-bottom: $spacing-lg;
 }
 
-.friend-profile-overview-item {
+.friend-profile-overview-item-1 {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: $spacing-lg;
-  background: white;
-  border: 1px solid $color-quaternary;
+  padding: 0.25rem;
+  background: $color-quinary-100;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.friend-profile-overview-item-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  background: $color-secondary-100;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.friend-profile-overview-item-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  background: $color-primary-100;
   border-radius: $border-radius-md;
   text-align: center;
 }
 
 .friend-profile-overview-icon {
-  width: 60px;
-  height: 60px;
-  background-color: $color-quaternary-light;
-  border-radius: $border-radius-md;
-  margin-bottom: $spacing-sm;
+  width: 50px;
+  height: 50px;
+  margin-bottom: $spacing-xs;
+  flex-shrink: 0;
 }
 
 .friend-profile-overview-label {
   font-size: $font-size-body;
+  color: $color-quaternary-700;
+  font-weight: $font-weight-bold;
+  margin: 0;
+}
+
+.friend-profile-overview-value {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
   color: $color-quaternary-dark;
-  font-weight: $font-weight-medium;
   margin: 0;
 }
 

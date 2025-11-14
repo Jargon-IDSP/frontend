@@ -30,10 +30,10 @@ export default function NavBar() {
       alt: "AI",
     },
     {
-      path: "/leaderboard",
+      path: "/community",
       icon: Leaderboard,
       iconBold: LeaderboardB,
-      alt: "Leaderboard",
+      alt: "Community",
     },
     { path: "/profile", icon: Profile, iconBold: ProfileB, alt: "Profile" },
   ];

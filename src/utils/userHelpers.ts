@@ -48,8 +48,8 @@ export function formatDate(dateString: string | undefined): string {
     const date = new Date(dateString);
     return date.toLocaleDateString("en-US", {
       year: "numeric",
-      month: "long",
-      day: "numeric",
+      month: "short",
+      // day: "numeric",
     });
   } catch {
     return "N/A";

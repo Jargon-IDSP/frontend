@@ -1,0 +1,144 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.container--edit-lesson {
+  padding: 0;
+  padding-bottom: calc(70px + #{$spacing-md});
+}
+
+.edit-lesson-page {
+  padding: $spacing-lg;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.edit-lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-xl;
+}
+
+.edit-lesson-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.edit-lesson-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.edit-lesson-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.edit-lesson-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.edit-lesson-label {
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary-dark;
+}
+
+.edit-lesson-input {
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  background: white;
+  color: $color-quaternary-dark;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-quinary;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.edit-lesson-error {
+  color: $color-error;
+  font-size: $font-size-body;
+  margin: 0;
+}
+
+.edit-lesson-actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: flex-end;
+}
+
+.edit-lesson-button {
+  padding: $spacing-md $spacing-xl;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--cancel {
+    background: white;
+    color: $color-quaternary-dark;
+    border: 1px solid $color-quaternary;
+
+    &:hover:not(:disabled) {
+      background: $color-secondary-100;
+    }
+  }
+
+  &--save {
+    background-color: $color-quinary;
+    color: white;
+
+    &:hover:not(:disabled) {
+      opacity: 0.9;
+    }
+  }
+}
+
+.edit-lesson-loading {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-quinary-50;
+}
+
