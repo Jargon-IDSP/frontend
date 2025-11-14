@@ -3889,9 +3889,9 @@ button.back-button {
 
 .categoriesHeader {
   display: grid;
-  grid-template-columns: auto 1fr 0.5fr;
-  grid-template-rows: auto auto;
-  gap: 0.5rem 1rem;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
   padding: 1rem 1.5rem;
   margin-bottom: 1rem;
 }
@@ -3901,7 +3901,6 @@ button.back-button {
   font-weight: 700;
   text-align: left;
   grid-column: 2;
-  grid-row: 1;
 }
 
 .categoriesBackButton {
@@ -3909,7 +3908,8 @@ button.back-button {
   width: 24px;
   height: 24px;
   grid-column: 1;
-  grid-row: 1;
+  display: flex;
+  align-items: center;
 }
 .categoriesBackButton:hover {
   opacity: 0.7;
@@ -3919,9 +3919,9 @@ button.back-button {
   width: 28px;
   height: 28px;
   cursor: pointer;
-  grid-column: 2;
-  grid-row: 2;
-  justify-self: end;
+  grid-column: 3;
+  display: flex;
+  align-items: center;
 }
 .categoriesFolderIcon:hover {
   opacity: 0.7;
@@ -4267,13 +4267,19 @@ button.back-button {
   height: 60px;
   animation: walk 16s linear infinite;
   z-index: 2;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
 }
 .rocky-animation__rocky img {
   width: 100%;
   height: 100%;
   -o-object-fit: contain;
      object-fit: contain;
+  -o-object-position: bottom center;
+     object-position: bottom center;
   animation: bounce 0.5s ease-in-out infinite;
+  display: block;
 }
 .rocky-animation__items {
   position: absolute;
@@ -4290,6 +4296,17 @@ button.back-button {
   transition: all 0.5s ease;
   opacity: 1;
   transform: scale(1) rotate(0deg);
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.rocky-animation__item img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
 }
 .rocky-animation__item.picked-up {
   opacity: 0;
@@ -4540,6 +4557,35 @@ button.back-button {
   padding-left: 0;
 }
 
+.button-drawer {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  background: none;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  margin-left: 1.5rem;
+  text-align: left;
+}
+
+.button-img-drawer {
+  display: block;
+  margin: 0 auto;
+}
+
+.button-options {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  margin-left: auto;
+}
+
 .card {
   padding: 1.5rem;
   border-radius: 8px;
@@ -4671,6 +4717,80 @@ button.back-button {
   background-color: #f9fafb;
 }
 
+.category-folder-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.category-folder-delete {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6b7280;
+  transition: all 0.2s ease;
+  border-radius: 4px;
+}
+.category-folder-delete:hover:not(:disabled) {
+  color: #ef4444;
+  background-color: #fef2f2;
+}
+.category-folder-delete:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.category-folder-delete svg {
+  width: 20px;
+  height: 20px;
+}
+
+.category-folder-delete-confirm {
+  padding: 1rem 1.5rem;
+  background-color: #fef2f2;
+  border-top: 1px solid #fee2e2;
+  border-bottom: 1px solid #fee2e2;
+}
+.category-folder-delete-confirm p {
+  margin: 0 0 1rem 0;
+  color: #1f2937;
+  font-size: 14px;
+}
+
+.category-folder-delete-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+}
+.category-folder-delete-actions button {
+  padding: 0.5rem 1rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+  background-color: white;
+  color: #374151;
+  transition: all 0.2s ease;
+}
+.category-folder-delete-actions button:hover:not(:disabled) {
+  background-color: #f9fafb;
+}
+.category-folder-delete-actions button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.category-folder-delete-actions button.delete-confirm-button {
+  background-color: #ef4444;
+  color: white;
+  border-color: #ef4444;
+}
+.category-folder-delete-actions button.delete-confirm-button:hover:not(:disabled) {
+  background-color: #dc2626;
+}
+
 .category-folder-title {
   display: flex;
   align-items: center;
@@ -4774,6 +4894,133 @@ button.back-button {
 .document-stats .stat {
   font-size: 13px;
   color: #6b7280;
+}
+
+.add-folder-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+.add-folder-modal__content {
+  background-color: white;
+  border-radius: 12px;
+  padding: 2rem;
+  max-width: 500px;
+  width: 90%;
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+.add-folder-modal__header {
+  margin-bottom: 0.5rem;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+.add-folder-modal__subtitle {
+  color: #6b7280;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+.add-folder-modal__input-group {
+  margin-bottom: 1.5rem;
+}
+.add-folder-modal__input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 2px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: border-color 0.2s ease;
+}
+.add-folder-modal__input:focus {
+  outline: none;
+  border-color: #fe4d13;
+}
+.add-folder-modal__input:disabled {
+  background-color: #f3f4f6;
+  cursor: not-allowed;
+}
+.add-folder-modal__error {
+  color: #ef4444;
+  font-size: 0.875rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+}
+.add-folder-modal__actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-end;
+}
+.add-folder-modal__button {
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+  cursor: pointer;
+  border: none;
+  transition: all 0.2s ease;
+}
+.add-folder-modal__button--cancel {
+  background-color: white;
+  color: #374151;
+  border: 1px solid #d1d5db;
+}
+.add-folder-modal__button--cancel:hover:not(:disabled) {
+  background-color: #f9fafb;
+}
+.add-folder-modal__button--create {
+  background-color: #fe4d13;
+  color: white;
+}
+.add-folder-modal__button--create:hover:not(:disabled) {
+  opacity: 0.9;
+}
+.add-folder-modal__button--create:disabled {
+  background-color: #d1d5db;
+  cursor: not-allowed;
+}
+
+.add-to-folder-drawer .radio-button-custom {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid #FE4D13;
+  border-radius: 50%;
+  background-color: white;
+  position: relative;
+  transition: all 0.2s ease;
+}
+.add-to-folder-drawer .radio-button-custom:focus {
+  outline: 2px solid #FE4D13;
+  outline-offset: 2px;
+}
+.add-to-folder-drawer .radio-button-custom:checked {
+  background-color: white;
+  border-color: #FE4D13;
+}
+.add-to-folder-drawer .radio-button-custom:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #FE4D13;
+}
+.add-to-folder-drawer .radio-button-custom:hover {
+  border-color: #FE4D13;
+}
+.add-to-folder-drawer .checkmark {
+  color: #FE4D13;
 }
 
 .rocky-speech-container {
@@ -6244,6 +6491,44 @@ input[type=radio]:checked ~ .privacy-option-content .privacy-option-title {
   border-color: #fe4d13;
 }
 
+.privacy-drawer .radio-button-custom {
+  width: 1.25rem;
+  height: 1.25rem;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border: 2px solid #FE4D13;
+  border-radius: 50%;
+  background-color: white;
+  position: relative;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+.privacy-drawer .radio-button-custom:focus {
+  outline: 2px solid #FE4D13;
+  outline-offset: 2px;
+}
+.privacy-drawer .radio-button-custom:checked {
+  background-color: white;
+  border-color: #FE4D13;
+}
+.privacy-drawer .radio-button-custom:checked::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: #FE4D13;
+}
+.privacy-drawer .radio-button-custom:hover {
+  border-color: #FE4D13;
+}
+
 .privacy-drawer-options {
   display: flex;
   flex-direction: column;
@@ -6265,14 +6550,6 @@ input[type=radio]:checked ~ .privacy-option-content .privacy-option-title {
 .privacy-drawer-option:hover {
   border-color: #fe4d13;
   background: #fffdf4;
-}
-.privacy-drawer-option input[type=radio] {
-  margin-top: 2px;
-  cursor: pointer;
-  width: 18px;
-  height: 18px;
-  accent-color: #fe4d13;
-  flex-shrink: 0;
 }
 .privacy-drawer-option-content {
   flex: 1;

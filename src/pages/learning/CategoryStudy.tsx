@@ -4,7 +4,15 @@ import { useDocumentsByCategory } from "../../hooks/useDocumentsByCategory";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
 import { useDocumentJobStatus } from "../../hooks/useDocumentJobStatus";
 import { useQueryClient } from "@tanstack/react-query";
+import { useNotificationContext } from "../../contexts/NotificationContext";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
+import hat from "../../assets/uploadAnimation/accessories/hat.svg";
+import vest from "../../assets/uploadAnimation/accessories/vest.svg";
+import drill from "../../assets/uploadAnimation/accessories/drill.svg";
+import rockyHat from "../../assets/uploadAnimation/rocky/rockyHat.svg";
+import rockyHatVest from "../../assets/uploadAnimation/rocky/rockyHatVest.svg";
+import rockyFullGear from "../../assets/uploadAnimation/rocky/rockyFull.svg";
+
 
 const categoryNames: Record<string, string> = {
   safety: "Safety",
@@ -36,6 +44,8 @@ function ProcessingDocumentCard({
   const navigate = useNavigate();
   const [currentMessage, setCurrentMessage] = useState(0);
   const [currentItem, setCurrentItem] = useState(0);
+  const [hasShownSneakPeekToast, setHasShownSneakPeekToast] = useState(false);
+  const { showToast } = useNotificationContext();
 
   // Fetch job status for detailed progress
   const { data: jobStatus } = useDocumentJobStatus({
@@ -47,6 +57,23 @@ function ProcessingDocumentCard({
   const canStudy =
     status.quickTranslation &&
     (status.flashcardCount > 0 || status.questionCount > 0);
+
+  // Show sneak peek toast when ready
+  useEffect(() => {
+    if (canStudy && !hasShownSneakPeekToast && documentId) {
+      showToast({
+        id: `sneak-peek-${documentId}-${Date.now()}`,
+        type: "SUCCESS",
+        title: "Sneak Peek Ready!",
+        message: "Your document is still saving to your profile, but we've generated a sneak peek that you can practice now! Click to start studying.",
+        isRead: false,
+        createdAt: new Date().toISOString(),
+        userId: "",
+        actionUrl: `/learning/documents/${documentId}/study`,
+      });
+      setHasShownSneakPeekToast(true);
+    }
+  }, [canStudy, hasShownSneakPeekToast, showToast, documentId]);
 
   // Enhanced steps with job progress (OCR + Translation run together, not shown separately)
   const getStepState = (stepName: string) => {
@@ -99,9 +126,9 @@ function ProcessingDocumentCard({
 
   // Rocky's messages and items based on processing stage
   const workSequence = [
-    { message: "Let me grab my hardhat!", item: "🪖" },
-    { message: "Time for the high-vis vest!", item: "🦺" },
-    { message: "Now, where's that hammer?", item: "🔨" },
+    { message: "Let me grab my hardhat!", item: <img src={hat} alt="Hardhat" /> },
+    { message: "Time for the high-vis vest!", item: <img src={vest} alt="High-vis vest" /> },
+    { message: "Now, where's that drill?", item: <img src={drill} alt="Drill" /> },
     { message: "All geared up and ready!", item: "✓" },
   ];
 
@@ -128,6 +155,22 @@ function ProcessingDocumentCard({
     }, 4000); // Pick up items every 4 seconds (4s * 4 = 16s = full walk cycle)
     return () => clearInterval(interval);
   }, []);
+
+  // Determine which Rocky image to show based on items picked up
+  const getRockyImage = () => {
+    switch (currentItem) {
+      case 0:
+        return "/rockyYellow.svg"; // Default happy Rocky
+      case 1:
+        return rockyHat; // Picked up hat
+      case 2:
+        return rockyHatVest; // Picked up hat and vest
+      case 3:
+        return rockyFullGear; // Picked up all items (walking off screen)
+      default:
+        return "/rockyYellow.svg";
+    }
+  };
 
   return (
     <div
@@ -176,7 +219,7 @@ function ProcessingDocumentCard({
 
           {/* Rocky Walking */}
           <div className="rocky-animation__rocky">
-            <img src="/rockyYellow.svg" alt="Rocky" />
+            <img src={getRockyImage()} alt="Rocky" />
           </div>
 
           {/* Work Items */}
@@ -186,21 +229,21 @@ function ProcessingDocumentCard({
                 currentItem > 0 ? "picked-up" : ""
               }`}
             >
-              🪖
+              <img src={hat} alt="Hardhat" />
             </div>
             <div
               className={`rocky-animation__item ${
                 currentItem > 1 ? "picked-up" : ""
               }`}
             >
-              🦺
+              <img src={vest} alt="High-vis vest" />
             </div>
             <div
               className={`rocky-animation__item ${
                 currentItem > 2 ? "picked-up" : ""
               }`}
             >
-              🔨
+              <img src={drill} alt="Drill" />
             </div>
           </div>
         </div>
@@ -278,11 +321,15 @@ export default function CategoryStudy() {
 
   const justUploadedDocId = location.state?.documentId;
   const justUploaded = location.state?.justUploaded;
+  const initialStatusData = location.state?.initialStatusData;
 
   const { data: statusData } = useDocumentProcessingStatus({
     documentId: justUploaded ? justUploadedDocId : null,
     pollingInterval: 1000,
   });
+
+  // Use initial status data from navigation if available, otherwise use hook data
+  const displayStatusData = statusData || initialStatusData;
 
   useEffect(() => {
     if (statusData?.status.status === "completed") {
@@ -292,8 +339,11 @@ export default function CategoryStudy() {
         queryKey: ["documents", "by-category", category],
       });
 
-      // Clear the upload state
-      window.history.replaceState({}, document.title);
+      // Wait a bit for the document to appear in the list before clearing state
+      // This prevents the flicker of the processing card disappearing
+      setTimeout(() => {
+        window.history.replaceState({}, document.title);
+      }, 1000);
     }
   }, [statusData?.status.status, refetch, queryClient, category]);
 
@@ -311,15 +361,13 @@ export default function CategoryStudy() {
         </h1>
       </div>
 
-      {justUploaded &&
-        statusData &&
-        statusData.status.status === "processing" && (
-          <ProcessingDocumentCard
-            filename={statusData.document.filename}
-            status={statusData.status}
-            documentId={statusData.document.id}
-          />
-        )}
+      {justUploaded && displayStatusData && (
+        <ProcessingDocumentCard
+          filename={displayStatusData.document.filename}
+          status={displayStatusData.status}
+          documentId={displayStatusData.document.id}
+        />
+      )}
 
       {isLoading ? (
         <div className="category-study__loading">Loading documents...</div>
@@ -337,7 +385,7 @@ export default function CategoryStudy() {
             if (
               justUploaded &&
               doc.id === justUploadedDocId &&
-              statusData?.status.status === "processing"
+              displayStatusData?.status.status === "processing"
             ) {
               return null;
             }

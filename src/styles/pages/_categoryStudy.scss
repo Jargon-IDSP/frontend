@@ -356,7 +356,8 @@
     right: 0;
     display: flex;
     justify-content: space-around;
-    padding: 0 20%;
+    padding: 0 15%;
+    gap: 20px;
     z-index: 0;
   }
 
@@ -365,6 +366,17 @@
     transition: all 0.5s ease;
     opacity: 1;
     transform: scale(1) rotate(0deg);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
 
     &.picked-up {
       opacity: 0;

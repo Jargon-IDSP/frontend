@@ -18,23 +18,27 @@ export default function Card({ onClick, children, hoverable = true, style = {} }
   );
 }
 
-// Specialized card for navigation items
-export function NavigationCard({ title, description, onClick, disabled = false, buttonText }: NavigationCardProps) {
-
+export function NavigationCard({ title, cardType = 'industry', onClick, disabled = false, buttonText }: NavigationCardProps) {
   return (
-    <div className="navCardWrapper">
-      <div className="navCardContent">
-        {description && (
-          <div className="NavCardDescription">{description}</div>
-        )}
-      </div>
-      <button
+    <div className={`navCardWrapper ${cardType}`}>
+      <div className="tabColor"></div>
+
+      <div className="navCardContent folderColor">
+        <div className="folderColor">
+          <div className="folderBadges">
+            Badges go here in the future
+          </div>
+        <button
         onClick={disabled ? undefined : onClick}
         className="NavCardButton"
         disabled={disabled}
       >
         {disabled ? 'Coming Soon...' : (buttonText || title)}
       </button>
+        </div>
+      
+      
+    </div>
     </div>
   );
 }

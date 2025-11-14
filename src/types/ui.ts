@@ -10,6 +10,7 @@ export interface CardProps {
 export interface NavigationCardProps {
   title: string;
   description?: string;
+  cardType?: 'industry' | 'generated' | 'friends';
   onClick: () => void;
   disabled?: boolean;
   buttonText?: string;
