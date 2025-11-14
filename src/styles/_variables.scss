@@ -40,15 +40,28 @@ $letter-spacing-wide: 0.05em;
 
 // Basic colors
 $color-primary: #fe4d13;
+$color-primary-300: #fe8861;
+$color-primary-600: #e74611;
 $color-secondary: #ffba0a;
+$color-secondary-400: #ffc83b;
+$color-secondary-200: #ffdf8e;
+$color-secondary-100: #ffeab3;
 $color-tertiary: #b2af97;
+$color-tertiary-100: #E7E6DF;
 $color-quaternary: #6f2e17;
 $color-quaternary-dark: #652a15;
+$color-quaternary-700: #4f2110;
+$color-quaternary-800: #3d190d;
+$color-quaternary-900: #2f130a;
 $color-quaternary-light: #f1eae8;
 $color-quaternary-light-dark: #9F7364;
 $color-quinary: #0828c0;
+$color-quinary-600: #0724af;
+$color-quinary-200: #8d9ce2;
+$color-quinary-50: #e6eaf9;
 $color-neutral: #393939;
 $color-second-neutral: #fff8dd;
+$color-second-neutral-50: #FFFEFC;
 $color-second-neutral-light: #fffdf4;
 $color-second-neutral-dark: #FFEAB3;
 $color-error: #c40000;
@@ -196,6 +209,7 @@ $success-900: #002403;
 $border-radius-sm: 4px;
 $border-radius-md: 8px;
 $border-radius-lg: 12px;
+$border-radius-xl: 30px;
 $border-radius-full: 50%;
 
 // Transitions

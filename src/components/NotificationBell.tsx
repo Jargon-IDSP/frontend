@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useUnreadCount } from "../hooks/useNotifications";
 import emptyBellIcon from "../assets/icons/emptyBell.svg";
-import solidBellIcon from "../assets/icons/notification.svg";
+// import solidBellIcon from "../assets/icons/notification.svg";
 import "../styles/components/_notificationBell.scss";
 
 export default function NotificationBell() {
@@ -16,7 +16,7 @@ export default function NotificationBell() {
     >
       <div className="notification-bell__wrapper">
         <img
-          src={(unreadCount ?? 0) > 0 ? solidBellIcon : emptyBellIcon}
+          src={(unreadCount ?? 0) > 0 ? emptyBellIcon : emptyBellIcon}
           alt="Notifications"
           className="notification-bell__icon"
         />
