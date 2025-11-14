@@ -36,8 +36,6 @@ export function NavigationCard({ title, cardType = 'industry', onClick, disabled
         {disabled ? 'Coming Soon...' : (buttonText || title)}
       </button>
         </div>
-      
-      
     </div>
     </div>
   );

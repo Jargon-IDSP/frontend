@@ -5,6 +5,7 @@ import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingSt
 import { useDocumentJobStatus } from "../../hooks/useDocumentJobStatus";
 import { useQueryClient } from "@tanstack/react-query";
 import { useNotificationContext } from "../../contexts/NotificationContext";
+import LoadingBar from "../../components/LoadingBar";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import hat from "../../assets/uploadAnimation/accessories/hat.svg";
 import vest from "../../assets/uploadAnimation/accessories/vest.svg";
@@ -42,7 +43,6 @@ function ProcessingDocumentCard({
   documentId,
 }: ProcessingDocumentCardProps) {
   const navigate = useNavigate();
-  const [currentMessage, setCurrentMessage] = useState(0);
   const [currentItem, setCurrentItem] = useState(0);
   const [hasShownSneakPeekToast, setHasShownSneakPeekToast] = useState(false);
   const { showToast } = useNotificationContext();
@@ -57,6 +57,10 @@ function ProcessingDocumentCard({
   const canStudy =
     status.quickTranslation &&
     (status.flashcardCount > 0 || status.questionCount > 0);
+
+  // Check if document is fully complete
+  const isFullyComplete =
+    status.hasTranslation && status.hasFlashcards && status.hasQuiz;
 
   // Show sneak peek toast when ready
   useEffect(() => {
@@ -129,30 +133,21 @@ function ProcessingDocumentCard({
     { message: "Let me grab my hardhat!", item: <img src={hat} alt="Hardhat" /> },
     { message: "Time for the high-vis vest!", item: <img src={vest} alt="High-vis vest" /> },
     { message: "Now, where's that drill?", item: <img src={drill} alt="Drill" /> },
-    { message: "All geared up and ready!", item: "✓" },
   ];
-
-  // Cycle through messages every 4 seconds
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentMessage((prev) => (prev + 1) % workSequence.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
 
   // Items get picked up progressively and reset when Rocky completes his walk
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentItem((prev) => {
         const next = prev + 1;
-        // After picking up all 3 items (at 3), reset to 0 after one more cycle
-        // This gives Rocky time to walk off screen before items respawn
-        if (prev === 3) {
-          return 0; // Reset items
+        // After picking up all 3 items (at 3), wait one more cycle for Rocky to walk off screen
+        // Reset to 0 only after state 4 (at 16s), giving Rocky time to complete his walk
+        if (prev === 4) {
+          return 0; // Reset items after full 16s cycle
         }
         return next;
       });
-    }, 4000); // Pick up items every 4 seconds (4s * 4 = 16s = full walk cycle)
+    }, 3200); // Pick up items every 3.2 seconds (3.2s * 5 = 16s = full walk cycle)
     return () => clearInterval(interval);
   }, []);
 
@@ -166,7 +161,8 @@ function ProcessingDocumentCard({
       case 2:
         return rockyHatVest; // Picked up hat and vest
       case 3:
-        return rockyFullGear; // Picked up all items (walking off screen)
+      case 4:
+        return rockyFullGear; // Picked up all items (states 3 & 4: walking off screen)
       default:
         return "/rockyYellow.svg";
     }
@@ -175,57 +171,63 @@ function ProcessingDocumentCard({
   return (
     <div
       className={`processing-card ${
-        canStudy ? "processing-card--clickable" : ""
+        canStudy || isFullyComplete ? "processing-card--clickable" : ""
       }`}
       onClick={() => {
-        if (canStudy && documentId) {
+        if ((canStudy || isFullyComplete) && documentId) {
           navigate(`/learning/documents/${documentId}/study`);
         }
       }}
-      style={{ cursor: canStudy ? "pointer" : "default" }}
+      style={{ cursor: canStudy || isFullyComplete ? "pointer" : "default" }}
     >
       <h3 className="processing-card__header">
         {filename}
         <span
           className={`processing-card__badge ${
-            canStudy ? "processing-card__badge--ready" : ""
+            canStudy || isFullyComplete ? "processing-card__badge--ready" : ""
           }`}
         >
-          {canStudy ? "SNEAK PEEK READY" : "PROCESSING"}
+          {isFullyComplete
+            ? "READY TO STUDY"
+            : canStudy
+            ? "SNEAK PEEK READY"
+            : "PROCESSING"}
         </span>
       </h3>
 
       {/* Rocky Animation Section */}
       <div className="rocky-animation">
         <div className="rocky-animation__scene">
-          {/* Speech Bubble */}
-          <div className="rocky-animation__speech-bubble">
-            <svg
-              className="rocky-animation__bubble-svg"
-              viewBox="0 0 194 131"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M20.9384 4.79796L13.5453 66.0892L20.9384 113.717L0.31543 130.504L32.2227 124.648L66.4646 130.504H177.362L193.315 87.9511L169.969 19.6328L92.1461 0.503662L20.9384 4.79796Z"
-                fill="white"
-                stroke="#0828C0"
-              />
-            </svg>
-            <span className="rocky-animation__message">
-              {workSequence[currentMessage].message}
-            </span>
-          </div>
+          {/* Speech Bubble - only show while collecting items */}
+          {currentItem < 3 && (
+            <div className="rocky-animation__speech-bubble">
+              <svg
+                className="rocky-animation__bubble-svg"
+                viewBox="0 0 194 131"
+                fill="none"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path
+                  d="M20.9384 4.79796L13.5453 66.0892L20.9384 113.717L0.31543 130.504L32.2227 124.648L66.4646 130.504H177.362L193.315 87.9511L169.969 19.6328L92.1461 0.503662L20.9384 4.79796Z"
+                  fill="white"
+                  stroke="#0828C0"
+                />
+              </svg>
+              <span className="rocky-animation__message">
+                {workSequence[currentItem].message}
+              </span>
+            </div>
+          )}
 
           {/* Rocky Walking */}
-          <div className="rocky-animation__rocky">
+          <div className={`rocky-animation__rocky ${currentItem > 0 ? 'rocky-animation__rocky--costumed' : ''}`}>
             <img src={getRockyImage()} alt="Rocky" />
           </div>
 
           {/* Work Items */}
           <div className="rocky-animation__items">
             <div
-              className={`rocky-animation__item ${
+              className={`rocky-animation__item rocky-animation__item--hat ${
                 currentItem > 0 ? "picked-up" : ""
               }`}
             >
@@ -331,21 +333,23 @@ export default function CategoryStudy() {
   // Use initial status data from navigation if available, otherwise use hook data
   const displayStatusData = statusData || initialStatusData;
 
+  // When coming from upload, wait for status data before showing content
+  const isWaitingForStatusData = justUploaded && !displayStatusData;
+
   useEffect(() => {
-    if (statusData?.status.status === "completed") {
+    if (statusData?.status.status === "completed" && justUploadedDocId) {
       // Invalidate queries to refetch the document list
       refetch();
       queryClient.invalidateQueries({
         queryKey: ["documents", "by-category", category],
       });
 
-      // Wait a bit for the document to appear in the list before clearing state
-      // This prevents the flicker of the processing card disappearing
+      // Automatically redirect to the study page when fully saved
       setTimeout(() => {
-        window.history.replaceState({}, document.title);
+        navigate(`/learning/documents/${justUploadedDocId}/study`);
       }, 1000);
     }
-  }, [statusData?.status.status, refetch, queryClient, category]);
+  }, [statusData?.status.status, refetch, queryClient, category, justUploadedDocId, navigate]);
 
   return (
     <div className="category-study">
@@ -361,6 +365,12 @@ export default function CategoryStudy() {
         </h1>
       </div>
 
+      {/* Show loading bar while waiting for status data after upload */}
+      {isWaitingForStatusData && (
+        <LoadingBar isLoading={true} text="Loading document status" />
+      )}
+
+      {/* Show processing card once status data is available */}
       {justUploaded && displayStatusData && (
         <ProcessingDocumentCard
           filename={displayStatusData.document.filename}
@@ -369,63 +379,68 @@ export default function CategoryStudy() {
         />
       )}
 
-      {isLoading ? (
-        <div className="category-study__loading">Loading documents...</div>
-      ) : documents.length === 0 && !justUploaded ? (
-        <div className="category-study__empty-state">
-          <p>No documents in the {categoryName} category yet.</p>
-          <p className="category-study__empty-state-description">
-            Upload and process documents to see them here!
-          </p>
-        </div>
-      ) : (
-        <div className="category-study__documents-list">
-          {documents.map((doc) => {
-            // Hide the just-uploaded document while it's being processed
-            if (
-              justUploaded &&
-              doc.id === justUploadedDocId &&
-              displayStatusData?.status.status === "processing"
-            ) {
-              return null;
-            }
+      {/* Only show document list after status data is loaded (if coming from upload) */}
+      {!isWaitingForStatusData && (
+        <>
+          {isLoading ? (
+            <div className="category-study__loading">Loading documents...</div>
+          ) : documents.length === 0 && !justUploaded ? (
+            <div className="category-study__empty-state">
+              <p>No documents in the {categoryName} category yet.</p>
+              <p className="category-study__empty-state-description">
+                Upload and process documents to see them here!
+              </p>
+            </div>
+          ) : (
+            <div className="category-study__documents-list">
+              {documents.map((doc) => {
+                // Hide the just-uploaded document while it's being processed
+                if (
+                  justUploaded &&
+                  doc.id === justUploadedDocId &&
+                  displayStatusData?.status.status === "processing"
+                ) {
+                  return null;
+                }
 
-            const isProcessing =
-              !doc.ocrProcessed ||
-              doc.flashcardCount === 0 ||
-              doc.questionCount === 0;
+                const isProcessing =
+                  !doc.ocrProcessed ||
+                  doc.flashcardCount === 0 ||
+                  doc.questionCount === 0;
 
-            return (
-              <div
-                key={doc.id}
-                onClick={() => {
-                  if (!isProcessing) {
-                    navigate(`/learning/documents/${doc.id}/study`);
-                  }
-                }}
-                className={`document-card ${
-                  isProcessing ? "document-card--processing" : ""
-                }`}
-              >
-                <div className="document-card__content">
-                  <div className="document-card__details">
-                    <h3 className="document-card__title">{doc.filename}</h3>
-                    {isProcessing ? (
-                      <p className="document-card__status document-card__status--processing">
-                        Processing document...
-                      </p>
-                    ) : (
-                      <p className="document-card__status document-card__status--ready">
-                        {doc.flashcardCount} flashcards • {doc.questionCount}{" "}
-                        questions
-                      </p>
-                    )}
+                return (
+                  <div
+                    key={doc.id}
+                    onClick={() => {
+                      if (!isProcessing) {
+                        navigate(`/learning/documents/${doc.id}/study`);
+                      }
+                    }}
+                    className={`document-card ${
+                      isProcessing ? "document-card--processing" : ""
+                    }`}
+                  >
+                    <div className="document-card__content">
+                      <div className="document-card__details">
+                        <h3 className="document-card__title">{doc.filename}</h3>
+                        {isProcessing ? (
+                          <p className="document-card__status document-card__status--processing">
+                            Processing document...
+                          </p>
+                        ) : (
+                          <p className="document-card__status document-card__status--ready">
+                            {doc.flashcardCount} flashcards • {doc.questionCount}{" "}
+                            questions
+                          </p>
+                        )}
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+                );
+              })}
+            </div>
+          )}
+        </>
       )}
     </div>
   );
