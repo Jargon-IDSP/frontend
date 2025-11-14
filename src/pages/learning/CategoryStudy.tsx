@@ -137,18 +137,27 @@ function ProcessingDocumentCard({
 
   // Items get picked up progressively and reset when Rocky completes his walk
   useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentItem((prev) => {
-        const next = prev + 1;
-        // After picking up all 3 items (at 3), wait one more cycle for Rocky to walk off screen
-        // Reset to 0 only after state 4 (at 16s), giving Rocky time to complete his walk
-        if (prev === 4) {
-          return 0; // Reset items after full 16s cycle
-        }
-        return next;
-      });
-    }, 3200); // Pick up items every 3.2 seconds (3.2s * 5 = 16s = full walk cycle)
-    return () => clearInterval(interval);
+    const timeouts: NodeJS.Timeout[] = [];
+
+    const schedulePickups = () => {
+      // First pickup (hardhat) at 2.9s
+      timeouts.push(setTimeout(() => setCurrentItem(1), 2900));
+      // Second pickup (vest) at 6.1s (2.9s + 3.2s)
+      timeouts.push(setTimeout(() => setCurrentItem(2), 6100));
+      // Third pickup (drill) at 9.3s (2.9s + 3.2s + 3.2s)
+      timeouts.push(setTimeout(() => setCurrentItem(3), 9300));
+      // State 4 at 12.5s (2.9s + 3.2s + 3.2s + 3.2s)
+      timeouts.push(setTimeout(() => setCurrentItem(4), 12500));
+      // Reset at 16s to match Rocky's walk cycle
+      timeouts.push(setTimeout(() => {
+        setCurrentItem(0);
+        schedulePickups();
+      }, 16000));
+    };
+
+    schedulePickups();
+
+    return () => timeouts.forEach(timeout => clearTimeout(timeout));
   }, []);
 
   // Determine which Rocky image to show based on items picked up
@@ -171,7 +180,7 @@ function ProcessingDocumentCard({
   return (
     <div
       className={`processing-card ${
-        canStudy || isFullyComplete ? "processing-card--clickable" : ""
+        canStudy || isFullyComplete ? "processing-card--clickable processing-card--ready" : ""
       }`}
       onClick={() => {
         if ((canStudy || isFullyComplete) && documentId) {
@@ -182,17 +191,11 @@ function ProcessingDocumentCard({
     >
       <div className="processing-card__header">
         <h3>{filename}</h3>
-        <span
-          className={`processing-card__badge ${
-            canStudy || isFullyComplete ? "processing-card__badge--ready" : ""
-          }`}
-        >
-          {isFullyComplete
-            ? "READY TO STUDY"
-            : canStudy
-            ? "SNEAK PEEK READY"
-            : "PROCESSING"}
-        </span>
+        {(canStudy || isFullyComplete) && (
+          <span className="processing-card__badge processing-card__badge--ready">
+            {isFullyComplete ? "READY TO STUDY" : "SNEAK PEEK READY"}
+          </span>
+        )}
         </div>
 
       {/* Rocky Animation Section */}
@@ -203,14 +206,15 @@ function ProcessingDocumentCard({
             <div className="rocky-animation__speech-bubble">
               <svg
                 className="rocky-animation__bubble-svg"
-                viewBox="0 0 194 131"
+                viewBox="0 0 180 110"
                 fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <path
-                  d="M20.9384 4.79796L13.5453 66.0892L20.9384 113.717L0.31543 130.504L32.2227 124.648L66.4646 130.504H177.362L193.315 87.9511L169.969 19.6328L92.1461 0.503662L20.9384 4.79796Z"
+                  d="M15 5 Q5 5 5 15 L5 70 Q5 80 15 80 L75 80 L90 100 L105 80 L165 80 Q175 80 175 70 L175 15 Q175 5 165 5 Z"
                   fill="white"
                   stroke="#0828C0"
+                  strokeWidth="2"
                 />
               </svg>
               <span className="rocky-animation__message">
