@@ -70,8 +70,10 @@ export default function FullTranslationView() {
   if (isLoading) {
     return (
       <div className="fullTranslationOverview">
-        <div className="loading-container">
-          <LoadingBar isLoading={true} hasData={!!data} hasError={!!error} />
+        <div className="container demo">
+          <div className="loading-container">
+            <LoadingBar isLoading={true} hasData={!!data} hasError={!!error} />
+          </div>
         </div>
       </div>
     );
@@ -80,23 +82,25 @@ export default function FullTranslationView() {
   if (processing && !translation) {
     return (
       <div className="fullTranslationOverview">
-        <div className="loading-container">
-          <h2 className="loading-title">Processing Document...</h2>
-          <p className="loading-description">
-            Your document is being processed.
-          </p>
-          <p className="loading-subtitle">
-            Feel free to navigate away - processing will continue in the
-            background.
-          </p>
-          <div className="spinner" />
-          <div className="button-group">
-            <button onClick={() => navigate("/documents")}>
-              ← Back to Documents
-            </button>
-            <button onClick={() => navigate("/learning/custom")}>
-              Go to Learning Hub
-            </button>
+        <div className="container demo">
+          <div className="loading-container">
+            <h2 className="loading-title">Processing Document...</h2>
+            <p className="loading-description">
+              Your document is being processed.
+            </p>
+            <p className="loading-subtitle">
+              Feel free to navigate away - processing will continue in the
+              background.
+            </p>
+            <div className="spinner" />
+            <div className="button-group">
+              <button onClick={() => navigate("/documents")}>
+                ← Back to Documents
+              </button>
+              <button onClick={() => navigate("/learning/custom")}>
+                Go to Learning Hub
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -106,18 +110,20 @@ export default function FullTranslationView() {
   if (error || !translation) {
     return (
       <div className="fullTranslationOverview">
-        <div className="error-container">
-          <h2 className="error-title">Error</h2>
-          <p className="error-message">
-            {error instanceof Error ? error.message : "Translation not found."}
-          </p>
-          <div className="error-buttons">
-            <button onClick={() => navigate(-1)}>
-              <img src={goBackIcon} alt="Back Button" />
-            </button>
-            <button onClick={() => window.location.reload()}>
-              Refresh Page
-            </button>
+        <div className="container demo">
+          <div className="error-container">
+            <h2 className="error-title">Error</h2>
+            <p className="error-message">
+              {error instanceof Error ? error.message : "Translation not found."}
+            </p>
+            <div className="error-buttons">
+              <button onClick={() => navigate(-1)}>
+                <img src={goBackIcon} alt="Back Button" />
+              </button>
+              <button onClick={() => window.location.reload()}>
+                Refresh Page
+              </button>
+            </div>
           </div>
         </div>
       </div>

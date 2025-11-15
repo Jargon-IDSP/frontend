@@ -7,6 +7,7 @@ import { useCompleteQuizAttempt } from "../../hooks/useCompleteQuizAttempt";
 import { useCompleteExistingQuiz } from "../../hooks/useCompleteExistingQuiz";
 import { useCompleteQuiz } from "../../hooks/useCompleteQuiz";
 import QuizComponent from "../../components/learning/QuizComponent";
+import LoadingBar from "../../components/LoadingBar";
 
 type QuizType = 'custom' | 'existing' | 'category';
 
@@ -136,9 +137,7 @@ export default function UnifiedQuizTaker() {
     return (
       <div className="quiz-page-wrapper">
         <div className="container">
-          <div style={{ padding: "2rem", textAlign: "center" }}>
-            <p>Loading quiz...</p>
-          </div>
+          <LoadingBar isLoading={true} text="Loading quiz" />
         </div>
       </div>
     );

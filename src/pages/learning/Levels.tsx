@@ -130,44 +130,6 @@ export default function ExistingLevels() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="categoriesPage">
-        <div className="categoriesHeader">
-          <img
-            src={goBackIcon}
-            alt="Go back"
-            className="categoriesBackButton"
-            onClick={() => navigate(-1)}
-          />
-          <h1>Red Seal Levels</h1>
-          <NotificationBell />
-        </div>
-        <LoadingBar isLoading={isLoading} text="Loading levels" />
-      </div>
-    );
-  }
-
-  if (error) {
-    return (
-      <div className="categoriesPage">
-        <div className="categoriesHeader">
-          <img
-            src={goBackIcon}
-            alt="Go back"
-            className="categoriesBackButton"
-            onClick={() => navigate(-1)}
-          />
-          <h1>Red Seal Levels</h1>
-          <NotificationBell />
-        </div>
-        <div className="error-message">
-          {error instanceof Error ? error.message : "Failed to load levels"}
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div className="categoriesPage">
       <div className="categoriesHeader">
@@ -181,8 +143,15 @@ export default function ExistingLevels() {
         <NotificationBell />
       </div>
 
-      <div className="categoriesList">
-        {levels.map((level) => {
+      {isLoading ? (
+        <LoadingBar isLoading={isLoading} text="Loading levels" />
+      ) : error ? (
+        <div className="error-message">
+          {error instanceof Error ? error.message : "Failed to load levels"}
+        </div>
+      ) : (
+        <div className="categoriesList">
+          {levels.map((level) => {
           const isOpen = openLevelId === level.id;
           const locked = isLevelLocked(level.id);
           const description = levelDescriptions[level.id] || "";
@@ -289,7 +258,8 @@ export default function ExistingLevels() {
             </div>
           );
         })}
-      </div>
+        </div>
+      )}
     </div>
   );
 }
