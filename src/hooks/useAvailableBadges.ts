@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import type { Badge } from "../types/badge";
+import { BACKEND_URL } from "../lib/api";
 
-const BACKEND_URL = import.meta.env.VITE_BACKEND_URL || "http://localhost:3000";
 
 export function useAvailableBadges() {
   const { getToken } = useAuth();
