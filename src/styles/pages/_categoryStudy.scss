@@ -482,10 +482,10 @@
     left: -80px;
   }
   20% {
-    left: calc(10% + 10px);
+    left: calc(10% - 5px);
   }
   30% {
-    left: calc(25% + 10px);
+    left: calc(25% - 5px);
   }
   50% {
     left: calc(45% + 10px);

@@ -4,12 +4,13 @@
 .container--community {
   padding: 0;
   background-color: $color-secondary-400;
+  scrollbar-gutter: stable;
 //   padding-bottom: calc(70px + #{$spacing-md});
 }
 
 .community-page {
   padding: $spacing-lg;
-  max-width: 1200px;
+  max-width: 480px;
   margin: 0 auto;
   background-color: $color-secondary-400;
 }
@@ -37,10 +38,14 @@
 }
 
 .community-header-actions {
+  display: flex;
   align-items: center;
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  grid-template-rows: 1fr;
+  justify-content: flex-end;
+  padding-right: 0.5rem;
+
+  > * {
+    flex-shrink: 0;
+  }
 }
 
 .community-settings-container {

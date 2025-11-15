@@ -27,14 +27,15 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
           style={{ cursor: onBackClick ? "pointer" : "default" }}
         />
         <h1>{title}</h1>
-        <button
-          // className="subtitle-button"
-          className="button-options"
-          onClick={onSubtitleClick}
-          disabled={!onSubtitleClick}
-        >
-          <img src={optionsIcon} alt="options" />
-        </button>
+        {onSubtitleClick && (
+          <button
+            // className="subtitle-button"
+            className="button-options"
+            onClick={onSubtitleClick}
+          >
+            <img src={optionsIcon} alt="options" />
+          </button>
+        )}
       </div>
 
       <div className="switch-view">

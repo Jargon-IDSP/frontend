@@ -2,9 +2,6 @@
 @use "../mixins" as *;
 
 // Documents Page - Apply consistent layout
-.documents-page {
-  @include page-layout;
-}
 
 // Page Header
 .page-title {

@@ -2,10 +2,7 @@
 @use '../mixins' as *;
 
 // Home Page - Apply consistent layout
-.home-page {
-  @include page-layout;
-  padding-bottom: 0;
-}
+
 
 // Top Header Section
 .top-header {

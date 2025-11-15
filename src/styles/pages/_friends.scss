@@ -3,9 +3,7 @@
 @use '../mixins' as *;
 
 // Friends Page
-.friends-page {
-  @include page-layout;
-}
+
 
 .friends-header {
   display: flex;

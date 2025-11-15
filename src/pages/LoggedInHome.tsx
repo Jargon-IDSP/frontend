@@ -102,84 +102,83 @@ export default function LoggedInHome() {
     }
   };
 
-  // Show loading state while checking for redirects or while profile is loading
-  if (isLoading || isCheckingRedirect || !user || !profile) {
-    return (
-      <div className="home-page">
-        <div className="loading-container">
-          <LoadingBar isLoading={true} />
-        </div>
-      </div>
-    );
-  }
-
+  // Maintain consistent container structure in both loading and loaded states
   return (
-    <div className="home-page">
-      <div className="top-header">
-        <div className="welcome-text-section">
+    <div className='container'>
+      <div className="home-page">
+        {(isLoading || isCheckingRedirect || !user || !profile) ? (
+          <div className="loading-container">
+            <LoadingBar isLoading={true} />
+          </div>
+        ) : (
+          <>
+            <div className="top-header">
+              <div className="welcome-text-section">
+                <h1 className="welcome-text">Welcome back,</h1>
+                <h1 className="welcome-title">
+                  {user?.firstName || user?.username || 'User'}
+                </h1>
+              </div>
+              <NotificationBell />
+              <div className="home-settings-container" ref={dropdownRef}>
+                <button
+                  className="rocky-logo-section"
+                  onClick={handleSettingsClick}
+                  aria-label="Settings"
+                >
+                  <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+                </button>
 
-          <h1 className="welcome-text">Welcome back,</h1>
-          <h1 className="welcome-title">
-            {user?.firstName || user?.username || 'User'}
-          </h1>
-        </div>
-        <NotificationBell />
-        <div className="home-settings-container" ref={dropdownRef}>
-          <button
-            className="rocky-logo-section"
-            onClick={handleSettingsClick}
-            aria-label="Settings"
-          >
-            <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-          </button>
-
-          {isDropdownOpen && (
-            <div className="home-settings-dropdown">
-              <button
-                className="home-settings-item"
-                onClick={handleProfileClick}
-              >
-                Profile
-              </button>
-              <button
-                className="home-settings-item"
-                onClick={() => {
-                  setIsDropdownOpen(false);
-                  navigate("/profile/avatar");
-                }}
-              >
-                Avatar
-              </button>
-              <button
-                className="home-settings-item"
-                onClick={handleLanguagesClick}
-              >
-                Languages
-              </button>
-              <button
-                className="home-settings-item"
-                onClick={handleIndustryClick}
-              >
-                Industry
-              </button>
-              <button
-                className="home-settings-item"
-                onClick={handleLogoutClick}
-              >
-                Logout
-              </button>
+                {isDropdownOpen && (
+                  <div className="home-settings-dropdown">
+                    <button
+                      className="home-settings-item"
+                      onClick={handleProfileClick}
+                    >
+                      Profile
+                    </button>
+                    <button
+                      className="home-settings-item"
+                      onClick={() => {
+                        setIsDropdownOpen(false);
+                        navigate("/profile/avatar");
+                      }}
+                    >
+                      Avatar
+                    </button>
+                    <button
+                      className="home-settings-item"
+                      onClick={handleLanguagesClick}
+                    >
+                      Languages
+                    </button>
+                    <button
+                      className="home-settings-item"
+                      onClick={handleIndustryClick}
+                    >
+                      Industry
+                    </button>
+                    <button
+                      className="home-settings-item"
+                      onClick={handleLogoutClick}
+                    >
+                      Logout
+                    </button>
+                  </div>
+                )}
+              </div>
             </div>
-          )}
-        </div>
-      </div>
 
-      <div className="welcome-section">
-        {/* <JargonLogo /> */}
-        <WordOfTheDay />
-        <DailyCheckIn />
-        <StartLearningCard />
-        <UploadFileCard />
-        <TopLeaderboard />
+            <div className="welcome-section">
+              {/* <JargonLogo /> */}
+              <WordOfTheDay />
+              <DailyCheckIn />
+              <StartLearningCard />
+              <UploadFileCard />
+              <TopLeaderboard />
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
