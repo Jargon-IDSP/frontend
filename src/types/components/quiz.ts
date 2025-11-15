@@ -28,11 +28,17 @@ export interface QuizCompletionProps {
   passed?: boolean;
 }
 
+export interface ChatMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  id: string;
+}
+
 export interface ChatModalProps {
   isOpen: boolean;
   onClose: () => void;
   currentQuestion: string;
-  chatReply: string;
+  chatHistory: ChatMessage[];
   chatPrompt: string;
   onChatPromptChange: (value: string) => void;
   onSendChat: (e?: React.FormEvent) => void;

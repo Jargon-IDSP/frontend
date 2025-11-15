@@ -15,19 +15,19 @@ export default function ChatModal({
   isOpen,
   onClose,
   currentQuestion,
-  chatReply,
+  chatHistory,
   chatPrompt,
   onChatPromptChange,
   onSendChat,
   isLoading,
 }: ChatModalProps) {
-  const chatReplyRef = useRef<HTMLDivElement>(null);
+  const chatMessagesRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (chatReplyRef.current) {
-      chatReplyRef.current.scrollTop = chatReplyRef.current.scrollHeight;
+    if (chatMessagesRef.current) {
+      chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
-  }, [chatReply]);
+  }, [chatHistory]);
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose} direction="right">
@@ -54,9 +54,27 @@ export default function ChatModal({
             <strong>Current Question:</strong> {currentQuestion}
           </div>
 
-          {chatReply && (
-            <div className="chat-drawer__reply" ref={chatReplyRef}>
-              {chatReply}
+          {chatHistory.length > 0 && (
+            <div className="chat-drawer__messages" ref={chatMessagesRef}>
+              {chatHistory.map((message) => (
+                <div
+                  key={message.id}
+                  className={`chat-drawer__message chat-drawer__message--${message.role}`}
+                >
+                  <div className="chat-drawer__message-content">
+                    {message.content}
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {chatHistory.length === 0 && (
+            <div className="chat-drawer__empty">
+              <p>
+                Start a conversation with Rocky! Ask any question about the
+                current quiz question.
+              </p>
             </div>
           )}
 
