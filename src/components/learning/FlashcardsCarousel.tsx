@@ -58,15 +58,12 @@ export default function FlashcardsCarousel({
       onTouchMove={onTouchMove}
       onTouchEnd={onTouchEnd}
     >
-      <div className="flashcards-carousel-counter">
-        Card {currentIndex + 1} of {totalCount}
-      </div>
-
       <div className="flashcards-carousel-card">
         <FlippableTermCard
           term={currentTerm}
           language={language}
           type={type}
+          shouldShowCharacter={true}
         />
       </div>
 
@@ -78,6 +75,10 @@ export default function FlashcardsCarousel({
         >
           <img src={backIcon} alt="Previous" width="24" height="24" />
         </button>
+
+        <div className="flashcards-carousel-counter">
+        Card {currentIndex + 1} of {totalCount}
+      </div>
         
         {currentIndex === terms.length - 1 ? (
           <button
@@ -100,14 +101,7 @@ export default function FlashcardsCarousel({
           </button>
         )}
       </div>
-
-      <div className="flashcards-carousel-progress">
-        <div 
-          className="flashcards-carousel-progress-bar"
-          style={{ width: `${((currentIndex + 1) / totalCount) * 100}%` }}
-        />
-      </div>
-    </div>
+       </div>
   );
 }
 

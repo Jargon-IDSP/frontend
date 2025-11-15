@@ -37,9 +37,10 @@
 }
 
 .community-header-actions {
-  display: flex;
   align-items: center;
-  gap: $spacing-md;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 .community-settings-container {

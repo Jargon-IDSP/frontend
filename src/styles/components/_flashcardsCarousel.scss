@@ -21,8 +21,9 @@
 }
 
 .flashcards-carousel-navigation {
-  display: flex;
-  gap: $spacing-md;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
   justify-content: center;
   width: 100%;
   max-width: 100%;
@@ -73,7 +74,7 @@
   background-color: #e5e7eb;
   border-radius: 3px;
   overflow: hidden;
-  
+
   &-bar {
     height: 100%;
     background-color: $color-primary;

@@ -36,13 +36,11 @@ export default function Terms() {
     searchParams.get("industry_id") || industryId?.toString();
   const showAll = searchParams.get("all") === "true";
 
-  // Determine type and endpoint
   let type: "existing" | "custom" = "custom";
   let endpoint = "";
 
   if (location.pathname.includes("/existing/")) {
     type = "existing";
-    // If showAll flag is set, use industry-only endpoint (same as terminology page)
     if (showAll && queryIndustryId) {
       endpoint = `levels/${levelId}/industry/${queryIndustryId}/terms`;
     } else {
@@ -64,7 +62,6 @@ export default function Terms() {
     endpoint,
     params: {
       language: queryLanguage,
-      // Only pass industry_id as param when NOT using showAll (industry-only endpoint already has it in path)
       ...(queryIndustryId &&
         type === "existing" && !showAll && { industry_id: queryIndustryId }),
       ...(sessionNumber && { limit: "10", session: sessionNumber }),
@@ -77,10 +74,8 @@ export default function Terms() {
   const isEmpty = terms.length === 0;
   const showLoading = !data && !error;
 
-  // Build dynamic finish URL based on current context
   let finishHref = "/learning/custom/quizzes";
   if (location.pathname.includes("/existing/")) {
-    // Check if this is the new Red Seal flashcards route
     if (location.pathname.includes("/flashcards/")) {
       finishHref = `/learning/existing/levels`;
     } else if (levelId) {
@@ -92,13 +87,12 @@ export default function Terms() {
     finishHref = `/learning/custom/categories/${category}/quizzes`;
   }
 
-  // Simulate progress while loading
   useEffect(() => {
     if (showLoading) {
       setLoadingProgress(0);
       const interval = setInterval(() => {
         setLoadingProgress((prev) => {
-          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          if (prev >= 90) return prev; 
           return prev + 10;
         });
       }, 200);
@@ -109,7 +103,6 @@ export default function Terms() {
     }
   }, [showLoading, data]);
 
-  // Reset to first term when terms change
   useEffect(() => {
     setCurrentTermIndex(0);
   }, [terms.length]);
@@ -128,13 +121,7 @@ export default function Terms() {
 
   return (
     <div className="terms-page">
-      <div className="terms-page-header">
-        <button onClick={() => navigate(-1)}>
-          <img src={goBackIcon} alt="Go Back" />
-          </button>
-      </div>
 
-      {/* Progress Bar */}
       {showLoading && (
         <div className="terms-page-progress">
           <div className="terms-page-progress-bar-container">
@@ -167,18 +154,31 @@ export default function Terms() {
               </div>
             )
           ) : (
-            <div className="terms-page-content">
-              <FlashcardsCarousel
-                terms={terms}
-                currentIndex={currentTermIndex}
-                onNext={handleNext}
-                onPrevious={handlePrevious}
-                language={queryLanguage}
-                type={type === "existing" ? "existing" : "custom"}
-                totalCount={count}
-                finishHref={finishHref}
-              />
+        <div className="terms-page-content">
+          <div className="flashcard-header-container">
+            <button onClick={() => navigate(-1)} className="flashcard-back-button">
+              <img src={goBackIcon} alt="Go Back" />
+            </button>
+            <div className="flashcard-progress-wrapper">
+              <div className="flashcards-carousel-progress">
+                <div
+                  className="flashcards-carousel-progress-bar"
+                  style={{ width: `${((currentTermIndex + 1) / count) * 100}%` }}
+                />
+              </div>
             </div>
+          </div>
+          <FlashcardsCarousel
+            terms={terms}
+            currentIndex={currentTermIndex}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            language={queryLanguage}
+            type={type === "existing" ? "existing" : "custom"}
+            totalCount={count}
+            finishHref={finishHref}
+          />
+        </div>
           )}
         </>
       )}

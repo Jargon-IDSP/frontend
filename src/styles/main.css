@@ -18,7 +18,7 @@ body {
   font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   line-height: 1.5;
   color: #393939;
-  background-color: #fffdf4;
+  background-color: #343434;
   margin: 0;
   padding: 0;
   min-height: 100vh;
@@ -142,6 +142,7 @@ body {
   height: 70px;
   z-index: 100;
   margin: auto;
+  max-width: 480px;
   box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.1);
 }
 .navbar .nav-items {
@@ -2078,6 +2079,32 @@ button.back-button {
   font-size: 16px;
 }
 
+.flashcard-header-container {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  width: 100%;
+}
+
+.flashcard-back-button {
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+.flashcard-back-button:hover {
+  opacity: 0.7;
+}
+
+.flashcard-progress-wrapper {
+  flex: 1;
+  min-width: 0;
+}
+
 .termlist-page {
   min-height: 100vh;
   padding-top: 2.5rem;
@@ -3373,9 +3400,10 @@ button.back-button {
 }
 
 .community-header-actions {
-  display: flex;
   align-items: center;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  grid-template-rows: 1fr;
 }
 
 .community-settings-container {
@@ -6410,6 +6438,13 @@ button.back-button {
   margin: 0;
 }
 
+.flip-card-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100px;
+  overflow: visible;
+}
+
 .flip-card-container {
   perspective: 1000px;
   width: 100%;
@@ -6417,6 +6452,9 @@ button.back-button {
   height: 350px;
   margin: 0 auto;
   cursor: pointer;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
 }
 
 .flip-card-inner {
@@ -6499,6 +6537,76 @@ button.back-button {
   line-height: 1.4;
 }
 
+.flip-card-definition-text {
+  font-size: 16px;
+  font-weight: 500;
+  color: #393939;
+  word-wrap: break-word;
+  line-height: 1.5;
+}
+
+.peeking-character {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%) translateY(120px);
+  width: 219px;
+  margin-top: 20px;
+  height: 208px;
+  pointer-events: none;
+  z-index: 15;
+  opacity: 0;
+}
+.peeking-character--animate {
+  animation: peek-animation 0.5s ease-in-out 0.6s both;
+}
+.peeking-character--descend {
+  opacity: 1;
+  animation: descend-animation 0.5s ease-in-out forwards;
+}
+.peeking-character__image {
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+@keyframes peek-animation {
+  0% {
+    transform: translateX(-50%) translateY(120px);
+    z-index: 1;
+    opacity: 0;
+  }
+  1% {
+    opacity: 1;
+  }
+  99% {
+    z-index: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(-60px);
+    z-index: 100;
+    opacity: 1;
+  }
+}
+@keyframes descend-animation {
+  0% {
+    transform: translateX(-50%) translateY(-60px);
+    z-index: 100;
+    opacity: 1;
+  }
+  1% {
+    transform: translateX(-50%) translateY(-60px);
+    z-index: 1;
+  }
+  99% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateX(-50%) translateY(120px);
+    z-index: 1;
+    opacity: 0;
+  }
+}
 .flashcards-carousel {
   display: flex;
   flex-direction: column;
@@ -6520,8 +6628,9 @@ button.back-button {
 }
 
 .flashcards-carousel-navigation {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
   justify-content: center;
   width: 100%;
   max-width: 100%;

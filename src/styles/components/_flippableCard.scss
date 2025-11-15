@@ -1,5 +1,12 @@
 @use '../variables' as *;
 
+.flip-card-wrapper {
+  position: relative;
+  width: 100%;
+  padding-top: 100px;
+  overflow: visible;
+}
+
 .flip-card-container {
   perspective: 1000px;
   width: 100%;
@@ -7,6 +14,9 @@
   height: 350px;
   margin: 0 auto;
   cursor: pointer;
+  overflow: visible;
+  position: relative;
+  z-index: 10;
 }
 
 .flip-card-inner {
@@ -88,5 +98,13 @@
   color: $color-quaternary-dark;
   word-wrap: break-word;
   line-height: 1.4;
+}
+
+.flip-card-definition-text {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-neutral;
+  word-wrap: break-word;
+  line-height: 1.5;
 }
 
