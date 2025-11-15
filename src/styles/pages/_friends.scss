@@ -59,7 +59,7 @@
   margin-bottom: $spacing-md;
   font-size: $font-size-h2;
   font-weight: $font-weight-bold;
-  color: $color-quaternary-dark;
+  color: $color-quaternary-500;
 }
 
 .friends-search-container {
@@ -308,6 +308,136 @@
   &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
+  }
+}
+
+
+.friends-search-container-new {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+  margin-bottom: $spacing-md;
+  position: relative;
+  width: 100%;
+}
+
+.friends-search-icon {
+  position: absolute;
+  left: $spacing-md;
+  width: 14px;
+  height: 14px;
+  z-index: 1;
+  pointer-events: none;
+  top: 1.375rem;
+  margin-top: -7px;
+}
+
+.friends-search-input-new {
+  flex: 1;
+  height: 2.75rem;
+  padding: 0 $spacing-md;
+  padding-left: 2.5rem;
+  padding-right: 3rem;
+  border: 1px solid $color-quaternary-500;
+  margin-bottom: $spacing-md;
+  border-radius: 39px;
+  font-size: $font-size-label;
+  font-weight: $font-weight-regular;
+  line-height: 2.75rem;
+  background-color: white;
+  width: 100%;
+
+
+  &::placeholder {
+    color: $color-quinary-200;
+  }
+}
+
+.friends-search-clear-button {
+  position: absolute;
+  right: $spacing-md;
+  top: 1.375rem;
+  margin-top: -12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: $color-quaternary-500;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color $transition-fast;
+  z-index: 1;
+
+  &:hover {
+    color: $color-quaternary-dark;
+  }
+}
+
+
+.friends-error-message-new {
+  margin-top: $spacing-sm;
+  padding: $spacing-sm $spacing-md;
+  background-color: #fee;
+  color: $color-error;
+  border-radius: 6px;
+  font-size: $font-size-body;
+}
+
+.friends-suggestions-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-500;
+  margin-bottom: $spacing-lg;
+  padding: 0 $spacing-lg;
+}
+
+.friends-share-qr-button-container {
+  position: fixed;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  max-width: 1200px;
+  padding: 0 $spacing-lg;
+  z-index: 10;
+  pointer-events: none;
+
+  @media (max-width: 768px) {
+    bottom: 80px;
+    padding: 0 $spacing-md;
+  }
+}
+
+.friends-page-new .leaderboard-drawer {
+  padding-bottom: 100px;
+
+}
+
+.friends-share-qr-button {
+  width: 100%;
+  padding: $spacing-md $spacing-xl;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  background-color: $color-quinary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-normal;
+  pointer-events: auto;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 }
 
