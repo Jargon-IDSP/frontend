@@ -1,132 +1,50 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import type {
-  Friend,
   SearchResult,
-  FriendsResponse,
   SearchResponse
 } from "../../types/friend";
-import LoadingBar from "../../components/LoadingBar";
-import NotificationBell from "../../components/NotificationBell";
-import "../../styles/pages/_friends.scss";
+import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
+import { getLanguageFlag } from "../../utils/languageFlagHelpers";
+import { useProfile } from "../../hooks/useProfile";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
-import { getUserDisplayName } from "../../utils/userHelpers";
-import { useFriendshipActions } from "../../hooks/useFriendshipActions";
-import { useLessonRequests } from "../../hooks/useLessonRequests";
-import { useNotificationContext } from "../../contexts/NotificationContext";
+import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
+import rockyWhiteLogo from "/rockyWhite.svg";
+import rockyLogo from "/rocky.svg";
+import "../../styles/pages/_friends.scss";
 
 export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
-  const [followingUserId, setFollowingUserId] = useState<string | null>(null);
   const { getToken } = useAuth();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
-  const { showToast } = useNotificationContext();
+  const { data: profile } = useProfile();
 
-  // Fetch friends
-  const { data: friends = [], isLoading: loading } = useQuery({
-    queryKey: ["friends"],
-    queryFn: async (): Promise<Friend[]> => {
+  // Fetch friend suggestions
+  const { data: suggestions = [], isLoading: suggestionsLoading } = useQuery({
+    queryKey: ["friendSuggestions"],
+    queryFn: async (): Promise<SearchResult[]> => {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships`, {
+      const res = await fetch(`${BACKEND_URL}/friendships/suggestions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) {
-        throw new Error("Failed to fetch friends");
+        throw new Error("Failed to fetch suggestions");
       }
 
-      const data: FriendsResponse = await res.json();
+      const data: SearchResponse = await res.json();
       return data.data || [];
     },
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 60 * 1000, // 1 minute
     retry: 2,
   });
 
-  // Fetch followers (people who follow you)
-  const { data: allFollowers = [], isLoading: isLoadingFollowers } = useQuery({
-    queryKey: ["followers"],
-    queryFn: async (): Promise<Friend[]> => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships/followers`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch followers");
-      }
-
-      const data: FriendsResponse = await res.json();
-      return data.data || [];
-    },
-    staleTime: 30 * 1000, // 30 seconds
-    retry: 2,
-  });
-
-  // Fetch following (people you follow)
-  const { data: allFollowing = [], isLoading: isLoadingFollowing } = useQuery({
-    queryKey: ["following"],
-    queryFn: async (): Promise<Friend[]> => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships/following`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch following");
-      }
-
-      const data: FriendsResponse = await res.json();
-      return data.data || [];
-    },
-    staleTime: 30 * 1000, // 30 seconds
-    retry: 2,
-  });
-
-  // Fetch lesson requests
-  const { data: lessonRequests = [], isLoading: isLoadingLessonRequests } = useQuery({
-    queryKey: ["lessonRequests"],
-    queryFn: async () => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/lesson-requests`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        return [];
-      }
-
-      const data = await res.json();
-      return data.data || [];
-    },
-    staleTime: 10 * 1000, // 10 seconds
-    retry: 2,
-  });
-
-  // Followers: People who follow you but you don't follow back
-  const followers = allFollowers.filter(
-    (follower) => !allFollowing.some((followed) => followed.id === follower.id)
-  );
-
-  // Following: People you follow who don't follow you back
-  const following = allFollowing.filter(
-    (followedUser) => !allFollowers.some((follower) => follower.id === followedUser.id)
-  );
-
-  // Use shared hooks for mutations
-  const { sendRequestMutation, removeFriendMutation } = useFriendshipActions({
-    navigateOnRemove: false,
-    skipFollowToast: true, // We'll show custom toast for mutual friends
-  });
-
-  const { acceptLessonRequestMutation, denyLessonRequestMutation } = useLessonRequests();
-
-  // Search users mutation (kept local as it's specific to this page)
+  // Search users mutation
   const searchUsersMutation = useMutation({
     mutationFn: async (query: string): Promise<SearchResult[]> => {
       if (query.length < 2) {
@@ -159,378 +77,199 @@ export default function FriendsPage() {
     },
   });
 
-  // Wrapper mutations for local state management
-  const sendFriendRequestWithState = useMutation({
-    mutationFn: async (addresseeId: string) => {
-      setFollowingUserId(addresseeId);
-      return sendRequestMutation.mutateAsync(addresseeId);
-    },
-    onSuccess: async () => {
-      setFollowingUserId(null);
+  // Real-time search with debouncing
+  useEffect(() => {
+    const trimmedQuery = searchQuery.trim();
+    
+    if (trimmedQuery.length === 0) {
       setSearchResults([]);
-      setSearchQuery("");
-      showToast({
-        id: `follow-${Date.now()}`,
-        type: "SUCCESS" as const,
-        title: "Success",
-        message: "You are now following this user",
-        isRead: false,
-        createdAt: new Date().toISOString(),
-        userId: "",
-        actionUrl: undefined,
-      });
-      // Refetch all queries immediately to update the UI
-      await Promise.all([
-        queryClient.refetchQueries({ queryKey: ["friends"] }),
-        queryClient.refetchQueries({ queryKey: ["followers"] }),
-        queryClient.refetchQueries({ queryKey: ["following"] }),
-      ]);
-    },
-    onError: (err: Error) => {
-      setFollowingUserId(null);
-      showToast({
-        id: `error-${Date.now()}`,
-        type: "ERROR",
-        title: "Failed to follow",
-        message: err.message,
-        isRead: false,
-        createdAt: new Date().toISOString(),
-        userId: "",
-        actionUrl: undefined,
-      });
-    },
-  });
+      setError(null);
+      return;
+    }
 
-  const followBackMutation = useMutation({
-    mutationFn: async (addresseeId: string) => {
-      setFollowingUserId(addresseeId);
-      return sendRequestMutation.mutateAsync(addresseeId);
-    },
-    onSuccess: async () => {
-      setFollowingUserId(null);
-      showToast({
-        id: `friends-${Date.now()}`,
-        type: "SUCCESS" as const,
-        title: "You are now friends!",
-        message: "You can now view their lessons and share yours with them.",
-        isRead: false,
-        createdAt: new Date().toISOString(),
-        userId: "",
-        actionUrl: undefined,
-      });
-      // Refetch all queries immediately to update the UI
-      await Promise.all([
-        queryClient.refetchQueries({ queryKey: ["friends"] }),
-        queryClient.refetchQueries({ queryKey: ["followers"] }),
-        queryClient.refetchQueries({ queryKey: ["following"] }),
-      ]);
-    },
-    onError: (err: Error) => {
-      setFollowingUserId(null);
-      showToast({
-        id: `error-${Date.now()}`,
-        type: "ERROR",
-        title: "Failed to follow",
-        message: err.message,
-        isRead: false,
-        createdAt: new Date().toISOString(),
-        userId: "",
-        actionUrl: undefined,
-      });
-    },
-  });
+    if (trimmedQuery.length < 2) {
+      setSearchResults([]);
+      setError(null);
+      return;
+    }
 
-  const searchUsers = () => {
+    // Debounce: wait 500ms after user stops typing
+    const timeoutId = setTimeout(() => {
+      setError(null);
+      searchUsersMutation.mutate(trimmedQuery);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
     setError(null);
-    searchUsersMutation.mutate(searchQuery);
   };
 
-  const sendFriendRequest = (addresseeId: string) => {
-    sendFriendRequestWithState.mutate(addresseeId);
-  };
+  // Determine what to show in drawer
+  const showSuggestions = searchQuery.trim().length === 0 && searchResults.length === 0;
+  const showSearchResults = searchQuery.trim().length >= 2 && searchResults.length > 0;
+  const showEmptySearch = searchQuery.trim().length >= 2 && searchResults.length === 0 && !searchUsersMutation.isPending;
 
-  const followBack = (addresseeId: string) => {
-    followBackMutation.mutate(addresseeId);
-  };
+  const renderUserItem = (user: SearchResult) => {
+    const languageFlag = getLanguageFlag(user.language ?? null);
+    const isCurrentUser = user.id === profile?.id;
 
-  const removeFriend = (friendshipId: string) => {
-    removeFriendMutation.mutate(friendshipId);
-  };
-
-  // Combine all loading states to prevent flickering
-  const isLoadingData = loading || isLoadingFollowers || isLoadingFollowing || isLoadingLessonRequests;
-
-  // Show only loading bar until all data is loaded
-  if (isLoadingData) {
     return (
-      <div className="container">
-        <LoadingBar isLoading={true} text="Loading friends" />
+      <div
+        key={user.id}
+        className={`leaderboard-item leaderboard-item--regular ${
+          isCurrentUser ? "leaderboard-item--current-user" : ""
+        } leaderboard-item--clickable`}
+        onClick={() => {
+          if (!isCurrentUser) {
+            navigate(`/profile/friends/${user.id}`, { state: { from: "/profile/friends" } });
+          }
+        }}
+      >
+        <div className="leaderboard-item-content leaderboard-item-content--regular">
+          <img
+            src={rockyLogo}
+            alt="Rocky"
+            className="leaderboard-item-logo leaderboard-item-logo--regular"
+          />
+          <div className="leaderboard-item-text">
+            <span className="leaderboard-item-name">
+              {getUserDisplayName(user)}
+              {isCurrentUser && (
+                <span className="leaderboard-item-you">(You)</span>
+              )}
+            </span>
+          </div>
+        </div>
+        <div className="leaderboard-item-details">
+          {languageFlag && (
+            <img
+              src={languageFlag.src}
+              alt={languageFlag.alt}
+              className="leaderboard-item-flag"
+            />
+          )}
+          <span className="leaderboard-item-language">
+            {getLanguageCode(user.language ?? null)}
+          </span>
+        </div>
       </div>
     );
-  }
+  };
 
   return (
-    <div className="container">
-    <div className="friends-page">
-      <div className="friends-header">
+    <div className="container container--leaderboard">
+      <div className="leaderboard-page friends-page-new">
+        <div className="leaderboard-hero">
+          <div className="leaderboard-header">
+            <button
+              className="leaderboard-back-button"
+              onClick={() => navigate(-1)}
+            >
+              <img src={goBackIcon} alt="Back" />
+            </button>
+            <div className="leaderboard-title-section">
+              <h1 className="leaderboard-title">Friends</h1>
+              <p className="view-friends-description">
+              Add more friends to compete with and share your custom lessons with!
+              </p>
+            </div>
+            <div className="leaderboard-header-actions">
+              <button
+                className="view-friends-avatar-button"
+                onClick={() => navigate("/profile")}
+                aria-label="Profile"
+              >
+                <img src={rockyWhiteLogo} alt="Rocky" className="view-friends-avatar" />
+              </button>
+            </div>
+          </div>
+
+          {/* Search Bar */}
+          <div className="friends-search-container-new">
+            <img
+              src={searchIconBlue}
+              alt="Search"
+              className="friends-search-icon"
+            />
+            <input
+              type="text"
+              className="friends-search-input-new"
+              placeholder="Search by username or email..."
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
+            />
+            {searchQuery.trim().length > 0 && (
+              <button
+                className="friends-search-clear-button"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          {error && (
+            <div className="friends-error-message-new">
+              {error}
+            </div>
+          )}
+        </div>
+
+        <div className="leaderboard-drawer">
+          {showSuggestions && (
+            <>
+              {suggestionsLoading ? (
+                <div className="view-friends-loading">Loading suggestions...</div>
+              ) : (
+                <>
+                  <h2 className="friends-suggestions-title">Friend Suggestions</h2>
+                  {suggestions.length === 0 ? (
+                    <div className="view-friends-empty">
+                      <p>No suggestions available</p>
+                    </div>
+                  ) : (
+                    <div className="leaderboard-list">
+                      {suggestions.map((user) => renderUserItem(user))}
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+
+          {showSearchResults && (
+            <div className="leaderboard-list">
+              {searchResults.map((user) => renderUserItem(user))}
+            </div>
+          )}
+
+          {showEmptySearch && (
+            <div className="view-friends-empty">
+              <p>No users found matching "{searchQuery}"</p>
+            </div>
+          )}
+
+          {searchUsersMutation.isPending && (
+            <div className="view-friends-loading">Searching...</div>
+          )}
+        </div>
+      </div>
+      <div className="friends-share-qr-button-container">
         <button
-          className="friends-back-button"
-          onClick={() => navigate(-1)}
+          className="friends-share-qr-button"
+          onClick={() => {
+            // Functionality will be added later
+          }}
         >
-          <img src={goBackIcon} alt="Back Button" />
+          Share my QR code
         </button>
-        <h1 className="friends-title">Friends</h1>
-        <NotificationBell />
       </div>
-
-
-      {/* Search Section */}
-      <div className="friends-search-section">
-        <h2 className="friends-search-title">Find Friends</h2>
-        <div className="friends-search-container">
-          <input
-            type="text"
-            className="friends-search-input"
-            placeholder="Search by username or email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && searchUsers()}
-          />
-          <button
-            className="friends-search-button"
-            onClick={searchUsers}
-            disabled={searchUsersMutation.isPending}
-          >
-            {searchUsersMutation.isPending ? "Searching..." : "Search"}
-          </button>
-        </div>
-
-        {error && (
-          <div className="friends-error-message">
-            {error}
-          </div>
-        )}
-
-        {searchResults.length > 0 && (
-          <div className="friends-search-results">
-            {searchResults.map((user) => (
-              <div
-                key={user.id}
-                className="friends-search-result-item"
-              >
-                <div>
-                  <strong className="friends-user-name">{getUserDisplayName(user)}</strong>
-                  <p className="friends-user-score">
-                    Score: {user.score}
-                  </p>
-                </div>
-                {user.friendshipStatus === "none" && (
-                  <button
-                    className="friends-add-button"
-                    onClick={() => sendFriendRequest(user.id)}
-                    disabled={followingUserId === user.id}
-                  >
-                    {followingUserId === user.id
-                      ? "Following..."
-                      : "Follow"}
-                  </button>
-                )}
-                {user.friendshipStatus === "friends" && (
-                  <span className="friends-status-badge friends-status-badge--friends">
-                    ✓ Friends
-                  </span>
-                )}
-                {user.friendshipStatus === "following" && (
-                  <span className="friends-status-badge friends-status-badge--pending-sent">
-                    Following
-                  </span>
-                )}
-                {user.friendshipStatus === "follower" && (
-                  <button
-                    className="friends-add-button"
-                    onClick={() => sendFriendRequest(user.id)}
-                    disabled={followingUserId === user.id}
-                    title="Follow back to become friends"
-                  >
-                    {followingUserId === user.id
-                      ? "Following..."
-                      : "Follow Back"}
-                  </button>
-                )}
-                {user.friendshipStatus === "blocked_by_you" && (
-                  <span className="friends-status-badge friends-status-badge--blocked">
-                    Blocked
-                  </span>
-                )}
-                {user.friendshipStatus === "blocked_by_them" && (
-                  <span className="friends-status-badge friends-status-badge--blocked">
-                    Unavailable
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Followers (people who follow you but you don't follow back) */}
-      {followers.length > 0 && (
-        <div className="friends-pending-section">
-          <h2 className="friends-pending-title">
-            Followers ({followers.length})
-          </h2>
-          <p className="friends-followers-subtitle">
-            Follow back to become friends
-          </p>
-          {followers.map((follower) => (
-            <div
-              key={follower.id}
-              className="friends-pending-item"
-            >
-              <div>
-                <strong className="friends-user-name">{getUserDisplayName(follower)}</strong>
-                <p className="friends-user-score">
-                  Score: {follower.score}
-                </p>
-              </div>
-              <div className="friends-pending-actions">
-                <button
-                  className="friends-accept-button"
-                  onClick={() => followBack(follower.id)}
-                  disabled={followingUserId === follower.id}
-                >
-                  {followingUserId === follower.id ? "Following..." : "Follow Back"}
-                </button>
-                <button
-                  className="friends-view-button"
-                  onClick={() => navigate(`/profile/friends/${follower.id}`, { state: { from: "/profile/friends" } })}
-                >
-                  View Profile
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Following (people you follow but who don't follow you back) */}
-      {following.length > 0 && (
-        <div className="friends-pending-section">
-          <h2 className="friends-pending-title">
-            Following ({following.length})
-          </h2>
-          <p className="friends-followers-subtitle">
-            People you follow who haven't followed you back yet
-          </p>
-          {following.map((followedUser) => (
-            <div
-              key={followedUser.id}
-              className="friends-pending-item"
-            >
-              <div>
-                <strong className="friends-user-name">{getUserDisplayName(followedUser)}</strong>
-                <p className="friends-user-score">
-                  Score: {followedUser.score}
-                </p>
-              </div>
-              <div className="friends-pending-actions">
-                <button
-                  className="friends-view-button"
-                  onClick={() => navigate(`/profile/friends/${followedUser.id}`)}
-                >
-                  View Profile
-                </button>
-                <button
-                  className="friends-unfollow-button"
-                  onClick={() => {
-                    if (followedUser.friendshipId) {
-                      removeFriendMutation.mutate(followedUser.friendshipId);
-                    }
-                  }}
-                  disabled={removeFriendMutation.isPending}
-                >
-                  Unfollow
-                </button>
-              </div>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Friends List (Mutual Follows) */}
-      <div className="friends-list-section">
-        <h2 className="friends-list-title">Friends - Mutual Follows ({friends.length})</h2>
-        {friends.length === 0 ? (
-          <p className="friends-list-empty">
-            No friends yet. Search for users to follow!
-          </p>
-        ) : (
-          friends.map((friend) => {
-            const lessonRequest = lessonRequests.find(
-              (req: any) => req.requester.id === friend.id
-            );
-            
-            return (
-              <div
-                key={friend.friendshipId}
-                className="friends-list-item"
-              >
-                <div
-                  className="friends-list-item-clickable"
-                  onClick={() => navigate(`/profile/friends/${friend.id}`, { state: { from: "/profile/friends" } })}
-                >
-                  <strong className="friends-user-name">{getUserDisplayName(friend)}</strong>
-                  <p className="friends-user-score">
-                    Score: {friend.score}
-                  </p>
-                  {lessonRequest && (
-                    <p className="friends-lesson-request-message">
-                      Wants to see your lessons
-                    </p>
-                  )}
-                </div>
-                <div className="friends-list-item-actions">
-                  {lessonRequest && (
-                    <>
-                      <button
-                        className="friends-accept-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          acceptLessonRequestMutation.mutate(friend.id);
-                        }}
-                        disabled={acceptLessonRequestMutation.isPending || denyLessonRequestMutation.isPending}
-                      >
-                        {acceptLessonRequestMutation.isPending ? "..." : "Accept Lesson Request"}
-                      </button>
-                      <button
-                        className="friends-deny-button"
-                        onClick={(e) => {
-                          e.stopPropagation();
-                          denyLessonRequestMutation.mutate(friend.id);
-                        }}
-                        disabled={acceptLessonRequestMutation.isPending || denyLessonRequestMutation.isPending}
-                      >
-                        {denyLessonRequestMutation.isPending ? "..." : "Deny"}
-                      </button>
-                    </>
-                  )}
-                  <button
-                    className="friends-unfollow-button"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      friend.friendshipId && removeFriend(friend.friendshipId);
-                    }}
-                    disabled={removeFriendMutation.isPending}
-                  >
-                    Unfollow
-                  </button>
-                </div>
-              </div>
-            );
-          })
-        )}
-      </div>
-    </div>
     </div>
   );
 }
