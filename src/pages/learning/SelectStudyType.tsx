@@ -28,7 +28,7 @@ export default function SelectStudyType() {
   const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
   const { data: documentData, isLoading, error: documentError } = useDocument(documentId);
-  const { isOwner } = useDocumentAccess(selectedDocument || documentData?.document);
+  const { isOwner } = useDocumentAccess(selectedDocument || documentData?.document || null);
 
   // Fetch quizzes for the document
   const { data: quizzesData, isLoading: isLoadingQuizzes } = useQuery({
