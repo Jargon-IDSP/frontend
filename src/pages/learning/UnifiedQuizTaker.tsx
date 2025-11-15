@@ -75,8 +75,12 @@ export default function UnifiedQuizTaker() {
   // Show loading if query is not enabled yet
   if (!isEnabled && !loading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Invalid quiz parameters...</p>
+      <div className="quiz-page-wrapper">
+        <div className="container">
+          <div style={{ padding: "2rem", textAlign: "center" }}>
+            <p>Invalid quiz parameters...</p>
+          </div>
+        </div>
       </div>
     );
   }
@@ -130,26 +134,34 @@ export default function UnifiedQuizTaker() {
 
   if (loading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Loading quiz...</p>
+      <div className="quiz-page-wrapper">
+        <div className="container">
+          <div style={{ padding: "2rem", textAlign: "center" }}>
+            <p>Loading quiz...</p>
+          </div>
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ padding: "2rem" }}>
-        <button onClick={handleBack} style={{ marginBottom: "1rem" }}>
-          ← Back
-        </button>
-        <div
-          style={{
-            backgroundColor: "#fee",
-            padding: "1rem",
-            borderRadius: "6px",
-          }}
-        >
-          <strong>Error:</strong> {error}
+      <div className="quiz-page-wrapper">
+        <div className="container">
+          <div style={{ padding: "2rem" }}>
+            <button onClick={handleBack} style={{ marginBottom: "1rem" }}>
+              ← Back
+            </button>
+            <div
+              style={{
+                backgroundColor: "#fee",
+                padding: "1rem",
+                borderRadius: "6px",
+              }}
+            >
+              <strong>Error:</strong> {error}
+            </div>
+          </div>
         </div>
       </div>
     );

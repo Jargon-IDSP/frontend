@@ -188,17 +188,6 @@ body {
   background-color: rgba(255, 186, 10, 0.5);
 }
 
-.home-page {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
-  padding-bottom: 0;
-}
-
 .top-header {
   display: flex;
   justify-content: space-between;
@@ -1425,16 +1414,6 @@ body {
   height: auto;
 }
 
-.documents-page {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
-}
-
 .page-title {
   display: flex;
   align-items: flex-start;
@@ -2427,13 +2406,6 @@ button.back-button {
 }
 
 .introduction-page {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   background-color: #fffdf4;
@@ -2561,13 +2533,6 @@ button.back-button {
 }
 
 .language-preferences {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   background-color: #fffdf4;
@@ -2610,13 +2575,6 @@ button.back-button {
 }
 
 .industry-preferences {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   background-color: #fffdf4;
@@ -3886,16 +3844,6 @@ button.back-button {
 }
 .view-friends-add-button:active {
   transform: translateY(0);
-}
-
-.friends-page {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
 }
 
 .friends-header {
@@ -5433,10 +5381,10 @@ button.back-button {
     left: -80px;
   }
   20% {
-    left: calc(10% + 10px);
+    left: calc(10% - 5px);
   }
   30% {
-    left: calc(25% + 10px);
+    left: calc(25% - 5px);
   }
   50% {
     left: calc(45% + 10px);
@@ -6785,13 +6733,6 @@ button.back-button {
 }
 
 .quiz-page-wrapper main .container {
-  width: 100vw;
-  max-width: min(480px, 100vw);
-  margin: 0 auto;
-  padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
-  box-sizing: border-box;
   padding: 2.5rem;
   display: flex;
   flex-direction: column;
@@ -7850,4 +7791,11 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   color: #393939;
   font-size: 16px;
   line-height: 1.5;
+}
+
+[data-slot=drawer-overlay],
+[data-slot=drawer-content],
+[data-vaul-drawer],
+[data-vaul-overlay] {
+  z-index: 100 !important;
 }/*# sourceMappingURL=main.css.map */

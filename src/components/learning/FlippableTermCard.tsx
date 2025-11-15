@@ -12,7 +12,7 @@ export default function FlippableTermCard({
   const [isDescending, setIsDescending] = useState(false);
 
   const handleClick = () => {
-    if (shouldShowCharacter && flipCount > 0) {
+    if (shouldShowCharacter) {
       // Character is visible, make it descend before flipping
       setIsDescending(true);
 
@@ -27,14 +27,8 @@ export default function FlippableTermCard({
         }, 600);
       }, 500);
     } else {
-      // First flip - just flip
+      // No character, just flip
       setIsFlipped(!isFlipped);
-      if (shouldShowCharacter) {
-        // Wait for card flip to complete before showing character
-        setTimeout(() => {
-          setFlipCount(prev => prev + 1);
-        }, 600);
-      }
     }
   };
 

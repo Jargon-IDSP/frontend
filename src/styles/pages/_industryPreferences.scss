@@ -2,7 +2,6 @@
 @use '../mixins' as *;
 
 .industry-preferences {
-  @include page-layout;
   display: flex;
   flex-direction: column;
   background-color: $color-second-neutral-light;

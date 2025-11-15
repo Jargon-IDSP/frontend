@@ -28,7 +28,7 @@ export default function SelectStudyType() {
   const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
   const { data: documentData, isLoading, error: documentError } = useDocument(documentId);
-  const { isOwner } = useDocumentAccess(selectedDocument);
+  const { isOwner } = useDocumentAccess(selectedDocument || documentData?.document);
 
   // Fetch quizzes for the document
   const { data: quizzesData, isLoading: isLoadingQuizzes } = useQuery({
@@ -92,7 +92,9 @@ export default function SelectStudyType() {
   if (isLoading) {
     return (
       <div className="fullTranslationOverview">
-        <LoadingBar isLoading={true} text="Loading document" />
+        <div className="container demo">
+          <LoadingBar isLoading={true} text="Loading document" />
+        </div>
       </div>
     );
   }

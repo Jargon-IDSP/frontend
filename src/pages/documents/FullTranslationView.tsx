@@ -160,10 +160,10 @@ export default function FullTranslationView() {
           <DocumentNav
             activeTab="document"
             title={documentTitle}
-            subtitle={!isFriendLesson && isOwner ? "..." : ""}
+            subtitle={isOwner ? "..." : ""}
             onLessonClick={canStudy ? handleLessonClick : undefined}
             onBackClick={handleBackClick}
-            onSubtitleClick={!isFriendLesson ? handleOptions : undefined}
+            onSubtitleClick={isOwner ? handleOptions : undefined}
           />
 
           <div className="content-container">

@@ -36,7 +36,7 @@ export default function QuizComponent({
 
   const currentQuestion = questions[currentQuestionIndex];
   const isBossQuiz = quizType === 'existing' && quizNumber === 3;
-  const BOSS_QUIZ_PASSING_SCORE = 70; // 70% required to pass boss quiz
+  const BOSS_QUIZ_PASSING_SCORE = 70;
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
@@ -135,12 +135,10 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     }
 
     if (currentQuestionIndex < questions.length - 1) {
-      // Navigate to next question
       setCurrentQuestionIndex(currentQuestionIndex + 1);
       setSelectedAnswer(answers[currentQuestionIndex + 1] || null);
       resetChatState();
     } else {
-      // On last question - check if all questions are answered before finishing
       const allAnswered = Object.keys(updatedAnswers).length === questions.length;
 
       if (!allAnswered) {
@@ -157,7 +155,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         return;
       }
 
-      // Calculate if user passed (for boss quizzes, need 70% or higher)
       const percentCorrect = (finalScore / questions.length) * 100;
       const userPassed = isBossQuiz ? percentCorrect >= BOSS_QUIZ_PASSING_SCORE : true;
       setPassed(userPassed);
