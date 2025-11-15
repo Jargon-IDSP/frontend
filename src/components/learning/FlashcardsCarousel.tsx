@@ -63,6 +63,7 @@ export default function FlashcardsCarousel({
           term={currentTerm}
           language={language}
           type={type}
+          shouldShowCharacter={true}
         />
       </div>
 
