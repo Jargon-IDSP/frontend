@@ -667,18 +667,18 @@
   }
 
   &--gold {
-    background: rgba(255, 215, 0, 0.2);
-    border: 2px solid #ffd700;
+    background: #fff8e7;
+    border: 3px solid #ffba0a;
   }
 
   &--silver {
-    background: rgba(192, 192, 192, 0.2);
-    border: 2px solid #c0c0c0;
+    background: #e6eaf9;
+    border: 3px solid #0828c0;
   }
 
   &--bronze {
-    background: rgba(205, 127, 50, 0.2);
-    border: 2px solid #cd7f32;
+    background: #ffede7;
+    border: 3px solid #fe4d13;
   }
 }
 
@@ -686,6 +686,7 @@
   font-size: $font-size-h3;
   font-weight: $font-weight-bold;
   color: $color-quaternary-900;
+  margin-top: $spacing-sm;
 }
 
 .self-leaderboard-placements {
@@ -713,11 +714,13 @@
   justify-content: space-between;
   align-items: center;
   padding: $spacing-md;
-  background: #ffa500;
-  border-radius: $border-radius-md;
+  background: #fe7142;
+  border-radius: 10px;
   color: white;
   font-size: $font-size-body;
   font-weight: $font-weight-medium;
+  box-shadow: 5px 5px 0px 0px #4f2110;
+  margin-bottom: $spacing-sm;
 }
 
 .self-leaderboard-placement-date {
