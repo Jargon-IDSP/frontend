@@ -270,6 +270,11 @@
 // Ensure overlay appears above navbar
 [data-slot="drawer-overlay"] {
   z-index: 150 !important;
+
+  // Hide overlay on wider screens (when drawer width matches container max-width)
+  @media (min-width: 480px) {
+    display: none !important;
+  }
 }
 
 // Explicit positioning for right-direction drawer

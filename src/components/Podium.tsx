@@ -5,7 +5,7 @@ import rockyLogo from "/rocky.svg";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import { getLanguageFlag } from "../utils/languageFlagHelpers";
 
-const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
+const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/leaderboard/full" }) => {
   const navigate = useNavigate();
   const topThree = users.slice(0, 3);
 
@@ -37,7 +37,7 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId }) => {
           <div
             key={user.id}
             className={`podium-item rank-${rank} podium-item--clickable`}
-            onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/leaderboard" } })}
+            onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: fromRoute } })}
           >
             <div className="rocky-avatar">
               <img
