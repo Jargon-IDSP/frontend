@@ -65,7 +65,7 @@
     overflow: hidden;
     gap: 1rem;
     min-height: 0;
-    max-height: calc(100dvh - 120px); 
+    max-height: calc(100dvh - 200px); 
   }
 
   &__question {
@@ -262,21 +262,21 @@
   z-index: 150 !important;
 }
 
-// Explicit positioning for right-direction drawer (fallback if Tailwind data attributes don't work)
+// Explicit positioning for right-direction drawer - centered on both mobile and desktop
 [data-vaul-drawer-direction="right"][data-slot="drawer-content"] {
   position: fixed !important;
   top: 0 !important;
   bottom: 0 !important;
-  right: 0 !important;
-  left: auto !important;
-  width: 75% !important;
-  max-width: 500px !important;
+  left: 50% !important;
+  right: auto !important;
+  width: 100% !important;
+  max-width: 480px !important;
   height: 100vh !important;
   max-height: 100dvh !important;
   z-index: 200 !important;
-  transform: translateX(0) !important;
+  transform: translateX(-50%) !important;
 
   @media (min-width: 640px) {
-    max-width: 500px !important;
+    max-width: 480px !important;
   }
 }
