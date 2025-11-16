@@ -23,12 +23,64 @@ export default function ChatModal({
 }: ChatModalProps) {
   const chatMessagesRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
+  const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
     if (chatMessagesRef.current) {
       chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
   }, [chatHistory]);
+
+  // Cleanup blur timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (blurTimeoutRef.current) {
+        clearTimeout(blurTimeoutRef.current);
+      }
+    };
+  }, []);
+
+  // Handle window resize to detect keyboard close on mobile
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const handleResize = () => {
+      // On mobile, if the viewport height increases significantly,
+      // it likely means the keyboard was closed
+      const currentHeight = window.visualViewport?.height || window.innerHeight;
+      const screenHeight = window.screen.height;
+
+      // If viewport is close to screen height, keyboard is likely closed
+      if (currentHeight > screenHeight * 0.8 && isInputFocused) {
+        setIsInputFocused(false);
+      }
+    };
+
+    window.visualViewport?.addEventListener('resize', handleResize);
+    window.addEventListener('resize', handleResize);
+
+    return () => {
+      window.visualViewport?.removeEventListener('resize', handleResize);
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [isOpen, isInputFocused]);
+
+  const handleInputFocus = () => {
+    // Clear any pending blur timeout
+    if (blurTimeoutRef.current) {
+      clearTimeout(blurTimeoutRef.current);
+      blurTimeoutRef.current = null;
+    }
+    setIsInputFocused(true);
+  };
+
+  const handleInputBlur = () => {
+    // Use a timeout to ensure the blur state is set after keyboard closes
+    // This helps with mobile keyboard behavior
+    blurTimeoutRef.current = setTimeout(() => {
+      setIsInputFocused(false);
+    }, 100);
+  };
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose} direction="right">
@@ -84,8 +136,8 @@ export default function ChatModal({
               type="text"
               value={chatPrompt}
               onChange={(e) => onChatPromptChange(e.target.value)}
-              onFocus={() => setIsInputFocused(true)}
-              onBlur={() => setIsInputFocused(false)}
+              onFocus={handleInputFocus}
+              onBlur={handleInputBlur}
               placeholder="Ask your question..."
               disabled={isLoading}
               className="chat-drawer__input"

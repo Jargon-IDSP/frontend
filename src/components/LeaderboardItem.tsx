@@ -1,0 +1,66 @@
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import rockyLogo from "/rocky.svg";
+import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
+import { getLanguageFlag } from "../utils/languageFlagHelpers";
+import type { LeaderboardItemProps } from "../types/leaderboardItem";
+
+const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
+  user,
+  rank,
+  isCurrentUser,
+  isClickable = false,
+  fromRoute = "/community",
+}) => {
+  const navigate = useNavigate();
+  const languageFlag = getLanguageFlag(user.language);
+
+  const handleClick = () => {
+    if (isClickable) {
+      navigate(`/profile/friends/${user.id}`, { state: { from: fromRoute } });
+    }
+  };
+
+  return (
+    <div
+      className={`leaderboard-item leaderboard-item--regular ${
+        isCurrentUser ? "leaderboard-item--current-user" : ""
+      } ${isClickable ? "leaderboard-item--clickable" : ""}`}
+      onClick={handleClick}
+    >
+      <div className="leaderboard-item-content leaderboard-item-content--regular">
+        <span className="leaderboard-item-rank">{rank}</span>
+        <img
+          src={rockyLogo}
+          alt="Rocky"
+          className="leaderboard-item-logo leaderboard-item-logo--regular"
+        />
+        <div className="leaderboard-item-text">
+          <span className="leaderboard-item-name">
+            {getUserDisplayName(user)}
+          </span>
+          {isCurrentUser && (
+            <span className="leaderboard-item-you">(You)</span>
+          )}
+          <span className="leaderboard-item-points">
+            {user.score.toLocaleString()} pts
+          </span>
+        </div>
+      </div>
+      <div className="leaderboard-item-details">
+        {languageFlag && (
+          <img
+            src={languageFlag.src}
+            alt={languageFlag.alt}
+            className="leaderboard-item-flag"
+          />
+        )}
+        <span className="leaderboard-item-language">
+          {getLanguageCode(user.language)}
+        </span>
+      </div>
+    </div>
+  );
+};
+
+export default LeaderboardItem;
