@@ -21,19 +21,21 @@
       display: none;
     }
   }
+
   .rocky-avatar {
-  position: relative;
-  z-index: 2;
-  margin: $spacing-sm 0 $spacing-xs;
-  background-color: $color-second-neutral-light;
-  border: 1px solid $color-quaternary-dark;
-  border-radius: 50%;
-  padding: $spacing-sm;
-  
-  .rocky-logo {
-    @include rocky-logo-size(1, 80px);
-    @include rocky-logo-size(2, 45px);
-    @include rocky-logo-size(3, 45px);
+    position: relative;
+    z-index: 2;
+    margin: $spacing-sm 0 $spacing-xs;
+    background-color: $color-second-neutral-light;
+    border: 1px solid $color-quaternary-dark;
+    border-radius: 50%;
+    padding: $spacing-sm;
+
+    .rocky-logo {
+      @include rocky-logo-size(1, 80px);
+      @include rocky-logo-size(2, 45px);
+      @include rocky-logo-size(3, 45px);
+    }
   }
 }
 
@@ -355,8 +357,9 @@
     align-items: flex-end;
     justify-content: center;
     gap: $spacing-md;
-    margin-bottom: 0;
+    margin-bottom: $spacing-sm;
     min-height: 200px;
+    position: relative;
   }
 
   &-item {
@@ -432,9 +435,7 @@
   width: 100%;
   text-align: center;
   color: $color-quaternary-800;
-  padding-bottom: $spacing-sm;
-}
-
+  padding-bottom: $spacing-md;
 }
 
 .podium-flag {

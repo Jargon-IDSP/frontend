@@ -107,16 +107,6 @@ export default function ChatModal({
             <HappyRocky />
             <DrawerTitle>Need Help? Ask Rocky!</DrawerTitle>
           </div>
-          <DrawerClose asChild>
-            <Button
-              variant="ghost"
-              size="icon"
-              className="chat-drawer__close"
-              aria-label="Close chat"
-            >
-              ×
-            </Button>
-          </DrawerClose>
         </DrawerHeader>
 
         <div className="chat-drawer__body" ref={drawerBodyRef}>
