@@ -2,14 +2,13 @@ import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useQuery, useMutation } from "@tanstack/react-query";
+import { Camera } from "lucide-react";
 import { BACKEND_URL } from "../../lib/api";
-import type {
-  SearchResult,
-  SearchResponse
-} from "../../types/friend";
+import type { SearchResult, SearchResponse } from "../../types/friend";
 import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
 import { getLanguageFlag } from "../../utils/languageFlagHelpers";
 import { useProfile } from "../../hooks/useProfile";
+import QRScannerModal from "../../components/QRScannerModal";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
 import rockyWhiteLogo from "/rockyWhite.svg";
@@ -20,6 +19,7 @@ export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const { data: profile } = useProfile();
@@ -80,7 +80,7 @@ export default function FriendsPage() {
   // Real-time search with debouncing
   useEffect(() => {
     const trimmedQuery = searchQuery.trim();
-    
+
     if (trimmedQuery.length === 0) {
       setSearchResults([]);
       setError(null);
@@ -108,10 +108,37 @@ export default function FriendsPage() {
     setError(null);
   };
 
+  const handleQRScanSuccess = (decodedText: string) => {
+    // Extract user ID from QR code
+    // QR code might be a URL like: https://app.jargon.com/user/123 or just a user ID
+    let userId = decodedText;
+
+    // If it's a URL, extract the user ID
+    const urlMatch = decodedText.match(/\/user\/([^\/\?]+)/);
+    if (urlMatch) {
+      userId = urlMatch[1];
+    }
+
+    // If it's just a UUID or user ID, use it directly
+    // Search for the user by ID or set it as search query
+    if (userId) {
+      // Try to search for the user
+      searchUsersMutation.mutate(userId);
+      setSearchQuery(userId);
+    } else {
+      setError("Invalid QR code format");
+    }
+  };
+
   // Determine what to show in drawer
-  const showSuggestions = searchQuery.trim().length === 0 && searchResults.length === 0;
-  const showSearchResults = searchQuery.trim().length >= 2 && searchResults.length > 0;
-  const showEmptySearch = searchQuery.trim().length >= 2 && searchResults.length === 0 && !searchUsersMutation.isPending;
+  const showSuggestions =
+    searchQuery.trim().length === 0 && searchResults.length === 0;
+  const showSearchResults =
+    searchQuery.trim().length >= 2 && searchResults.length > 0;
+  const showEmptySearch =
+    searchQuery.trim().length >= 2 &&
+    searchResults.length === 0 &&
+    !searchUsersMutation.isPending;
 
   const renderUserItem = (user: SearchResult) => {
     const languageFlag = getLanguageFlag(user.language ?? null);
@@ -125,7 +152,9 @@ export default function FriendsPage() {
         } leaderboard-item--clickable`}
         onClick={() => {
           if (!isCurrentUser) {
-            navigate(`/profile/friends/${user.id}`, { state: { from: "/profile/friends" } });
+            navigate(`/profile/friends/${user.id}`, {
+              state: { from: "/profile/friends" },
+            });
           }
         }}
       >
@@ -174,7 +203,8 @@ export default function FriendsPage() {
             <div className="leaderboard-title-section">
               <h1 className="leaderboard-title">Friends</h1>
               <p className="view-friends-description">
-              Add more friends to compete with and share your custom lessons with!
+                Add more friends to compete with and share your custom lessons
+                with!
               </p>
             </div>
             <div className="leaderboard-header-actions">
@@ -183,7 +213,11 @@ export default function FriendsPage() {
                 onClick={() => navigate("/profile")}
                 aria-label="Profile"
               >
-                <img src={rockyWhiteLogo} alt="Rocky" className="view-friends-avatar" />
+                <img
+                  src={rockyWhiteLogo}
+                  alt="Rocky"
+                  className="view-friends-avatar"
+                />
               </button>
             </div>
           </div>
@@ -198,12 +232,20 @@ export default function FriendsPage() {
             <input
               type="text"
               className="friends-search-input-new"
-              placeholder="Search by username or email..."
+              placeholder="Search by username, email, or scan a QR code..."
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
               }}
             />
+            <button
+              className="friends-search-camera-button"
+              onClick={() => setIsQRScannerOpen(true)}
+              aria-label="Scan QR code"
+              type="button"
+            >
+              <Camera size={18} />
+            </button>
             {searchQuery.trim().length > 0 && (
               <button
                 className="friends-search-clear-button"
@@ -214,21 +256,21 @@ export default function FriendsPage() {
               </button>
             )}
           </div>
-          {error && (
-            <div className="friends-error-message-new">
-              {error}
-            </div>
-          )}
+          {error && <div className="friends-error-message-new">{error}</div>}
         </div>
 
         <div className="leaderboard-drawer">
           {showSuggestions && (
             <>
               {suggestionsLoading ? (
-                <div className="view-friends-loading">Loading suggestions...</div>
+                <div className="view-friends-loading">
+                  Loading suggestions...
+                </div>
               ) : (
                 <>
-                  <h2 className="friends-suggestions-title">Friend Suggestions</h2>
+                  <h2 className="friends-suggestions-title">
+                    Friend Suggestions
+                  </h2>
                   {suggestions.length === 0 ? (
                     <div className="view-friends-empty">
                       <p>No suggestions available</p>
@@ -270,6 +312,11 @@ export default function FriendsPage() {
           Share my QR code
         </button>
       </div>
+      <QRScannerModal
+        isOpen={isQRScannerOpen}
+        onClose={() => setIsQRScannerOpen(false)}
+        onScanSuccess={handleQRScanSuccess}
+      />
     </div>
   );
 }

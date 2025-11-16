@@ -1,0 +1,146 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.qr-scanner-modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-lg;
+
+  &__header {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    width: 100%;
+    margin-bottom: $spacing-md;
+  }
+
+  &__close-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-xs;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity $transition-fast;
+
+    &:hover {
+      opacity: 0.7;
+    }
+
+    img {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &__title {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0;
+  }
+
+  &__scanner-container {
+    position: relative;
+    width: 100%;
+    max-width: 400px;
+    min-height: 300px;
+    height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #000;
+    border-radius: $border-radius-md;
+    overflow: hidden;
+  }
+
+  &__scanner {
+    width: 100% !important;
+    height: 100% !important;
+    min-height: 300px;
+    position: relative;
+
+    // html5-qrcode creates its own structure with nested divs
+    > div {
+      width: 100% !important;
+      height: 100% !important;
+      position: relative !important;
+    }
+
+    // Target the video element that html5-qrcode creates
+    video {
+      width: 100% !important;
+      height: 100% !important;
+      object-fit: cover !important;
+      display: block !important;
+      visibility: visible !important;
+      opacity: 1 !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+      z-index: 1 !important;
+      background-color: #000 !important;
+    }
+
+    // Keep canvas visible for scanning overlay
+    canvas {
+      display: block !important;
+      position: absolute !important;
+      top: 0 !important;
+      left: 0 !important;
+    }
+
+    // Ensure the scanning box overlay is visible
+    #qr-shaded-region {
+      border-color: rgba(0, 0, 0, 0.3) !important;
+    }
+  }
+
+  &__loading {
+    position: absolute;
+    color: white;
+    font-size: $font-size-body;
+    z-index: 10;
+  }
+
+  &__error {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-lg;
+    text-align: center;
+
+    p {
+      color: $color-error;
+      font-size: $font-size-body;
+      margin: 0;
+    }
+  }
+
+  &__retry-button {
+    padding: $spacing-sm $spacing-lg;
+    background-color: $color-primary;
+    color: white;
+    border: none;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    font-size: $font-size-body;
+    font-weight: $font-weight-medium;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &__instructions {
+    color: $color-neutral;
+    font-size: $font-size-body;
+    text-align: center;
+    margin: 0;
+  }
+}
+
