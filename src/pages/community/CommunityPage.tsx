@@ -13,6 +13,7 @@ import {
   type TabType
 } from "../../utils/communityHelpers";
 import NotificationBell from "../../components/NotificationBell";
+import LeaderboardItem from "../../components/LeaderboardItem";
 import LeaderboardConnectAvatar from "../../assets/leaderboardConnectAvatar.svg";
 import findYourFriendsImg from '/findYourFriendsImg.svg';
 import noFriendsImg from '/noFriendsImg.svg';
@@ -156,46 +157,14 @@ const CommunityPage: React.FC = () => {
                     {previewUsers.map((user, index) => {
                       const actualRank = index + 4;
                       const isCurrentUser = checkIsCurrentUser(user.id, profile?.id);
-                      const languageFlag = getLanguageFlag(user.language);
                       return (
-                        <div
+                        <LeaderboardItem
                           key={user.id}
-                          className={`leaderboard-item leaderboard-item--regular ${
-                            isCurrentUser ? "leaderboard-item--current-user" : ""
-                          }`}
-                        >
-                          <div className="leaderboard-item-content leaderboard-item-content--regular">
-                            <span className="leaderboard-item-rank">{actualRank}</span>
-                            <img
-                              src={rockyLogo}
-                              alt="Rocky"
-                              className="leaderboard-item-logo leaderboard-item-logo--regular"
-                            />
-                            <div className="leaderboard-item-text">
-                              <span className="leaderboard-item-name">
-                                {getUserDisplayName(user)}
-                                {isCurrentUser && (
-                                  <span className="leaderboard-item-you">(You)</span>
-                                )}
-                              </span>
-                              <span className="leaderboard-item-points">
-                                {user.score.toLocaleString()} pts
-                              </span>
-                            </div>
-                          </div>
-                          <div className="leaderboard-item-details">
-                            {languageFlag && (
-                              <img
-                                src={languageFlag.src}
-                                alt={languageFlag.alt}
-                                className="leaderboard-item-flag"
-                              />
-                            )}
-                            <span className="leaderboard-item-language">
-                              {getLanguageCode(user.language)}
-                            </span>
-                          </div>
-                        </div>
+                          user={user}
+                          rank={actualRank}
+                          isCurrentUser={isCurrentUser}
+                          isClickable={false}
+                        />
                       );
                     })}
                   </div>

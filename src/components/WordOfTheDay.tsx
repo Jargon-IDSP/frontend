@@ -23,24 +23,20 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
     isLoaded && isSignedIn && !preferencesLoading && !!userLanguage
   );
 
-  // Only show loading when query is actually enabled and running
   const shouldShowLoading = isLoaded && isSignedIn && !preferencesLoading && !!userLanguage && isLoading;
 
   const handleCardClick = () => {
-    // If documentId is present, navigate to flashcards
     if (documentId) {
       navigate(`/learning/documents/${documentId}/flashcards`);
       return;
     }
 
-    // Otherwise, clear the cached word and refetch for homepage
     if (userLanguage) {
       localStorage.removeItem(`wordOfTheDay_${userLanguage}`);
     }
     refetch();
   };
 
-  // Loading state - auth or preferences loading
   if (!isLoaded || preferencesLoading) {
     return (
       <div className="word-of-the-day-card word-of-the-day-card--loading">
@@ -56,7 +52,6 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
     );
   }
 
-  // Not signed in
   if (!isSignedIn) {
     return (
       <div className="word-of-the-day-card">
@@ -74,7 +69,6 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
     );
   }
 
-  // Loading state - fetching word
   if (shouldShowLoading) {
     return (
       <div className="word-of-the-day-card">
@@ -90,7 +84,6 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className="word-of-the-day-card">
@@ -124,7 +117,6 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
     );
   }
 
-  // No data
   if (!wordData) {
     return (
       <div className="word-of-the-day-card">
@@ -154,7 +146,6 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
     );
   }
 
-  // Success - show the word
   return (
     <div className="word-of-the-day-card" onClick={handleCardClick} style={{ cursor: "pointer" }}>
       <img

@@ -1,16 +1,14 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
-import rockyLogo from "/rocky.svg";
 import rockyWhiteLogo from '/rockyWhite.svg';
 import goBackIcon from "../assets/icons/goBackIcon.svg";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
-import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
 import NotificationBell from "../components/NotificationBell";
-import { getLanguageFlag } from "../utils/languageFlagHelpers";
+import LeaderboardItem from "../components/LeaderboardItem";
 
 type LeaderboardType = "general" | "private" | "self";
 
@@ -316,47 +314,15 @@ const LeaderboardPage: React.FC = () => {
                   {users.slice(3).map((user, index) => {
                     const actualRank = index + 4;
                     const isCurrentUser = user.id === profile?.id;
-                    const languageFlag = getLanguageFlag(user.language);
                     return (
-                      <div
+                      <LeaderboardItem
                         key={user.id}
-                        className={`leaderboard-item leaderboard-item--regular ${
-                          isCurrentUser ? "leaderboard-item--current-user" : ""
-                        } leaderboard-item--clickable`}
-                        onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: "/community" } })}
-                      >
-                        <div className="leaderboard-item-content leaderboard-item-content--regular">
-                          <span className="leaderboard-item-rank">{actualRank}</span>
-                          <img
-                            src={rockyLogo}
-                            alt="Rocky"
-                            className="leaderboard-item-logo leaderboard-item-logo--regular"
-                          />
-                          <div className="leaderboard-item-text">
-                            <span className="leaderboard-item-name">
-                              {getUserDisplayName(user)}
-                              {isCurrentUser && (
-                                <span className="leaderboard-item-you">(You)</span>
-                              )}
-                            </span>
-                            <span className="leaderboard-item-points">
-                              {user.score.toLocaleString()} pts
-                            </span>
-                          </div>
-                        </div>
-                        <div className="leaderboard-item-details">
-                          {languageFlag && (
-                            <img
-                              src={languageFlag.src}
-                              alt={languageFlag.alt}
-                              className="leaderboard-item-flag"
-                            />
-                          )}
-                          <span className="leaderboard-item-language">
-                            {getLanguageCode(user.language)}
-                          </span>
-                        </div>
-                      </div>
+                        user={user}
+                        rank={actualRank}
+                        isCurrentUser={isCurrentUser}
+                        isClickable={true}
+                        fromRoute="/community"
+                      />
                     );
                   })}
                 </div>

@@ -336,112 +336,6 @@
   }
 }
 
-// Leaderboard list
-.leaderboard-list {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-sm;
-  flex: 1;
-}
-
-// Leaderboard item
-.leaderboard-item {
-  display: flex;
-  flex-direction: row;
-  justify-content: space-between;
-  align-items: center;
-  padding: $spacing-md;
-  margin-bottom: $spacing-sm;
-  background: white;
-  border-radius: $border-radius-md;
-  font-size: $font-size-body;
-
-  &--regular {
-    border-bottom: 1px solid $color-secondary-200;
-  }
-
-  &--clickable {
-    cursor: pointer;
-    transition: background-color $transition-fast;
-  }
-}
-
-.leaderboard-item-you {
-  color: $color-primary;
-  font-weight: $font-weight-bold;
-  margin-left: $spacing-xs;
-}
-
-.leaderboard-item-content {
-  display: flex;
-  align-items: center;
-  gap: $spacing-md;
-  flex: 1;
-
-  &--regular {
-    color: $color-neutral;
-  }
-}
-
-.leaderboard-item-text {
-  display: flex;
-  flex-direction: column;
-  gap: $spacing-xs;
-  flex: 1;
-}
-
-.leaderboard-item-name {
-  font-size: $font-size-body;
-  font-weight: $font-weight-medium;
-  color: $color-quaternary;
-}
-
-.leaderboard-item-rank {
-  color: $color-primary;
-  font-weight: $font-weight-medium;
-}
-
-.leaderboard-item-logo {
-  width: 40px;
-  height: 40px;
-  flex-shrink: 0;
-
-  &--top {
-    filter: none;
-  }
-
-  &--regular {
-    filter: none;
-  }
-}
-
-.leaderboard-item-details {
-  display: flex;
-  align-items: center;
-  gap: $spacing-xs;
-}
-
-.leaderboard-item-points {
-  font-weight: $font-weight-medium;
-  color: $color-quaternary;
-  font-size: $font-size-label;
-}
-
-.leaderboard-item-flag {
-  width: 28px;
-  height: 18px;
-  border-radius: 2px;
-  object-fit: cover;
-  box-shadow: 0 0 0 1px rgba(#000, 0.05);
-}
-
-.leaderboard-item-language {
-  font-weight: $font-weight-bold;
-  color: $color-quaternary-dark;
-  font-size: $font-size-label;
-  padding: 0.2rem 0.5rem;
-}
-
 .leaderboard-error {
   padding: $spacing-xl;
   text-align: center;
@@ -674,4 +568,116 @@
   }
 }
 
+}
+
+// Shared Leaderboard Item Styles (used in multiple pages)
+// Leaderboard list
+.leaderboard-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  flex: 1;
+}
+
+// Leaderboard item
+.leaderboard-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  background: white;
+  border-radius: $border-radius-md;
+  font-size: $font-size-body;
+
+  &--regular {
+    border-bottom: 1px solid $color-secondary-200;
+  }
+
+  &--clickable {
+    cursor: pointer;
+    transition: background-color $transition-fast;
+  }
+
+  &--current-user {
+    border: 2px solid $color-primary;
+  }
+}
+
+.leaderboard-item-you {
+  color: $color-primary;
+  font-weight: $font-weight-bold;
+  font-size: 0.9rem;
+}
+
+.leaderboard-item-content {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex: 1;
+
+  &--regular {
+    color: $color-neutral;
+  }
+}
+
+.leaderboard-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  flex: 1;
+}
+
+.leaderboard-item-name {
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary;
+}
+
+.leaderboard-item-rank {
+  color: $color-primary;
+  font-weight: $font-weight-medium;
+}
+
+.leaderboard-item-logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+
+  &--top {
+    filter: none;
+  }
+
+  &--regular {
+    filter: none;
+  }
+}
+
+.leaderboard-item-details {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.leaderboard-item-points {
+  font-weight: $font-weight-medium;
+  color: $color-quaternary;
+  font-size: $font-size-label;
+  margin-top: 0.1rem;
+}
+
+.leaderboard-item-flag {
+  width: 28px;
+  height: 18px;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(#000, 0.05);
+}
+
+.leaderboard-item-language {
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  font-size: $font-size-label;
+  padding: 0.2rem 0.5rem;
 }
