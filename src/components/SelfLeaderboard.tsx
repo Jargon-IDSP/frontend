@@ -31,7 +31,7 @@ const formatWeekRange = (startDate: string, endDate: string): string => {
   const endYear = end.getFullYear();
 
   // Format: "Aug 31 2025- Sept 6 2025"
-  return `${startMonth} ${startDay} ${startYear}- ${endMonth} ${endDay} ${endYear}`;
+  return `${startMonth} ${startDay} ${startYear} - ${endMonth} ${endDay} ${endYear}`;
 };
 
 const getRankDisplay = (
