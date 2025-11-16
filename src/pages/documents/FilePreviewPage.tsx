@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
-import fileIcon from "../../assets/icons/fileIcon.svg";
+import uploadDocumentIcon from "../../assets/icons/uploadDocument.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import { BACKEND_URL } from "../../lib/api";
 import CategorySelectDrawer from "@/pages/drawers/CategorySelectDrawer";
@@ -121,9 +121,6 @@ export default function FilePreviewPage() {
     return null;
   }
 
-  const formatFileSize = (bytes: number) => {
-    return (bytes / 1024 / 1024).toFixed(2) + " MB";
-  };
 
   const handleBack = () => {
     setIsDrawerOpen(true);
@@ -134,7 +131,6 @@ export default function FilePreviewPage() {
   };
 
   const handleCategorySelect = async (categoryId: number, categoryName: string) => {
-    // Convert category name to lowercase for URL
     const categoryNameLower = categoryName.toLowerCase();
     setSelectedCategory({ id: categoryId, name: categoryNameLower });
     setShowCategoryModal(false);
@@ -180,10 +176,11 @@ export default function FilePreviewPage() {
       <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
 
       <div className="container">
+        <div className="uploadPage">
         <button onClick={handleBackButton} className="back-button">
           <h1 className="page-title">
             <img src={goBackIcon} alt="go back" />
-            Courses
+            Upload your document
           </h1>
         </button>
 
@@ -199,26 +196,20 @@ export default function FilePreviewPage() {
               ) : (
                 <div className="preview-placeholder">
                   <div className="file-icon">
-                    <img src={fileIcon} alt="file" />
+                    <img src={uploadDocumentIcon} alt="file" />
                   </div>
                   <p className="file-name-preview">{fileInfo.fileName}</p>
                 </div>
               )}
             </div>
 
-            <div className="file-info">
-              <p className="file-details">
-                Size: {formatFileSize(fileInfo.fileSize)} | Type:{" "}
-                {fileInfo.fileType}
-              </p>
-            </div>
 
             <div className="action-buttons">
               <button
                 className="btn btn-outline back-to-choose-button-preview"
                 onClick={handleBack}
               >
-                Choose Different File
+                Choose/ Change File
               </button>
 
               <div className="agreement-checkbox">
@@ -269,6 +260,7 @@ export default function FilePreviewPage() {
             </div>
           )}
         </div>
+      </div>
       </div>
     </>
   );

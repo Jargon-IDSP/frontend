@@ -3,4 +3,5 @@ export interface DocumentStudyOptionsProps {
   documentTitle?: string;
   terminologyColor?: string;
   quizColor?: string;
+  showWordOfTheDay?: boolean;
 }

@@ -2,17 +2,21 @@
 @use "../mixins" as *;
 
 // Documents Page - Apply consistent layout
+.uploadPage {
+  padding: 1rem;
+  padding-bottom: 1rem;
 
 // Page Header
 .page-title {
   display: flex;
   align-items: flex-start;
   gap: $spacing-lg;
-  font-size: $font-size-h1;
+  font-size: $font-size-h2;
   font-weight: $font-weight-bold;
   color: $color-quaternary-dark;
   margin: 3rem 0 $spacing-lg 0;
   text-align: left;
+}
 }
 
 button.back-button {

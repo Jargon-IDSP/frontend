@@ -5,7 +5,6 @@ import { useAuth } from "@clerk/clerk-react";
 import DocumentNav from "../../components/DocumentNav";
 import DocumentSelector from "../../components/learning/DocumentSelector";
 import DocumentStudyOptions from "../../components/learning/DocumentStudyOptions";
-import WordOfTheDay from "../../components/WordOfTheDay";
 import LoadingBar from "../../components/LoadingBar";
 import type { Document } from "../../types/document";
 import { useDocument } from "../../hooks/useDocument";
@@ -147,12 +146,6 @@ export default function SelectStudyType() {
             onSubtitleClick={isOwner && !isLoadingQuizzes && quizData ? handleOptionsClick : undefined}
           />
 
-          {(selectedDocument || documentData?.document) && (
-            <WordOfTheDay
-              documentId={selectedDocument?.id || documentData?.document?.id || documentId}
-            />
-          )}
-
           {shouldShowDocumentSelector ? (
             <div style={{ padding: "1rem" }}>
               <DocumentSelector
@@ -166,6 +159,7 @@ export default function SelectStudyType() {
               documentId={selectedDocument?.id || documentData?.document?.id || documentId!}
               terminologyColor="blue"
               quizColor="red"
+              showWordOfTheDay={true}
             />
           ) : (
             <LoadingBar isLoading={true} text="Loading document" />

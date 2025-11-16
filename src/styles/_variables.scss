@@ -11,16 +11,17 @@ $spacing-lg: 1.5rem;
 $spacing-xl: 2.5rem;
 
 // Font Family
-$font-family-primary: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+$font-family-primary: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 $font-family-mono: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
 
 // Font sizes
-$font-size-h1: 28px;
-$font-size-h2: 24px;
-$font-size-h3: 20px;
-$font-size-body: 16px;
-$font-size-label: 13px;
-$font-size-tag: 10px;
+$font-size-h1-large: 36px;  // H1 Poppins Bold (36px)
+$font-size-h1: 28px;         // H1 Poppins Bold/Regular (28px)
+$font-size-h2: 24px;         // H2 Poppins Bold/Regular (24px)
+$font-size-h3: 20px;         // H3 Poppins Bold/Regular (20px)
+$font-size-body: 16px;       // Body Poppins Bold/Regular (16px)
+$font-size-label: 13px;      // Label Poppins Bold/Regular (13px)
+$font-size-tag: 10px;        // Tag Poppins Bold/Regular/Light (10px)
 
 // Font weight
 $font-weight-light: 300;

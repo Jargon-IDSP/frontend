@@ -69,8 +69,8 @@ export default function FullTranslationView() {
 
   if (isLoading) {
     return (
-      <div className="fullTranslationOverview">
-        <div className="container demo">
+        <div className="container">
+          <div className="fullTranslationOverview">
           <div className="loading-container">
             <LoadingBar isLoading={true} hasData={!!data} hasError={!!error} />
           </div>
@@ -81,8 +81,8 @@ export default function FullTranslationView() {
 
   if (processing && !translation) {
     return (
-      <div className="fullTranslationOverview">
-        <div className="container demo">
+        <div className="container">
+          <div className="fullTranslationOverview">
           <div className="loading-container">
             <h2 className="loading-title">Processing Document...</h2>
             <p className="loading-description">
@@ -109,8 +109,8 @@ export default function FullTranslationView() {
 
   if (error || !translation) {
     return (
-      <div className="fullTranslationOverview">
-        <div className="container demo">
+        <div className="container">
+          <div className="fullTranslationOverview">
           <div className="error-container">
             <h2 className="error-title">Error</h2>
             <p className="error-message">
@@ -161,8 +161,8 @@ export default function FullTranslationView() {
         quizId={quizData?.id || null}
       />
 
-      <div className="fullTranslationOverview">
-        <div className="container demo">
+        <div className="container">
+          <div className="fullTranslationOverview">
           <DocumentNav
             activeTab="document"
             title={documentTitle}

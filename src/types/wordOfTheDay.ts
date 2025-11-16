@@ -31,4 +31,6 @@ export interface FlashcardResponse {
 
 export interface WordOfTheDayProps {
   documentId?: string;
+  backgroundImage?: string;
+  backgroundColor?: string;
 }

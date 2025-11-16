@@ -182,7 +182,7 @@ export default function ShareDrawer({
     <Drawer open={open} onOpenChange={onOpenChange} direction="bottom">
       <DrawerContent className="mx-auto w-[100vw] max-w-[480px]">
         <DrawerHeader>
-          <DrawerTitle>Share Lesson</DrawerTitle>
+          <DrawerTitle>Share Your Lesson to:</DrawerTitle>
           <DrawerDescription>
             {isPrivate
               ? "Select friends who can access this lesson"
@@ -225,7 +225,7 @@ export default function ShareDrawer({
             onClick={() => onOpenChange(false)}
             className="w-full"
           >
-            Done
+            Save
           </Button>
         </DrawerFooter>
       </DrawerContent>

@@ -7,7 +7,9 @@ import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
 import LoadingBar from "./LoadingBar";
 
-export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
+export default function WordOfTheDay({ documentId, backgroundImage, backgroundColor }: WordOfTheDayProps = {}) {
+  const cardBackground = backgroundImage || todayTermCard;
+  const useColorBg = !!backgroundColor;
   const { isSignedIn, isLoaded } = useAuth();
   const navigate = useNavigate();
   const { language: userLanguage, loading: preferencesLoading } =
@@ -40,11 +42,18 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   if (!isLoaded || preferencesLoading) {
     return (
       <div className="word-of-the-day-card word-of-the-day-card--loading">
-        <img
-          src={todayTermCard}
-          alt="Random Trade Term"
-          className="today-term-card-image"
-        />
+        {useColorBg ? (
+          <div
+            className="word-of-the-day-card__background"
+            style={{ backgroundColor }}
+          />
+        ) : (
+          <img
+            src={cardBackground}
+            alt="Random Trade Term"
+            className="today-term-card-image"
+          />
+        )}
         <div className="word-card-content">
           <LoadingBar isLoading={true} text="Initializing" />
         </div>
@@ -55,11 +64,18 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   if (!isSignedIn) {
     return (
       <div className="word-of-the-day-card">
-        <img
-          src={todayTermCard}
-          alt="Random Trade Term"
-          className="today-term-card-image"
-        />
+        {useColorBg ? (
+          <div
+            className="word-of-the-day-card__background"
+            style={{ backgroundColor }}
+          />
+        ) : (
+          <img
+            src={cardBackground}
+            alt="Random Trade Term"
+            className="today-term-card-image"
+          />
+        )}
         <div className="word-card-content">
           <div className="error-message">
             Please sign in to view trade terms
@@ -72,11 +88,18 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   if (shouldShowLoading) {
     return (
       <div className="word-of-the-day-card">
-        <img
-          src={todayTermCard}
-          alt="Random Trade Term"
-          className="today-term-card-image"
-        />
+        {useColorBg ? (
+          <div
+            className="word-of-the-day-card__background"
+            style={{ backgroundColor }}
+          />
+        ) : (
+          <img
+            src={cardBackground}
+            alt="Random Trade Term"
+            className="today-term-card-image"
+          />
+        )}
         <div className="word-card-content">
           <LoadingBar isLoading={true} hasData={!!wordData} hasError={!!error} />
         </div>
@@ -87,11 +110,18 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   if (error) {
     return (
       <div className="word-of-the-day-card">
-        <img
-          src={todayTermCard}
-          alt="Random Trade Term"
-          className="today-term-card-image"
-        />
+        {useColorBg ? (
+          <div
+            className="word-of-the-day-card__background"
+            style={{ backgroundColor }}
+          />
+        ) : (
+          <img
+            src={cardBackground}
+            alt="Random Trade Term"
+            className="today-term-card-image"
+          />
+        )}
         <div className="word-card-content">
           <div className="error-message">
             {error instanceof Error
@@ -120,11 +150,18 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   if (!wordData) {
     return (
       <div className="word-of-the-day-card">
-        <img
-          src={todayTermCard}
-          alt="Random Trade Term"
-          className="today-term-card-image"
-        />
+        {useColorBg ? (
+          <div
+            className="word-of-the-day-card__background"
+            style={{ backgroundColor }}
+          />
+        ) : (
+          <img
+            src={cardBackground}
+            alt="Random Trade Term"
+            className="today-term-card-image"
+          />
+        )}
         <div className="word-card-content">
           <div className="error-message">No term available</div>
           <button
@@ -147,12 +184,23 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
   }
 
   return (
-    <div className="word-of-the-day-card" onClick={handleCardClick} style={{ cursor: "pointer" }}>
-      <img
-        src={todayTermCard}
-        alt="Random Trade Term"
-        className="today-term-card-image"
-      />
+    <div
+      className="word-of-the-day-card"
+      onClick={documentId ? undefined : handleCardClick}
+      style={{ cursor: documentId ? "default" : "pointer" }}
+    >
+      {useColorBg ? (
+        <div
+          className="word-of-the-day-card__background"
+          style={{ backgroundColor }}
+        />
+      ) : (
+        <img
+          src={cardBackground}
+          alt="Random Trade Term"
+          className="today-term-card-image"
+        />
+      )}
       <div className="word-card-content">
         <div className="word-term">{wordData.term}</div>
         {wordData.termTranslated && (
@@ -169,21 +217,14 @@ export default function WordOfTheDay({ documentId }: WordOfTheDayProps = {}) {
             )}
           </div>
         )}
-        {/* <button
-          onClick={() => refetch()}
-          style={{
-            marginTop: "1rem",
-            padding: "0.5rem 1rem",
-            backgroundColor: "#10b981",
-            color: "white",
-            border: "none",
-            borderRadius: "6px",
-            cursor: "pointer",
-            fontWeight: "600",
-          }}
-        >
-          Get New Term
-        </button> */}
+        {documentId && (
+          <button
+            className="word-start-learning-btn"
+            onClick={handleCardClick}
+          >
+            Start Learning
+          </button>
+        )}
       </div>
     </div>
   );
