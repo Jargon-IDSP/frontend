@@ -1,6 +1,6 @@
-@use 'sass:color';
-@use '../variables' as *;
-@use '../mixins' as *;
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
 
 // Leaderboard Page
 .leaderboard-page {
@@ -58,9 +58,10 @@
   }
 }
 
-.leaderboard-page:has(.leaderboard-empty-state){
+.leaderboard-page:has(.leaderboard-empty-state) {
   background: $color-secondary-400;
-} .leaderboard-hero {
+}
+.leaderboard-hero {
   padding-bottom: $spacing-xl;
 }
 
@@ -215,7 +216,7 @@
   width: 100%;
   max-width: 100%;
   border-radius: 9999px;
-  background: #D3D3D361;
+  background: #d3d3d361;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 
@@ -367,11 +368,17 @@
     flex-direction: column;
     align-items: center;
     transition: all 0.3s ease;
-    max-width: 90px; 
+    max-width: 90px;
 
-    &.rank-1 { order: 2; }
-    &.rank-2 { order: 1; }
-    &.rank-3 { order: 3; }
+    &.rank-1 {
+      order: 2;
+    }
+    &.rank-2 {
+      order: 1;
+    }
+    &.rank-3 {
+      order: 3;
+    }
 
     &--clickable {
       cursor: pointer;
@@ -487,7 +494,7 @@
 
 .leaderboard-friends-button {
   position: fixed;
-  bottom: 80px; 
+  bottom: 80px;
   left: 50%;
   transform: translateX(-50%);
   padding-right: $spacing-xl;
@@ -648,7 +655,7 @@
   align-items: center;
   justify-content: center;
   padding: $spacing-md;
-  border-radius: $border-radius-full;
+  border-radius: 40px;
   min-width: 100px;
   min-height: 100px;
   position: relative;
@@ -661,17 +668,17 @@
 
   &--gold {
     background: rgba(255, 215, 0, 0.2);
-    border: 2px solid #FFD700;
+    border: 2px solid #ffd700;
   }
 
   &--silver {
     background: rgba(192, 192, 192, 0.2);
-    border: 2px solid #C0C0C0;
+    border: 2px solid #c0c0c0;
   }
 
   &--bronze {
     background: rgba(205, 127, 50, 0.2);
-    border: 2px solid #CD7F32;
+    border: 2px solid #cd7f32;
   }
 }
 
@@ -706,7 +713,7 @@
   justify-content: space-between;
   align-items: center;
   padding: $spacing-md;
-  background: #FFA500;
+  background: #ffa500;
   border-radius: $border-radius-md;
   color: white;
   font-size: $font-size-body;

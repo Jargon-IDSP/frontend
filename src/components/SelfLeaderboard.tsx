@@ -1,84 +1,22 @@
 import React from "react";
 import { useSelfLeaderboard } from "../hooks/useSelfLeaderboard";
 import LoadingBar from "./LoadingBar";
+import GoldMedal from "../assets/medals/gold_medal.svg";
+import SilverMedal from "../assets/medals/silver_medal.svg";
+import BronzeMedal from "../assets/medals/bronze_medal.svg";
 
 // Medal SVG icons
 const GoldMedalIcon = () => (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle
-      cx="16"
-      cy="16"
-      r="14"
-      fill="#FFD700"
-      stroke="#FFA500"
-      strokeWidth="2"
-    />
-    <path
-      d="M16 8L18 14L24 14L19 18L21 24L16 20L11 24L13 18L8 14L14 14Z"
-      fill="#FFA500"
-    />
-  </svg>
+  <img src={GoldMedal} alt="Gold Medal" width="32" height="32" />
 );
 
 const SilverMedalIcon = () => (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle
-      cx="16"
-      cy="16"
-      r="14"
-      fill="#C0C0C0"
-      stroke="#808080"
-      strokeWidth="2"
-    />
-    <path
-      d="M16 8L18 14L24 14L19 18L21 24L16 20L11 24L13 18L8 14L14 14Z"
-      fill="#808080"
-    />
-  </svg>
+  <img src={SilverMedal} alt="Silver Medal" width="32" height="32" />
 );
 
 const BronzeMedalIcon = () => (
-  <svg
-    width="32"
-    height="32"
-    viewBox="0 0 32 32"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-  >
-    <circle
-      cx="16"
-      cy="16"
-      r="14"
-      fill="#CD7F32"
-      stroke="#8B4513"
-      strokeWidth="2"
-    />
-    <path
-      d="M16 8L18 14L24 14L19 18L21 24L16 20L11 24L13 18L8 14L14 14Z"
-      fill="#8B4513"
-    />
-  </svg>
+  <img src={BronzeMedal} alt="Bronze Medal" width="32" height="32" />
 );
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  const month = date.toLocaleString("en-US", { month: "short" });
-  const day = date.getDate();
-  const year = date.getFullYear();
-  return `${month} ${day} ${year}`;
-};
 
 const formatWeekRange = (startDate: string, endDate: string): string => {
   const start = new Date(startDate);
@@ -98,7 +36,7 @@ const formatWeekRange = (startDate: string, endDate: string): string => {
 
 const getRankDisplay = (
   rank: number | null
-): { icon: JSX.Element | null; text: string } => {
+): { icon: React.ReactElement | null; text: string } => {
   if (rank === null) {
     return { icon: null, text: "NP" };
   }
