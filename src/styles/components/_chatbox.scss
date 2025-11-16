@@ -5,9 +5,10 @@
   display: flex;
   flex-direction: column;
   height: 100%;
+  max-height: 100dvh;
   padding: 0;
+  overflow: hidden;
 
-  // Hide the handle bar for right-side drawer
   > div[class*="mx-auto"] {
     display: none;
   }
@@ -21,11 +22,14 @@
     padding: 1.5rem !important;
     border-bottom: 1px solid #e5e7eb;
     position: relative;
+    transition: all 0.3s ease;
+    overflow: hidden;
+    max-height: 200px; // Approximate header height
   }
 
   &__title {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     align-items: center;
     gap: 0.5rem;
     flex: 1;
@@ -60,6 +64,7 @@
     overflow: hidden;
     gap: 1rem;
     min-height: 0;
+    max-height: calc(100dvh - 120px); // Account for header height
   }
 
   &__question {
@@ -164,7 +169,7 @@
     transition: background-color 0.2s;
 
     &:hover:not(:disabled) {
-      background-color: darken($color-primary, 10%);
+      background-color: $primary-600;
     }
 
     &:disabled {
@@ -178,4 +183,55 @@
     display: flex;
     align-items: center;
     gap: 0.5rem;
+}
+
+@media (max-width: 768px) {
+  .chat-drawer-content {
+    max-height: 100dvh;
+    height: 100dvh;
+  }
+
+  .chat-drawer {
+    &__header {
+      // Hide header when input is focused on mobile
+      &--hidden {
+        max-height: 0;
+        padding-top: 0 !important;
+        padding-bottom: 0 !important;
+        border-bottom: none;
+        opacity: 0;
+      }
+    }
+
+    &__body {
+      max-height: calc(100dvh - 100px);
+      padding: 1rem;
+      transition: max-height 0.3s ease;
+    }
+
+    &__messages {
+      -webkit-overflow-scrolling: touch;
+    }
+
+    &__form {
+      flex-shrink: 0;
+      padding-top: 0.75rem;
+    }
+
+    &__input {
+      font-size: 16px;
+    }
+  }
+
+  // Expand body when header is hidden (input is focused)
+  .chat-drawer-content--input-focused .chat-drawer__body {
+    max-height: calc(100dvh - 20px);
+  }
+}
+
+@supports (-webkit-touch-callout: none) {
+  .chat-drawer-content {
+    height: -webkit-fill-available;
+    max-height: -webkit-fill-available;
+  }
 }

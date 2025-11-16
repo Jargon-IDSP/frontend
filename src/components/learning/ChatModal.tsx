@@ -1,4 +1,4 @@
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -7,7 +7,7 @@ import {
   DrawerClose,
 } from "../ui/drawer";
 import { Button } from "../ui/button";
-import HappyRocky from "../avatar/HappyRocky";
+import HappyRocky from "../avatar/rocky/HappyRocky";
 import type { ChatModalProps } from "../../types/components/quiz";
 import "../../styles/components/_chatbox.scss";
 
@@ -22,6 +22,7 @@ export default function ChatModal({
   isLoading,
 }: ChatModalProps) {
   const chatMessagesRef = useRef<HTMLDivElement>(null);
+  const [isInputFocused, setIsInputFocused] = useState(false);
 
   useEffect(() => {
     if (chatMessagesRef.current) {
@@ -31,8 +32,8 @@ export default function ChatModal({
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose} direction="right">
-      <DrawerContent className="chat-drawer-content w-full sm:w-[500px]">
-        <DrawerHeader className="chat-drawer__header">
+      <DrawerContent className={`chat-drawer-content w-full sm:w-[500px] ${isInputFocused ? 'chat-drawer-content--input-focused' : ''}`}>
+        <DrawerHeader className={`chat-drawer__header ${isInputFocused ? 'chat-drawer__header--hidden' : ''}`}>
           <div className="chat-drawer__title">
             <HappyRocky />
             <DrawerTitle>Need Help? Ask Rocky!</DrawerTitle>
@@ -83,6 +84,8 @@ export default function ChatModal({
               type="text"
               value={chatPrompt}
               onChange={(e) => onChatPromptChange(e.target.value)}
+              onFocus={() => setIsInputFocused(true)}
+              onBlur={() => setIsInputFocused(false)}
               placeholder="Ask your question..."
               disabled={isLoading}
               className="chat-drawer__input"

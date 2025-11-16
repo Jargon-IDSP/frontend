@@ -14,7 +14,6 @@ const BossPage = () => {
   const industryId = searchParams.get("industry_id");
   const { data: availableBadges, isLoading } = useAvailableBadges();
 
-  // Get the badge for this level and industry
   const targetBadge = useMemo(() => {
     console.log('🔍 BossPage Debug:', {
       availableBadges: availableBadges?.length,
@@ -25,7 +24,6 @@ const BossPage = () => {
     });
 
     if (availableBadges && levelId && industryId) {
-      // Find the badge that matches this level and industry
       const found = availableBadges.find(
         (badge) => {
           const matches = badge.levelId === parseInt(levelId) &&

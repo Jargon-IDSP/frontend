@@ -22,15 +22,13 @@ export default function SelectStudyType() {
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
     null
   );
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false); // Add drawer state
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false); 
 
-  // Check if this is a friend's lesson from location state
   const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
   const { data: documentData, isLoading, error: documentError } = useDocument(documentId);
   const { isOwner } = useDocumentAccess(selectedDocument || documentData?.document || null);
 
-  // Fetch quizzes for the document
   const { data: quizzesData, isLoading: isLoadingQuizzes } = useQuery({
     queryKey: ["documentQuizzes", documentId],
     queryFn: async () => {
@@ -47,7 +45,7 @@ export default function SelectStudyType() {
     enabled: !!documentId,
   });
 
-  const quizData = quizzesData?.[0]; // Get the first quiz
+  const quizData = quizzesData?.[0]; 
 
   console.log('🎯 SelectStudyType state:', {
     documentId,
@@ -86,24 +84,23 @@ export default function SelectStudyType() {
   };
 
   const handleOptionsClick = () => {
-    setIsDrawerOpen(true); // Open drawer when three dots clicked (only for own lessons)
+    setIsDrawerOpen(true);
   };
 
   if (isLoading) {
     return (
+      <div className="container">
       <div className="fullTranslationOverview">
-        <div className="container demo">
           <LoadingBar isLoading={true} text="Loading document" />
-        </div>
+      </div>
       </div>
     );
   }
 
-  // Show error if user doesn't have access to the document
   if (documentError && documentId) {
     return (
+    <div className="container">
       <div className="fullTranslationOverview">
-        <div className="container demo">
           <DocumentNav
             activeTab="lesson"
             title="Access Denied"
@@ -124,13 +121,13 @@ export default function SelectStudyType() {
     );
   }
 
-  // If we have a documentId in the URL (from friend's lesson), don't show DocumentSelector
-  // Wait for the document to load or show error
   const shouldShowDocumentSelector = !documentId && !selectedDocument;
   const shouldShowStudyOptions = selectedDocument || (documentId && !isLoading && documentData?.document);
 
   return (
     <>
+    <div className="container">
+      <div className="fullTranslationOverview">
       <LessonOptionsDrawer
         open={isDrawerOpen}
         onOpenChange={setIsDrawerOpen}
@@ -138,9 +135,6 @@ export default function SelectStudyType() {
         documentId={selectedDocument?.id || documentData?.document?.id || documentId || null}
         documentName={selectedDocument?.filename || documentData?.document?.filename || ""}
       />
-
-      <div className="fullTranslationOverview">
-        <div className="container demo">
           <DocumentNav
             activeTab="lesson"
             title={
@@ -177,7 +171,7 @@ export default function SelectStudyType() {
             <LoadingBar isLoading={true} text="Loading document" />
           )}
         </div>
-      </div>
+        </div>
     </>
   );
 }

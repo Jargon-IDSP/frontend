@@ -1,12 +1,10 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Profile Page - Apply consistent layout
 .profile-page {
-  padding-top: $spacing-md;
+  padding: 2rem 1rem 1rem 1rem;
 }
 
-// Profile Header with title and settings
 .profile-header {
   display: flex;
   justify-content: space-between;
@@ -22,14 +20,12 @@
   margin: 0;
 }
 
-// Header actions (notifications + settings)
 .profile-header-actions {
   display: flex;
   align-items: center;
   gap: $spacing-sm;
 }
 
-// Notifications icon
 .profile-notifications-icon {
   background: none;
   border: none;
@@ -417,7 +413,7 @@
 
 // Manage Profile Page
 .manage-profile-page {
-  padding-top: $spacing-md;
+  padding: 2rem 1rem 1rem 1rem;
 }
 
 .manage-profile-header {

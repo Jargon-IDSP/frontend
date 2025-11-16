@@ -6,6 +6,12 @@ import { useLeaderboard } from "../../hooks/useLeaderboard";
 import { useProfile } from "../../hooks/useProfile";
 import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
 import { getLanguageFlag } from "../../utils/languageFlagHelpers";
+import {
+  getHeaderImage,
+  getPreviewUsers,
+  isCurrentUser as checkIsCurrentUser,
+  type TabType
+} from "../../utils/communityHelpers";
 import NotificationBell from "../../components/NotificationBell";
 import LeaderboardConnectAvatar from "../../assets/leaderboardConnectAvatar.svg";
 import findYourFriendsImg from '/findYourFriendsImg.svg';
@@ -19,18 +25,14 @@ import type { Friend, FriendsResponse } from "../../types/friend";
 import friendsNoShowImg from '../../../public/FriendsNoShowImg.svg';
 // Styles are imported via main.scss
 
-type TabType = "leaderboard" | "friends";
-
 const CommunityPage: React.FC = () => {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const [activeTab, setActiveTab] = useState<TabType>("leaderboard");
   
-  // Fetch data for preview
   const { data: leaderboardUsers = [], isLoading: leaderboardLoading } = useLeaderboard("general");
-  const { data: profile } = useProfile();
+  const { data: profile, isLoading: profileLoading } = useProfile();
 
-  // Fetch friends (mutual follows only)
   const { data: friends = [], isLoading: friendsLoading } = useQuery({
     queryKey: ["community", "friends"],
     queryFn: async (): Promise<Friend[]> => {
@@ -46,7 +48,7 @@ const CommunityPage: React.FC = () => {
       const data: FriendsResponse = await res.json();
       return data.data || [];
     },
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 30 * 1000, 
     retry: 2,
   });
 
@@ -58,42 +60,45 @@ const CommunityPage: React.FC = () => {
     navigate("/community/friends");
   };
 
-  // Check if user has points
   const userScore = profile?.score ?? 0;
-  const hasNoPoints = userScore === 0;
+  const hasNoPoints = !profileLoading && userScore === 0;
 
-  // Check if user has friends
-  const hasNoFriends = friends.length === 0;
+  const hasNoFriends = !friendsLoading && friends.length === 0;
 
-  // Start from 4th place (skip first 3)
-  const previewUsers = leaderboardUsers.slice(3);
+  const previewUsers = getPreviewUsers(leaderboardUsers);
+
+  const headerImage = getHeaderImage(
+    activeTab,
+    hasNoPoints,
+    hasNoFriends,
+    {
+      leaderShowImg: communityPageLeaderShowImg,
+      leaderNoShowImg: communityPageLeaderNoShowImg,
+      friendsShowImg: findYourFriendsImg,
+      friendsNoShowImg: noFriendsImg,
+    }
+  );
 
   return (
-    <div className="container container--community">
-      <div className="community-page">
+    <div className="container">
+      <main className="community-page">
         <div className="community-header">
-          <img 
-            src={
-              activeTab === "leaderboard"
-                ? (hasNoPoints ? communityPageLeaderNoShowImg : communityPageLeaderShowImg)
-                : (hasNoFriends ? noFriendsImg : findYourFriendsImg)
-            }
-            alt="Community" 
+          <img
+            src={headerImage}
+            alt="Community"
             className="community-title-image"
           />
-          <div className="community-header-actions">
-            <NotificationBell />
-            <div className="community-settings-container">
-              <button
-                className="community-settings-icon"
-                onClick={() => navigate("/profile")}
-                aria-label="Profile"
-              >
-                <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-              </button>
-            </div>
-          </div>
         </div>
+        <div className="community-header-actions">
+            <NotificationBell />
+            <button
+              className="community-settings-icon"
+              onClick={() => navigate("/profile")}
+              aria-label="Profile"
+            >
+              <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+            </button>
+          </div>
 
         <div className="community-tabs">
           <button
@@ -149,8 +154,8 @@ const CommunityPage: React.FC = () => {
                 <>
                   <div className="leaderboard-list">
                     {previewUsers.map((user, index) => {
-                      const actualRank = index + 4; // Starting from 4th place
-                      const isCurrentUser = user.id === profile?.id;
+                      const actualRank = index + 4;
+                      const isCurrentUser = checkIsCurrentUser(user.id, profile?.id);
                       const languageFlag = getLanguageFlag(user.language);
                       return (
                         <div
@@ -232,7 +237,7 @@ const CommunityPage: React.FC = () => {
                 <>
                   <div className="friends-list">
                     {friends.map((friend) => {
-                      const isCurrentUser = friend.id === profile?.id;
+                      const isCurrentUser = checkIsCurrentUser(friend.id, profile?.id);
                       const languageFlag = getLanguageFlag(friend.language ?? null);
                       return (
                         <div
@@ -297,7 +302,7 @@ const CommunityPage: React.FC = () => {
             </div>
           )}
         </div>
-      </div>
+      </main>
     </div>
   );
 };
