@@ -3012,6 +3012,7 @@ button.back-button {
 }
 .leaderboard-page .leaderboard-item {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
   padding: 0.4rem;
@@ -3524,7 +3525,7 @@ button.back-button {
   padding: 2.5rem;
   color: #e6eaf9;
 }
-.community-page .friends-item {
+.community-page .friends-item, .community-page .leaderboard-item--regular {
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -3535,7 +3536,7 @@ button.back-button {
   border-bottom: 1px solid #ffdf8e;
   transition: all 0.15s ease;
 }
-.community-page .friends-item--current-user {
+.community-page .friends-item--current-user, .community-page .leaderboard-item--regular--current-user {
   background: #fe8861;
   border-color: #fe4d13;
 }
@@ -3545,7 +3546,7 @@ button.back-button {
   gap: 1rem;
   flex: 1;
 }
-.community-page .friends-item-logo {
+.community-page .friends-item-logo, .community-page .leaderboard-item-logo {
   width: 40px;
   height: 40px;
   flex-shrink: 0;
