@@ -21,6 +21,20 @@
       display: none;
     }
   }
+  .rocky-avatar {
+  position: relative;
+  z-index: 2;
+  margin: $spacing-sm 0 $spacing-xs;
+  background-color: $color-second-neutral-light;
+  border: 1px solid $color-quaternary-dark;
+  border-radius: 50%;
+  padding: $spacing-sm;
+  
+  .rocky-logo {
+    @include rocky-logo-size(1, 80px);
+    @include rocky-logo-size(2, 45px);
+    @include rocky-logo-size(3, 45px);
+  }
 }
 
 .container--leaderboard {
@@ -421,20 +435,6 @@
   padding-bottom: $spacing-sm;
 }
 
-.rocky-avatar {
-  position: relative;
-  z-index: 2;
-  margin: $spacing-sm 0 $spacing-xs;
-  background-color: $color-second-neutral-light;
-  border: 1px solid $color-quaternary-dark;
-  border-radius: 50%;
-  padding: $spacing-sm;
-  
-  .rocky-logo {
-    @include rocky-logo-size(1, 80px);
-    @include rocky-logo-size(2, 45px);
-    @include rocky-logo-size(3, 45px);
-  }
 }
 
 .podium-flag {

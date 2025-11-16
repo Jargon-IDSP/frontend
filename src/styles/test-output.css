@@ -776,8 +776,7 @@ body {
 .home-page .start-learning-card .learning-image {
   width: 100%;
   height: auto;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   display: block;
 }
 .home-page .loading-placeholder,
@@ -1135,8 +1134,7 @@ body {
 .profile-badge-icon {
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .profile-no-badges {
   text-align: center;
@@ -1170,8 +1168,7 @@ body {
 .profile-card-avatar .profile-avatar-image {
   width: 70%;
   height: 70%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .profile-card-info {
   flex: 1;
@@ -1422,8 +1419,7 @@ body {
   align-items: center;
   justify-content: center;
   background-color: rgba(0, 0, 0, 0.5);
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 .profile-account-modal-wrapper > div {
   width: 100%;
@@ -2231,8 +2227,7 @@ button.back-button {
   height: 100%;
   max-width: 120px;
   max-height: 120px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   align-self: center;
 }
 
@@ -2475,13 +2470,11 @@ button.back-button {
   width: 100%;
   height: 100%;
   border-radius: 12px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   display: block;
 }
 .introduction-page__media[src] {
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .introduction-page__media-placeholder {
   display: flex;
@@ -2503,8 +2496,7 @@ button.back-button {
   padding: 0.25rem 0.5rem;
   background-color: rgba(57, 57, 57, 0.3);
   border-radius: 8px;
-  -webkit-backdrop-filter: blur(4px);
-          backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
 }
 .introduction-page__dot {
   width: 8px;
@@ -3171,8 +3163,7 @@ button.back-button {
   width: 32px;
   height: 22px;
   border-radius: 6px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
 }
 
 .user-name {
@@ -3186,8 +3177,7 @@ button.back-button {
   width: 100%;
   word-wrap: break-word;
   overflow-wrap: break-word;
-  -webkit-hyphens: auto;
-          hyphens: auto;
+  hyphens: auto;
   white-space: normal;
 }
 
@@ -3317,8 +3307,7 @@ button.back-button {
   width: 28px;
   height: 18px;
   border-radius: 2px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 
@@ -3346,8 +3335,7 @@ button.back-button {
   height: auto;
   width: 100%;
   max-width: 400px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .community-page .community-header-actions {
   align-items: center;
@@ -3527,8 +3515,7 @@ button.back-button {
   width: 100%;
   max-width: 400px;
   height: auto;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .community-page .friends-preview-empty-message {
   font-size: 1.2rem;
@@ -3607,8 +3594,7 @@ button.back-button {
   width: 28px;
   height: 18px;
   border-radius: 2px;
-  -o-object-fit: cover;
-     object-fit: cover;
+  object-fit: cover;
   box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.05);
 }
 .community-page .friends-item-language {
@@ -4125,9 +4111,6 @@ button.back-button {
   background-color: white;
   width: 100%;
 }
-.friends-search-input-new::-moz-placeholder {
-  color: #8d9ce2;
-}
 .friends-search-input-new::placeholder {
   color: #8d9ce2;
 }
@@ -4305,8 +4288,7 @@ button.back-button {
 .edit-lesson-icon {
   width: 160px;
   height: 160px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 .edit-lesson-drawer {
@@ -4367,8 +4349,7 @@ button.back-button {
 .edit-lesson-category-wrench-icon {
   width: 40px;
   height: 40px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   margin-right: 0.5rem;
 }
 
@@ -4430,8 +4411,7 @@ button.back-button {
 .edit-lesson-category-option-wrench-icon {
   width: 30px;
   height: 30px;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   margin-right: 0.5rem;
 }
 
@@ -4791,8 +4771,7 @@ button.back-button {
 .friend-profile-avatar img {
   width: 70%;
   height: 70%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 .friend-profile-name {
@@ -5039,8 +5018,7 @@ button.back-button {
 .friend-profile-badge-icon {
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 
 .friend-profile-no-badges {
@@ -5630,10 +5608,8 @@ button.back-button {
 .rocky-animation__rocky img {
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
-  -o-object-position: bottom center;
-     object-position: bottom center;
+  object-fit: contain;
+  object-position: bottom center;
   animation: bounce 0.5s ease-in-out infinite;
   image-rendering: -webkit-optimize-contrast;
   image-rendering: crisp-edges;
@@ -5664,8 +5640,7 @@ button.back-button {
 .rocky-animation__item img {
   width: 100%;
   height: 100%;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
 }
 .rocky-animation__item--hat {
   transform: scale(1) rotate(0deg);
@@ -6123,9 +6098,7 @@ button.back-button {
   align-items: center;
   padding: 1.25rem 1.5rem;
   cursor: pointer;
-  -webkit-user-select: none;
-     -moz-user-select: none;
-          user-select: none;
+  user-select: none;
   transition: background-color 0.2s ease;
 }
 .category-folder-header:hover {
@@ -6478,7 +6451,6 @@ button.back-button {
   padding: 0.5rem 0.25rem;
   line-height: 1.3;
   max-width: 80%;
-  width: -moz-fit-content;
   width: fit-content;
   word-wrap: break-word;
   overflow-wrap: break-word;
@@ -6601,6 +6573,12 @@ button.back-button {
   color: #652a15;
 }
 
+.documents-list-edit-toggle p {
+  font-size: 13px;
+  font-weight: 500;
+  color: #393939;
+  text-decoration: underline;
+}
 .documents-list-edit-toggle {
   background: none;
   border: none;
@@ -6611,12 +6589,6 @@ button.back-button {
   justify-content: center;
   border-radius: 8px;
   transition: background-color 0.15s ease;
-}
-.documents-list-edit-toggle p {
-  font-size: 13px;
-  font-weight: 500;
-  color: #393939;
-  text-decoration: underline;
 }
 .documents-list-edit-toggle:hover {
   background-color: #f1eae8;
@@ -7140,8 +7112,7 @@ button.back-button {
   width: 200px !important;
   height: 200px !important;
   margin: 1.5rem 0;
-  -o-object-fit: contain;
-     object-fit: contain;
+  object-fit: contain;
   display: block !important;
 }
 .quizCompletion p {
@@ -8133,4 +8104,4 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   color: #393939;
   font-size: 16px;
   line-height: 1.5;
-}/*# sourceMappingURL=main.css.map */
+}

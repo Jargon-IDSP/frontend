@@ -101,7 +101,7 @@ export default function ChatModal({
 
   return (
     <Drawer open={isOpen} onOpenChange={onClose} direction="right">
-      <DrawerContent className={`chat-drawer-content w-full sm:w-[500px] ${isInputFocused ? 'chat-drawer-content--input-focused' : ''}`}>
+      <DrawerContent className={`chat-drawer-content ${isInputFocused ? 'chat-drawer-content--input-focused' : ''}`}>
         <DrawerHeader className={`chat-drawer__header ${isInputFocused ? 'chat-drawer__header--hidden' : ''}`}>
           <div className="chat-drawer__title">
             <HappyRocky />
