@@ -191,6 +191,7 @@ body {
   justify-content: space-between;
   align-items: center;
   margin: 1.5rem auto;
+  padding: 1rem 1rem 0 1rem;
   gap: 1rem;
 }
 .home-page .welcome-text-section {
@@ -298,7 +299,6 @@ body {
   color: #652a15;
 }
 .home-page .welcome-section {
-  display: flex;
   flex-direction: column;
   gap: 1.5rem;
 }
@@ -627,85 +627,6 @@ body {
   margin-bottom: 0;
   color: #652a15;
 }
-.home-page .word-of-the-day-card {
-  border-radius: 0.5rem;
-  padding: 0;
-  position: relative;
-  overflow: hidden;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-}
-.home-page .word-of-the-day-card .today-term-card-image {
-  width: 100%;
-  height: auto;
-  display: block;
-  z-index: 1;
-  position: relative;
-}
-.home-page .word-of-the-day-card .word-card-content {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  z-index: 2;
-  text-align: center;
-  box-sizing: border-box;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding: 1.5rem;
-}
-.home-page .word-of-the-day-card .word-card-content h3 {
-  font-size: 20px;
-  font-weight: 700;
-  color: #393939;
-  margin: 0 0 0.5rem 0;
-}
-.home-page .word-term {
-  font-size: 32px;
-  font-weight: 700;
-  color: #fffdf4;
-  margin-bottom: 0.5rem;
-  text-transform: capitalize;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-.home-page .word-term-translated {
-  font-size: 20px;
-  font-weight: 700;
-  color: #fff8dd;
-  margin-bottom: 0.5rem;
-  text-transform: capitalize;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-.home-page .word-definition {
-  font-size: 16px;
-  color: #393939;
-  line-height: 1.5;
-  margin-bottom: 0.5rem;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  max-width: 100%;
-}
-.home-page .word-meta {
-  display: flex;
-  justify-content: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
-}
-.home-page .word-industry, .home-page .word-level {
-  background-color: #f1eae8;
-  color: #9F7364;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.25rem;
-  font-size: 13px;
-  font-weight: 500;
-}
 .home-page .flashcard-loading {
   margin-bottom: 1rem;
   width: 100%;
@@ -728,7 +649,6 @@ body {
   border-radius: 9999px;
 }
 .home-page .flashcard-loading__text {
-  margin-top: 0.5rem;
   text-align: center;
   font-size: 0.875rem;
   color: #FFFFFF;
@@ -8172,10 +8092,14 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   max-height: 100dvh;
   padding: 0;
   overflow: hidden;
+  box-sizing: border-box;
   transition: height 0.3s ease, max-height 0.3s ease;
 }
 .chat-drawer-content > div[class*=mx-auto] {
   display: none;
+}
+.chat-drawer-content * {
+  box-sizing: border-box;
 }
 
 .chat-drawer__header {
@@ -8291,9 +8215,12 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   padding-top: 1rem;
   border-top: 1px solid #e5e7eb;
   flex-shrink: 0;
+  width: 100%;
+  max-width: 100%;
 }
 .chat-drawer__input {
   flex: 1;
+  min-width: 0;
   padding: 0.75rem;
   border: 1px solid #e5e7eb;
   border-radius: 6px;
@@ -8312,6 +8239,8 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   cursor: pointer;
   font-weight: 600;
   transition: background-color 0.2s;
+  flex-shrink: 0;
+  white-space: nowrap;
 }
 .chat-drawer__submit:hover:not(:disabled) {
   background-color: #e74611;
@@ -8387,22 +8316,31 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 [data-slot=drawer-overlay] {
   z-index: 150 !important;
 }
+@media (min-width: 480px) {
+  [data-slot=drawer-overlay] {
+    display: none !important;
+  }
+}
 
 [data-vaul-drawer-direction=right][data-slot=drawer-content] {
   position: fixed !important;
   top: 0 !important;
   bottom: 0 !important;
-  left: 50% !important;
-  right: auto !important;
-  width: 95% !important;
+  left: auto !important;
+  right: 0 !important;
+  width: 90% !important;
   max-width: 480px !important;
   height: 100vh !important;
   max-height: 100dvh !important;
   z-index: 200 !important;
-  transform: translateX(-50%) !important;
+  transform: none !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
 }
 @media (min-width: 640px) {
   [data-vaul-drawer-direction=right][data-slot=drawer-content] {
-    max-width: 480px !important;
+    left: 50% !important;
+    right: auto !important;
+    transform: translateX(-50%) !important;
   }
 }/*# sourceMappingURL=main.css.map */

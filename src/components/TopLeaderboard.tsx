@@ -38,7 +38,7 @@ const TopLeaderboard: React.FC = () => {
           <div className="action-buttons">
             <button
               className="btn btn-leaderboard"
-              onClick={() => navigate("/leaderboard")}
+              onClick={() => navigate("/leaderboard/full")}
             >
               Check Leaderboard
             </button>
