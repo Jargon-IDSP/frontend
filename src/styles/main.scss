@@ -57,11 +57,3 @@
 @use 'components/privacySettings';
 @use 'components/privacyDrawer';
 @use 'components/shareDrawer';
-
-// Ensure all drawers appear above other content (including peeking character)
-[data-slot="drawer-overlay"],
-[data-slot="drawer-content"],
-[data-vaul-drawer],
-[data-vaul-overlay] {
-  z-index: 100 !important;
-}

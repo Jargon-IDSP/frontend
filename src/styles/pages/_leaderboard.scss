@@ -21,7 +21,7 @@
       display: none;
     }
   }
-
+}
 
 .container--leaderboard {
   padding: 0;
@@ -335,7 +335,6 @@
   }
 }
 
-// Podium Styles
 .podium {
   &-container {
     display: flex;
@@ -351,7 +350,7 @@
     flex-direction: column;
     align-items: center;
     transition: all 0.3s ease;
-    max-width: 90px; // Prevent stretching with long names
+    max-width: 90px; 
 
     &.rank-1 { order: 2; }
     &.rank-2 { order: 1; }
@@ -377,7 +376,6 @@
     border-radius: $border-radius-lg $border-radius-lg 0 0;
   }
 
-  // Rank-specific podium block styles
   &-item.rank-1 &-block {
     background: $color-secondary-100;
     height: 115px;
@@ -394,6 +392,17 @@
     background: $color-primary-300;
     height: 60px;
     width: 80px;
+  }
+
+  &-item.rank-1 &-base {
+    height: 100px;
+    width: 80px;
+  }
+
+  &-item.rank-2 &-base,
+  &-item.rank-3 &-base {
+    height: 60px;
+    width: 70px;
   }
 
   &-you {
@@ -475,10 +484,9 @@
   text-overflow: ellipsis;
 }
 
-// Sticky Friends Button
 .leaderboard-friends-button {
   position: fixed;
-  bottom: 80px; // Space above navbar
+  bottom: 80px; 
   left: 50%;
   transform: translateX(-50%);
   padding-right: $spacing-xl;
@@ -502,10 +510,6 @@
   }
 }
 
-}
-
-// Shared Leaderboard Item Styles (used in multiple pages)
-// Leaderboard list
 .leaderboard-list {
   display: flex;
   flex-direction: column;
@@ -513,7 +517,6 @@
   flex: 1;
 }
 
-// Leaderboard item
 .leaderboard-item {
   display: flex;
   flex-direction: row;
