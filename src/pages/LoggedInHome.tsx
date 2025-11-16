@@ -11,6 +11,7 @@ import NotificationBell from '../components/NotificationBell';
 import LoadingBar from '../components/LoadingBar';
 // import JargonLogo from '../components/Wordmark';
 import rockyWhiteLogo from '/rockyWhite.svg';
+import todayTermCard from '../assets/todayTermCard.svg';
 
 export default function LoggedInHome() {
   const { user } = useUser();
@@ -171,7 +172,7 @@ export default function LoggedInHome() {
 
             <div className="welcome-section">
               {/* <JargonLogo /> */}
-              <WordOfTheDay />
+              <WordOfTheDay backgroundImage={todayTermCard} />
               <DailyCheckIn />
               <StartLearningCard />
               <UploadFileCard />

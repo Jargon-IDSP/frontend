@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CategoriesCard } from "./learning/CategoriesCard";
 import { BACKEND_URL } from "../lib/api";
 import type { FriendQuiz } from "../types/friend";
 import lockIcon from "../assets/icons/lockIcon.svg";
@@ -337,16 +338,14 @@ export default function FriendLessonsSection({
 
   return (
     <div className="friend-profile-section">
-      <h3 className="friend-profile-section-title">
-        {getUserDisplayName()}'s Lessons
-      </h3>
-
-      {displayMode.mode === "show_all" && renderLessonsList()}
-      {displayMode.mode === "show_locked" && renderLessonsList()}
-      {(displayMode.mode === "pending_request" ||
-        displayMode.mode === "prompt_follow" ||
-        displayMode.mode === "loading") &&
-        renderPrompt()}
+      <CategoriesCard title={`${getUserDisplayName()}'s Lessons`}>
+        {displayMode.mode === "show_all" && renderLessonsList()}
+        {displayMode.mode === "show_locked" && renderLessonsList()}
+        {(displayMode.mode === "pending_request" ||
+          displayMode.mode === "prompt_follow" ||
+          displayMode.mode === "loading") &&
+          renderPrompt()}
+      </CategoriesCard>
     </div>
   );
 }

@@ -1,20 +1,47 @@
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useProfile } from "@/hooks/useProfile";
+import { CategoriesCard } from "@/components/learning/CategoriesCard";
+import { CategoryFolder } from "@/components/learning/CategoryFolder";
 import type { StudySession } from "@/types/learning";
-import goBackIcon from "../../assets/icons/goBackIcon.svg";
-import lockIcon from "../../assets/icons/lockIcon.svg";
 import { useLevels } from "@/hooks/useLevels";
 import LoadingBar from "@/components/LoadingBar";
-import NotificationBell from "../../components/NotificationBell";
+import { getIndustryName } from "@/utils/userHelpers";
+import dictionaryBottom from "../../assets/dictionaryBottom.svg";
 
-const levelDescriptions: Record<number, string> = {
-  1: "Basic trades terminology",
-  2: "Common trade practices",
-  3: "Complex technical concepts",
+import carpenterBadge1 from "../../assets/badges/carpenter/C1.svg";
+import carpenterBadge2 from "../../assets/badges/carpenter/C2.svg";
+import carpenterBadge3 from "../../assets/badges/carpenter/C3.svg";
+import electricianBadge1 from "../../assets/badges/electrician/E1.svg";
+import electricianBadge2 from "../../assets/badges/electrician/E2.svg";
+import electricianBadge3 from "../../assets/badges/electrician/E3.svg";
+import plumberBadge1 from "../../assets/badges/plumber/P1.svg";
+import plumberBadge2 from "../../assets/badges/plumber/P2.svg";
+import plumberBadge3 from "../../assets/badges/plumber/P3.svg";
+import mechanicBadge1 from "../../assets/badges/mechanic/E1.svg";
+import mechanicBadge2 from "../../assets/badges/mechanic/E2.svg";
+import mechanicBadge3 from "../../assets/badges/mechanic/E3.svg";
+import welderBadge1 from "../../assets/badges/welder/W1.svg";
+import welderBadge2 from "../../assets/badges/welder/W2.svg";
+import welderBadge3 from "../../assets/badges/welder/W3.svg";
+import apprenticeship4Badge from "../../assets/badges/apprenticeship4.svg";
+import redSealBadge from "../../assets/badges/redSeal.svg";
+
+const getBadgeForLevel = (industryId: number | null | undefined, levelId: number): string => {
+  if (levelId === 4) return apprenticeship4Badge;
+
+  if (levelId === 5) return redSealBadge;
+
+  const badgeMap: Record<number, Record<number, string>> = {
+    1: { 1: electricianBadge1, 2: electricianBadge2, 3: electricianBadge3 }, // Electrician
+    2: { 1: plumberBadge1, 2: plumberBadge2, 3: plumberBadge3 },             // Plumber
+    3: { 1: carpenterBadge1, 2: carpenterBadge2, 3: carpenterBadge3 },       // Carpenter
+    4: { 1: mechanicBadge1, 2: mechanicBadge2, 3: mechanicBadge3 },          // Mechanic
+    5: { 1: welderBadge1, 2: welderBadge2, 3: welderBadge3 },                // Welder
+  };
+
+  return badgeMap[industryId || 1]?.[levelId] || electricianBadge1;
 };
 
-// Default levels in case API fails
 const DEFAULT_LEVELS = [
   { id: 1, name: "Foundation", completed: false, unlocked: true, quizzesCompleted: 0 },
   { id: 2, name: "Intermediate", completed: false, unlocked: false, quizzesCompleted: 0 },
@@ -24,104 +51,89 @@ const DEFAULT_LEVELS = [
 export default function ExistingLevels() {
   const navigate = useNavigate();
   const { data: profile } = useProfile();
-  const [openLevelId, setOpenLevelId] = useState<number | null>(null);
 
-  // Use the custom hook
   const { data: levelsData, isLoading, error } = useLevels(profile?.industryId);
-  const levels = levelsData || DEFAULT_LEVELS;
+  const backendLevels = levelsData || DEFAULT_LEVELS;
 
-  // Check if a level is locked using backend-provided status
+
+  const level3 = backendLevels.find((l) => l.id === 3);
+  const levels = [
+    ...backendLevels,
+    {
+      id: 4,
+      name: "Apprentice 4",
+      completed: false,
+      unlocked: level3?.completed || false,
+      quizzesCompleted: 0,
+    },
+    {
+      id: 5,
+      name: "Red Seal",
+      completed: false,
+      unlocked: false, 
+      quizzesCompleted: 0,
+    },
+  ];
+
   const isLevelLocked = (levelId: number): boolean => {
     const level = levels.find((l) => l.id === levelId);
-    // Use backend's unlocked status (if available), otherwise default to locked for levels > 1
     return level?.unlocked === false || (level?.unlocked === undefined && levelId > 1);
   };
 
-  // Check if boss quiz (quiz 3) should be locked
-  const isBossQuizLocked = (levelId: number): boolean => {
-    const level = levels.find((l) => l.id === levelId);
-
-    // Lock if less than 2 quizzes completed (need quizzes 1 and 2)
-    // Backend provides quizzesCompleted in the level data
-    return !level || (level.quizzesCompleted ?? 0) < 2;
-  };
-
-  // Generate study sessions for each level (2 flashcard sessions + 3 quiz sessions)
   const getStudySessions = (levelId: number): StudySession[] => {
     return [
       {
         id: `level-${levelId}-flashcards-1`,
-        name: "Industry Terms Practice",
-        description: "Practice flashcards specific to your trade",
+        name: "Lv1 Industry Term",
         type: "flashcards",
         sessionNumber: 1,
       },
       {
         id: `level-${levelId}-flashcards-2`,
-        name: "General Terms Practice",
-        description: "Practice general construction terminology",
+        name: "Lv2 General Term",
         type: "flashcards",
         sessionNumber: 2,
       },
       {
         id: `level-${levelId}-quiz-1`,
-        name: "Industry Knowledge Quiz",
-        description: "Test your trade-specific knowledge",
+        name: "Lv3 Industry Knowledge Quiz",
         type: "quiz",
         sessionNumber: 1,
       },
       {
         id: `level-${levelId}-quiz-2`,
-        name: "Mixed Practice Quiz",
-        description: "Test your overall understanding",
+        name: "Lv4 Mixed Practice Quiz",
         type: "quiz",
         sessionNumber: 2,
       },
       {
         id: `level-${levelId}-quiz-3`,
-        name: "Challenge Quiz",
-        description: "Put your skills to the test",
+        name: "Lv5 Challenge Quiz",
         type: "quiz",
         sessionNumber: 3,
       },
     ];
   };
 
-  const toggleLevel = (levelId: number) => {
-    const locked = isLevelLocked(levelId);
-    if (locked) return; // Don't toggle if locked
-    setOpenLevelId(openLevelId === levelId ? null : levelId);
-  };
-
   const handleStudySessionClick = (levelId: number, session: StudySession) => {
     const locked = isLevelLocked(levelId);
-    if (locked) return; // Don't navigate if level is locked
-
-    // Check if boss quiz is locked
-    if (session.type === "quiz" && session.sessionNumber === 3) {
-      if (isBossQuizLocked(levelId)) {
-        return; // Don't navigate if boss quiz is locked
-      }
-    }
+    if (locked) return;
 
     const industryId = profile?.industryId;
 
     if (session.type === "flashcards") {
-      // Navigate to flashcards practice
       navigate(
         `/learning/existing/levels/${levelId}/flashcards/${
           session.sessionNumber
         }${industryId ? `?industry_id=${industryId}` : ""}`
       );
     } else if (session.sessionNumber === 3) {
-      // Navigate to boss page for quiz 3
       navigate(
         `/learning/existing/levels/${levelId}/boss${
           industryId ? `?industry_id=${industryId}` : ""
         }`
       );
     } else {
-      // Navigate directly to quiz (skip the Start Quiz page)
       navigate(
         `/learning/existing/levels/${levelId}/quiz/take?quiz=${session.sessionNumber}${
           industryId ? `&industry_id=${industryId}` : ""
@@ -130,110 +142,60 @@ export default function ExistingLevels() {
     }
   };
 
+  const handleLevel4Click = () => {
+    const locked = isLevelLocked(4);
+    if (locked) return;
+
+    const industryId = profile?.industryId;
+    navigate(
+      `/learning/existing/levels/3/quiz/take?quiz=3${
+        industryId ? `&industry_id=${industryId}` : ""
+      }`
+    );
+  };
+
   return (
     <div className="categoriesPage">
-      <div className="categoriesHeader">
-        <img
-          src={goBackIcon}
-          alt="Go back"
-          className="categoriesBackButton"
-          onClick={() => navigate(-1)}
-        />
-        <h1>Red Seal Levels</h1>
-        <NotificationBell />
-      </div>
+      <CategoriesCard
+        title={`${getIndustryName(profile?.industryId)} Course`}
+        onBack={() => navigate(-1)}
+        bottomImages={[dictionaryBottom]}
+      >
+        {isLoading ? (
+          <LoadingBar isLoading={isLoading} text="Loading levels" />
+        ) : error ? (
+          <div className="error-message">
+            {error instanceof Error ? error.message : "Failed to load levels"}
+          </div>
+        ) : (
+          <div className="categoriesList">
+            {levels.map((level) => {
+              const locked = isLevelLocked(level.id);
+              const badge = getBadgeForLevel(profile?.industryId, level.id);
 
-      {isLoading ? (
-        <LoadingBar isLoading={isLoading} text="Loading levels" />
-      ) : error ? (
-        <div className="error-message">
-          {error instanceof Error ? error.message : "Failed to load levels"}
-        </div>
-      ) : (
-        <div className="categoriesList">
-          {levels.map((level) => {
-          const isOpen = openLevelId === level.id;
-          const locked = isLevelLocked(level.id);
-          const description = levelDescriptions[level.id] || "";
+              const isLevel4 = level.id === 4;
+              const isRedSeal = level.id === 5;
 
-          return (
-            <div
-              key={level.id}
-              className={`category-folder ${
-                locked ? "category-folder--locked" : ""
-              } ${level.completed ? "category-folder--completed" : ""}`}
-            >
-              <div
-                className={`category-folder-header ${locked ? 'category-folder-header--locked' : ''}`}
-                onClick={() => toggleLevel(level.id)}
-              >
-                <div className="category-folder-title">
-                  <h3>
-                    {locked && (
-                      <span><img src={lockIcon} alt="Locked"/></span>
-                    )}
-                    {level.completed && (
-                      <span>✅</span>
-                    )}
-                    Level {level.id}: {level.name}
-                  </h3>
-                  {locked && (
-                    <p className="level-subtitle">
-                      Complete previous levels to unlock
-                    </p>
-                  )}
-                  {!locked && !level.completed && (
-                    <p className="level-subtitle">
-                      {description}
-                    </p>
-                  )}
-                </div>
-                {!locked && (
-                  <svg
-                    className={`chevron ${isOpen ? "open" : ""}`}
-                    width="24"
-                    height="24"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                  >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={2}
-                      d="M19 9l-7 7-7-7"
-                    />
-                  </svg>
-                )}
-              </div>
-
-              {isOpen && !locked && (
-                <div className="category-folder-content">
-                  <div className="document-list">
-                    {getStudySessions(level.id).map((session) => {
-                      const isBossQuiz = session.type === "quiz" && session.sessionNumber === 3;
-                      const sessionLocked = isBossQuiz && isBossQuizLocked(level.id);
-
-                      return (
-                        <div
-                          key={session.id}
-                          className={`document-item ${sessionLocked ? 'document-item--locked' : ''}`}
-                          onClick={() =>
-                            !sessionLocked && handleStudySessionClick(level.id, session)
-                          }
-                        >
-                          <div className="document-info">
-                            <span className="document-name">
-                              {sessionLocked && <img src={lockIcon} alt="Locked" className="session-lock-icon" />}
-                              {session.name}
-                            </span>
-                            <div className="document-stats">
-                              <span className="stat">
-                                {sessionLocked ? "Complete all practice quizzes to unlock" : session.description}
-                              </span>
+              return (
+                <CategoryFolder
+                  key={level.id}
+                  title={`Apprentice ${level.id}`}
+                  icon={badge}
+                  locked={locked}
+                  completed={level.completed}
+                >
+                  {!isLevel4 && !isRedSeal && (
+                    <div className="document-list">
+                      {getStudySessions(level.id).map((session) => {
+                        return (
+                          <div
+                            key={session.id}
+                            className="document-item"
+                            onClick={() => handleStudySessionClick(level.id, session)}
+                          >
+                            <div className="document-info">
+                              <span className="document-name">{session.name}</span>
                             </div>
-                          </div>
-                          {!sessionLocked && (
                             <svg
                               width="20"
                               height="20"
@@ -248,18 +210,43 @@ export default function ExistingLevels() {
                                 d="M9 5l7 7-7 7"
                               />
                             </svg>
-                          )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                  {isLevel4 && (
+                    <div className="document-list">
+                      <div
+                        className="document-item"
+                        onClick={handleLevel4Click}
+                      >
+                        <div className="document-info">
+                          <span className="document-name">Challenge Quiz</span>
                         </div>
-                      );
-                    })}
-                  </div>
-                </div>
-              )}
-            </div>
-          );
-        })}
-        </div>
-      )}
+                        <svg
+                          width="20"
+                          height="20"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M9 5l7 7-7 7"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+                  )}
+                </CategoryFolder>
+              );
+            })}
+          </div>
+        )}
+      </CategoriesCard>
     </div>
   );
 }

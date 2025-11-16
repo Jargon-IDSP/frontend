@@ -226,7 +226,6 @@ export type StudySessionType = "flashcards" | "quiz";
 export interface StudySession {
   id: string;
   name: string;
-  description: string;
   type: StudySessionType;
   sessionNumber: number;
 }

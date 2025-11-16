@@ -6,9 +6,20 @@
   width: 100vw;
   max-width: min(480px, 100vw);
   margin: 0 auto;
-  padding: 2rem 0;
+  background-color: $secondary-500;
+  padding: 2rem 1rem;
   box-sizing: border-box;
   overflow-x: hidden;
+  min-height: 100vh;
+
+  .categoriesCard {
+    background-color: $second-neutral-50;
+    padding: 1rem 0;
+    border: 1px solid $quinary-500;
+    box-shadow: 8px 8px 0 $color-quaternary-800;
+    border-radius: 20px;
+
+  }
 }
 
 .categoriesHeader {
@@ -21,7 +32,8 @@
 
   h1 {
     margin: 0;
-    font-size: $font-size-h1;
+    color: $color-quaternary-700;
+    font-size: $font-size-h3;
     font-weight: $font-weight-bold;
     text-align: left;
     grid-column: 2;
@@ -54,9 +66,37 @@
   }
 }
 
+.categoriesRightIcon {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.categoriesBottomImages {
+  display: flex;
+  justify-content: center;
+  padding: 0 1.5rem 1rem 1.5rem;
+  margin-top: 1rem;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
 .categoriesList {
   display: flex;
   flex-direction: column;
+  border-radius: 25px;
   gap: 0.5rem;
   margin-bottom: 2rem;
   padding: 0 1.5rem;
@@ -79,19 +119,10 @@
   padding: 2rem;
 }
 
-// Level subtitle (description text under level name)
-.level-subtitle {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0.25rem 0 0 0;
-}
-
-// Category folder header cursor styles
 .category-folder-header--locked {
   cursor: not-allowed !important;
 }
 
-// Locked document/session item
 .document-item--locked {
   opacity: 0.6;
   cursor: not-allowed !important;
@@ -101,7 +132,6 @@
   }
 }
 
-// Lock icon in session name
 .session-lock-icon {
   width: 16px;
   height: 16px;
