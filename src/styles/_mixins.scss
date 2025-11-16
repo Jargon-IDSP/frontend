@@ -42,3 +42,77 @@
   overflow-wrap: break-word;
   max-width: 100%;
 }
+
+// Icon Button Mixin - For buttons with icons only
+@mixin icon-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Podium Block Mixin - Creates rank-specific podium blocks
+@mixin podium-block($rank, $bg-color, $height, $width: 80px) {
+  .rank-#{$rank} & {
+    background: $bg-color;
+    height: $height;
+    width: $width;
+  }
+}
+
+// Podium Flag Mixin - Creates rank-specific flag positioning
+@mixin podium-flag($rank, $scale: 1) {
+  &--rank-#{$rank} {
+    @if $rank == 1 {
+      top: calc(#{$spacing-sm} * -1.8);
+      right: calc(#{$spacing-sm} * -1.8);
+      transform: scale($scale);
+    } @else {
+      top: calc(#{$spacing-sm} * -2);
+      right: calc(#{$spacing-sm} * -2);
+    }
+  }
+}
+
+// Rocky Logo Size Mixin - For rank-specific avatar sizes
+@mixin rocky-logo-size($rank, $size) {
+  &.rank-#{$rank} {
+    width: $size;
+    height: $size;
+  }
+}
+
+// Dropdown Item Mixin - For dropdown menu items
+@mixin dropdown-item {
+  width: 100%;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: $font-size-body;
+  color: $color-neutral;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  &:active {
+    background-color: $color-quaternary;
+    color: white;
+  }
+}

@@ -3085,18 +3085,18 @@ button.back-button {
   padding-bottom: 0.25rem;
   border-radius: 12px 12px 0 0;
 }
-.rank-1 .leaderboard-page .podium-block {
+.leaderboard-page .podium-item.rank-1 .leaderboard-page .podium-block {
   background: #ffeab3;
   height: 115px;
   width: 80px;
 }
-.rank-2 .leaderboard-page .podium-block {
-  background-color: #8d9ce2;
+.leaderboard-page .podium-item.rank-2 .leaderboard-page .podium-block {
+  background: #8d9ce2;
   height: 80px;
   width: 80px;
 }
-.rank-3 .leaderboard-page .podium-block {
-  background-color: #fe8861;
+.leaderboard-page .podium-item.rank-3 .leaderboard-page .podium-block {
+  background: #fe8861;
   height: 60px;
   width: 80px;
 }
@@ -3126,7 +3126,11 @@ button.back-button {
   width: 80px;
   height: 80px;
 }
-.leaderboard-page .rocky-avatar .rocky-logo.rank-2, .leaderboard-page .rocky-avatar .rocky-logo.rank-3 {
+.leaderboard-page .rocky-avatar .rocky-logo.rank-2 {
+  width: 45px;
+  height: 45px;
+}
+.leaderboard-page .rocky-avatar .rocky-logo.rank-3 {
   width: 45px;
   height: 45px;
 }
@@ -3141,13 +3145,15 @@ button.back-button {
   min-width: 34px;
 }
 .leaderboard-page .podium-flag--rank-1 {
-  top: -1rem;
-  right: -1rem;
-  transform: scale(1.1);
   top: calc(0.5rem * -1.8);
   right: calc(0.5rem * -1.8);
+  transform: scale(1.1);
 }
-.leaderboard-page .podium-flag--rank-2, .leaderboard-page .podium-flag--rank-3 {
+.leaderboard-page .podium-flag--rank-2 {
+  top: calc(0.5rem * -2);
+  right: calc(0.5rem * -2);
+}
+.leaderboard-page .podium-flag--rank-3 {
   top: calc(0.5rem * -2);
   right: calc(0.5rem * -2);
 }

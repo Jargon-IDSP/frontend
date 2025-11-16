@@ -1,23 +1,16 @@
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "@clerk/clerk-react";
-import rockyWhiteLogo from '/rockyWhite.svg';
-import goBackIcon from "../assets/icons/goBackIcon.svg";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
-import NotificationBell from "../components/NotificationBell";
 import LeaderboardItem from "../components/LeaderboardItem";
-
-type LeaderboardType = "general" | "private" | "self";
+import LeaderboardHeader from "../components/LeaderboardHeader";
+import type { LeaderboardType } from "../types/leaderboardHeader";
 
 const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
   const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>("general");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const {
     data: users = [],
     isLoading: loading,
@@ -28,49 +21,6 @@ const LeaderboardPage: React.FC = () => {
 
   const userScore = profile?.score ?? 0;
   const hasNoPoints = userScore === 0;
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
-  const handleSettingsClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleProfileClick = () => {
-    setIsDropdownOpen(false);
-    navigate("/profile");
-  };
-
-  const handleLanguagesClick = () => {
-    setIsDropdownOpen(false);
-    navigate("/onboarding/language");
-  };
-
-  const handleIndustryClick = () => {
-    setIsDropdownOpen(false);
-    navigate("/onboarding/industry");
-  };
-
-  const handleLogoutClick = async () => {
-    try {
-      setIsDropdownOpen(false);
-      await signOut({ redirectUrl: "/" });
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Force navigation even if signOut fails
-      window.location.href = "/";
-    }
-  };
 
   const isPrivateLeaderboard = leaderboardType === "private";
   const isSelfLeaderboard = leaderboardType === "self";
@@ -90,19 +40,11 @@ const LeaderboardPage: React.FC = () => {
     return (
       <div className={containerClass}>
         <div className="leaderboard-page leaderboard-error">
-          <div className="leaderboard-header">
-            <button
-              className="leaderboard-back-button"
-              onClick={() => navigate("/community")}
-            >
-              <img src={goBackIcon} alt="Back" />
-            </button>
-            <h1 className="leaderboard-title">Leaderboard</h1>
-            <div className="leaderboard-header-actions">
-              {/* Empty div for spacing */}
-              <div></div>
-            </div>
-          </div>
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={false}
+          />
           <p>Loading...</p>
         </div>
       </div>
@@ -113,19 +55,11 @@ const LeaderboardPage: React.FC = () => {
     return (
       <div className={containerClass}>
         <div className="leaderboard-page leaderboard-error">
-          <div className="leaderboard-header">
-            <button
-              className="leaderboard-back-button"
-              onClick={() => navigate("/community")}
-            >
-              <img src={goBackIcon} alt="Back" />
-            </button>
-            <h1 className="leaderboard-title">Leaderboard</h1>
-            <div className="leaderboard-header-actions">
-              {/* Empty div for spacing */}
-              <div></div>
-            </div>
-          </div>
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={false}
+          />
           <p className="leaderboard-error-message">
             Error:{" "}
             {error instanceof Error
@@ -147,19 +81,11 @@ const LeaderboardPage: React.FC = () => {
     return (
       <div className={containerClass}>
         <div className="leaderboard-page">
-          <div className="leaderboard-header">
-            <button
-              className="leaderboard-back-button"
-              onClick={() => navigate("/community")}
-            >
-              <img src={goBackIcon} alt="Back" />
-            </button>
-            <h1 className="leaderboard-title">Leaderboard</h1>
-            <div className="leaderboard-header-actions">
-              {/* Empty div for spacing */}
-              <div></div>
-            </div>
-          </div>
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={false}
+          />
           <div className="leaderboard-empty-state">
             <img src={LeaderboardConnectAvatar} alt="Leaderboard Connect Avatar" className="leaderboard-empty-avatar" />
             <p className="leaderboard-empty-message">
@@ -181,95 +107,11 @@ const LeaderboardPage: React.FC = () => {
     <div className={containerClass}>
       <div className="leaderboard-page">
         <div className="leaderboard-hero">
-          <div className="leaderboard-header">
-            <button
-              className="leaderboard-back-button"
-              onClick={() => navigate("/community")}
-            >
-              <img src={goBackIcon} alt="Back" />
-            </button>
-            <h1 className="leaderboard-title">Leaderboard</h1>
-            <div className="leaderboard-header-actions">
-              <NotificationBell />
-              <div className="leaderboard-settings-container" ref={dropdownRef}>
-                <button
-                  className="leaderboard-settings-icon"
-                  onClick={handleSettingsClick}
-                  aria-label="Settings"
-                >
-                  <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-                </button>
-
-                {isDropdownOpen && (
-                  <div className="leaderboard-settings-dropdown">
-                    <button
-                      className="leaderboard-settings-item"
-                      onClick={handleProfileClick}
-                    >
-                      Profile
-                    </button>
-                    <button
-                      className="leaderboard-settings-item"
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        navigate("/profile/avatar");
-                      }}
-                    >
-                      Avatar
-                    </button>
-                    <button
-                      className="leaderboard-settings-item"
-                      onClick={handleLanguagesClick}
-                    >
-                      Languages
-                    </button>
-                    <button
-                      className="leaderboard-settings-item"
-                      onClick={handleIndustryClick}
-                    >
-                      Industry
-                    </button>
-                    <button
-                      className="leaderboard-settings-item"
-                      onClick={handleLogoutClick}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          <div className="leaderboard-tabs">
-            <button
-              type="button"
-              className={`leaderboard-tab ${
-                leaderboardType === "general" ? "leaderboard-tab--active" : ""
-              }`}
-              onClick={() => setLeaderboardType("general")}
-            >
-              General
-            </button>
-            <button
-              type="button"
-              className={`leaderboard-tab ${
-                leaderboardType === "private" ? "leaderboard-tab--active" : ""
-              }`}
-              onClick={() => setLeaderboardType("private")}
-            >
-              Private
-            </button>
-            <button
-              type="button"
-              className={`leaderboard-tab ${
-                leaderboardType === "self" ? "leaderboard-tab--active" : ""
-              }`}
-              onClick={() => setLeaderboardType("self")}
-            >
-              Self
-            </button>
-          </div>
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={true}
+          />
 
           {hasInsufficientPrivateConnections ? (
             <div className="leaderboard-empty-state">

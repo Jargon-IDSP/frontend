@@ -144,6 +144,7 @@
     margin-top: auto;
     padding-top: 1rem;
     border-top: 1px solid #e5e7eb;
+    flex-shrink: 0;
   }
 
   &__input {
@@ -191,10 +192,12 @@
     max-height: 100dvh;
     height: 100dvh;
     transition: height 0.3s ease-in-out, max-height 0.3s ease-in-out;
+    position: relative;
   }
 
   .chat-drawer {
     &__header {
+      flex-shrink: 0;
       transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out, opacity 0.3s ease-in-out, border-bottom 0.3s ease-in-out;
 
       &--hidden {
@@ -208,9 +211,13 @@
     }
 
     &__body {
-      max-height: calc(100dvh - 100px);
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-height: none;
       padding: 1rem;
-      transition: max-height 0.3s ease-in-out, padding 0.3s ease-in-out;
+      transition: padding 0.3s ease-in-out;
+      overflow: hidden;
     }
 
     &__messages {
@@ -225,13 +232,18 @@
 
     &__input {
       font-size: 16px;
-      transition: none; // Disable transitions on input to prevent layout shifts
+      transition: none;
     }
   }
 
   .chat-drawer-content--input-focused {
-    .chat-drawer__body {
-      max-height: calc(100dvh - 20px);
+    .chat-drawer__header {
+      max-height: 0;
+      padding-top: 0 !important;
+      padding-bottom: 0 !important;
+      border-bottom: none;
+      opacity: 0;
+      overflow: hidden;
     }
   }
 }

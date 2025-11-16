@@ -22,6 +22,7 @@ export default function ChatModal({
   isLoading,
 }: ChatModalProps) {
   const chatMessagesRef = useRef<HTMLDivElement>(null);
+  const drawerBodyRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
 
@@ -30,6 +31,14 @@ export default function ChatModal({
       chatMessagesRef.current.scrollTop = chatMessagesRef.current.scrollHeight;
     }
   }, [chatHistory]);
+
+  // Force layout recalculation when keyboard state changes
+  useEffect(() => {
+    if (drawerBodyRef.current) {
+      // Trigger reflow to ensure proper layout
+      void drawerBodyRef.current.offsetHeight;
+    }
+  }, [isInputFocused]);
 
   // Cleanup blur timeout on unmount
   useEffect(() => {
@@ -53,6 +62,10 @@ export default function ChatModal({
       // If viewport is close to screen height, keyboard is likely closed
       if (currentHeight > screenHeight * 0.8 && isInputFocused) {
         setIsInputFocused(false);
+        // Force layout recalculation
+        requestAnimationFrame(() => {
+          window.scrollTo({ top: 0, behavior: 'auto' });
+        });
       }
     };
 
@@ -79,6 +92,10 @@ export default function ChatModal({
     // This helps with mobile keyboard behavior
     blurTimeoutRef.current = setTimeout(() => {
       setIsInputFocused(false);
+      // Force a layout recalculation after state update
+      requestAnimationFrame(() => {
+        window.scrollTo({ top: 0, behavior: 'auto' });
+      });
     }, 100);
   };
 
@@ -102,7 +119,7 @@ export default function ChatModal({
           </DrawerClose>
         </DrawerHeader>
 
-        <div className="chat-drawer__body">
+        <div className="chat-drawer__body" ref={drawerBodyRef}>
           <div className="chat-drawer__question">
             <strong>Current Question:</strong> {currentQuestion}
           </div>
