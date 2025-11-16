@@ -90,23 +90,7 @@
 }
 
 .leaderboard-back-button {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: $spacing-xs;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity $transition-fast;
-
-  &:hover {
-    opacity: 0.7;
-  }
-
-  img {
-    width: 24px;
-    height: 24px;
-  }
+  @include icon-button;
 }
 
 .leaderboard-header-actions {
@@ -132,23 +116,7 @@
 }
 
 .leaderboard-notifications-icon {
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: $spacing-xs;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: opacity $transition-fast;
-
-  &:hover {
-    opacity: 0.7;
-  }
-
-  img {
-    width: 24px;
-    height: 24px;
-  }
+  @include icon-button;
 }
 
 .leaderboard-notifications-icon-wrapper {
@@ -218,24 +186,7 @@
 }
 
 .leaderboard-settings-item {
-  width: 100%;
-  padding: $spacing-sm $spacing-md;
-  background: none;
-  border: none;
-  text-align: left;
-  cursor: pointer;
-  font-size: $font-size-body;
-  color: $color-neutral;
-  transition: background-color $transition-fast;
-
-  &:hover {
-    background-color: $color-quaternary-light;
-  }
-
-  &:active {
-    background-color: $color-quaternary;
-    color: white;
-  }
+  @include dropdown-item;
 }
 
 // Leaderboard Tabs
@@ -424,23 +375,25 @@
     align-items: flex-end;
     padding-bottom: $spacing-xs;
     border-radius: $border-radius-lg $border-radius-lg 0 0;
-    
-    .rank-1 & {
-      background: $color-secondary-100;
-      height: 115px;
-      width: 80px;
-    }
-    
-    .rank-2 & {
-      background-color: $color-quinary-200;
-      height: 80px;
-      width: 80px;
-    }
-    .rank-3 & {
-      background-color: $color-primary-300;
-      height: 60px;
-      width: 80px;
-    }
+  }
+
+  // Rank-specific podium block styles
+  &-item.rank-1 &-block {
+    background: $color-secondary-100;
+    height: 115px;
+    width: 80px;
+  }
+
+  &-item.rank-2 &-block {
+    background: $color-quinary-200;
+    height: 80px;
+    width: 80px;
+  }
+
+  &-item.rank-3 &-block {
+    background: $color-primary-300;
+    height: 60px;
+    width: 80px;
   }
 
   &-you {
@@ -469,16 +422,9 @@
   padding: $spacing-sm;
   
   .rocky-logo {
-    &.rank-1 {
-      width: 80px;
-      height: 80px;
-    }
-    
-    &.rank-2,
-    &.rank-3 {
-      width: 45px;
-      height: 45px;
-    }
+    @include rocky-logo-size(1, 80px);
+    @include rocky-logo-size(2, 45px);
+    @include rocky-logo-size(3, 45px);
   }
 }
 
@@ -492,21 +438,9 @@
   right: -$spacing-sm;
   min-width: 34px;
 
-
-  &--rank-1 {
-    top: -$spacing-md;
-    right: -$spacing-md;
-    transform: scale(1.1);
-    
-    top: calc(#{$spacing-sm} * -1.8);
-    right: calc(#{$spacing-sm} * -1.8);
-  }
-
-  &--rank-2,
-  &--rank-3 {
-    top: calc(#{$spacing-sm} * -2);
-    right: calc(#{$spacing-sm} * -2);
-  }
+  @include podium-flag(1, 1.1);
+  @include podium-flag(2);
+  @include podium-flag(3);
 }
 
 .podium-flag-icon {
