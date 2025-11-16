@@ -6,7 +6,10 @@ import { useNotificationContext } from "../../contexts/NotificationContext";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
-import type { QuizComponentProps } from "../../types/components/quiz";
+import type {
+  QuizComponentProps,
+  ChatMessage,
+} from "../../types/components/quiz";
 import type { ChatRequest } from "../../types/api/chat";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import nextButton from "../../assets/icons/nextButton.svg";
@@ -32,14 +35,36 @@ export default function QuizComponent({
 
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatPrompt, setChatPrompt] = useState("");
-  const [chatReply, setChatReply] = useState("");
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [streamingMessageId, setStreamingMessageId] = useState<string | null>(
+    null
+  );
 
   const currentQuestion = questions[currentQuestionIndex];
-  const isBossQuiz = quizType === 'existing' && quizNumber === 3;
+  const isBossQuiz = quizType === "existing" && quizNumber === 3;
   const BOSS_QUIZ_PASSING_SCORE = 70;
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
+      // Add user message to history
+      const userMessageId = `user-${Date.now()}`;
+      const userMessage: ChatMessage = {
+        id: userMessageId,
+        role: "user",
+        content: prompt,
+      };
+      setChatHistory((prev) => [...prev, userMessage]);
+
+      // Create assistant message for streaming
+      const assistantMessageId = `assistant-${Date.now()}`;
+      const assistantMessage: ChatMessage = {
+        id: assistantMessageId,
+        role: "assistant",
+        content: "",
+      };
+      setChatHistory((prev) => [...prev, assistantMessage]);
+      setStreamingMessageId(assistantMessageId);
+
       const contextualPrompt = `You are a friendly, helpful tutor assisting immigrants learning skilled trades terminology in British Columbia, Canada. Your role is to explain concepts in simple, clear language. Give short, conversational answers (2-4 sentences) that are warm and encouraging. Use everyday examples when helpful.
 
 Current quiz question the student is working on: "${currentQuestion.prompt}"
@@ -60,7 +85,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       if (!res.ok) throw new Error(`Request failed (${res.status})`);
 
       const reader = res.body?.getReader();
-      if (!reader) return await res.text();
+      if (!reader) {
+        const text = await res.text();
+        setChatHistory((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMessageId ? { ...msg, content: text } : msg
+          )
+        );
+        setStreamingMessageId(null);
+        return text;
+      }
 
       const decoder = new TextDecoder();
       let fullResponse = "";
@@ -68,17 +102,45 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       while (true) {
         const { done, value } = await reader.read();
         if (done) break;
-        
+
         const chunk = decoder.decode(value, { stream: true });
         fullResponse += chunk;
-        setChatReply((prev) => prev + chunk);
+
+        // Update the streaming message
+        setChatHistory((prev) =>
+          prev.map((msg) =>
+            msg.id === assistantMessageId
+              ? { ...msg, content: fullResponse }
+              : msg
+          )
+        );
       }
 
+      setStreamingMessageId(null);
       return fullResponse;
     },
-    onMutate: () => setChatReply(""),
     onError: (error: Error) => {
-      setChatReply("Error: " + (error?.message || "Unknown error"));
+      if (streamingMessageId) {
+        setChatHistory((prev) =>
+          prev.map((msg) =>
+            msg.id === streamingMessageId
+              ? {
+                  ...msg,
+                  content: `Error: ${error?.message || "Unknown error"}`,
+                }
+              : msg
+          )
+        );
+        setStreamingMessageId(null);
+      } else {
+        // If no streaming message, add error message
+        const errorMessage: ChatMessage = {
+          id: `error-${Date.now()}`,
+          role: "assistant",
+          content: `Error: ${error?.message || "Unknown error"}`,
+        };
+        setChatHistory((prev) => [...prev, errorMessage]);
+      }
     },
   });
 
@@ -86,23 +148,29 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     text: string,
     targetLanguage: string
   ): Promise<string> => {
-    console.log('🔄 Translating text:', { text, targetLanguage, prompts: currentQuestion.prompts });
+    console.log("🔄 Translating text:", {
+      text,
+      targetLanguage,
+      prompts: currentQuestion.prompts,
+    });
 
     if (!currentQuestion.prompts) {
-      console.log('❌ No prompts available on question');
+      console.log("❌ No prompts available on question");
       return text;
     }
 
-    const lang = targetLanguage.toLowerCase() as keyof typeof currentQuestion.prompts;
+    const lang =
+      targetLanguage.toLowerCase() as keyof typeof currentQuestion.prompts;
     const translated = currentQuestion.prompts[lang] || text;
 
-    console.log('✅ Translation result:', { lang, translated });
+    console.log("✅ Translation result:", { lang, translated });
     return translated;
   };
 
   const resetChatState = () => {
     setChatPrompt("");
-    setChatReply("");
+    setChatHistory([]);
+    setStreamingMessageId(null);
     setShowChatModal(false);
     chatMutation.reset();
   };
@@ -118,9 +186,12 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   };
 
   const handleNext = (answerOverride?: string | React.MouseEvent) => {
-    const answer = typeof answerOverride === 'string' ? answerOverride : selectedAnswer;
+    const answer =
+      typeof answerOverride === "string" ? answerOverride : selectedAnswer;
     let finalScore = score;
-    const updatedAnswers = answer ? { ...answers, [currentQuestionIndex]: answer } : answers;
+    const updatedAnswers = answer
+      ? { ...answers, [currentQuestionIndex]: answer }
+      : answers;
 
     if (answer) {
       setAnswers(updatedAnswers);
@@ -139,7 +210,8 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       setSelectedAnswer(answers[currentQuestionIndex + 1] || null);
       resetChatState();
     } else {
-      const allAnswered = Object.keys(updatedAnswers).length === questions.length;
+      const allAnswered =
+        Object.keys(updatedAnswers).length === questions.length;
 
       if (!allAnswered) {
         showToast({
@@ -156,7 +228,9 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       }
 
       const percentCorrect = (finalScore / questions.length) * 100;
-      const userPassed = isBossQuiz ? percentCorrect >= BOSS_QUIZ_PASSING_SCORE : true;
+      const userPassed = isBossQuiz
+        ? percentCorrect >= BOSS_QUIZ_PASSING_SCORE
+        : true;
       setPassed(userPassed);
 
       setIsComplete(true);
@@ -186,13 +260,18 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     e?.preventDefault();
     if (!chatPrompt.trim() || chatMutation.isPending) return;
 
+    const promptToSend = chatPrompt.trim();
+    setChatPrompt(""); // Clear input immediately
+
     try {
       const token = await getToken();
       if (!token) throw new Error("Authentication required");
-      
-      chatMutation.mutate({ prompt: chatPrompt, token });
+
+      chatMutation.mutate({ prompt: promptToSend, token });
     } catch (err) {
       console.error("Auth error:", err);
+      // Restore prompt on error
+      setChatPrompt(promptToSend);
     }
   };
 
@@ -224,16 +303,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       <div className="quiz-page-wrapper">
         <div className="container">
           <div className="quizContainer">
-          <button className="back-to-quiz-button" onClick={onBack}>
-            <img src={goBackIcon} alt="Back" />
-          </button>
-          <div className="empty-state">
-            <p>
-              No questions available for this quiz. Please try again or select a
-              different quiz.
-            </p>
+            <button className="back-to-quiz-button" onClick={onBack}>
+              <img src={goBackIcon} alt="Back" />
+            </button>
+            <div className="empty-state">
+              <p>
+                No questions available for this quiz. Please try again or select
+                a different quiz.
+              </p>
+            </div>
           </div>
-        </div>
         </div>
       </div>
     );
@@ -243,133 +322,145 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     <div className="quiz-page-wrapper">
       <div className="container">
         <div className="quizContainer">
-        <button
-          className="back-to-quiz-button"
-          onClick={onBack}
-          aria-label="Back to Quizzes"
-        >
-          <img src={goBackIcon} alt="Back" />
-        </button>
+          <button
+            className="back-to-quiz-button"
+            onClick={onBack}
+            aria-label="Back to Quizzes"
+          >
+            <img src={goBackIcon} alt="Back" />
+          </button>
 
-      <div className="quiz-progress">
-        <span className="quiz-number">
-          Question {currentQuestionIndex + 1} of {questions.length}
-        </span>
-      </div>
-
-      <div className="quiz-question-section">
-        {!isBossQuiz ? (
-          <div className="quiz-translate-button">
-            <TranslateButton
-              text={currentQuestion.prompt}
-              preferredLanguage={preferredLanguage}
-              onTranslate={(targetLanguage) =>
-                translateText(currentQuestion.prompt, targetLanguage)
-              }
-            />
+          <div className="quiz-progress">
+            <span className="quiz-number">
+              Question {currentQuestionIndex + 1} of {questions.length}
+            </span>
           </div>
-        ) : (
-          <p className="translate-button-text">{currentQuestion.prompt}</p>
-        )}
 
-        <div className="quiz-choices-section">
-          {currentQuestion.choices.map((choice) => {
-            const isSelected = selectedAnswer === choice.id;
-            const isCorrect = choice.isCorrect;
-            const showFeedback = !isBossQuiz && selectedAnswer !== null;
+          <div className="quiz-question-section">
+            {!isBossQuiz ? (
+              <div className="quiz-translate-button">
+                <TranslateButton
+                  text={currentQuestion.prompt}
+                  preferredLanguage={preferredLanguage}
+                  onTranslate={(targetLanguage) =>
+                    translateText(currentQuestion.prompt, targetLanguage)
+                  }
+                />
+              </div>
+            ) : (
+              <p className="translate-button-text">{currentQuestion.prompt}</p>
+            )}
 
-            const buttonClasses = [
-              "quiz-choices-button",
-              showFeedback && "show-feedback",
-              showFeedback && isSelected && isCorrect && "quiz-correct",
-              showFeedback && isSelected && !isCorrect && "quiz-incorrect",
-            ]
-              .filter(Boolean)
-              .join(" ");
+            <div className="quiz-choices-section">
+              {currentQuestion.choices.map((choice) => {
+                const isSelected = selectedAnswer === choice.id;
+                const isCorrect = choice.isCorrect;
+                const showFeedback = !isBossQuiz && selectedAnswer !== null;
 
-            return (
+                const buttonClasses = [
+                  "quiz-choices-button",
+                  showFeedback && "show-feedback",
+                  showFeedback && isSelected && isCorrect && "quiz-correct",
+                  showFeedback && isSelected && !isCorrect && "quiz-incorrect",
+                ]
+                  .filter(Boolean)
+                  .join(" ");
+
+                return (
+                  <button
+                    key={choice.id}
+                    className={buttonClasses}
+                    onClick={() =>
+                      !showFeedback && handleAnswerSelect(choice.id)
+                    }
+                    disabled={showFeedback}
+                  >
+                    <div className="choice-content">
+                      <span className="choice-id">{choice.id}.</span>
+                      <span className="choice-text">{choice.term}</span>
+                    </div>
+
+                    {showFeedback && (
+                      <div className="quiz-feedback-section">
+                        {isSelected && isCorrect && (
+                          <span className="feedback-icon quiz-correct">✓</span>
+                        )}
+                        {isSelected && !isCorrect && (
+                          <span className="feedback-icon quiz-incorrect">
+                            ✗
+                          </span>
+                        )}
+                        {!isSelected && isCorrect && (
+                          <span className="quiz-feedback-correct">
+                            ✓ Correct answer
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          <div className="quiz-nav-buttons">
+            {!isBossQuiz && (
               <button
-                key={choice.id}
-                className={buttonClasses}
-                onClick={() => !showFeedback && handleAnswerSelect(choice.id)}
-                disabled={showFeedback}
+                className="back-previous-question-button"
+                onClick={handlePrevious}
+                disabled={currentQuestionIndex === 0}
+                aria-label="Previous question"
               >
-                <div className="choice-content">
-                  <span className="choice-id">{choice.id}.</span>
-                  <span className="choice-text">{choice.term}</span>
-                </div>
+                <img src={backButton} alt="Back" />
+              </button>
+            )}
 
-                {showFeedback && (
-                  <div className="quiz-feedback-section">
-                    {isSelected && isCorrect && (
-                      <span className="feedback-icon quiz-correct">✓</span>
-                    )}
-                    {isSelected && !isCorrect && (
-                      <span className="feedback-icon quiz-incorrect">✗</span>
-                    )}
-                    {!isSelected && isCorrect && (
-                      <span className="quiz-feedback-correct">✓ Correct answer</span>
-                    )}
-                  </div>
+            {!isBossQuiz && (
+              <button className="quiz-chat-button" onClick={handleOpenChat}>
+                <span className="quiz-chat-button-text">
+                  Need Help? Ask Rocky!
+                </span>
+              </button>
+            )}
+
+            {!isBossQuiz && (
+              <button
+                className={`next-question-button ${
+                  currentQuestionIndex === questions.length - 1
+                    ? "next-question-button--submit"
+                    : ""
+                }`}
+                onClick={handleNext}
+                aria-label={
+                  currentQuestionIndex === questions.length - 1
+                    ? "Finish quiz"
+                    : "Next question"
+                }
+              >
+                {currentQuestionIndex === questions.length - 1 ? (
+                  <>
+                    <span style={{ marginRight: "8px" }}>Submit</span>
+                    <img src={nextButton} alt="Next" />
+                  </>
+                ) : (
+                  <img src={nextButton} alt="Next" />
                 )}
               </button>
-            );
-          })}
+            )}
+          </div>
+
+          <ChatModal
+            isOpen={showChatModal}
+            onClose={handleCloseChat}
+            currentQuestion={currentQuestion.prompt}
+            chatHistory={chatHistory}
+            chatPrompt={chatPrompt}
+            onChatPromptChange={setChatPrompt}
+            onSendChat={handleSendChat}
+            isLoading={chatMutation.isPending}
+          />
         </div>
       </div>
-
-      <div className="quiz-nav-buttons">
-        {!isBossQuiz && (
-          <button
-            className="back-previous-question-button"
-            onClick={handlePrevious}
-            disabled={currentQuestionIndex === 0}
-            aria-label="Previous question"
-          >
-            <img src={backButton} alt="Back" />
-          </button>
-        )}
-
-        {!isBossQuiz && (
-          <button className="quiz-chat-button" onClick={handleOpenChat}>
-            <span className="quiz-chat-button-text">Need Help? Ask Rocky!</span>
-          </button>
-        )}
-
-        {!isBossQuiz && (
-          <button
-            className={`next-question-button ${currentQuestionIndex === questions.length - 1 ? 'next-question-button--submit' : ''}`}
-            onClick={handleNext}
-            aria-label={
-              currentQuestionIndex === questions.length - 1
-                ? "Finish quiz"
-                : "Next question"
-            }
-          >
-            {currentQuestionIndex === questions.length - 1 ? (
-              <>
-                <span style={{ marginRight: '8px' }}>Submit</span>
-                <img src={nextButton} alt="Next" />
-              </>
-            ) : (
-              <img src={nextButton} alt="Next" />
-            )}
-          </button>
-        )}
-      </div>
-
-      <ChatModal
-        isOpen={showChatModal}
-        onClose={handleCloseChat}
-        currentQuestion={currentQuestion.prompt}
-        chatReply={chatReply}
-        chatPrompt={chatPrompt}
-        onChatPromptChange={setChatPrompt}
-        onSendChat={handleSendChat}
-        isLoading={chatMutation.isPending}
-      />
-      </div>
-    </div>
     </div>
   );
 }
