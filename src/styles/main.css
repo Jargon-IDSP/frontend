@@ -2726,10 +2726,12 @@ button.back-button {
 .leaderboard-page:has(.leaderboard-empty-state):before {
   display: none;
 }
-.leaderboard-page .container--leaderboard {
+
+.container--leaderboard {
   padding: 0;
 }
-.leaderboard-page .leaderboard-hero {
+
+.leaderboard-hero {
   position: sticky;
   top: 0;
   z-index: 2;
@@ -2740,17 +2742,20 @@ button.back-button {
   flex-shrink: 0;
 }
 @media (max-width: 768px) {
-  .leaderboard-page .leaderboard-hero {
+  .leaderboard-hero {
     padding: 1.5rem 1rem calc(1.5rem * 2);
   }
 }
-.leaderboard-page .leaderboard-page:has(.leaderboard-empty-state) {
+
+.leaderboard-page:has(.leaderboard-empty-state) {
   background: #ffc83b;
 }
-.leaderboard-page .leaderboard-hero {
+
+.leaderboard-hero {
   padding-bottom: 2.5rem;
 }
-.leaderboard-page .leaderboard-drawer {
+
+.leaderboard-drawer {
   position: relative;
   z-index: 3;
   margin-top: calc(2.5rem * -1.6);
@@ -2763,7 +2768,7 @@ button.back-button {
   flex: 1;
   min-height: 0;
 }
-.leaderboard-page .leaderboard-drawer:before {
+.leaderboard-drawer:before {
   content: "";
   position: absolute;
   top: 0.5rem;
@@ -2775,7 +2780,7 @@ button.back-button {
   background: #f1eae8;
 }
 @media (max-width: 768px) {
-  .leaderboard-page .leaderboard-drawer {
+  .leaderboard-drawer {
     margin-top: calc(2.5rem * -1.2);
     padding-top: 1.5rem;
     padding-left: 1rem;
@@ -2783,13 +2788,15 @@ button.back-button {
     padding-bottom: 0;
   }
 }
-.leaderboard-page .leaderboard-header {
+
+.leaderboard-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin-bottom: 1.5rem;
 }
-.leaderboard-page .leaderboard-back-button {
+
+.leaderboard-back-button {
   background: none;
   border: none;
   cursor: pointer;
@@ -2799,19 +2806,21 @@ button.back-button {
   justify-content: center;
   transition: opacity 0.15s ease;
 }
-.leaderboard-page .leaderboard-back-button:hover {
+.leaderboard-back-button:hover {
   opacity: 0.7;
 }
-.leaderboard-page .leaderboard-back-button img {
+.leaderboard-back-button img {
   width: 24px;
   height: 24px;
 }
-.leaderboard-page .leaderboard-header-actions {
+
+.leaderboard-header-actions {
   display: flex;
   align-items: center;
   gap: 0.5rem;
 }
-.leaderboard-page .leaderboard-title {
+
+.leaderboard-title {
   text-align: left;
   margin: 0;
   margin-left: 1rem;
@@ -2820,12 +2829,13 @@ button.back-button {
   font-weight: 700;
   color: #2f130a;
 }
-.leaderboard-page:has(.leaderboard-empty-state) .leaderboard-page .leaderboard-title {
+.leaderboard-page:has(.leaderboard-empty-state) .leaderboard-title {
   position: relative;
   margin-bottom: 1.5rem;
   margin-top: 0;
 }
-.leaderboard-page .leaderboard-notifications-icon {
+
+.leaderboard-notifications-icon {
   background: none;
   border: none;
   cursor: pointer;
@@ -2835,18 +2845,20 @@ button.back-button {
   justify-content: center;
   transition: opacity 0.15s ease;
 }
-.leaderboard-page .leaderboard-notifications-icon:hover {
+.leaderboard-notifications-icon:hover {
   opacity: 0.7;
 }
-.leaderboard-page .leaderboard-notifications-icon img {
+.leaderboard-notifications-icon img {
   width: 24px;
   height: 24px;
 }
-.leaderboard-page .leaderboard-notifications-icon-wrapper {
+
+.leaderboard-notifications-icon-wrapper {
   position: relative;
   display: inline-block;
 }
-.leaderboard-page .leaderboard-notifications-badge {
+
+.leaderboard-notifications-badge {
   position: absolute;
   top: -6px;
   right: -6px;
@@ -2865,10 +2877,12 @@ button.back-button {
   border: 2px solid white;
   box-sizing: border-box;
 }
-.leaderboard-page .leaderboard-settings-container {
+
+.leaderboard-settings-container {
   position: relative;
 }
-.leaderboard-page .leaderboard-settings-icon {
+
+.leaderboard-settings-icon {
   background: none;
   border: none;
   cursor: pointer;
@@ -2883,14 +2897,15 @@ button.back-button {
   width: 48px;
   height: 48px;
 }
-.leaderboard-page .leaderboard-settings-icon:hover {
+.leaderboard-settings-icon:hover {
   opacity: 0.7;
 }
-.leaderboard-page .leaderboard-settings-icon .rocky-logo {
+.leaderboard-settings-icon .rocky-logo {
   width: 32px;
   height: 32px;
 }
-.leaderboard-page .leaderboard-settings-dropdown {
+
+.leaderboard-settings-dropdown {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
@@ -2901,7 +2916,8 @@ button.back-button {
   z-index: 1000;
   overflow: hidden;
 }
-.leaderboard-page .leaderboard-settings-item {
+
+.leaderboard-settings-item {
   width: 100%;
   padding: 0.5rem 1rem;
   background: none;
@@ -2912,14 +2928,15 @@ button.back-button {
   color: #393939;
   transition: background-color 0.15s ease;
 }
-.leaderboard-page .leaderboard-settings-item:hover {
+.leaderboard-settings-item:hover {
   background-color: #f1eae8;
 }
-.leaderboard-page .leaderboard-settings-item:active {
+.leaderboard-settings-item:active {
   background-color: #6f2e17;
   color: white;
 }
-.leaderboard-page .leaderboard-tabs {
+
+.leaderboard-tabs {
   display: flex;
   gap: 0;
   margin-bottom: 1.5rem;
@@ -2932,13 +2949,14 @@ button.back-button {
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 }
-.leaderboard-page:has(.leaderboard-empty-state) .leaderboard-page .leaderboard-tabs {
+.leaderboard-page:has(.leaderboard-empty-state) .leaderboard-tabs {
   margin-bottom: 2.5rem;
   position: relative;
   width: 100%;
   max-width: 100%;
 }
-.leaderboard-page .leaderboard-tab {
+
+.leaderboard-tab {
   flex: 1;
   padding: 0.65rem 1.25rem;
   font-size: 16px;
@@ -2951,20 +2969,21 @@ button.back-button {
   min-width: 0;
   background: transparent;
 }
-.leaderboard-page .leaderboard-tab:hover {
+.leaderboard-tab:hover {
   color: rgba(8, 40, 192, 0.7);
 }
-.leaderboard-page .leaderboard-tab:focus-visible {
+.leaderboard-tab:focus-visible {
   outline: 2px solid rgba(8, 40, 192, 0.45);
   outline-offset: 2px;
 }
-.leaderboard-page .leaderboard-tab--active {
+.leaderboard-tab--active {
   color: #0724af;
   background-color: white;
   font-weight: 700;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
 }
-.leaderboard-page .leaderboard-empty-state {
+
+.leaderboard-empty-state {
   text-align: center;
   padding: 3rem 2.5rem;
   padding-bottom: 0;
@@ -2978,19 +2997,22 @@ button.back-button {
   position: relative;
   z-index: 0;
 }
-.leaderboard-page .leaderboard-empty-avatar {
+
+.leaderboard-empty-avatar {
   width: 100%;
   max-width: 300px;
   height: auto;
   margin-bottom: 2.5rem;
 }
-.leaderboard-page .leaderboard-empty-message {
+
+.leaderboard-empty-message {
   font-size: 1.2rem;
   color: #393939;
   margin-bottom: 2.5rem;
   line-height: 1.75;
 }
-.leaderboard-page .leaderboard-start-button {
+
+.leaderboard-start-button {
   padding: 0.75rem 2.5rem;
   font-size: 16px;
   font-weight: 700;
@@ -3001,26 +3023,31 @@ button.back-button {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-.leaderboard-page .leaderboard-start-button:hover {
+.leaderboard-start-button:hover {
   background-color: #6f2e17;
 }
-.leaderboard-page .leaderboard-error {
+
+.leaderboard-error {
   padding: 2.5rem;
   text-align: center;
 }
-.leaderboard-page .leaderboard-error-message {
+
+.leaderboard-error-message {
   color: #c40000;
 }
-.leaderboard-page .leaderboard-error-button {
+
+.leaderboard-error-button {
   padding: 0.5rem 1rem;
 }
-.leaderboard-page .leaderboard-empty-list {
+
+.leaderboard-empty-list {
   text-align: center;
   color: #393939;
   margin-top: auto;
   padding: 1.5rem 0;
 }
-.leaderboard-page .leaderboard-coming-soon {
+
+.leaderboard-coming-soon {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -3032,20 +3059,21 @@ button.back-button {
   box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
   color: #4f2110;
 }
-.leaderboard-page .leaderboard-coming-soon__title {
+.leaderboard-coming-soon__title {
   font-size: 24px;
   font-weight: 700;
   margin: 0;
   color: #0828c0;
 }
-.leaderboard-page .leaderboard-coming-soon__description {
+.leaderboard-coming-soon__description {
   font-size: 16px;
   margin: 0;
   max-width: 340px;
   line-height: 1.75;
   color: #393939;
 }
-.leaderboard-page .podium-container {
+
+.podium-container {
   display: flex;
   align-items: flex-end;
   justify-content: center;
@@ -3053,29 +3081,29 @@ button.back-button {
   margin-bottom: 0;
   min-height: 200px;
 }
-.leaderboard-page .podium-item {
+.podium-item {
   display: flex;
   flex-direction: column;
   align-items: center;
   transition: all 0.3s ease;
   max-width: 90px;
 }
-.leaderboard-page .podium-item.rank-1 {
+.podium-item.rank-1 {
   order: 2;
 }
-.leaderboard-page .podium-item.rank-2 {
+.podium-item.rank-2 {
   order: 1;
 }
-.leaderboard-page .podium-item.rank-3 {
+.podium-item.rank-3 {
   order: 3;
 }
-.leaderboard-page .podium-item--clickable {
+.podium-item--clickable {
   cursor: pointer;
 }
-.leaderboard-page .podium-item--clickable:hover {
+.podium-item--clickable:hover {
   transform: translateY(-5px);
 }
-.leaderboard-page .podium-block {
+.podium-block {
   padding: 1rem;
   text-align: center;
   position: relative;
@@ -3085,27 +3113,36 @@ button.back-button {
   padding-bottom: 0.25rem;
   border-radius: 12px 12px 0 0;
 }
-.leaderboard-page .podium-item.rank-1 .leaderboard-page .podium-block {
+.podium-item.rank-1 .podium-block {
   background: #ffeab3;
   height: 115px;
   width: 80px;
 }
-.leaderboard-page .podium-item.rank-2 .leaderboard-page .podium-block {
+.podium-item.rank-2 .podium-block {
   background: #8d9ce2;
   height: 80px;
   width: 80px;
 }
-.leaderboard-page .podium-item.rank-3 .leaderboard-page .podium-block {
+.podium-item.rank-3 .podium-block {
   background: #fe8861;
   height: 60px;
   width: 80px;
 }
-.leaderboard-page .podium-you {
+.podium-item.rank-1 .podium-base {
+  height: 100px;
+  width: 80px;
+}
+.podium-item.rank-2 .podium-base, .podium-item.rank-3 .podium-base {
+  height: 60px;
+  width: 70px;
+}
+.podium-you {
   font-size: 0.85rem;
   color: #652a15;
   font-weight: 600;
 }
-.leaderboard-page .rank-label {
+
+.rank-label {
   font-weight: 700;
   font-size: 18px;
   width: 100%;
@@ -3113,7 +3150,8 @@ button.back-button {
   color: #3d190d;
   padding-bottom: 0.5rem;
 }
-.leaderboard-page .rocky-avatar {
+
+.rocky-avatar {
   position: relative;
   z-index: 2;
   margin: 0.5rem 0 0.25rem;
@@ -3122,19 +3160,20 @@ button.back-button {
   border-radius: 50%;
   padding: 0.5rem;
 }
-.leaderboard-page .rocky-avatar .rocky-logo.rank-1 {
+.rocky-avatar .rocky-logo.rank-1 {
   width: 80px;
   height: 80px;
 }
-.leaderboard-page .rocky-avatar .rocky-logo.rank-2 {
+.rocky-avatar .rocky-logo.rank-2 {
   width: 45px;
   height: 45px;
 }
-.leaderboard-page .rocky-avatar .rocky-logo.rank-3 {
+.rocky-avatar .rocky-logo.rank-3 {
   width: 45px;
   height: 45px;
 }
-.leaderboard-page .podium-flag {
+
+.podium-flag {
   position: absolute;
   display: flex;
   align-items: center;
@@ -3144,27 +3183,29 @@ button.back-button {
   right: -0.5rem;
   min-width: 34px;
 }
-.leaderboard-page .podium-flag--rank-1 {
+.podium-flag--rank-1 {
   top: calc(0.5rem * -1.8);
   right: calc(0.5rem * -1.8);
   transform: scale(1.1);
 }
-.leaderboard-page .podium-flag--rank-2 {
+.podium-flag--rank-2 {
   top: calc(0.5rem * -2);
   right: calc(0.5rem * -2);
 }
-.leaderboard-page .podium-flag--rank-3 {
+.podium-flag--rank-3 {
   top: calc(0.5rem * -2);
   right: calc(0.5rem * -2);
 }
-.leaderboard-page .podium-flag-icon {
+
+.podium-flag-icon {
   width: 32px;
   height: 22px;
   border-radius: 6px;
   -o-object-fit: cover;
      object-fit: cover;
 }
-.leaderboard-page .user-name {
+
+.user-name {
   font-weight: 700;
   font-size: 16px;
   color: #4f2110;
@@ -3179,7 +3220,8 @@ button.back-button {
           hyphens: auto;
   white-space: normal;
 }
-.leaderboard-page .user-score {
+
+.user-score {
   font-weight: 600;
   font-size: 13px;
   color: #6f2e17;
@@ -3188,7 +3230,8 @@ button.back-button {
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.leaderboard-page .leaderboard-friends-button {
+
+.leaderboard-friends-button {
   position: fixed;
   bottom: 80px;
   left: 50%;
@@ -3205,10 +3248,10 @@ button.back-button {
   transition: background-color 0.3s ease;
   z-index: 100;
 }
-.leaderboard-page .leaderboard-friends-button:hover {
+.leaderboard-friends-button:hover {
   background-color: rgb(221.0632911392, 55.2658227848, 0.9367088608);
 }
-.leaderboard-page .leaderboard-friends-button:active {
+.leaderboard-friends-button:active {
   background-color: rgb(195.6708860759, 48.917721519, 0.8291139241);
 }
 
@@ -8120,11 +8163,4 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   color: #393939;
   font-size: 16px;
   line-height: 1.5;
-}
-
-[data-slot=drawer-overlay],
-[data-slot=drawer-content],
-[data-vaul-drawer],
-[data-vaul-overlay] {
-  z-index: 100 !important;
 }/*# sourceMappingURL=main.css.map */

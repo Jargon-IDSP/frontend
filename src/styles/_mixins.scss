@@ -64,7 +64,6 @@
   }
 }
 
-// Podium Block Mixin - Creates rank-specific podium blocks
 @mixin podium-block($rank, $bg-color, $height, $width: 80px) {
   .rank-#{$rank} & {
     background: $bg-color;
@@ -73,7 +72,6 @@
   }
 }
 
-// Podium Flag Mixin - Creates rank-specific flag positioning
 @mixin podium-flag($rank, $scale: 1) {
   &--rank-#{$rank} {
     @if $rank == 1 {
@@ -87,7 +85,6 @@
   }
 }
 
-// Rocky Logo Size Mixin - For rank-specific avatar sizes
 @mixin rocky-logo-size($rank, $size) {
   &.rank-#{$rank} {
     width: $size;
@@ -95,7 +92,6 @@
   }
 }
 
-// Dropdown Item Mixin - For dropdown menu items
 @mixin dropdown-item {
   width: 100%;
   padding: $spacing-sm $spacing-md;
