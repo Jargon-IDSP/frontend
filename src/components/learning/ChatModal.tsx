@@ -125,7 +125,7 @@ export default function ChatModal({
     const isFastEnough = deltaTime < 500;
 
     if (isHorizontalSwipe && isLeftToRight && isLongEnough && isFastEnough) {
-      onClose(false);
+      onClose();
     }
   };
 
