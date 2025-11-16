@@ -8,6 +8,7 @@
   max-height: 100dvh;
   padding: 0;
   overflow: hidden;
+  transition: height 0.3s ease, max-height 0.3s ease;
 
   > div[class*="mx-auto"] {
     display: none;
@@ -229,9 +230,14 @@
   }
 }
 
+// iOS Safari specific viewport handling
 @supports (-webkit-touch-callout: none) {
-  .chat-drawer-content {
-    height: -webkit-fill-available;
-    max-height: -webkit-fill-available;
+  @media (max-width: 768px) {
+    // Only apply -webkit-fill-available when NOT focused
+    // This allows dvh to work properly when keyboard appears
+    .chat-drawer-content:not(.chat-drawer-content--input-focused) {
+      height: -webkit-fill-available;
+      max-height: -webkit-fill-available;
+    }
   }
 }

@@ -267,7 +267,7 @@
   color: $color-quinary-50;
 }
 
-// Friends List Items (reusing leaderboard item styles)
+// Friends List Items
 .friends-item {
   display: flex;
   align-items: center;
@@ -292,7 +292,7 @@
   flex: 1;
 }
 
-.friends-item-logo {
+.friends-item-logo, .leaderboard-item-logo  {
   width: 40px;
   height: 40px;
   flex-shrink: 0;

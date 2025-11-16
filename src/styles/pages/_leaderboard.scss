@@ -7,7 +7,7 @@
   display: flex;
   flex-direction: column;
   position: relative;
-  min-height: calc(100vh - 140px); // Account for navbar and padding
+  min-height: calc(100vh - 140px);
   background: $color-secondary-400;
   overflow: hidden;
 
@@ -347,11 +347,13 @@
 // Leaderboard item
 .leaderboard-item {
   display: flex;
+  flex-direction: row;
   justify-content: space-between;
   align-items: center;
-  padding: .4rem;
-  padding-top: .65rem;
-  padding-bottom: .65rem;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  background: white;
+  border-radius: $border-radius-md;
   font-size: $font-size-body;
 
   &--regular {
@@ -365,16 +367,15 @@
 }
 
 .leaderboard-item-you {
-  font-size: 0.9rem;
-  color: $color-quaternary-dark;
+  color: $color-primary;
   font-weight: $font-weight-bold;
+  margin-left: $spacing-xs;
 }
 
 .leaderboard-item-content {
   display: flex;
-  align-items: flex-start;
-  gap: $spacing-sm;
-  font-weight: $font-weight-bold;
+  align-items: center;
+  gap: $spacing-md;
   flex: 1;
 
   &--regular {
@@ -385,35 +386,32 @@
 .leaderboard-item-text {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: $spacing-xs;
+  flex: 1;
 }
 
 .leaderboard-item-name {
-  display: flex;
-  color: $color-quaternary-dark;
-  align-items: baseline;
-  gap: $spacing-xs;
-  font-weight: $font-weight-regular;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary;
 }
 
 .leaderboard-item-rank {
-  margin-right: $spacing-sm;
   color: $color-primary;
+  font-weight: $font-weight-medium;
 }
 
 .leaderboard-item-logo {
-  width: 36px;
-  height: 36px;
-  background-color: #f5f5f5;
-  padding: $spacing-xs;
-  border-radius: $border-radius-full;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
 
   &--top {
     filter: none;
   }
 
   &--regular {
-    filter: grayscale(0.3);
+    filter: none;
   }
 }
 
@@ -427,7 +425,6 @@
   font-weight: $font-weight-medium;
   color: $color-quaternary;
   font-size: $font-size-label;
-  margin-top: 0.1rem;
 }
 
 .leaderboard-item-flag {
