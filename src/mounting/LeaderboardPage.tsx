@@ -7,6 +7,7 @@ import Podium from "../components/Podium";
 import LeaderboardItem from "../components/LeaderboardItem";
 import LeaderboardHeader from "../components/LeaderboardHeader";
 import LoadingBar from "../components/LoadingBar";
+import SelfLeaderboard from "../components/SelfLeaderboard";
 import type { LeaderboardType } from "../types/leaderboardHeader";
 
 const LeaderboardPage: React.FC = () => {
@@ -145,12 +146,7 @@ const LeaderboardPage: React.FC = () => {
         {!hasInsufficientPrivateConnections && (
           <div className="leaderboard-drawer">
             {isSelfLeaderboard ? (
-              <div className="leaderboard-coming-soon">
-                <h2 className="leaderboard-coming-soon__title">Self leaderboard coming soon</h2>
-                <p className="leaderboard-coming-soon__description">
-                  Track your personal streaks and milestones right from this tab. Hang tight—we’re polishing the experience!
-                </p>
-              </div>
+              <SelfLeaderboard />
             ) : (
               <>
                 <div className="leaderboard-list">

@@ -619,3 +619,128 @@
   font-size: $font-size-label;
   padding: 0.2rem 0.5rem;
 }
+
+// Self Leaderboard Styles
+.self-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+  padding: $spacing-lg 0;
+}
+
+.self-leaderboard-error {
+  color: $color-error;
+  text-align: center;
+  padding: $spacing-lg;
+}
+
+.self-leaderboard-medals {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: $spacing-md;
+  flex-wrap: wrap;
+}
+
+.self-leaderboard-medal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: $spacing-md;
+  border-radius: $border-radius-full;
+  min-width: 100px;
+  min-height: 100px;
+  position: relative;
+
+  svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: $spacing-xs;
+  }
+
+  &--gold {
+    background: rgba(255, 215, 0, 0.2);
+    border: 2px solid #FFD700;
+  }
+
+  &--silver {
+    background: rgba(192, 192, 192, 0.2);
+    border: 2px solid #C0C0C0;
+  }
+
+  &--bronze {
+    background: rgba(205, 127, 50, 0.2);
+    border: 2px solid #CD7F32;
+  }
+}
+
+.self-leaderboard-medal-count {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-900;
+}
+
+.self-leaderboard-placements {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.self-leaderboard-placements-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-900;
+  text-align: center;
+  margin: 0;
+}
+
+.self-leaderboard-placements-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.self-leaderboard-placement-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-md;
+  background: #FFA500;
+  border-radius: $border-radius-md;
+  color: white;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+}
+
+.self-leaderboard-placement-date {
+  flex: 1;
+}
+
+.self-leaderboard-placement-rank {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.self-leaderboard-placement-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.self-leaderboard-placement-text {
+  font-weight: $font-weight-bold;
+}
+
+.self-leaderboard-empty {
+  text-align: center;
+  color: $color-neutral;
+  padding: $spacing-xl;
+  font-size: $font-size-body;
+}
