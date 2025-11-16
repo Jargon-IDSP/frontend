@@ -14,6 +14,7 @@ import {
 } from "../../utils/communityHelpers";
 import NotificationBell from "../../components/NotificationBell";
 import LeaderboardItem from "../../components/LeaderboardItem";
+import LoadingBar from "../../components/LoadingBar";
 import LeaderboardConnectAvatar from "../../assets/leaderboardConnectAvatar.svg";
 import findYourFriendsImg from '/findYourFriendsImg.svg';
 import noFriendsImg from '/noFriendsImg.svg';
@@ -126,7 +127,7 @@ const CommunityPage: React.FC = () => {
           {activeTab === "leaderboard" && (
             <div className="leaderboard-preview-card" onClick={!hasNoPoints ? handleLeaderboardCardClick : undefined}>
               {leaderboardLoading ? (
-                <div className="leaderboard-preview-loading">Loading...</div>
+                <LoadingBar isLoading={leaderboardLoading} text="Loading Leaderboard" />
               ) : hasNoPoints ? (
                 <div className="leaderboard-preview-empty-state">
                   <img 
@@ -177,7 +178,7 @@ const CommunityPage: React.FC = () => {
           {activeTab === "friends" && (
             <div className="friends-preview-card" onClick={!hasNoFriends ? handleFriendsCardClick : undefined}>
               {friendsLoading ? (
-                <div className="friends-preview-loading">Loading...</div>
+                <LoadingBar isLoading={friendsLoading} text="Loading Friends" />
               ) : hasNoFriends ? (
                 <div className="friends-preview-empty-state">
                   <img 

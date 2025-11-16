@@ -6,6 +6,7 @@ import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
 import Podium from "../components/Podium";
 import LeaderboardItem from "../components/LeaderboardItem";
 import LeaderboardHeader from "../components/LeaderboardHeader";
+import LoadingBar from "../components/LoadingBar";
 import type { LeaderboardType } from "../types/leaderboardHeader";
 
 const LeaderboardPage: React.FC = () => {
@@ -45,7 +46,7 @@ const LeaderboardPage: React.FC = () => {
             onTabChange={setLeaderboardType}
             showActions={false}
           />
-          <p>Loading...</p>
+          <LoadingBar isLoading={loading || profileLoading} text="Loading Leaderboard" />
         </div>
       </div>
     );

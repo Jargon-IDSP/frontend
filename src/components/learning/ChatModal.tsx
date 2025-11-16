@@ -4,9 +4,7 @@ import {
   DrawerContent,
   DrawerHeader,
   DrawerTitle,
-  DrawerClose,
 } from "../ui/drawer";
-import { Button } from "../ui/button";
 import HappyRocky from "../avatar/rocky/HappyRocky";
 import type { ChatModalProps } from "../../types/components/quiz";
 import "../../styles/components/_chatbox.scss";
