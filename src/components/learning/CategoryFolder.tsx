@@ -1,82 +1,74 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useDocumentsByCategory } from "../../hooks/useDocumentsByCategory";
-import DeleteCategoryDrawer from "../../pages/drawers/DeleteCategoryDrawer";
-import type { CategoryFolderProps } from "../../types/learning";
-
-// Default category names that should never show delete button
-const DEFAULT_CATEGORIES = [
-  "General",
-  "Professional",
-  "Safety",
-  "Technical",
-  "Training",
-  "Workplace",
-];
+import type { CategoryFolderProps } from "@/types/categoryFolder";
 
 export function CategoryFolder({
-  categoryId,
-  categoryName,
-  isDefault,
+  title,
+  icon,
+  subtitle,
+  locked = false,
+  completed = false,
+  showDeleteButton = false,
+  onDelete,
+  children,
+  defaultOpen = false,
 }: CategoryFolderProps) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
-  const navigate = useNavigate();
-  const { data: documents, isLoading } = useDocumentsByCategory(categoryName);
-
-  // Check if this is a default category or "Uncategorized" (by isDefault flag or by name)
-  const isDefaultCategory = isDefault || DEFAULT_CATEGORIES.includes(categoryName) || categoryName === "Uncategorized";
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
   const toggleFolder = () => {
+    if (locked) return;
     setIsOpen(!isOpen);
   };
 
-  const handleDocumentClick = (documentId: string) => {
-    navigate(`/learning/documents/${documentId}/study`);
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onDelete) {
+      onDelete();
+    }
   };
 
   return (
-    <>
-      <DeleteCategoryDrawer
-        open={isDeleteDrawerOpen}
-        onOpenChange={setIsDeleteDrawerOpen}
-        categoryId={categoryId}
-        categoryName={categoryName}
-      />
-
-      <div className="category-folder">
-        <div className="category-folder-header" onClick={toggleFolder}>
-          <div className="category-folder-title">
-            <h3>{categoryName}</h3>
-          </div>
-          <div className="category-folder-actions" onClick={(e) => e.stopPropagation()}>
-            {!isDefaultCategory && (
-              <button
-                className="category-folder-delete"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsDeleteDrawerOpen(true);
-                }}
-                title="Delete folder"
-              >
-                <svg
-                  width="20"
-                  height="20"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth={2}
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
-                  />
-                </svg>
-              </button>
-            )}
+    <div
+      className={`category-folder ${
+        locked ? "category-folder--locked" : ""
+      } ${completed ? "category-folder--completed" : ""}`}
+    >
+      <div
+        className={`category-folder-header ${
+          locked ? "category-folder-header--locked" : ""
+        }`}
+        onClick={toggleFolder}
+      >
+        <div className="category-folder-title">
+          <h3>
+            {icon && <img src={icon} alt="" className="folder-icon" />}
+            {title}
+          </h3>
+          {subtitle && <p className="level-subtitle">{subtitle}</p>}
+        </div>
+        <div className="category-delete">
+          {showDeleteButton && (
             <svg
-              className={`chevron ${isOpen ? 'open' : ''}`}
+              className="category-folder-delete"
+              onClick={handleDeleteClick}
+              width="30"
+              height="30"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+              />
+            </svg>
+          )}
+          </div>
+        <div className="category-folder-actions">
+          {!locked && (
+            <svg
+              className={`chevron ${isOpen ? "open" : ""}`}
               width="24"
               height="24"
               viewBox="0 0 24 24"
@@ -90,57 +82,11 @@ export function CategoryFolder({
                 d="M19 9l-7 7-7-7"
               />
             </svg>
-          </div>
+          )}
         </div>
-
-        {isOpen && (
-          <div className="category-folder-content">
-            {isLoading ? (
-              <div className="folder-loading">Loading lessons...</div>
-            ) : documents && documents.length > 0 ? (
-              <div className="document-list">
-                {documents.map((doc) => (
-                  <div
-                    key={doc.id}
-                    className="document-item"
-                    onClick={() => handleDocumentClick(doc.id)}
-                  >
-                    <div className="document-info">
-                      <span className="document-name">{doc.filename}</span>
-                      <div className="document-stats">
-                        {doc.flashcardCount > 0 && (
-                          <span className="stat">{doc.flashcardCount} flashcards</span>
-                        )}
-                        {doc.questionCount > 0 && (
-                          <span className="stat">{doc.questionCount} questions</span>
-                        )}
-                      </div>
-                    </div>
-                    <svg
-                      width="20"
-                      height="20"
-                      viewBox="0 0 24 24"
-                      fill="none"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M9 5l7 7-7 7"
-                      />
-                    </svg>
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="folder-empty">
-                No lessons in this category yet. Upload a document to get started!
-              </div>
-            )}
-          </div>
-        )}
       </div>
-    </>
+
+      {isOpen && !locked && <div className="category-folder-content">{children}</div>}
+    </div>
   );
 }

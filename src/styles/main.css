@@ -1356,11 +1356,15 @@ body {
   height: auto;
 }
 
-.page-title {
+.uploadPage {
+  padding: 1rem;
+  padding-bottom: 1rem;
+}
+.uploadPage .page-title {
   display: flex;
   align-items: flex-start;
   gap: 1.5rem;
-  font-size: 28px;
+  font-size: 24px;
   font-weight: 700;
   color: #652a15;
   margin: 3rem 0 1.5rem 0;
@@ -1900,7 +1904,7 @@ button.back-button {
   color: #6f2e17;
 }
 .fullTranslationOverview .full-translation-header .page-title {
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 20px;
   font-weight: 700;
   color: #6f2e17;
@@ -1920,7 +1924,7 @@ button.back-button {
   height: 24px;
 }
 .fullTranslationOverview .content-text {
-  margin-top: 1.5rem;
+  margin: 1.5rem 1rem 0 1rem;
 }
 
 .terms-page {
@@ -2110,94 +2114,6 @@ button.back-button {
   font-size: 16px;
   color: #fe4d13;
   line-height: 1.6;
-}
-
-.study-type {
-  display: grid;
-  grid-template-columns: minmax(60px, 120px) 1fr;
-  grid-template-rows: 1fr;
-  border: 1px solid;
-  border-radius: 20px;
-  margin-top: 1.5rem;
-  padding: 0.5rem;
-  gap: 0.5rem;
-  overflow: hidden;
-  min-height: 120px;
-}
-
-.study-type .top {
-  grid-column: 2;
-  grid-row: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  overflow: hidden;
-  padding: 0.5rem;
-  min-width: 0;
-}
-
-.study-type .top .type {
-  margin: 0 0 auto 0;
-  font-size: clamp(14px, 3.5vw, 28px);
-  word-wrap: break-word;
-  overflow-wrap: break-word;
-  line-height: 1.2;
-}
-
-.study-type img {
-  grid-column: 1;
-  grid-row: 1;
-  width: 100%;
-  height: 100%;
-  max-width: 120px;
-  max-height: 120px;
-  -o-object-fit: contain;
-     object-fit: contain;
-  align-self: center;
-}
-
-.study-type .start_learning {
-  margin-top: auto;
-  display: flex;
-  justify-content: flex-end;
-  min-width: 0;
-}
-
-.study-type button {
-  background-color: #ffba0a;
-  color: #652a15;
-  border-radius: 25px;
-  padding: 0.4rem 0.8rem;
-  min-height: 1.8rem;
-  height: auto;
-  white-space: nowrap;
-  border: none;
-  cursor: pointer;
-  font-size: clamp(11px, 2.5vw, 16px);
-  max-width: 100%;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.study-type button p {
-  margin: 0;
-  font-size: inherit;
-}
-
-.study-type--blue {
-  border-color: #0828c0;
-}
-
-.study-type--blue .type {
-  color: #0828c0;
-}
-
-.study-type--red {
-  border-color: #fe4d13;
-}
-
-.study-type--red .type {
-  color: #fe4d13;
 }
 
 .quiz-completion {
@@ -4065,7 +3981,7 @@ button.back-button {
   height: 2.75rem;
   padding: 0 1rem;
   padding-left: 2.5rem;
-  padding-right: 3rem;
+  padding-right: 4.5rem;
   border: 1px solid #6F2E17;
   margin-bottom: 1rem;
   border-radius: 39px;
@@ -4082,9 +3998,35 @@ button.back-button {
   color: #8d9ce2;
 }
 
-.friends-search-clear-button {
+.friends-search-camera-button {
   position: absolute;
   right: 1rem;
+  top: 1.375rem;
+  margin-top: -12px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #6F2E17;
+  transition: color 0.15s ease;
+  z-index: 1;
+}
+.friends-search-camera-button:hover {
+  color: #652a15;
+}
+.friends-search-camera-button svg {
+  width: 18px;
+  height: 18px;
+}
+
+.friends-search-clear-button {
+  position: absolute;
+  right: 3rem;
   top: 1.375rem;
   margin-top: -12px;
   background: none;
@@ -5183,9 +5125,17 @@ button.back-button {
   width: 100vw;
   max-width: min(480px, 100vw);
   margin: 0 auto;
-  padding: 2rem 0;
+  background-color: #ffba0a;
+  padding: 2rem 1rem;
   box-sizing: border-box;
   overflow-x: hidden;
+}
+.categoriesPage .categoriesCard {
+  background-color: #fffefc;
+  padding: 1rem 0;
+  border: 1px solid #0828c0;
+  box-shadow: 8px 8px 0 #3d190d;
+  border-radius: 20px;
 }
 
 .categoriesHeader {
@@ -5198,7 +5148,8 @@ button.back-button {
 }
 .categoriesHeader h1 {
   margin: 0;
-  font-size: 28px;
+  color: #4f2110;
+  font-size: 20px;
   font-weight: 700;
   text-align: left;
   grid-column: 2;
@@ -5228,9 +5179,34 @@ button.back-button {
   opacity: 0.7;
 }
 
+.categoriesRightIcon {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.categoriesRightIcon img {
+  cursor: pointer;
+}
+.categoriesRightIcon img:hover {
+  opacity: 0.7;
+}
+
+.categoriesBottomImages {
+  display: flex;
+  justify-content: center;
+  padding: 0 1.5rem 1rem 1.5rem;
+  margin-top: 1rem;
+}
+.categoriesBottomImages img {
+  max-width: 100%;
+  height: auto;
+}
+
 .categoriesList {
   display: flex;
   flex-direction: column;
+  border-radius: 25px;
   gap: 0.5rem;
   margin-bottom: 2rem;
   padding: 0 1.5rem;
@@ -5251,12 +5227,6 @@ button.back-button {
   color: #dc2626;
   text-align: center;
   padding: 2rem;
-}
-
-.level-subtitle {
-  font-size: 0.875rem;
-  color: #6b7280;
-  margin: 0.25rem 0 0 0;
 }
 
 .category-folder-header--locked {
@@ -5864,7 +5834,7 @@ button.back-button {
   gap: 10px;
   flex-shrink: 0;
   font-size: 20px;
-  margin-bottom: 2.5rem;
+  margin-bottom: 1rem;
 }
 
 .back-button {
@@ -6032,85 +6002,66 @@ button.back-button {
 }
 
 .category-folder {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 25px;
+  background-color: #fff8dd;
   margin-bottom: 1rem;
   overflow: hidden;
   transition: all 0.2s ease;
   width: 100%;
   max-width: 100%;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   box-sizing: border-box;
 }
 .category-folder:hover {
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 .category-folder--locked {
-  opacity: 0.6;
-  background-color: #f9fafb;
-  border-color: #d1d5db;
+  opacity: 0.8;
 }
 .category-folder--locked:hover {
   box-shadow: none;
 }
 .category-folder--locked .category-folder-header {
   cursor: not-allowed !important;
+  background-color: #ffdf8e;
 }
 .category-folder--locked .category-folder-header:hover {
-  background-color: transparent;
+  background-color: #ffdf8e;
 }
-.category-folder--completed {
-  border-color: #10b981;
-  background-color: #f0fdf4;
-}
-.category-folder--completed .category-folder-title h3 {
-  color: #10b981;
+.category-folder--locked .category-folder-actions {
+  background-color: #ffad92;
 }
 
 .category-folder-header {
   display: flex;
+  background-color: #ffba0a;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
+  border-radius: 30px;
+  padding: 1rem 1.5rem;
   cursor: pointer;
   -webkit-user-select: none;
      -moz-user-select: none;
           user-select: none;
   transition: background-color 0.2s ease;
 }
-.category-folder-header:hover {
-  background-color: #f9fafb;
-}
 
 .category-folder-actions {
   display: flex;
   align-items: center;
+  background-color: #fe4d13;
+  border-radius: 20px;
   gap: 0.75rem;
 }
 
 .category-folder-delete {
-  background: none;
-  border: none;
   cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b7280;
+  color: #ffffff;
   transition: all 0.2s ease;
-  border-radius: 4px;
+  padding: 0.2rem;
 }
-.category-folder-delete:hover:not(:disabled) {
+.category-folder-delete:hover {
   color: #ef4444;
-  background-color: #fef2f2;
-}
-.category-folder-delete:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.category-folder-delete svg {
-  width: 20px;
-  height: 20px;
 }
 
 .category-folder-delete-confirm {
@@ -6158,8 +6109,8 @@ button.back-button {
 
 .category-folder-title {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.25rem;
   flex: 1;
 }
 .category-folder-title h3 {
@@ -6167,15 +6118,21 @@ button.back-button {
   font-size: 18px;
   font-weight: 600;
   color: #1f2937;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.category-folder-title .level-subtitle {
+  font-size: 0.875rem;
+  color: #6b7280;
+  margin: 0;
 }
 
 .folder-icon {
-  width: 32px;
-  height: 32px;
-  transition: transform 0.2s ease;
-}
-.folder-icon.open {
-  transform: rotate(20deg);
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .document-count {
@@ -6186,16 +6143,16 @@ button.back-button {
 
 .chevron {
   transition: transform 0.2s ease;
-  color: #6b7280;
+  color: #ffffff;
+  padding: 0.2rem;
 }
 .chevron.open {
   transform: rotate(180deg);
 }
 
 .category-folder-content {
-  border-top: 1px solid #e5e7eb;
-  padding: 1rem 1.5rem;
-  background-color: #f9fafb;
+  padding: 0 0.5rem 1rem 0.5rem;
+  background-color: #fff8dd;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -6205,7 +6162,7 @@ button.back-button {
 .folder-empty {
   text-align: center;
   padding: 1.5rem;
-  color: #6b7280;
+  color: #2f130a;
   font-size: 14px;
 }
 
@@ -6220,22 +6177,21 @@ button.back-button {
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-bottom: 1px solid #ffba0a;
   cursor: pointer;
   transition: all 0.2s ease;
 }
-.document-item:hover {
-  background-color: #f3f4f6;
-  border-color: #d1d5db;
-  transform: translateX(4px);
+.document-item p {
+  color: #773800;
 }
-.document-item:hover svg {
-  color: #6f2e17;
+.document-item:hover {
+  text-decoration: underline;
+}
+.document-item:last-child {
+  border-bottom: none;
 }
 .document-item svg {
-  color: #9ca3af;
+  color: #2f130a;
   transition: color 0.2s ease;
 }
 
@@ -6249,7 +6205,8 @@ button.back-button {
 .document-name {
   font-size: 15px;
   font-weight: 500;
-  color: #1f2937;
+  color: #5b2a00;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
 }
 
 .document-stats {
@@ -6499,7 +6456,7 @@ button.back-button {
   border: none;
   background: transparent;
   color: white;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
@@ -6946,69 +6903,87 @@ button.back-button {
   transition: width 0.3s ease-in-out;
 }
 
+.document-study-options {
+  margin: 1rem;
+}
 .document-study-options__title {
   margin-bottom: 1rem;
   text-align: center;
 }
+.document-study-options .word-of-the-day-card {
+  margin-bottom: 1.5rem;
+  background-color: #fe4d13;
+  box-shadow: 8px 8px 0 #3d190d;
+  border-radius: 5px;
+}
+
+.studyTypeHead {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+}
+.studyTypeHead h2 {
+  font-size: 24px;
+  font-weight: 700;
+  color: #652a15;
+  margin: 0;
+  text-align: left;
+}
 
 .study-type {
-  display: grid;
-  grid-template-columns: 1fr 2fr;
-  grid-template-rows: auto auto;
-  border: 1px solid;
-  border-radius: 20px;
-  margin-top: 1.5rem;
-  padding: 0.5rem;
-}
-.study-type .top {
-  grid-column: 2;
-  align-self: start;
-}
-.study-type .top .type {
-  margin: 0 auto auto 0.5rem;
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  box-shadow: 8px 8px 0 #3d190d;
+  padding: 3rem;
 }
 .study-type .start_learning {
-  grid-column: 2;
   display: flex;
-  justify-content: flex-end;
+  justify-content: center;
   align-items: center;
   padding-right: 0.5rem;
 }
-.study-type img {
-  grid-column: 1;
-  grid-row: 1/3;
-}
-.study-type button {
+.study-type .start_learning button {
+  outline: none;
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
   background-color: #ffba0a;
   color: #652a15;
   border-radius: 25px;
   width: 100%;
   max-width: 12rem;
-  margin-left: auto;
-  margin-right: 0.5rem;
   height: 2rem;
   min-width: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
   padding: 0 1rem;
+  transition: all 0.2s ease;
 }
-.study-type button p {
+.study-type .start_learning button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+}
+.study-type .start_learning button:active {
+  transform: translateY(0);
+}
+.study-type .start_learning button:focus-visible {
+  outline: 2px solid #ffba0a;
+  outline-offset: 2px;
+}
+.study-type .start_learning button p {
+  margin: 0;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
-.study-type--blue {
-  border-color: #0828c0;
+.study-type-blue {
+  background-color: #B2BCEB;
+  color: white;
 }
-.study-type--blue .type {
-  color: #0828c0;
-}
-.study-type--red {
-  border-color: #fe4d13;
-}
-.study-type--red .type {
-  color: #fe4d13;
+.study-type-red {
+  background-color: #ffeab3;
+  color: white;
 }
 
 .switch-view {

@@ -1,8 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { useDocumentQuizzes } from '../../hooks/useDocumentQuizzes';
 import StudyTypeCard from './StudyType';
-import readBook from '../../assets/readBook.png';
-import studyLaptop from '../../assets/studyLaptop.png';
+import WordOfTheDay from '../WordOfTheDay';
 import type { DocumentStudyOptionsProps } from '../../types/documentStudyOptions';
 import '../../styles/components/_studyType.scss';
 
@@ -10,7 +9,8 @@ export default function DocumentStudyOptions({
   documentId,
   documentTitle,
   terminologyColor = "blue",
-  quizColor = "red"
+  quizColor = "red",
+  showWordOfTheDay = false
 }: DocumentStudyOptionsProps) {
   const navigate = useNavigate();
   const { data: quizzes = [], isLoading } = useDocumentQuizzes(documentId);
@@ -35,9 +35,15 @@ export default function DocumentStudyOptions({
         </h2>
       )}
 
+      {showWordOfTheDay && (
+        <WordOfTheDay
+          documentId={documentId}
+          backgroundColor="#FE4D13"
+        />
+      )}
+
       <StudyTypeCard
         name="Terminology"
-        img={readBook}
         start_button_text="Start Learning"
         onClick={handleTerminology}
         color={terminologyColor}
@@ -45,8 +51,7 @@ export default function DocumentStudyOptions({
 
       <StudyTypeCard
         name="Quiz"
-        img={studyLaptop}
-        start_button_text={isLoading ? "Loading..." : quizzes.length > 0 ? "Start the Quiz" : "View Quizzes"}
+        start_button_text={isLoading ? "Loading..." : quizzes.length > 0 ? "Take Quiz" : "View Quizzes"}
         onClick={handleStartQuiz}
         color={quizColor}
       />

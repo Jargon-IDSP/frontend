@@ -1,13 +1,16 @@
-// Category Folder Styles
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
+
 .category-folder {
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 12px;
+  border-radius: 25px;
+    background-color: $second-neutral-500;
   margin-bottom: 1rem;
   overflow: hidden;
   transition: all 0.2s ease;
   width: 100%;
   max-width: 100%;
+  font-family: $font-family-primary;
   box-sizing: border-box;
 
   &:hover {
@@ -15,9 +18,7 @@
   }
 
   &--locked {
-    opacity: 0.6;
-    background-color: #f9fafb;
-    border-color: #d1d5db;
+    opacity: 0.8;
 
     &:hover {
       box-shadow: none;
@@ -25,68 +26,49 @@
 
     .category-folder-header {
       cursor: not-allowed !important;
+      background-color: $secondary-200;
 
       &:hover {
-        background-color: transparent;
+        background-color: $secondary-200;
       }
     }
-  }
 
-  &--completed {
-    border-color: #10b981;
-    background-color: #f0fdf4;
-
-    .category-folder-title h3 {
-      color: #10b981;
+    .category-folder-actions {
+      background-color: $primary-200;
     }
   }
+
 }
 
 .category-folder-header {
   display: flex;
+  background-color: $color-secondary;
   justify-content: space-between;
   align-items: center;
-  padding: 1.25rem 1.5rem;
+  border-radius: 30px;
+  padding: 1rem 1.5rem;
   cursor: pointer;
   user-select: none;
   transition: background-color 0.2s ease;
 
-  &:hover {
-    background-color: #f9fafb;
-  }
 }
 
 .category-folder-actions {
   display: flex;
   align-items: center;
+  background-color: $color-primary;
+  border-radius: 20px;
   gap: 0.75rem;
 }
 
 .category-folder-delete {
-  background: none;
-  border: none;
   cursor: pointer;
-  padding: 0.25rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #6b7280;
+  color: #ffffff;
   transition: all 0.2s ease;
-  border-radius: 4px;
+  padding: 0.2rem;
 
-  &:hover:not(:disabled) {
+  &:hover {
     color: #ef4444;
-    background-color: #fef2f2;
-  }
-
-  &:disabled {
-    opacity: 0.5;
-    cursor: not-allowed;
-  }
-
-  svg {
-    width: 20px;
-    height: 20px;
   }
 }
 
@@ -141,8 +123,8 @@
 
 .category-folder-title {
   display: flex;
-  align-items: center;
-  gap: 1rem;
+  flex-direction: column;
+  gap: 0.25rem;
   flex: 1;
 
   h3 {
@@ -150,17 +132,23 @@
     font-size: 18px;
     font-weight: 600;
     color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .level-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
   }
 }
 
 .folder-icon {
-  width: 32px;
-  height: 32px;
-  transition: transform 0.2s ease;
-
-  &.open {
-    transform: rotate(20deg);
-  }
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  vertical-align: middle;
 }
 
 .document-count {
@@ -171,7 +159,8 @@
 
 .chevron {
   transition: transform 0.2s ease;
-  color: #6b7280;
+  color: #ffffff;
+  padding: 0.2rem;
 
   &.open {
     transform: rotate(180deg);
@@ -179,9 +168,8 @@
 }
 
 .category-folder-content {
-  border-top: 1px solid #e5e7eb;
-  padding: 1rem 1.5rem;
-  background-color: #f9fafb;
+  padding: 0 0.5rem 1rem 0.5rem;
+  background-color: $second-neutral-500;
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
@@ -191,7 +179,7 @@
 .folder-empty {
   text-align: center;
   padding: 1.5rem;
-  color: #6b7280;
+  color: $quaternary-900;
   font-size: 14px;
 }
 
@@ -206,24 +194,24 @@
   justify-content: space-between;
   align-items: center;
   padding: 1rem;
-  background-color: white;
-  border: 1px solid #e5e7eb;
-  border-radius: 8px;
+  border-bottom: 1px solid $color-secondary;
   cursor: pointer;
   transition: all 0.2s ease;
+  p {
+      color: $warning-800;
+
+  }
 
   &:hover {
-    background-color: #f3f4f6;
-    border-color: #d1d5db;
-    transform: translateX(4px);
+    text-decoration: underline;
+  }
 
-    svg {
-      color: #6f2e17;
-    }
+  &:last-child {
+    border-bottom: none;
   }
 
   svg {
-    color: #9ca3af;
+    color: $color-quaternary-900;
     transition: color 0.2s ease;
   }
 }
@@ -238,7 +226,8 @@
 .document-name {
   font-size: 15px;
   font-weight: 500;
-  color: #1f2937;
+  color: $warning-900;
+  font-family: $font-family-primary;
 }
 
 .document-stats {
