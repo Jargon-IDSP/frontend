@@ -1,23 +1,18 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-.container--community {
-  padding: 0;
-  background-color: $color-secondary-400;
-  scrollbar-gutter: stable;
-//   padding-bottom: calc(70px + #{$spacing-md});
-}
 
 .community-page {
-  padding: $spacing-lg;
   background-color: $color-secondary-400;
-}
+  width: 100%;
+  padding: 1rem;
+  position: relative;
+
 
 .community-header {
   display: flex;
-  justify-content: space-between;
+  margin-top: 1rem;
   align-items: flex-start;
-  margin-bottom: 0;
   position: relative;
   z-index: 1;
 }
@@ -27,32 +22,27 @@
   width: 100%;
   max-width: 400px;
   object-fit: contain;
-  margin-bottom: -$spacing-md; // Negative margin to allow tabs to overlap
-  
-  @media (max-width: 768px) {
-    max-width: 300px;
-    margin-bottom: -$spacing-sm;
-  }
 }
 
 .community-header-actions {
-  display: flex;
   align-items: center;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
   justify-content: flex-end;
-  padding-right: 0.5rem;
+  z-index: 100;
+  gap: 0.5rem;
 
   > * {
     flex-shrink: 0;
   }
 }
 
-.community-settings-container {
-  position: relative;
-}
-
 .community-settings-icon {
   background: $color-tertiary-100;
   border: 1px solid black;
+  grid-column: 3;
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -397,4 +387,4 @@
     padding-bottom: 0;
   }
 }
-
+}

@@ -4,9 +4,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../hooks/useProfile";
 import { BACKEND_URL } from "../../lib/api";
-import HappyRocky from "../../components/avatar/HappyRocky";
-import TopHat from "../../components/avatar/TopHat";
-import Mustache from "../../components/avatar/Mustache";
+import FullAvatar from "../../components/avatar/fullAvatar";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 const industryOptions = [
@@ -17,7 +15,6 @@ const industryOptions = [
   { id: 'welder', label: 'Welder', value: 'welder' },
 ];
 
-// Map industry IDs to names (based on industries.json)
 const industryIdToName: { [key: number]: string } = {
   1: 'electrician',
   2: 'plumber',
@@ -84,6 +81,7 @@ export default function ManageProfilePage() {
   };
 
   return (
+    <div className="container">
     <div className="manage-profile-page">
       <div className="manage-profile-header">
         <button 
@@ -99,17 +97,7 @@ export default function ManageProfilePage() {
       <div className="manage-profile-content">
         {/* Large Avatar */}
         <div className="manage-profile-avatar">
-          <div className="manage-profile-avatar-container">
-            <div className="manage-profile-avatar-rocky">
-              <HappyRocky />
-            </div>
-            <div className="manage-profile-avatar-tophat">
-              <TopHat />
-            </div>
-            <div className="manage-profile-avatar-mustache">
-              <Mustache />
-            </div>
-          </div>
+                  <FullAvatar />
         </div>
 
         {/* Trades Section */}
@@ -145,6 +133,7 @@ export default function ManageProfilePage() {
           )}
         </div>
       </div>
+    </div>
     </div>
   );
 }

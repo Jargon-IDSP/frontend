@@ -1,5 +1,5 @@
-import Mustache from "./Mustache";
-import TopHat from "./TopHat";
+import Mustache from "../props/Mustache";
+import TopHat from "../props/TopHat";
 
 interface RockyAvatarProps {
   config: {

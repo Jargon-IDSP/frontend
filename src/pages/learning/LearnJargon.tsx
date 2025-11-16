@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { NavigationCard } from "../../components/learning/ui/Card";
-import HappyRocky from "../../components/avatar/HappyRocky";
+import HappyRocky from "../../components/avatar/rocky/HappyRocky";
 import { useProfile } from "../../hooks/useProfile";
 import { getIndustryName } from "../../hooks/useUserPreferences";
 import DocumentDrawer from "../drawers/DocumentDrawer";
@@ -11,7 +11,6 @@ export default function LearnJargon() {
   const { data: profile } = useProfile();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  // Get the user's industry name dynamically
   const industryName = getIndustryName(profile?.industryId);
 
  

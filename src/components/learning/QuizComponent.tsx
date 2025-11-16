@@ -46,7 +46,6 @@ export default function QuizComponent({
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
-      // Add user message to history
       const userMessageId = `user-${Date.now()}`;
       const userMessage: ChatMessage = {
         id: userMessageId,
@@ -55,7 +54,6 @@ export default function QuizComponent({
       };
       setChatHistory((prev) => [...prev, userMessage]);
 
-      // Create assistant message for streaming
       const assistantMessageId = `assistant-${Date.now()}`;
       const assistantMessage: ChatMessage = {
         id: assistantMessageId,
@@ -106,7 +104,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         const chunk = decoder.decode(value, { stream: true });
         fullResponse += chunk;
 
-        // Update the streaming message
         setChatHistory((prev) =>
           prev.map((msg) =>
             msg.id === assistantMessageId
@@ -133,7 +130,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         );
         setStreamingMessageId(null);
       } else {
-        // If no streaming message, add error message
         const errorMessage: ChatMessage = {
           id: `error-${Date.now()}`,
           role: "assistant",
@@ -261,7 +257,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     if (!chatPrompt.trim() || chatMutation.isPending) return;
 
     const promptToSend = chatPrompt.trim();
-    setChatPrompt(""); // Clear input immediately
+    setChatPrompt(""); 
 
     try {
       const token = await getToken();
@@ -270,7 +266,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       chatMutation.mutate({ prompt: promptToSend, token });
     } catch (err) {
       console.error("Auth error:", err);
-      // Restore prompt on error
       setChatPrompt(promptToSend);
     }
   };
@@ -300,7 +295,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
   if (questions.length === 0) {
     return (
-      <div className="quiz-page-wrapper">
         <div className="container">
           <div className="quizContainer">
             <button className="back-to-quiz-button" onClick={onBack}>
@@ -314,13 +308,11 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             </div>
           </div>
         </div>
-      </div>
     );
   }
 
   return (
-    <div className="quiz-page-wrapper">
-      <div className="container">
+    <div className="container">
         <div className="quizContainer">
           <button
             className="back-to-quiz-button"
@@ -460,7 +452,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             isLoading={chatMutation.isPending}
           />
         </div>
-      </div>
-    </div>
+        </div>
   );
 }

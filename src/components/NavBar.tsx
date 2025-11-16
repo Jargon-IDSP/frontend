@@ -49,7 +49,6 @@ export default function NavBar() {
   return (
     <>
       <nav className="navbar">
-        <div className="container">
           <div className="nav-items">
             {navItems.map((item) => {
               const isActive = location.pathname === item.path;
@@ -72,7 +71,6 @@ export default function NavBar() {
               );
             })}
           </div>
-        </div>
       </nav>
       <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
     </>

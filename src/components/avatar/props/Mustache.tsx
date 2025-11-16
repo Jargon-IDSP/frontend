@@ -1,9 +1,8 @@
-export default function Mustache ({ color = "#3d2817", className = "" }) {
+export default function Mustache ({ color = "#3d2817", className = "avatar-accessory Mustache" }) {
   return (
-  <svg 
-    viewBox="0 0 200 200" 
+  <svg
+    viewBox="0 0 200 200"
     className={className}
-    style={{ width: '100%', height: '100%' }}
   >
     <path 
       d="M 100 100 Q 85 95 70 95 Q 55 95 45 105 Q 40 110 45 115 Q 50 120 60 115 Q 70 110 80 108 Q 90 105 100 105 Z" 
