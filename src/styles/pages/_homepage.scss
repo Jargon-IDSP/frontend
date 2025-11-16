@@ -2,14 +2,14 @@
 @use '../mixins' as *;
 
 .home-page {
-  padding: 1rem;
-
+padding:1rem;
 
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: $spacing-lg auto;
+  padding: 1rem 1rem 0 1rem;
   gap: $spacing-md;
 }
 
@@ -138,7 +138,6 @@
 
 // Welcome Section - Container for all cards
 .welcome-section {
-  display: flex;
   flex-direction: column;
   gap: $spacing-lg;
 }
@@ -249,6 +248,7 @@
 
   // New Leaderboard Design
   .leaderboard-content-new {
+
     @include card-content;
     display: flex;
     gap: $spacing-md;
@@ -443,6 +443,7 @@
 
 // Upload File Card
 .upload-file-card {
+
   @include card-base;
 
   .upload-title {
@@ -490,7 +491,7 @@
   }
 }
 
-// Word of the Day
+// Word of the Day - component handles its own styling
 .word-of-the-day {
   @include card-base;
 
@@ -498,92 +499,6 @@
     @include card-title;
     margin-bottom: 0;
     color: $color-quaternary-dark;
-  }
-
-  &-card {
-    border-radius: $spacing-sm;
-    padding: 0;
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
-    display: flex;
-    flex-direction: column;
-
-    .today-term-card-image {
-      width: 100%;
-      height: auto;
-      display: block;
-      z-index: 1;
-      position: relative;
-    }
-
-    .word-card-content {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      z-index: 2;
-      text-align: center;
-      box-sizing: border-box;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      padding: $spacing-lg;
-      
-      h3 {
-        font-size: $font-size-h3;
-        font-weight: $font-weight-bold;
-        color: $color-neutral;
-        margin: 0 0 $spacing-sm 0;
-      }
-    }
-  }
-}
-
-// Word Components (nested under word-of-the-day context)
-.word {
-  &-term {
-    font-size: 32px;
-    font-weight: $font-weight-bold;
-    color: $color-second-neutral-light;
-    margin-bottom: $spacing-sm;
-    text-transform: capitalize;
-    @include text-overflow;
-  }
-
-  &-term-translated {
-    font-size: $font-size-h3;
-    font-weight: $font-weight-bold;
-    color: $color-second-neutral;
-    margin-bottom: $spacing-sm;
-    text-transform: capitalize;
-    @include text-overflow;
-  }
-
-  &-definition {
-    font-size: $font-size-body;
-    color: $color-neutral;
-    line-height: 1.5;
-    margin-bottom: $spacing-sm;
-    @include text-overflow;
-  }
-
-  &-meta {
-    display: flex;
-    justify-content: center;
-    gap: $spacing-sm;
-    flex-wrap: wrap;
-  }
-
-  &-industry,
-  &-level {
-    background-color: $color-quaternary-light;
-    color: $color-quaternary-light-dark;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $spacing-xs;
-    font-size: $font-size-label;
-    font-weight: $font-weight-regular;
   }
 }
 
@@ -612,7 +527,6 @@
   }
 
   &__text {
-    margin-top: 0.5rem;
     text-align: center;
     font-size: 0.875rem;
     color: #FFFFFF;
@@ -621,6 +535,7 @@
 
 // Start Learning Card
 .start-learning-card {
+
   @include card-base;
 
   .learning-title {

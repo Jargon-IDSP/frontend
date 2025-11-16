@@ -136,7 +136,7 @@ const LeaderboardPage: React.FC = () => {
           ) : (
             <>
               {users.length > 0 && (
-                <Podium users={users} currentUserId={profile?.id} />
+                <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
               )}
             </>
           )}
@@ -164,7 +164,7 @@ const LeaderboardPage: React.FC = () => {
                         rank={actualRank}
                         isCurrentUser={isCurrentUser}
                         isClickable={true}
-                        fromRoute="/community"
+                        fromRoute="/leaderboard/full"
                       />
                     );
                   })}

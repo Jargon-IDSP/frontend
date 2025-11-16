@@ -23,6 +23,9 @@ export default function ChatModal({
   const drawerBodyRef = useRef<HTMLDivElement>(null);
   const [isInputFocused, setIsInputFocused] = useState(false);
   const blurTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const touchStartX = useRef<number>(0);
+  const touchStartY = useRef<number>(0);
+  const touchStartTime = useRef<number>(0);
 
   useEffect(() => {
     if (chatMessagesRef.current) {
@@ -97,9 +100,42 @@ export default function ChatModal({
     }, 100);
   };
 
+  const handleTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX;
+    touchStartY.current = e.touches[0].clientY;
+    touchStartTime.current = Date.now();
+  };
+
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    const touchEndX = e.changedTouches[0].clientX;
+    const touchEndY = e.changedTouches[0].clientY;
+    const touchEndTime = Date.now();
+
+    const deltaX = touchEndX - touchStartX.current;
+    const deltaY = touchEndY - touchStartY.current;
+    const deltaTime = touchEndTime - touchStartTime.current;
+
+    // Check if it's a left-to-right swipe (positive deltaX)
+    // Swipe should be at least 100px horizontally
+    // Swipe should be more horizontal than vertical
+    // Swipe should be completed within 500ms
+    const isHorizontalSwipe = Math.abs(deltaX) > Math.abs(deltaY);
+    const isLeftToRight = deltaX > 0;
+    const isLongEnough = Math.abs(deltaX) > 100;
+    const isFastEnough = deltaTime < 500;
+
+    if (isHorizontalSwipe && isLeftToRight && isLongEnough && isFastEnough) {
+      onClose();
+    }
+  };
+
   return (
     <Drawer open={isOpen} onOpenChange={onClose} direction="right">
-      <DrawerContent className={`chat-drawer-content ${isInputFocused ? 'chat-drawer-content--input-focused' : ''}`}>
+      <DrawerContent
+        className={`chat-drawer-content ${isInputFocused ? 'chat-drawer-content--input-focused' : ''}`}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
         <DrawerHeader className={`chat-drawer__header ${isInputFocused ? 'chat-drawer__header--hidden' : ''}`}>
           <div className="chat-drawer__title">
             <HappyRocky />
