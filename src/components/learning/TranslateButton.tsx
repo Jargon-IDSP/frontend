@@ -1,66 +1,20 @@
-import { useState, useEffect } from 'react';
-
 interface TranslateButtonProps {
-  text: string;
-  preferredLanguage?: string | null;
-  onTranslate: (toLanguage: string) => Promise<string>;
+  isTranslated: boolean;
+  loading: boolean;
+  targetLanguage: string;
+  onToggle: () => void;
 }
 
-export default function TranslateButton({ text, preferredLanguage, onTranslate }: TranslateButtonProps) {
-  const [isTranslated, setIsTranslated] = useState(false);
-  const [translatedText, setTranslatedText] = useState('');
-  const [loading, setLoading] = useState(false);
-  
-  const targetLanguage = preferredLanguage || 'french';
-
-  useEffect(() => {
-    setIsTranslated(false);
-    setTranslatedText('');
-  }, [text]);
-
-  const handleToggle = async () => {
-    if (isTranslated) {
-      setIsTranslated(false);
-    } else {
-      if (!translatedText) {
-        setLoading(true);
-        try {
-          const result = await onTranslate(targetLanguage);
-          if (result && result !== text) {
-            setTranslatedText(result);
-            setIsTranslated(true);
-          } else {
-            setTranslatedText('Translation not available for this content.');
-            setIsTranslated(false);
-          }
-        } catch (err) {
-          console.error('Translation failed:', err);
-          setTranslatedText('Translation not available for this content.');
-          setIsTranslated(false);
-        } finally {
-          setLoading(false);
-        }
-      } else {
-        setIsTranslated(true);
-      }
-    }
-  };
-
+export default function TranslateButton({ isTranslated, loading, targetLanguage, onToggle }: TranslateButtonProps) {
   return (
-    <div>
-      <div className="quiz-translate-button">
-        <button
-          onClick={handleToggle}
-          disabled={loading}
-          className={`translate-button ${isTranslated ? 'translate-button--translated' : 'translate-button--default'}`}
-        >
-          {loading ? '...' : isTranslated ? 'Show English' : `Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
-        </button>
-      </div>
-
-      <p className="translate-button-text">
-        {isTranslated && translatedText ? translatedText : text}
-      </p>
+    <div className="quiz-translate-button">
+      <button
+        onClick={onToggle}
+        disabled={loading}
+        className={`translate-button ${isTranslated ? 'translate-button--translated' : 'translate-button--default'}`}
+      >
+        {loading ? '...' : isTranslated ? 'Translate to English' : `Translate to ${targetLanguage.charAt(0).toUpperCase() + targetLanguage.slice(1)}`}
+      </button>
     </div>
   );
 }
