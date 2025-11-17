@@ -7,7 +7,7 @@ import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
 import LoadingBar from "./LoadingBar";
 
-export default function WordOfTheDay({ documentId, backgroundImage, backgroundColor }: WordOfTheDayProps = {}) {
+export default function WordOfTheDay({ documentId, backgroundImage, backgroundColor, showButton = false }: WordOfTheDayProps = {}) {
   const cardBackground = backgroundImage || todayTermCard;
   const useColorBg = !!backgroundColor;
   const { isSignedIn, isLoaded } = useAuth();
@@ -217,10 +217,10 @@ export default function WordOfTheDay({ documentId, backgroundImage, backgroundCo
             )}
           </div>
         )}
-        {documentId && (
+        {(documentId || showButton) && (
           <button
             className="word-start-learning-btn"
-            onClick={handleCardClick}
+            onClick={documentId ? handleCardClick : undefined}
           >
             Start Learning
           </button>

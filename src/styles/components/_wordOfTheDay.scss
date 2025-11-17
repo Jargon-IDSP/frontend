@@ -50,7 +50,7 @@
 
 .word-of-the-day-card__background {
   width: 100%;
-  aspect-ratio: 324 / 207;
+  aspect-ratio: 324 / 250;
   border-radius: 10px;
   display: block;
 }
@@ -115,7 +115,6 @@
   -webkit-box-orient: vertical;
   overflow: hidden;
   flex-shrink: 2;
-  margin-bottom: 1rem;
   text-align: center;
   width: 100%;
 }

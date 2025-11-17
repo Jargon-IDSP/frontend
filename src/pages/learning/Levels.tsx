@@ -50,9 +50,9 @@ const DEFAULT_LEVELS = [
 
 export default function ExistingLevels() {
   const navigate = useNavigate();
-  const { data: profile } = useProfile();
+  const { data: profile, isLoading: profileLoading } = useProfile();
 
-  const { data: levelsData, isLoading, error } = useLevels(profile?.industryId);
+  const { data: levelsData, isLoading: levelsLoading, error } = useLevels(profile?.industryId);
   const backendLevels = levelsData || DEFAULT_LEVELS;
 
 
@@ -79,6 +79,9 @@ export default function ExistingLevels() {
     const level = levels.find((l) => l.id === levelId);
     return level?.unlocked === false || (level?.unlocked === undefined && levelId > 1);
   };
+
+  // Combine both loading states to prevent content jitter
+  const isLoading = profileLoading || levelsLoading;
 
   const getStudySessions = (levelId: number): StudySession[] => {
     return [
@@ -162,7 +165,7 @@ export default function ExistingLevels() {
         bottomImages={[dictionaryBottom]}
       >
         {isLoading ? (
-          <LoadingBar isLoading={isLoading} text="Loading levels" />
+          <LoadingBar isLoading={isLoading} hasData={!!profile && !!levelsData} text="Loading course" />
         ) : error ? (
           <div className="error-message">
             {error instanceof Error ? error.message : "Failed to load levels"}

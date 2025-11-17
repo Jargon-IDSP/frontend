@@ -5126,9 +5126,10 @@ button.back-button {
   max-width: min(480px, 100vw);
   margin: 0 auto;
   background-color: #ffba0a;
-  padding: 2rem 1rem;
+  padding: 2rem 1rem 2rem 0.5rem;
   box-sizing: border-box;
   overflow-x: hidden;
+  min-height: 100vh;
 }
 .categoriesPage .categoriesCard {
   background-color: #fffefc;
@@ -5714,6 +5715,73 @@ button.back-button {
 .notifications-page__content {
   max-width: 600px;
   margin: 0 auto;
+}
+
+.bossPage {
+  margin: 1rem;
+}
+.bossPage .headerContent {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  margin: 2rem 1rem 1rem 1rem;
+  position: relative;
+}
+.bossPage .headerContent .navigation {
+  background-color: #3d190d;
+  width: 2rem;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.bossPage .headerContent .navigation img {
+  filter: brightness(0) invert(1);
+}
+.bossPage .headerContent .headerText {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+}
+.bossPage .headerContent .headerText .levelLabel {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #2f130a;
+}
+.bossPage .headerContent .headerText h1 {
+  margin: 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+.bossPage .headerContent .headerText .badge {
+  background-color: #fe4d13;
+  color: white;
+  padding: 0.25rem 0.75rem;
+  align-self: center;
+  border-radius: 1rem;
+  font-size: 0.875rem;
+  font-weight: 500;
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.bossPage .headerContent .headerText .description {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #4f2110;
+}
+.bossPage .levelBadge {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+.bossPage .levelBadge img {
+  width: 50%;
 }
 
 .button {
@@ -6916,6 +6984,28 @@ button.back-button {
   box-shadow: 8px 8px 0 #3d190d;
   border-radius: 5px;
 }
+.document-study-options .boss-quiz-score-card {
+  background: linear-gradient(135deg, #f5deb3 0%, #e8d5a8 100%);
+  border: 1px solid #3d190d;
+  border-radius: 12px;
+  box-shadow: 8px 8px 0 #3d190d;
+  padding: 2rem;
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+.document-study-options .boss-quiz-score-card .score-label {
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: #652a15;
+  margin-bottom: 0.5rem;
+}
+.document-study-options .boss-quiz-score-card .score-value {
+  font-size: 4rem;
+  font-weight: 700;
+  color: #3d190d;
+  line-height: 1;
+}
 
 .studyTypeHead {
   margin-top: 1.5rem;
@@ -6935,14 +7025,46 @@ button.back-button {
   margin-top: 0.5rem;
   box-shadow: 8px 8px 0 #3d190d;
   padding: 3rem;
+  position: relative;
 }
-.study-type .start_learning {
+.study-type-with-score {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  padding: 2rem 1rem;
+}
+.study-type-score {
+  display: flex;
+  flex-direction: column;
+}
+.study-type-score .score-label {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #652a15;
+  margin-bottom: 0.25rem;
+}
+.study-type-score .score-value {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #3d190d;
+  line-height: 1;
+}
+.study-type-actions {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  padding-right: 0.5rem;
+}
+.study-type .start_learning,
+.study-type .study-type-actions {
   display: flex;
   justify-content: center;
   align-items: center;
   padding-right: 0.5rem;
 }
-.study-type .start_learning button {
+.study-type .start_learning button,
+.study-type .study-type-actions button {
   outline: none;
   font-family: inherit;
   font-size: inherit;
@@ -6960,18 +7082,22 @@ button.back-button {
   padding: 0 1rem;
   transition: all 0.2s ease;
 }
-.study-type .start_learning button:hover {
+.study-type .start_learning button:hover,
+.study-type .study-type-actions button:hover {
   opacity: 0.9;
   transform: translateY(-1px);
 }
-.study-type .start_learning button:active {
+.study-type .start_learning button:active,
+.study-type .study-type-actions button:active {
   transform: translateY(0);
 }
-.study-type .start_learning button:focus-visible {
+.study-type .start_learning button:focus-visible,
+.study-type .study-type-actions button:focus-visible {
   outline: 2px solid #ffba0a;
   outline-offset: 2px;
 }
-.study-type .start_learning button p {
+.study-type .start_learning button p,
+.study-type .study-type-actions button p {
   margin: 0;
   white-space: nowrap;
   overflow: hidden;
@@ -6984,6 +7110,49 @@ button.back-button {
 .study-type-red {
   background-color: #ffeab3;
   color: white;
+}
+.study-type-locked {
+  background-color: #ffeab3 !important;
+  cursor: not-allowed;
+}
+.study-type-locked .start_learning,
+.study-type-locked .study-type-actions {
+  display: flex;
+  flex-direction: column;
+}
+.study-type-locked .start_learning .lock-message,
+.study-type-locked .study-type-actions .lock-message {
+  color: #bd9f94;
+  font-size: 0.75rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0;
+  text-align: center;
+}
+.study-type-locked .start_learning button,
+.study-type-locked .study-type-actions button {
+  background-color: #ffdf8e !important;
+  color: #bd9f94 !important;
+  cursor: not-allowed;
+  opacity: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+}
+.study-type-locked .start_learning button .button-lock-icon,
+.study-type-locked .study-type-actions button .button-lock-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+  filter: brightness(0) saturate(100%) invert(69%) sepia(13%) saturate(445%) hue-rotate(326deg) brightness(89%) contrast(85%);
+}
+.study-type-locked .start_learning button:hover,
+.study-type-locked .study-type-actions button:hover {
+  opacity: 1;
+  transform: none;
+}
+.study-type-locked .start_learning button:active,
+.study-type-locked .study-type-actions button:active {
+  transform: none;
 }
 
 .switch-view {
