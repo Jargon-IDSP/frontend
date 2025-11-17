@@ -10,7 +10,6 @@ import { useDocument } from "../../hooks/useDocument";
 import EmptyState from "../../components/learning/EmptyState";
 import LoadingBar from "../../components/LoadingBar";
 import type { Term } from "../../types/learning";
-import type { Document } from "../../types/document";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import { industryIdToName } from "@/lib/api";
 
