@@ -232,7 +232,7 @@ export default function FriendsPage() {
             <input
               type="text"
               className="friends-search-input-new"
-              placeholder="Search by username, email, or scan a QR code..."
+              placeholder="Search by username, email, or scan a QR code"
               value={searchQuery}
               onChange={(e) => {
                 setSearchQuery(e.target.value);
