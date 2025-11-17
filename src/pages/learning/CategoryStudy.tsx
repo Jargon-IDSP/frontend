@@ -58,22 +58,18 @@ function ProcessingDocumentCard({
   const [hasShownSneakPeekToast, setHasShownSneakPeekToast] = useState(false);
   const { showToast } = useNotificationContext();
 
-  // Fetch job status for detailed progress
   const { data: jobStatus } = useDocumentJobStatus({
     documentId: documentId || null,
     pollingInterval: 1000,
   });
 
-  // If quick translation is available, user can start studying immediately
   const canStudy =
     status.quickTranslation &&
     (status.flashcardCount > 0 || status.questionCount > 0);
 
-  // Check if document is fully complete
   const isFullyComplete =
     status.hasTranslation && status.hasFlashcards && status.hasQuiz;
 
-  // Show sneak peek toast when ready
   useEffect(() => {
     if (canStudy && !hasShownSneakPeekToast && documentId) {
       showToast({
@@ -90,11 +86,9 @@ function ProcessingDocumentCard({
     }
   }, [canStudy, hasShownSneakPeekToast, showToast, documentId]);
 
-  // Enhanced steps with job progress (OCR + Translation run together, not shown separately)
   const getStepState = (stepName: string) => {
     switch (stepName) {
       case "Translation":
-        // Translation runs in OCR worker, use OCR job state if available
         return jobStatus?.ocr?.state;
       case "Flashcards":
       case "Questions":
@@ -109,7 +103,6 @@ function ProcessingDocumentCard({
       name: "Translation",
       complete: status.hasTranslation || status.quickTranslation,
       state: getStepState("Translation"),
-      // Use real OCR job progress if available, otherwise undefined (will show as "in progress" without %)
       progress: jobStatus?.ocr?.progress,
     },
     {
@@ -118,7 +111,6 @@ function ProcessingDocumentCard({
         status.hasFlashcards ||
         (status.quickTranslation && status.flashcardCount > 0),
       state: getStepState("Flashcards"),
-      // Use real flashcard job progress
       progress: jobStatus?.flashcards?.progress,
     },
     {
@@ -126,7 +118,6 @@ function ProcessingDocumentCard({
       complete:
         status.hasQuiz || (status.quickTranslation && status.questionCount > 0),
       state: getStepState("Questions"),
-      // Questions are generated with flashcards, so use same progress
       progress: jobStatus?.flashcards?.progress,
     },
     {
@@ -139,27 +130,20 @@ function ProcessingDocumentCard({
 
   const activeStepIndex = steps.findIndex((step) => !step.complete);
 
-  // Rocky's messages and items based on processing stage
   const workSequence = [
     { message: "Let me grab my hardhat!", item: <img src={hat} alt="Hardhat" /> },
     { message: "Time for the high-vis vest!", item: <img src={vest} alt="High-vis vest" /> },
     { message: "Now, where's that drill?", item: <img src={drill} alt="Drill" /> },
   ];
 
-  // Items get picked up progressively and reset when Rocky completes his walk
   useEffect(() => {
     const timeouts: NodeJS.Timeout[] = [];
 
     const schedulePickups = () => {
-      // First pickup (hardhat) at 2.9s
       timeouts.push(setTimeout(() => setCurrentItem(1), 2900));
-      // Second pickup (vest) at 6.1s (2.9s + 3.2s)
       timeouts.push(setTimeout(() => setCurrentItem(2), 6100));
-      // Third pickup (drill) at 9.3s (2.9s + 3.2s + 3.2s)
       timeouts.push(setTimeout(() => setCurrentItem(3), 9300));
-      // State 4 at 12.5s (2.9s + 3.2s + 3.2s + 3.2s)
       timeouts.push(setTimeout(() => setCurrentItem(4), 12500));
-      // Reset at 16s to match Rocky's walk cycle
       timeouts.push(setTimeout(() => {
         setCurrentItem(0);
         schedulePickups();
@@ -171,18 +155,17 @@ function ProcessingDocumentCard({
     return () => timeouts.forEach(timeout => clearTimeout(timeout));
   }, []);
 
-  // Determine which Rocky image to show based on items picked up
   const getRockyImage = () => {
     switch (currentItem) {
       case 0:
-        return "/rockyYellow.svg"; // Default happy Rocky
+        return "/rockyYellow.svg";
       case 1:
-        return rockyHat; // Picked up hat
+        return rockyHat;
       case 2:
-        return rockyHatVest; // Picked up hat and vest
+        return rockyHatVest; 
       case 3:
       case 4:
-        return rockyFullGear; // Picked up all items (states 3 & 4: walking off screen)
+        return rockyFullGear; 
       default:
         return "/rockyYellow.svg";
     }
@@ -209,10 +192,8 @@ function ProcessingDocumentCard({
         )}
         </div>
 
-      {/* Rocky Animation Section */}
       <div className="rocky-animation">
         <div className="rocky-animation__scene">
-          {/* Speech Bubble - only show while collecting items */}
           {currentItem < 3 && (
             <div className="rocky-animation__speech-bubble">
               <svg
@@ -234,12 +215,10 @@ function ProcessingDocumentCard({
             </div>
           )}
 
-          {/* Rocky Walking */}
           <div className={`rocky-animation__rocky ${showCostumed ? 'rocky-animation__rocky--costumed' : ''}`}>
             <img src={getRockyImage()} alt="Rocky" />
           </div>
 
-          {/* Work Items */}
           <div className="rocky-animation__items">
             <div
               className={`rocky-animation__item rocky-animation__item--hat ${
@@ -345,21 +324,17 @@ export default function CategoryStudy() {
     pollingInterval: 1000,
   });
 
-  // Use initial status data from navigation if available, otherwise use hook data
   const displayStatusData = statusData || initialStatusData;
 
-  // When coming from upload, wait for status data before showing content
   const isWaitingForStatusData = justUploaded && !displayStatusData;
 
   useEffect(() => {
     if (statusData?.status.status === "completed" && justUploadedDocId) {
-      // Invalidate queries to refetch the document list
       refetch();
       queryClient.invalidateQueries({
         queryKey: ["documents", "by-category", category],
       });
 
-      // Automatically redirect to the study page when fully saved
       setTimeout(() => {
         navigate(`/learning/documents/${justUploadedDocId}/study`);
       }, 1000);
@@ -380,12 +355,10 @@ export default function CategoryStudy() {
         </h1>
       </div>
 
-      {/* Show loading bar while waiting for status data after upload */}
       {isWaitingForStatusData && (
         <LoadingBar isLoading={true} text="Loading document status" />
       )}
 
-      {/* Show processing card once status data is available */}
       {justUploaded && displayStatusData && (
         <ProcessingDocumentCard
           filename={displayStatusData.document.filename}
@@ -394,7 +367,6 @@ export default function CategoryStudy() {
         />
       )}
 
-      {/* Only show document list after status data is loaded (if coming from upload) */}
       {!isWaitingForStatusData && (
         <>
           {isLoading ? (
@@ -409,7 +381,6 @@ export default function CategoryStudy() {
           ) : (
             <div className="category-study__documents-list">
               {documents.map((doc) => {
-                // Hide the just-uploaded document while it's being processed
                 if (
                   justUploaded &&
                   doc.id === justUploadedDocId &&

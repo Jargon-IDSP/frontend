@@ -8,7 +8,7 @@ export interface WordOfTheDayData {
 
 export interface CachedWordData {
   data: WordOfTheDayData;
-  date: string; // YYYY-MM-DD format
+  date: string; 
 }
 
 export interface FlashcardResponse {
@@ -33,4 +33,5 @@ export interface WordOfTheDayProps {
   documentId?: string;
   backgroundImage?: string;
   backgroundColor?: string;
+  showButton?: boolean;
 }
