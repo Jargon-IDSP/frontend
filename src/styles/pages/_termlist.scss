@@ -3,10 +3,10 @@
 
 .termlist-page {
   min-height: 100vh;
-  padding-top: $spacing-xl;
+  padding: $spacing-xl 0.5rem;
 
   .container {
-    padding: 0 $spacing-xl $spacing-xl;
+    padding: 0 $spacing-sm 0 $spacing-md;
   }
 
   &-header {
@@ -24,7 +24,7 @@
   }
 
   &-title {
-    font-size: $font-size-h1;
+    font-size: $font-size-h2;
     font-weight: $font-weight-medium;
     color: $color-quaternary-dark;
   }
@@ -44,11 +44,16 @@
     p {
       margin: 0;
       color: $color-error;
+      background-color: $color-second-neutral;
     }
   }
 
   &-content {
-    margin-top: $spacing-lg;
+    margin: $spacing-lg $spacing-md $spacing-lg $spacing-sm;
+    padding: $spacing-md;
+    border: 1px $quaternary-600 solid;
+    border-radius: 25px;
+    box-shadow: 8px 8px 0 $color-quaternary-800;
   }
 
   &-empty {
@@ -61,8 +66,8 @@
   }
 
   &-items {
-    list-style-type: disc;
-    padding-left: $spacing-xl;
+    list-style-type: none;
+    padding-left: 0;
     margin: 0;
     display: flex;
     flex-direction: column;
@@ -72,6 +77,28 @@
 
 .termlist-item {
   margin-top: 3rem;
+  display: flex;
+  gap: $spacing-md;
+  align-items: flex-start;
+  padding-bottom: 2rem;
+  border-bottom: 1px dashed $color-quaternary;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &-number {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    min-width: 2.5rem;
+    flex-shrink: 0;
+  }
+
+  &-content {
+    flex: 1;
+  }
+
   &-term {
     font-size: $font-size-h3;
     font-weight: $font-weight-medium;

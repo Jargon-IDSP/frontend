@@ -1,8 +1,8 @@
 import Star from '../../assets/icons/star.svg';
-import Hat from '../../assets/icons/hat.svg';
 import type { QuizCompletionProps } from '../../types/components/quiz';
 import { useUserBadges } from '../../hooks/useUserBadges';
 import { useMemo } from 'react';
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 const badgeModules = import.meta.glob<string>('../../assets/badges/**/*.svg', {
   eager: true,
@@ -13,23 +13,24 @@ export default function QuizCompletion({
   score,
   totalQuestions: _totalQuestions,
   onBack,
-  quizType = 'custom',
   isBossQuiz = false,
   passed = true,
 }: QuizCompletionProps) {
   const { data: userBadges } = useUserBadges();
 
-  // Determine if this is a failed boss quiz
   const failedBossQuiz = isBossQuiz && !passed;
 
-  const completionMessage = failedBossQuiz
-    ? 'So close! Your badge is waiting for you on your next attempt.'
+const headingMessage = failedBossQuiz
+    ? 'So Close!'
     : isBossQuiz
-    ? 'You earned a new badge!'
-    : quizType === 'existing'
-    ? 'You completed your Red Seal practice quiz!'
-    : 'You completed your customized course!';
+    ? 'Congrats!'
+    : 'Awesome!';
 
+  const completionMessage = failedBossQuiz
+    ? 'Try again to earn your badge'
+    : isBossQuiz
+    ? 'You completed your course'
+    : "You've finished this lesson";
   const pointsPerQuestion = isBossQuiz ? 20 : 10;
 
   const latestBadge = userBadges && userBadges.length > 0 ? userBadges[0] : null;
@@ -51,30 +52,33 @@ export default function QuizCompletion({
   }, [latestBadge, userBadges]);
 
   return (
-    <div className="quiz-page-wrapper">
       <div className="container">
+      <div className="quiz-page-wrapper">
+        <div className="quiz-header">
+          <button
+            className="back-to-quiz-button"
+            onClick={onBack}
+            aria-label="Back to Quizzes"
+          >
+            <img src={goBackIcon} alt="Back" />
+          </button>
+          </div>
         <div className="quizCompletion">
         <div className="points">
         <h1>{score * pointsPerQuestion}</h1>
         <img src={Star} alt="Star" />
         </div>
-              <h2>Awesome!</h2>
+              <h2>{headingMessage}!</h2>
               <h2> {completionMessage}</h2>
 
-              {!isBossQuiz && (
-                <img className="hatIcon" src={Hat} alt="Celebration" />
-              )}
-
-              {isBossQuiz && !failedBossQuiz && badgeIconUrl && (
+              {isBossQuiz && !failedBossQuiz && badgeIconUrl ? (
                 <>
                   <img className="badgeIcon" src={badgeIconUrl} alt="Badge" />
                   <p>You got a new badge to your collection!</p>
                   <p className="smallNote">You can view all your achievements on your profile page.</p>
                 </>
-              )}
-
-              {failedBossQuiz && (
-                <img className="hatIcon" src={Hat} alt="Keep trying!" />
+              ) : (
+                <img className="rockyIcon" src="/rockyYellow.svg" alt="Rocky" />
               )}
 
       </div>

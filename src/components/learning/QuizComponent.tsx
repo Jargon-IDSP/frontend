@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
@@ -6,6 +6,9 @@ import { useNotificationContext } from "../../contexts/NotificationContext";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
+import Correct from "../../assets/icons/correct.svg";
+import Incorrect from "../../assets/icons/incorrect.svg";
+
 import type {
   QuizComponentProps,
   ChatMessage,
@@ -40,9 +43,14 @@ export default function QuizComponent({
     null
   );
 
+  const [isTranslated, setIsTranslated] = useState(false);
+  const [translatedText, setTranslatedText] = useState('');
+  const [translationLoading, setTranslationLoading] = useState(false);
+
   const currentQuestion = questions[currentQuestionIndex];
   const isBossQuiz = quizType === "existing" && quizNumber === 3;
   const BOSS_QUIZ_PASSING_SCORE = 70;
+  const targetLanguage = preferredLanguage || 'french';
 
   const chatMutation = useMutation({
     mutationFn: async ({ prompt, token }: ChatRequest) => {
@@ -161,6 +169,39 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
     console.log("✅ Translation result:", { lang, translated });
     return translated;
+  };
+
+  useEffect(() => {
+    setIsTranslated(false);
+    setTranslatedText('');
+  }, [currentQuestion.prompt]);
+
+  const handleTranslateToggle = async () => {
+    if (isTranslated) {
+      setIsTranslated(false);
+    } else {
+      if (!translatedText) {
+        setTranslationLoading(true);
+        try {
+          const result = await translateText(currentQuestion.prompt, targetLanguage);
+          if (result && result !== currentQuestion.prompt) {
+            setTranslatedText(result);
+            setIsTranslated(true);
+          } else {
+            setTranslatedText('Translation not available for this content.');
+            setIsTranslated(false);
+          }
+        } catch (err) {
+          console.error('Translation failed:', err);
+          setTranslatedText('Translation not available for this content.');
+          setIsTranslated(false);
+        } finally {
+          setTranslationLoading(false);
+        }
+      } else {
+        setIsTranslated(true);
+      }
+    }
   };
 
   const resetChatState = () => {
@@ -285,7 +326,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         totalQuestions={questions.length}
         onRetry={handleRetry}
         onBack={onBack}
-        quizType={quizType}
         quizNumber={quizNumber}
         isBossQuiz={isBossQuiz}
         passed={passed}
@@ -314,6 +354,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   return (
     <div className="container">
         <div className="quizContainer">
+          <div className="quiz-header">
           <button
             className="back-to-quiz-button"
             onClick={onBack}
@@ -324,24 +365,24 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
           <div className="quiz-progress">
             <span className="quiz-number">
-              Question {currentQuestionIndex + 1} of {questions.length}
+              {currentQuestionIndex + 1} / {questions.length}
             </span>
           </div>
 
+          {!isBossQuiz && (
+            <TranslateButton
+              isTranslated={isTranslated}
+              loading={translationLoading}
+              targetLanguage={targetLanguage}
+              onToggle={handleTranslateToggle}
+            />
+          )}
+          </div>
+
           <div className="quiz-question-section">
-            {!isBossQuiz ? (
-              <div className="quiz-translate-button">
-                <TranslateButton
-                  text={currentQuestion.prompt}
-                  preferredLanguage={preferredLanguage}
-                  onTranslate={(targetLanguage) =>
-                    translateText(currentQuestion.prompt, targetLanguage)
-                  }
-                />
-              </div>
-            ) : (
-              <p className="translate-button-text">{currentQuestion.prompt}</p>
-            )}
+            <p className="translate-button-text">
+              {isTranslated && translatedText ? translatedText : currentQuestion.prompt}
+            </p>
 
             <div className="quiz-choices-section">
               {currentQuestion.choices.map((choice) => {
@@ -375,16 +416,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                     {showFeedback && (
                       <div className="quiz-feedback-section">
                         {isSelected && isCorrect && (
-                          <span className="feedback-icon quiz-correct">✓</span>
+                          <span className="feedback-icon quiz-correct"><img src={Correct} alt="Correct" /></span>
                         )}
                         {isSelected && !isCorrect && (
                           <span className="feedback-icon quiz-incorrect">
-                            ✗
+                            <img src={Incorrect} alt="Incorrect" />
                           </span>
                         )}
                         {!isSelected && isCorrect && (
                           <span className="quiz-feedback-correct">
-                            ✓ Correct answer
+                            <img src={Correct} alt="Correct Answer" /> 
                           </span>
                         )}
                       </div>

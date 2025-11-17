@@ -136,12 +136,13 @@
 }
 
 .translate-button {
-  padding: $spacing-sm $spacing-md;
+  padding: $spacing-sm;
   color: white;
   border: none;
   border-radius: 6px;
   font-weight: $font-weight-regular;
   font-size: $font-size-label;
+  width: 150px;
   transition: background-color $transition-fast, transform $transition-fast;
 
   &:disabled {
@@ -171,7 +172,6 @@
     }
   }
 
-  // Translated state - use primary color
   &--translated {
     background-color: $color-primary;
 
@@ -181,9 +181,10 @@
   }
 }
 
-// Question text styles
 .translate-button-text {
-  font-size: 1.25rem;
+  font-size: $font-size-h3;
+  font-family: $font-family-primary;
   margin-bottom: $spacing-xl;
   line-height: $line-height-relaxed;
+  color: $color-quaternary-500;
 }
