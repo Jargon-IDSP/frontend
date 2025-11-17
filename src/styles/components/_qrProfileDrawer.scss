@@ -1,0 +1,62 @@
+@use '../variables' as *;
+
+.qr-profile-drawer-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  padding: 0 $spacing-md $spacing-md $spacing-md;
+  align-items: center;
+}
+
+.qr-profile-drawer-qr-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: $spacing-md;
+  background: white;
+  border-radius: $border-radius-lg;
+  border: 2px solid $color-quaternary-light;
+}
+
+.qr-profile-drawer-link-section {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.qr-profile-drawer-link-label {
+  font-size: $font-size-label;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary-dark;
+  margin: 0;
+}
+
+.qr-profile-drawer-link-container {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+}
+
+.qr-profile-drawer-link-input {
+  flex: 1;
+  padding: $spacing-sm;
+  border: 2px solid $color-quaternary-light;
+  border-radius: $border-radius-md;
+  font-size: $font-size-label;
+  color: $color-neutral;
+  background: white;
+  font-family: monospace;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+}
+
+.qr-profile-drawer-copy-button {
+  flex-shrink: 0;
+}

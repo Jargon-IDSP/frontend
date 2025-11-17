@@ -9,6 +9,7 @@ import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
 import { getLanguageFlag } from "../../utils/languageFlagHelpers";
 import { useProfile } from "../../hooks/useProfile";
 import QRScannerModal from "../../components/QRScannerModal";
+import QRProfileDrawer from "../drawers/QRProfileDrawer";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
 import rockyWhiteLogo from "/rockyWhite.svg";
@@ -20,6 +21,7 @@ export default function FriendsPage() {
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
+  const [isQRDrawerOpen, setIsQRDrawerOpen] = useState(false);
   const { getToken } = useAuth();
   const navigate = useNavigate();
   const { data: profile } = useProfile();
@@ -110,21 +112,43 @@ export default function FriendsPage() {
 
   const handleQRScanSuccess = (decodedText: string) => {
     // Extract user ID from QR code
-    // QR code might be a URL like: https://app.jargon.com/user/123 or just a user ID
-    let userId = decodedText;
+    // QR code might be a URL like: https://app.jargon.com/user/123
+    // or https://app.jargon.com/profile/friends/123 or just a user ID
 
     // If it's a URL, extract the user ID
-    const urlMatch = decodedText.match(/\/user\/([^\/\?]+)/);
-    if (urlMatch) {
-      userId = urlMatch[1];
+    const profileUrlMatch = decodedText.match(/\/profile\/friends\/([^\/\?]+)/);
+    const userUrlMatch = decodedText.match(/\/user\/([^\/\?]+)/);
+
+    if (profileUrlMatch) {
+      const userId = profileUrlMatch[1];
+      // Navigate directly to the friend profile page
+      navigate(`/profile/friends/${userId}`, {
+        state: { from: "/profile/friends" },
+      });
+      setIsQRScannerOpen(false);
+      return;
+    } else if (userUrlMatch) {
+      const userId = userUrlMatch[1];
+      // Navigate directly to the friend profile page
+      navigate(`/profile/friends/${userId}`, {
+        state: { from: "/profile/friends" },
+      });
+      setIsQRScannerOpen(false);
+      return;
     }
 
-    // If it's just a UUID or user ID, use it directly
-    // Search for the user by ID or set it as search query
-    if (userId) {
-      // Try to search for the user
-      searchUsersMutation.mutate(userId);
-      setSearchQuery(userId);
+    // If it's not a profile URL, treat it as a search query
+    // This could be a user ID (starts with "user_"), username, or email
+    const trimmedText = decodedText.trim();
+
+    if (trimmedText && trimmedText.length > 0) {
+      // Close the scanner and search for the text
+      setIsQRScannerOpen(false);
+      setSearchQuery(trimmedText);
+
+      // If it looks like a user ID (starts with "user_"), search for it
+      // Otherwise search as normal (username, email, etc.)
+      searchUsersMutation.mutate(trimmedText);
     } else {
       setError("Invalid QR code format");
     }
@@ -305,9 +329,7 @@ export default function FriendsPage() {
       <div className="friends-share-qr-button-container">
         <button
           className="friends-share-qr-button"
-          onClick={() => {
-            // Functionality will be added later
-          }}
+          onClick={() => setIsQRDrawerOpen(true)}
         >
           Share my QR code
         </button>
@@ -316,6 +338,13 @@ export default function FriendsPage() {
         isOpen={isQRScannerOpen}
         onClose={() => setIsQRScannerOpen(false)}
         onScanSuccess={handleQRScanSuccess}
+      />
+      <QRProfileDrawer
+        open={isQRDrawerOpen}
+        onOpenChange={setIsQRDrawerOpen}
+        userId={profile?.id || ""}
+        displayName={getUserDisplayName(profile)}
+        username={profile?.username || profile?.email || ""}
       />
     </div>
   );
