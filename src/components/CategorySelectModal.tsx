@@ -7,7 +7,6 @@ import folderIcon from "../assets/icons/folderIcon.svg";
 import type { CategorySelectModalProps, Category } from "../types/categorySelectModal";
 import "../styles/components/_categorySelectModal.scss";
 
-// Default category descriptions
 const DEFAULT_DESCRIPTIONS: Record<string, string> = {
   Safety: "Safety protocols and procedures",
   Technical: "Technical documentation and guides",
@@ -30,7 +29,6 @@ export function CategorySelectModal({
   const createCategory = useCreateCategory();
   const { showSuccessToast } = useNotificationContext();
 
-  // Transform categories data to include descriptions
   const categories: Category[] = useMemo(() => {
     if (!categoriesData) return [];
 
@@ -50,9 +48,7 @@ export function CategorySelectModal({
       const result = await createCategory.mutateAsync(name);
       setIsModalOpen(false);
       
-      // Select the newly created category
       if (result?.data?.id) {
-        // Wait a bit for categories to refresh, then select the new category
         setTimeout(() => {
           setSelectedId(result.data.id);
         }, 100);
@@ -60,7 +56,6 @@ export function CategorySelectModal({
       }
     } catch (error) {
       console.error("Failed to create folder:", error);
-      // Error will be shown via the modal's error prop
     }
   };
 
