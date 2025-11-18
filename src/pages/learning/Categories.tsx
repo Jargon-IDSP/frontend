@@ -19,14 +19,12 @@ export default function Categories() {
       await createCategory.mutateAsync(name);
       setIsModalOpen(false);
     } catch (error) {
-      // Error is handled by the modal's error prop
       console.error("Failed to create folder:", error);
     }
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    // Reset mutation state when closing
     createCategory.reset();
   };
 
