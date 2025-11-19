@@ -1,12 +1,10 @@
 @use "../variables" as *;
 @use "../mixins" as *;
 
-// Documents Page - Apply consistent layout
 .uploadPage {
   padding: 1rem;
   padding-bottom: 1rem;
 
-// Page Header
 .page-title {
   display: flex;
   align-items: flex-start;
@@ -64,9 +62,6 @@ button.back-button {
       padding-bottom: 0.2rem;
     }
 
-    // &:hover {
-    //   border: 1px solid $color-quaternary-light-dark;
-    // }
   }
 
   &-section-preview {
@@ -141,7 +136,6 @@ button.back-button {
   margin-bottom: $spacing-lg;
 }
 
-// File Preview
 .preview {
   &-content {
     background-color: $color-second-neutral-light;
@@ -168,7 +162,6 @@ button.back-button {
   }
 }
 
-// File Info
 .file {
   &-preview {
     margin-bottom: $spacing-lg;
@@ -207,7 +200,6 @@ button.back-button {
   }
 }
 
-// Action Buttons
 .action-buttons {
   display: flex;
   gap: $spacing-md;
@@ -224,7 +216,6 @@ button.back-button {
   font-weight: $font-weight-bold;
 }
 
-// Agreement Checkbox
 .agreement-checkbox {
   margin-top: $spacing-md;
   text-align: left;
@@ -272,7 +263,6 @@ button.back-button {
   }
 }
 
-// Warning Messages
 .warning-messages {
   display: flex;
   flex-direction: column;
@@ -284,7 +274,6 @@ button.back-button {
   }
 }
 
-// Status Messages
 .error-message {
   margin-top: $spacing-md;
   text-align: center;
@@ -315,7 +304,6 @@ button.back-button {
   }
 }
 
-// OCR Documents List
 .ocr-documents {
   &-loading {
     padding: $spacing-md;
@@ -408,7 +396,6 @@ button.back-button {
   }
 }
 
-// OCR Results Modal
 .ocr-modal {
   &-overlay {
     position: fixed;
@@ -598,5 +585,27 @@ button.back-button {
     &:hover {
       background-color: #2563eb;
     }
+  }
+}
+
+
+.fallbackDocPage {
+  padding: 2rem 1rem;
+  text-align: center;
+
+  .documentHeader {
+    display: flex;
+    align-items: center;
+  h1 {
+    font-family: $font-family-primary;
+    font-size: $font-size-h1;
+    text-align: start;
+    color: $color-quaternary-800;
+    font-weight: $font-weight-bold;
+  }
+}
+
+  .rocky-speech-bubble {
+    margin-top: 2rem;
   }
 }

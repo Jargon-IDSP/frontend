@@ -1862,6 +1862,25 @@ button.back-button {
   background-color: #2563eb;
 }
 
+.fallbackDocPage {
+  padding: 2rem 1rem;
+  text-align: center;
+}
+.fallbackDocPage .documentHeader {
+  display: flex;
+  align-items: center;
+}
+.fallbackDocPage .documentHeader h1 {
+  font-family: "Poppins", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 28px;
+  text-align: start;
+  color: #3d190d;
+  font-weight: 700;
+}
+.fallbackDocPage .rocky-speech-bubble {
+  margin-top: 2rem;
+}
+
 .fullTranslationOverview {
   background-color: #fffdf4;
   padding: 1rem;
@@ -5560,7 +5579,7 @@ button.back-button {
   }
 }
 .notifications-page {
-  padding: 1rem 0;
+  padding: 1rem;
 }
 .notifications-page__header {
   display: flex;
