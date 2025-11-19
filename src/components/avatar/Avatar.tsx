@@ -1,24 +1,9 @@
-export type AvatarConfig = {
-  body?: string;      // e.g., 'body-1', 'body-2', etc.
-  hair?: string;      // e.g., 'hair-1', 'hair-2', etc.
-  expression?: string; // e.g., 'body-1-h1' (h1 = happy expression with body-1)
-  headwear?: string;  // e.g., 'cap', 'hard-hat', 'round-hat'
-  eyewear?: string;   // e.g., 'glasses', 'welding-mask'
-  facial?: string;    // e.g., 'beard-1', 'beard-2'
-  clothing?: string;  // e.g., 'yellow-vest', 'orange-vest'
-  shoes?: string;     // e.g., 'shoe-1', 'shoe-2'
-  accessories?: string[]; // e.g., ['name-tag', 'beauty-spot', 'blush']
-}
-
-type AvatarProps = {
-  config: AvatarConfig;
-  size?: number;
-  className?: string;
-}
+import type { AvatarConfig, AvatarProps } from '../types/avatar';
 
 export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
   // Use the body with expression if provided, otherwise use base body
   const bodyId = config.expression || config.body || 'body-1';
+  const bodyColor = config.bodyColor || '#FFB6C1';
 
   return (
     <svg
@@ -28,7 +13,12 @@ export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
       className={className}
     >
       {/* Base body (includes expression if using body-X-hY format) */}
-      <use href={`/avatar-sprites.svg#${bodyId}`} x="30" y="60" />
+      <use
+        href={`/avatar-sprites.svg#${bodyId}`}
+        x="30"
+        y="60"
+        style={{ fill: bodyColor }}
+      />
 
       {/* Shoes - render first so they appear behind body */}
       {config.shoes && (
@@ -117,7 +107,7 @@ export function AvatarExample() {
 // Helper function to get all available options
 export const avatarOptions = {
   bodies: [
-    'body-1', 'body-2', 'body-3', 'body-4', 'body-5', 
+    'body-1', 'body-2', 'body-3', 'body-4', 'body-5',
     'body-6', 'body-7', 'body-8', 'body-9'
   ],
   expressions: {
@@ -137,7 +127,19 @@ export const avatarOptions = {
   facial: ['beard-1', 'beard-2', 'beard-3'],
   clothing: ['yellow-vest', 'orange-vest'],
   shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
-  accessories: ['name-tag', 'beauty-spot', 'blush', 'lashes-1', 'lashes-2']
+  accessories: ['name-tag', 'beauty-spot', 'blush', 'lashes-1', 'lashes-2'],
+  bodyColors: [
+    '#FFB6C1', // Light Pink (default)
+    '#FF69B4', // Hot Pink
+    '#FFA07A', // Light Salmon
+    '#FFD700', // Gold
+    '#98FB98', // Pale Green
+    '#87CEEB', // Sky Blue
+    '#DDA0DD', // Plum
+    '#F0E68C', // Khaki
+    '#D2691E', // Chocolate
+    '#A0522D', // Sienna
+  ]
 };
 
 export default Avatar;

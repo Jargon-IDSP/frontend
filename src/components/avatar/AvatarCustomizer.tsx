@@ -1,14 +1,43 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Avatar, avatarOptions } from './Avatar';
-import type { AvatarConfig } from './Avatar';
+import type { AvatarConfig } from '../../types/avatar';
 import { useAvatar } from '../../hooks/useAvatar';
+import { useUser } from '@clerk/clerk-react';
+
+type TabId = 'body' | 'expression' | 'hair' | 'headwear' | 'features' | 'clothing' | 'shoes' | 'color';
+
+interface Tab {
+  id: TabId;
+  label: string;
+}
+
+const tabs: Tab[] = [
+  { id: 'body', label: 'Body' },
+  { id: 'expression', label: 'Expression' },
+  { id: 'hair', label: 'Hair' },
+  { id: 'headwear', label: 'Headwear' },
+  { id: 'features', label: 'Features' },
+  { id: 'clothing', label: 'Clothing' },
+  { id: 'shoes', label: 'Shoes' },
+  { id: 'color', label: 'Color' },
+];
 
 export function AvatarCustomizer() {
-  const { avatar, isLoading, updateAvatar, isUpdating, updateError } = useAvatar();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { user } = useUser();
+  const { avatar, isLoading, updateAvatar, isUpdating } = useAvatar();
 
+  // Determine context from URL params
+  const searchParams = new URLSearchParams(location.search);
+  const context = (searchParams.get('context') as 'onboarding' | 'profile') || 'profile';
+
+  const [activeTab, setActiveTab] = useState<TabId>('body');
   const [config, setConfig] = useState<AvatarConfig>({
     body: 'body-1',
-    expression: 'body-1-h1'
+    bodyColor: '#FFB6C1',
+    expression: 'body-1-h1',
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
@@ -23,7 +52,7 @@ export function AvatarCustomizer() {
   const updateConfig = (key: keyof AvatarConfig, value: string | undefined) => {
     setConfig(prev => ({
       ...prev,
-      [key]: value
+      [key]: value,
     }));
   };
 
@@ -32,14 +61,7 @@ export function AvatarCustomizer() {
     setConfig(prev => ({
       ...prev,
       body,
-      expression: undefined 
-    }));
-  };
-
-  const handleExpressionChange = (expression: string) => {
-    setConfig(prev => ({
-      ...prev,
-      expression
+      expression: undefined,
     }));
   };
 
@@ -48,338 +70,222 @@ export function AvatarCustomizer() {
       onSuccess: () => {
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 3000);
-      }
+
+        if (context === 'onboarding') {
+          // Navigate to next onboarding step
+          navigate('/');
+        }
+      },
     });
+  };
+
+  const handleBack = () => {
+    if (context === 'profile') {
+      navigate('/profile');
+    } else {
+      navigate('/onboarding/industry');
+    }
+  };
+
+  // Get options for current tab
+  const currentOptions = useMemo(() => {
+    switch (activeTab) {
+      case 'body':
+        return avatarOptions.bodies.map(id => ({ id, label: id }));
+      case 'expression':
+        const expressions = avatarOptions.expressions[selectedBody as keyof typeof avatarOptions.expressions] || [];
+        return [
+          { id: selectedBody, label: 'Neutral' },
+          ...expressions.map(id => ({ id, label: id.split('-').pop() || id }))
+        ];
+      case 'hair':
+        return [
+          { id: 'none', label: 'None' },
+          ...avatarOptions.hair.map(id => ({ id, label: id }))
+        ];
+      case 'headwear':
+        return [
+          { id: 'none', label: 'None' },
+          ...avatarOptions.headwear.map(id => ({ id, label: id }))
+        ];
+      case 'features':
+        return [
+          { id: 'none', label: 'None' },
+          ...avatarOptions.eyewear.map(id => ({ id, label: id, category: 'eyewear' as const })),
+          ...avatarOptions.facial.map(id => ({ id, label: id, category: 'facial' as const }))
+        ];
+      case 'clothing':
+        return [
+          { id: 'none', label: 'None' },
+          ...avatarOptions.clothing.map(id => ({ id, label: id }))
+        ];
+      case 'shoes':
+        return [
+          { id: 'none', label: 'None' },
+          ...avatarOptions.shoes.map(id => ({ id, label: id }))
+        ];
+      case 'color':
+        return avatarOptions.bodyColors.map(color => ({ id: color, label: color }));
+      default:
+        return [];
+    }
+  }, [activeTab, selectedBody]);
+
+  const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial') => {
+    if (activeTab === 'body') {
+      handleBodyChange(optionId);
+    } else if (activeTab === 'expression') {
+      updateConfig('expression', optionId);
+    } else if (activeTab === 'color') {
+      updateConfig('bodyColor', optionId);
+    } else if (activeTab === 'features') {
+      if (optionId === 'none') {
+        updateConfig('eyewear', undefined);
+        updateConfig('facial', undefined);
+      } else if (category) {
+        updateConfig(category, optionId);
+      }
+    } else {
+      const key = activeTab as keyof AvatarConfig;
+      updateConfig(key, optionId === 'none' ? undefined : optionId);
+    }
+  };
+
+  const isSelected = (optionId: string, category?: 'eyewear' | 'facial') => {
+    if (activeTab === 'body') {
+      return selectedBody === optionId;
+    } else if (activeTab === 'expression') {
+      return config.expression === optionId;
+    } else if (activeTab === 'color') {
+      return config.bodyColor === optionId;
+    } else if (activeTab === 'features') {
+      if (optionId === 'none') {
+        return !config.eyewear && !config.facial;
+      } else if (category === 'eyewear') {
+        return config.eyewear === optionId;
+      } else if (category === 'facial') {
+        return config.facial === optionId;
+      }
+      return false;
+    } else {
+      const key = activeTab as keyof AvatarConfig;
+      if (optionId === 'none') {
+        return !config[key];
+      }
+      return config[key] === optionId;
+    }
   };
 
   if (isLoading) {
     return (
-      <div style={{ padding: '20px', textAlign: 'center' }}>
-        <p>Loading your avatar...</p>
+      <div className="avatar-customization">
+        <p>Loading...</p>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: '20px', maxWidth: '1200px', margin: '0 auto' }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
-        <h1>Avatar Customizer</h1>
+    <div className="avatar-customization">
+      {/* Header with back button and progress */}
+      <div className="avatar-customization__top">
         <button
-          onClick={handleSave}
-          disabled={isUpdating}
-          style={{
-            padding: '12px 24px',
-            fontSize: '16px',
-            fontWeight: 'bold',
-            backgroundColor: saveSuccess ? '#28a745' : '#007bff',
-            color: 'white',
-            border: 'none',
-            borderRadius: '6px',
-            cursor: isUpdating ? 'not-allowed' : 'pointer',
-            opacity: isUpdating ? 0.6 : 1,
-            transition: 'all 0.3s ease'
-          }}
+          type="button"
+          className="avatar-customization__back"
+          onClick={handleBack}
+          aria-label="Go back"
         >
-          {isUpdating ? 'Saving...' : saveSuccess ? '✓ Saved!' : 'Save Avatar'}
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+          </svg>
         </button>
+        {context === 'onboarding' && (
+          <div className="avatar-customization__progress">
+            <div className="avatar-customization__progress-fill" />
+          </div>
+        )}
       </div>
 
-      {updateError && (
-        <div style={{
-          padding: '12px',
-          backgroundColor: '#f8d7da',
-          color: '#721c24',
-          borderRadius: '4px',
-          marginBottom: '20px'
-        }}>
-          Error saving avatar: {updateError.message}
-        </div>
-      )}
-      
-      <div style={{ display: 'flex', gap: '40px', flexWrap: 'wrap' }}>
-        <div style={{ flex: '0 0 300px' }}>
-          <h2>Preview</h2>
-          <div style={{
-            border: '2px solid #ccc',
-            borderRadius: '8px',
-            padding: '20px',
-            backgroundColor: '#f5f5f5',
-            display: 'flex',
-            justifyContent: 'center',
-            alignItems: 'center',
-            overflow: 'hidden'
-          }}>
-            <Avatar config={config} size={250} />
-          </div>
+      <h1>Create your Rocky!</h1>
 
-          <div style={{ marginTop: '20px' }}>
-            <h3>Config (save this in database):</h3>
-            <pre style={{ 
-              backgroundColor: '#f0f0f0', 
-              padding: '10px', 
-              borderRadius: '4px',
-              fontSize: '12px',
-              overflow: 'auto'
-            }}>
-              {JSON.stringify(config, null, 2)}
-            </pre>
-          </div>
-        </div>
-
-        <div style={{ flex: '1', minWidth: '300px' }}>
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Body Pose</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              {avatarOptions.bodies.map(body => (
-                <button
-                  key={body}
-                  onClick={() => handleBodyChange(body)}
-                  style={{
-                    padding: '8px 16px',
-                    border: selectedBody === body ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: selectedBody === body ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {body}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Expression</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => handleExpressionChange(selectedBody)}
-                style={{
-                  padding: '8px 16px',
-                  border: config.expression === selectedBody ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: config.expression === selectedBody ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                neutral
-              </button>
-              {avatarOptions.expressions[selectedBody as keyof typeof avatarOptions.expressions]?.map(expr => (
-                <button
-                  key={expr}
-                  onClick={() => handleExpressionChange(expr)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.expression === expr ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.expression === expr ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {expr.split('-').pop()}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Hair</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => updateConfig('hair', undefined)}
-                style={{
-                  padding: '8px 16px',
-                  border: !config.hair ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: !config.hair ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                None
-              </button>
-              {avatarOptions.hair.map(hair => (
-                <button
-                  key={hair}
-                  onClick={() => updateConfig('hair', hair)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.hair === hair ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.hair === hair ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {hair}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Headwear</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => updateConfig('headwear', undefined)}
-                style={{
-                  padding: '8px 16px',
-                  border: !config.headwear ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: !config.headwear ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                None
-              </button>
-              {avatarOptions.headwear.map(headwear => (
-                <button
-                  key={headwear}
-                  onClick={() => updateConfig('headwear', headwear)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.headwear === headwear ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.headwear === headwear ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {headwear}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Eyewear</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => updateConfig('eyewear', undefined)}
-                style={{
-                  padding: '8px 16px',
-                  border: !config.eyewear ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: !config.eyewear ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                None
-              </button>
-              {avatarOptions.eyewear.map(eyewear => (
-                <button
-                  key={eyewear}
-                  onClick={() => updateConfig('eyewear', eyewear)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.eyewear === eyewear ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.eyewear === eyewear ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {eyewear}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Facial Hair</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => updateConfig('facial', undefined)}
-                style={{
-                  padding: '8px 16px',
-                  border: !config.facial ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: !config.facial ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                None
-              </button>
-              {avatarOptions.facial.map(facial => (
-                <button
-                  key={facial}
-                  onClick={() => updateConfig('facial', facial)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.facial === facial ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.facial === facial ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {facial}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Clothing</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => updateConfig('clothing', undefined)}
-                style={{
-                  padding: '8px 16px',
-                  border: !config.clothing ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: !config.clothing ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                None
-              </button>
-              {avatarOptions.clothing.map(clothing => (
-                <button
-                  key={clothing}
-                  onClick={() => updateConfig('clothing', clothing)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.clothing === clothing ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.clothing === clothing ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {clothing}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <div style={{ marginBottom: '20px' }}>
-            <h3>Shoes</h3>
-            <div style={{ display: 'flex', gap: '10px', flexWrap: 'wrap' }}>
-              <button
-                onClick={() => updateConfig('shoes', undefined)}
-                style={{
-                  padding: '8px 16px',
-                  border: !config.shoes ? '2px solid #007bff' : '1px solid #ccc',
-                  borderRadius: '4px',
-                  backgroundColor: !config.shoes ? '#e7f3ff' : 'white',
-                  cursor: 'pointer'
-                }}
-              >
-                None
-              </button>
-              {avatarOptions.shoes.map(shoe => (
-                <button
-                  key={shoe}
-                  onClick={() => updateConfig('shoes', shoe)}
-                  style={{
-                    padding: '8px 16px',
-                    border: config.shoes === shoe ? '2px solid #007bff' : '1px solid #ccc',
-                    borderRadius: '4px',
-                    backgroundColor: config.shoes === shoe ? '#e7f3ff' : 'white',
-                    cursor: 'pointer'
-                  }}
-                >
-                  {shoe}
-                </button>
-              ))}
-            </div>
-          </div>
+      {/* Avatar Preview */}
+      <div className="avatar-customization__preview">
+        <div className="avatar-customization__canvas">
+          <Avatar config={config} size={250} />
         </div>
       </div>
+
+      {/* Username Display */}
+      <label className="avatar-customization__input-label" htmlFor="avatarName">
+        User Name
+      </label>
+      <input
+        id="avatarName"
+        type="text"
+        className="avatar-customization__input"
+        value={user?.username || user?.firstName || 'User'}
+        disabled
+        readOnly
+      />
+
+      {/* Tabs */}
+      <div className="avatar-customization__tabs">
+        {tabs.map(tab => (
+          <button
+            key={tab.id}
+            type="button"
+            className={`avatar-customization__tab ${
+              tab.id === activeTab ? 'avatar-customization__tab--active' : ''
+            }`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
+      </div>
+
+      {/* Options Grid */}
+      <div className="avatar-customization__options-grid">
+        {currentOptions.map(option => {
+          const category = 'category' in option ? option.category : undefined;
+          const selected = isSelected(option.id, category);
+
+          return (
+            <button
+              key={option.id}
+              type="button"
+              className={`avatar-option ${selected ? 'avatar-option--selected' : ''}`}
+              onClick={() => handleOptionSelect(option.id, category)}
+              style={
+                activeTab === 'color' && option.id !== 'none'
+                  ? { backgroundColor: option.id }
+                  : undefined
+              }
+            >
+              {activeTab === 'color' && option.id !== 'none' ? (
+                <span className="avatar-option__color-swatch" />
+              ) : (
+                <span className="avatar-option__label">{option.label}</span>
+              )}
+            </button>
+          );
+        })}
+      </div>
+
+      {/* Save/Next Button */}
+      <button
+        type="button"
+        className="avatar-customization__next"
+        onClick={handleSave}
+        disabled={isUpdating}
+      >
+        {isUpdating
+          ? 'Saving...'
+          : saveSuccess
+          ? '✓ Saved!'
+          : context === 'onboarding'
+          ? 'Next'
+          : 'Save'}
+      </button>
     </div>
   );
 }

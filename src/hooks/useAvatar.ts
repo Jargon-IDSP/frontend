@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";
-import type { AvatarConfig } from "../components/avatar/Avatar";
+import type { AvatarConfig } from "../types/avatar";
 
 interface AvatarResponse {
   avatarConfig: AvatarConfig & {
@@ -17,7 +17,7 @@ export function useAvatar() {
     queryKey: ["avatar"],
     queryFn: async (): Promise<AvatarConfig> => {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/avatar/avatar`, {
+      const res = await fetch(`${BACKEND_URL}/avatar/edit`, {
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
@@ -38,7 +38,7 @@ export function useAvatar() {
   const mutation = useMutation({
     mutationFn: async (avatarConfig: AvatarConfig) => {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/avatar/avatar`, {
+      const res = await fetch(`${BACKEND_URL}/avatar/edit`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
