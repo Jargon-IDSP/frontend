@@ -109,22 +109,29 @@ export function ProcessingDocumentCard({
   ];
 
   useEffect(() => {
-    const timeouts: NodeJS.Timeout[] = [];
+    let currentTimeouts: NodeJS.Timeout[] = [];
 
     const schedulePickups = () => {
-      timeouts.push(setTimeout(() => setCurrentItem(1), 2900));
-      timeouts.push(setTimeout(() => setCurrentItem(2), 6100));
-      timeouts.push(setTimeout(() => setCurrentItem(3), 9300));
-      timeouts.push(setTimeout(() => setCurrentItem(4), 12500));
-      timeouts.push(setTimeout(() => {
+      // Clear any existing timeouts first
+      currentTimeouts.forEach(timeout => clearTimeout(timeout));
+      currentTimeouts = [];
+
+      // Schedule new pickups
+      currentTimeouts.push(setTimeout(() => setCurrentItem(1), 2700));
+      currentTimeouts.push(setTimeout(() => setCurrentItem(2), 6100));
+      currentTimeouts.push(setTimeout(() => setCurrentItem(3), 12000)); // Drill at 75%
+      currentTimeouts.push(setTimeout(() => setCurrentItem(4), 12500));
+      currentTimeouts.push(setTimeout(() => {
         setCurrentItem(0);
-        schedulePickups();
+        schedulePickups(); // Now safe - old timeouts cleared
       }, 16000));
     };
 
     schedulePickups();
 
-    return () => timeouts.forEach(timeout => clearTimeout(timeout));
+    return () => {
+      currentTimeouts.forEach(timeout => clearTimeout(timeout));
+    };
   }, []);
 
   const getRockyImage = () => {
@@ -248,13 +255,7 @@ export function ProcessingDocumentCard({
                 {step.name}
                 {isActive && (
                   <span className="processing-card__progress-text">
-                    (
-                    {step.state === "active" &&
-                    step.progress !== undefined &&
-                    step.progress > 0
-                      ? `${step.progress}%`
-                      : "in progress"}
-                    )
+                    (in progress)
                   </span>
                 )}
                 {isFailed && (
