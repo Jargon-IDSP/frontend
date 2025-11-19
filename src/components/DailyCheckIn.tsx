@@ -25,6 +25,7 @@ function getSevenDayRange(): { date: Date; label: string; key: string; isToday: 
   const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
   const result = [];
 
+  // Rolling 7-day window: 3 days back, today, 3 days forward
   for (let i = -3; i <= 3; i++) {
     const date = getPSTDate(i);
     const dayIndex = date.getDay();
@@ -33,7 +34,7 @@ function getSevenDayRange(): { date: Date; label: string; key: string; isToday: 
       label: days[dayIndex],
       key: `${days[dayIndex]}-${date.getFullYear()}-${date.getMonth()}-${date.getDate()}`,
       isToday: i === 0,
-      isFuture: i > 0  
+      isFuture: i > 0
     });
   }
 
@@ -46,12 +47,12 @@ export default function DailyCheckIn() {
 
   const fetchWeeklyStats = async (): Promise<string[]> => {
     const token = await getToken();
-    const response = await fetch(`${BACKEND_URL}/weekly-tracking/current`, {
+    const response = await fetch(`${BACKEND_URL}/weekly-tracking/rolling-week`, {
       headers: { Authorization: `Bearer ${token}` },
     });
 
     if (!response.ok) {
-      throw new Error("Failed to fetch weekly stats");
+      throw new Error("Failed to fetch rolling week stats");
     }
 
     const result: WeeklyStatsResponse = await response.json();

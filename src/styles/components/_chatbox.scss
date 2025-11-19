@@ -304,25 +304,22 @@
   }
 }
 
-// Ensure overlay appears above navbar
 [data-slot="drawer-overlay"] {
   z-index: 150 !important;
   background-color: transparent !important;
 
-  // Hide overlay on wider screens (no click-to-close on desktop)
   @media (min-width: 640px) {
     display: none !important;
   }
 }
 
-// Explicit positioning for right-direction drawer
 [data-vaul-drawer-direction="right"][data-slot="drawer-content"] {
   position: fixed !important;
   top: 0 !important;
   bottom: 0 !important;
   left: auto !important;
   right: 0 !important;
-  width: 90% !important;
+  width: 100% !important;
   max-width: 480px !important;
   height: 100vh !important;
   max-height: 100dvh !important;
@@ -331,10 +328,11 @@
   overflow: hidden !important;
   box-sizing: border-box !important;
 
-  // On wider screens, center the drawer instead of sticking to right
   @media (min-width: 640px) {
     left: 50% !important;
     right: auto !important;
+    width: 100% !important;
+    max-width: 480px !important;
     transform: translateX(-50%) !important;
   }
 }
