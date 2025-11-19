@@ -209,7 +209,7 @@ export default function ExistingLevels() {
                   {isLevel4 && (
                     <div className="document-list">
                       {/* Level 4 uses Level 3 content for first 4 sessions, but has its own boss quiz */}
-                      {getStudySessions(3).map((session, index) => {
+                      {getStudySessions(3).map((session) => {
                         // For the challenge quiz (session 3), link to level 4's boss page
                         const isChallenge = session.sessionNumber === 3;
                         return (
