@@ -6632,7 +6632,6 @@ button.back-button {
   height: 350px;
   margin: 0 auto;
   cursor: pointer;
-  overflow: hidden;
   position: relative;
   z-index: 10;
 }
