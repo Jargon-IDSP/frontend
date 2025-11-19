@@ -30,7 +30,36 @@
     position: relative;
     transition: all 0.3s ease;
     overflow: hidden;
-    max-height: 200px; 
+    max-height: 200px;
+  }
+
+  &__close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 2rem;
+    height: 2rem;
+    border: none;
+    background: transparent;
+    font-size: 2rem;
+    line-height: 1;
+    color: #6b7280;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: color 0.2s;
+    padding: 0;
+    z-index: 10;
+
+    &:hover {
+      color: #374151;
+    }
+
+    &:focus {
+      outline: 2px solid $color-primary;
+      outline-offset: 2px;
+    }
   }
 
   &__title {
@@ -217,6 +246,10 @@
         border-bottom: none;
         opacity: 0;
         overflow: hidden;
+
+        .chat-drawer__close-button {
+          display: none;
+        }
       }
     }
 
@@ -254,6 +287,10 @@
       border-bottom: none;
       opacity: 0;
       overflow: hidden;
+
+      .chat-drawer__close-button {
+        display: none;
+      }
     }
   }
 }
@@ -270,9 +307,10 @@
 // Ensure overlay appears above navbar
 [data-slot="drawer-overlay"] {
   z-index: 150 !important;
+  background-color: transparent !important;
 
-  // Hide overlay on wider screens (when drawer width matches container max-width)
-  @media (min-width: 480px) {
+  // Hide overlay on wider screens (no click-to-close on desktop)
+  @media (min-width: 640px) {
     display: none !important;
   }
 }

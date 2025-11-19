@@ -145,18 +145,6 @@ export default function ExistingLevels() {
     }
   };
 
-  const handleLevel4Click = () => {
-    const locked = isLevelLocked(4);
-    if (locked) return;
-
-    const industryId = profile?.industryId;
-    navigate(
-      `/learning/existing/levels/3/quiz/take?quiz=3${
-        industryId ? `&industry_id=${industryId}` : ""
-      }`
-    );
-  };
-
   return (
     <div className="categoriesPage">
       <CategoriesCard
@@ -220,28 +208,49 @@ export default function ExistingLevels() {
                   )}
                   {isLevel4 && (
                     <div className="document-list">
-                      <div
-                        className="document-item"
-                        onClick={handleLevel4Click}
-                      >
-                        <div className="document-info">
-                          <span className="document-name">Challenge Quiz</span>
-                        </div>
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="none"
-                          stroke="currentColor"
-                        >
-                          <path
-                            strokeLinecap="round"
-                            strokeLinejoin="round"
-                            strokeWidth={2}
-                            d="M9 5l7 7-7 7"
-                          />
-                        </svg>
-                      </div>
+                      {/* Level 4 uses Level 3 content for first 4 sessions, but has its own boss quiz */}
+                      {getStudySessions(3).map((session, index) => {
+                        // For the challenge quiz (session 3), link to level 4's boss page
+                        const isChallenge = session.sessionNumber === 3;
+                        return (
+                          <div
+                            key={session.id}
+                            className="document-item"
+                            onClick={() => {
+                              if (isChallenge) {
+                                // Navigate to level 4's boss page
+                                const industryId = profile?.industryId;
+                                navigate(
+                                  `/learning/existing/levels/4/boss${
+                                    industryId ? `?industry_id=${industryId}` : ""
+                                  }`
+                                );
+                              } else {
+                                // Use level 3's content for other sessions
+                                handleStudySessionClick(3, session);
+                              }
+                            }}
+                          >
+                            <div className="document-info">
+                              <span className="document-name">{session.name}</span>
+                            </div>
+                            <svg
+                              width="20"
+                              height="20"
+                              viewBox="0 0 24 24"
+                              fill="none"
+                              stroke="currentColor"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth={2}
+                                d="M9 5l7 7-7 7"
+                              />
+                            </svg>
+                          </div>
+                        );
+                      })}
                     </div>
                   )}
                 </CategoryFolder>

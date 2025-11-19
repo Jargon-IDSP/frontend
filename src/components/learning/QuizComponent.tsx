@@ -3,6 +3,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import { useNotificationContext } from "../../contexts/NotificationContext";
+import { useUserBadges } from "../../hooks/useUserBadges";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
@@ -28,6 +29,10 @@ export default function QuizComponent({
 }: QuizComponentProps) {
   const { getToken } = useAuth();
   const { showToast } = useNotificationContext();
+
+  // Preload user badges while quiz is in progress
+  // This ensures badges are already cached when completion page shows (prevents flicker)
+  useUserBadges();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
