@@ -129,8 +129,16 @@ export default function ChatModal({
     }
   };
 
+  const handleOpenChange = (open: boolean) => {
+    // Allow closing on both mobile and desktop
+    // The backdrop click will trigger this with open=false
+    if (!open) {
+      onClose();
+    }
+  };
+
   return (
-    <Drawer open={isOpen} onOpenChange={onClose} direction="right">
+    <Drawer open={isOpen} onOpenChange={handleOpenChange} direction="right" dismissible={false}>
       <DrawerContent
         className={`chat-drawer-content ${isInputFocused ? 'chat-drawer-content--input-focused' : ''}`}
         onTouchStart={handleTouchStart}
@@ -141,6 +149,13 @@ export default function ChatModal({
             <HappyRocky />
             <DrawerTitle>Need Help? Ask Rocky!</DrawerTitle>
           </div>
+          <button
+            className="chat-drawer__close-button"
+            onClick={onClose}
+            aria-label="Close chat"
+          >
+            ×
+          </button>
         </DrawerHeader>
 
         <div className="chat-drawer__body" ref={drawerBodyRef}>
