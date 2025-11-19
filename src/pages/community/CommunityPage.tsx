@@ -24,7 +24,7 @@ import communityPageLeaderShowImg from '/communityPageLeaderShowImg.svg';
 import communityPageLeaderNoShowImg from '/communityPageLeaderNoShowImg.svg';
 import { BACKEND_URL } from "../../lib/api";
 import type { Friend, FriendsResponse } from "../../types/friend";
-import friendsNoShowImg from '../../../public/FriendsNoShowImg.svg';
+import friendsNoShowImg from '/FriendsNoShowImg.svg';
 // Styles are imported via main.scss
 
 const CommunityPage: React.FC = () => {

@@ -188,7 +188,17 @@ export default function ProfilePage() {
             {/* Profile Card */}
             <div className="profile-card">
               <div className="profile-card-avatar">
-                <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-image" />
+                <img
+                  src={data.imageUrl
+                    ? `${import.meta.env.VITE_BACKEND_URL || 'http://localhost:8080'}${data.imageUrl}`
+                    : rockyWhiteLogo
+                  }
+                  alt="User Avatar"
+                  className="profile-avatar-image"
+                  onClick={() => navigate("/profile/avatar")}
+                  style={{ cursor: 'pointer' }}
+                  title="Click to edit avatar"
+                />
               </div>
               <div className="profile-card-info">
                 <h2 className="profile-card-name">
