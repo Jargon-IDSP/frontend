@@ -140,7 +140,7 @@ export default function ProfilePage() {
                   className="profile-settings-item"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    navigate("/profile/avatar");
+                    navigate("/avatar/edit");
                   }}
                 >
                   Avatar
