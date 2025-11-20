@@ -235,14 +235,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   const handleAnswerSelect = (choiceId: string) => {
     setSelectedAnswer(choiceId);
 
-    // Play sound effect immediately when answer is selected
-    const selectedChoice = currentQuestion.choices.find(
-      (c) => c.id === choiceId
-    );
-    if (selectedChoice?.isCorrect) {
-      playSound(correctAnswerSound);
-    } else {
-      playSound(wrongAnswerSound);
+    // Only play sound effects for non-boss quizzes (boss quizzes are exam-style)
+    if (!isBossQuiz) {
+      const selectedChoice = currentQuestion.choices.find(
+        (c) => c.id === choiceId
+      );
+      if (selectedChoice?.isCorrect) {
+        playSound(correctAnswerSound);
+      } else {
+        playSound(wrongAnswerSound);
+      }
     }
 
     if (isBossQuiz) {
