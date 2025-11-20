@@ -1,4 +1,4 @@
-import type { AvatarConfig, AvatarProps } from '../types/avatar';
+import type { AvatarConfig, AvatarProps } from '../../types/avatar';
 
 export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
   // Use the body with expression if provided, otherwise use base body
@@ -51,7 +51,7 @@ export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
       )}
 
       {/* Additional accessories */}
-      {config.accessories?.map((accessory, index) => (
+      {config.accessories?.map((accessory: string, index: number) => (
         <use
           key={index}
           href={`/avatar-sprites.svg#${accessory}`}

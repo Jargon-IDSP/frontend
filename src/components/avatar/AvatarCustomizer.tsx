@@ -246,7 +246,7 @@ export function AvatarCustomizer() {
       {/* Options Grid */}
       <div className="avatar-customization__options-grid">
         {currentOptions.map(option => {
-          const category = 'category' in option ? option.category : undefined;
+          const category: 'eyewear' | 'facial' | undefined = 'category' in option ? (option.category as 'eyewear' | 'facial') : undefined;
           const selected = isSelected(option.id, category);
 
           return (
