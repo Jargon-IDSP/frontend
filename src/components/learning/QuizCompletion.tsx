@@ -1,7 +1,7 @@
 import Star from "../../assets/icons/star.svg";
 import type { QuizCompletionProps } from "../../types/components/quiz";
 import { useUserBadges } from "../../hooks/useUserBadges";
-import { useMemo, useEffect } from "react";
+import { useMemo, useEffect, useRef } from "react";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import confetti from "canvas-confetti";
 
@@ -37,15 +37,62 @@ export default function QuizCompletion({
   const latestBadge =
     userBadges && userBadges.length > 0 ? userBadges[0] : null;
 
+  const containerRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
   useEffect(() => {
     // Trigger confetti when component mounts
+    const container = containerRef.current;
+    if (!container) return;
+
+    // Create a custom canvas element positioned over the container
+    const canvas = document.createElement("canvas");
+    canvas.style.position = "fixed";
+    canvas.style.pointerEvents = "none";
+    canvas.style.zIndex = "1000";
+    canvas.style.top = "0";
+    canvas.style.left = "0";
+    document.body.appendChild(canvas);
+    canvasRef.current = canvas;
+
+    // Create confetti instance for this canvas
+    const myConfetti = confetti.create(canvas, {
+      resize: true,
+    });
+
     const duration = 3000;
     const animationEnd = Date.now() + duration;
-    const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
 
     function randomInRange(min: number, max: number) {
       return Math.random() * (max - min) + min;
     }
+
+    // Update canvas size and position to match container
+    function updateCanvasBounds() {
+      if (!container) return;
+      const rect = container.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+      canvas.style.width = `${rect.width}px`;
+      canvas.style.height = `${rect.height}px`;
+      canvas.style.top = `${rect.top}px`;
+      canvas.style.left = `${rect.left}px`;
+    }
+
+    // Initial setup
+    updateCanvasBounds();
+
+    // Update on resize/scroll
+    const handleResize = () => updateCanvasBounds();
+    window.addEventListener("resize", handleResize);
+    window.addEventListener("scroll", handleResize, true);
+
+    const defaults = {
+      startVelocity: 30,
+      spread: 360,
+      ticks: 60,
+      zIndex: 0,
+    };
 
     const interval = setInterval(() => {
       const timeLeft = animationEnd - Date.now();
@@ -54,23 +101,33 @@ export default function QuizCompletion({
         return clearInterval(interval);
       }
 
+      updateCanvasBounds(); // Update bounds on each frame for responsiveness
       const particleCount = 50 * (timeLeft / duration);
 
-      // Launch confetti from both sides
-      confetti({
+      // Launch confetti from both sides of the container
+      // Coordinates are relative to the canvas (0-1)
+      myConfetti({
         ...defaults,
         particleCount,
         origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
       });
-      confetti({
+      myConfetti({
         ...defaults,
         particleCount,
         origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
       });
     }, 250);
 
-    // Cleanup interval on unmount
-    return () => clearInterval(interval);
+    // Cleanup
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener("resize", handleResize);
+      window.removeEventListener("scroll", handleResize, true);
+      myConfetti.reset();
+      if (canvas.parentNode) {
+        canvas.parentNode.removeChild(canvas);
+      }
+    };
   }, []);
 
   const badgeIconUrl = useMemo(() => {
@@ -95,7 +152,7 @@ export default function QuizCompletion({
   }, [latestBadge, userBadges]);
 
   return (
-    <div className="container">
+    <div className="container" ref={containerRef}>
       <div className="quiz-page-wrapper">
         <div className="quiz-header">
           <button
