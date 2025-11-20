@@ -188,7 +188,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     return (
       <div className="documents-list-empty">
         <p className="documents-list-empty-message">
-          No documents yet. Upload your first document above!
+          No documents yet. Upload your first document!
         </p>
       </div>
     );
