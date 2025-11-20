@@ -261,15 +261,24 @@ export default function FriendLessonsSection({
               )}
 
               {showLock && (
-                <img
-                  src={lockIcon}
-                  alt="Locked"
-                  className="friend-profile-lesson-lock"
+                <button
+                  type="button"
+                  className="friend-profile-lesson-request-button"
                   onClick={(e) => {
                     e.stopPropagation();
                     requestQuizAccessMutation.mutate(quiz.id);
                   }}
-                />
+                  disabled={requestQuizAccessMutation.isPending || sendRequestMutationPending}
+                >
+                  <img
+                    src={lockIcon}
+                    alt="Locked"
+                    className="friend-profile-lesson-request-button-icon"
+                  />
+                  <span className="friend-profile-lesson-request-button-text">
+                    Request Access
+                  </span>
+                </button>
               )}
 
               {isOwnProfile && (
