@@ -154,6 +154,7 @@ const CommunityPage: React.FC = () => {
                 </div>
               ) : (
                 <>
+                  
                   <div className="leaderboard-list">
                     {previewUsers.map((user, index) => {
                       const actualRank = index + 4;
@@ -169,7 +170,9 @@ const CommunityPage: React.FC = () => {
                       );
                     })}
                   </div>
-                  
+                  <p className="leaderboard-preview-view-more">
+                    Click to see full leaderboard
+                  </p>
                 </>
               )}
             </div>

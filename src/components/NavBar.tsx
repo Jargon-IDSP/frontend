@@ -2,12 +2,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 
 import AI from "../assets/icons/navbar/standard/aiIcon.svg";
 import Course from "../assets/icons/navbar/standard/courseIcon.svg";
-import Leaderboard from "../assets/icons/navbar/standard/leaderBoardIcon.svg";
+import Community from "../assets/icons/navbar/standard/communityIcon.svg";
 import Profile from "../assets/icons/navbar/standard/profileIcon.svg";
 import Home from "../assets/icons/navbar/standard/homeIcon.svg";
 
 import CourseB from "../assets/icons/navbar/bold/courseIconB.svg";
-import LeaderboardB from "../assets/icons/navbar/bold/leaderBoardIconB.svg";
+import CommunityBold from "../assets/icons/navbar/bold/communityIconBold.svg";
 import ProfileB from "../assets/icons/navbar/bold/profileIconB.svg";
 import HomeB from "../assets/icons/navbar/bold/homeIconB.svg";
 
@@ -31,8 +31,8 @@ export default function NavBar() {
     },
     {
       path: "/community",
-      icon: Leaderboard,
-      iconBold: LeaderboardB,
+      icon: Community,
+      iconBold: CommunityBold,
       alt: "Community",
     },
     { path: "/profile", icon: Profile, iconBold: ProfileB, alt: "Profile" },
