@@ -18,6 +18,8 @@ import type { ChatRequest } from "../../types/api/chat";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import nextButton from "../../assets/icons/nextButton.svg";
 import backButton from "../../assets/icons/backButton.svg";
+import correctAnswerSound from "../../assets/sounds/correct_answer.mp3";
+import wrongAnswerSound from "../../assets/sounds/wrong_answer.mp3";
 
 export default function QuizComponent({
   questions,
@@ -217,9 +219,9 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     chatMutation.reset();
   };
 
-  const playSound = (soundFile: string) => {
+  const playSound = (soundUrl: string) => {
     try {
-      const audio = new Audio(`/sounds/${soundFile}`);
+      const audio = new Audio(soundUrl);
       audio.volume = 0.5; // Set volume to 50% to avoid being too loud
       audio.play().catch((error) => {
         // Silently handle errors (e.g., user hasn't interacted with page yet)
@@ -238,9 +240,9 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
       (c) => c.id === choiceId
     );
     if (selectedChoice?.isCorrect) {
-      playSound("correct_answer.mp3");
+      playSound(correctAnswerSound);
     } else {
-      playSound("wrong_answer.mp3");
+      playSound(wrongAnswerSound);
     }
 
     if (isBossQuiz) {
