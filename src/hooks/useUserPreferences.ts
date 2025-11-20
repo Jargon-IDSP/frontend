@@ -6,6 +6,25 @@ import type {
   UserPreferences,
 } from "@/types/useUserPreferences";
 
+// Map industry IDs to display names (matching industries.json in backend)
+export const industryIdToName: { [key: number]: string } = {
+  1: 'Electrician',
+  2: 'Plumber',
+  3: 'Carpenter',
+  4: 'Mechanic',
+  5: 'Welder',
+};
+
+/**
+ * Get the display name for an industry ID
+ * @param industryId The industry ID number
+ * @returns The display name, or 'General' if not found
+ */
+export function getIndustryName(industryId?: number | null): string {
+  if (!industryId) return 'General';
+  return industryIdToName[industryId] || 'General';
+}
+
 export const useUserPreferences = () => {
   const { user } = useUser();
   const { getToken } = useAuth();
@@ -38,8 +57,8 @@ export const useUserPreferences = () => {
         userId: user.id,
       };
     },
-    enabled: !!user?.id, // Only fetch when user is available
-    staleTime: 10 * 60 * 1000, // 10 minutes - preferences don't change often
+    enabled: !!user?.id, 
+    staleTime: 10 * 60 * 1000, 
     retry: 2,
   });
 

@@ -1,0 +1,189 @@
+@use '../variables' as *;
+
+.notifications-list {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-md;
+    padding-bottom: $spacing-sm;
+    border-bottom: 1px solid #e5e7eb;
+  }
+
+  &__title {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-medium;
+    color: $color-neutral;
+    display: flex;
+    align-items: center;
+    gap: $spacing-sm;
+  }
+
+  &__badge {
+    margin-left: $spacing-sm;
+    background: $color-secondary;
+    color: white;
+    font-size: $font-size-label;
+    padding: 0.125rem $spacing-sm;
+    border-radius: $border-radius-full;
+    font-weight: $font-weight-medium;
+  }
+
+  &__actions {
+    display: flex;
+    gap: $spacing-sm;
+  }
+
+  &__mark-all,
+  &__clear-all {
+    background: none;
+    border: none;
+    color: $color-primary;
+    font-size: $font-size-label;
+    cursor: pointer;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-sm;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background: rgba($color-primary, 0.1);
+    }
+
+    &:active {
+      transform: scale(0.98);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  }
+
+  &__clear-all {
+    color: $color-error;
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+    }
+  }
+
+  &__items {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-sm;
+  }
+
+  &__item {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    padding: $spacing-md;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    position: relative;
+
+    &:hover {
+      background: #f9fafb;
+    }
+
+    &:active {
+      transform: scale(0.99);
+    }
+
+    &.unread {
+      border-left: 3px solid $color-secondary;
+    }
+  }
+
+  &__item-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  &__item-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__item-title {
+    font-weight: $font-weight-medium;
+    color: $color-neutral;
+    margin-bottom: 0.25rem;
+  }
+
+  &__item-message {
+    color: #6b7280;
+    font-size: $font-size-label;
+    margin-bottom: 0.25rem;
+    line-height: $line-height-normal;
+  }
+
+  &__item-time {
+    color: #9ca3af;
+    font-size: $font-size-tag;
+  }
+
+  &__item-actions {
+    display: flex;
+    align-items: flex-start;
+    gap: $spacing-sm;
+    flex-shrink: 0;
+  }
+
+  &__item-dot {
+    width: 8px;
+    height: 8px;
+    background: $color-secondary;
+    border-radius: $border-radius-full;
+    flex-shrink: 0;
+    margin-top: $spacing-sm;
+  }
+
+  &__item-delete {
+    background: none;
+    border: none;
+    color: #9ca3af;
+    font-size: 1.5rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-sm;
+    transition: all $transition-fast;
+    opacity: 0;
+
+    .notifications-list__item:hover & {
+      opacity: 1;
+    }
+
+    &:hover {
+      background: rgba($color-error, 0.1);
+      color: $color-error;
+    }
+
+    &:active {
+      transform: scale(0.9);
+    }
+  }
+
+  &__loading,
+  &__empty {
+    text-align: center;
+    padding: $spacing-xl $spacing-md;
+    color: #6b7280;
+
+    p {
+      margin: 0;
+    }
+  }
+}

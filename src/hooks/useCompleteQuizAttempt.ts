@@ -37,8 +37,6 @@ export function useCompleteQuizAttempt() {
       return await response.json();
     },
     onSuccess: (_data, variables) => {
-      // ← Changed 'data' to '_data' to indicate it's intentionally unused
-      // Invalidate quiz attempts cache
       if (variables.quizId) {
         queryClient.invalidateQueries({
           queryKey: ["quizAttempts", variables.quizId],
@@ -47,7 +45,6 @@ export function useCompleteQuizAttempt() {
           queryKey: ["customQuiz", variables.quizId],
         });
       }
-      // Invalidate category quiz cache if applicable
       if (variables.category) {
         queryClient.invalidateQueries({
           queryKey: ["categoryQuestions", variables.category],

@@ -1,6 +1,66 @@
-@use 'sass:color';
-@use '../variables' as *;
-@use '../mixins' as *;
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
+
+// Button Component Styles
+.button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 6px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+
+  // Variants
+  &--primary {
+    background-color: #3b82f6;
+    color: white;
+  }
+
+  &--secondary {
+    background-color: #f3f4f6;
+    color: #1f2937;
+    border: 1px solid #e5e7eb;
+  }
+
+  &--danger {
+    background-color: #ef4444;
+    color: white;
+  }
+
+  &--success {
+    background-color: #10b981;
+    color: white;
+  }
+
+  // Sizes
+  &--small {
+    padding: 0.5rem 0.75rem;
+    font-size: 0.875rem;
+  }
+
+  &--medium {
+    padding: 0.75rem 1rem;
+    font-size: 1rem;
+  }
+
+  &--large {
+    padding: 1rem 1.5rem;
+    font-size: 1.1rem;
+  }
+
+  // Full width
+  &--full-width {
+    width: 100%;
+  }
+}
 
 // Basic Button Component Styles
 .btn {
@@ -18,7 +78,6 @@
   color: $color-neutral;
   text-decoration: none;
 
-  
   &:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -30,7 +89,6 @@
   background-color: $color-primary;
   color: white;
   border-color: $color-primary;
-  
 }
 
 .choose-file-button {
@@ -45,7 +103,14 @@
   gap: 10px;
   flex-shrink: 0;
   border-radius: 18px;
-  
+}
+
+.upload-option-button {
+  background-color: $color-quaternary-dark;
+  color: $color-second-neutral-light;
+  border-color: $color-quaternary-dark;
+  width: 100%;
+  font-weight: $font-weight-bold;
 }
 
 .back-to-choose-button-preview {
@@ -73,7 +138,7 @@
   flex-shrink: 0;
   font-size: $font-size-h3;
 
-  margin-bottom: $spacing-xl;
+  margin-bottom: $spacing-md;
 }
 
 .back-button {
@@ -86,5 +151,33 @@
   cursor: pointer;
   transition: all 0.2s ease;
   padding-left: 0;
+}
 
+.button-drawer {
+  display: grid;
+  grid-template-columns: 32px 1fr;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-sm $spacing-md;
+  background: none;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  margin-left: $spacing-lg;
+  text-align: left;
+}
+
+.button-img-drawer {
+  display: block;
+  margin: 0 auto;
+}
+
+.button-options {
+  background: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  padding-left: 0;
+  margin-left: auto;
 }

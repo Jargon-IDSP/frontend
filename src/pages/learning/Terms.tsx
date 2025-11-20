@@ -7,20 +7,23 @@ import {
 } from "react-router-dom";
 import { useLearning } from "../../hooks/useLearning";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
-import TermCard from "../../components/learning/TermCard";
+import FlashcardsCarousel from "../../components/learning/FlashcardsCarousel";
 import EmptyState from "../../components/learning/EmptyState";
 import type { Term } from "../../types/learning";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function Terms() {
   const navigate = useNavigate();
   const location = useLocation();
-  const { levelId, documentId, category } = useParams<{
+  const { levelId, documentId, category, sessionNumber } = useParams<{
     levelId?: string;
     documentId?: string;
     category?: string;
+    sessionNumber?: string;
   }>();
   const [searchParams] = useSearchParams();
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [currentTermIndex, setCurrentTermIndex] = useState(0);
 
   const {
     language,
@@ -31,14 +34,18 @@ export default function Terms() {
   const queryLanguage = searchParams.get("language") || language;
   const queryIndustryId =
     searchParams.get("industry_id") || industryId?.toString();
+  const showAll = searchParams.get("all") === "true";
 
-  // Determine type and endpoint
   let type: "existing" | "custom" = "custom";
   let endpoint = "";
 
   if (location.pathname.includes("/existing/")) {
     type = "existing";
-    endpoint = `levels/${levelId}/terms`;
+    if (showAll && queryIndustryId) {
+      endpoint = `levels/${levelId}/industry/${queryIndustryId}/terms`;
+    } else {
+      endpoint = `levels/${levelId}/terms`;
+    }
   } else if (location.pathname.includes("/learning/documents/")) {
     type = "custom";
     endpoint = `documents/${documentId}/terms`;
@@ -56,7 +63,8 @@ export default function Terms() {
     params: {
       language: queryLanguage,
       ...(queryIndustryId &&
-        type === "existing" && { industry_id: queryIndustryId }),
+        type === "existing" && !showAll && { industry_id: queryIndustryId }),
+      ...(sessionNumber && { limit: "10", session: sessionNumber }),
     },
     enabled: !preferencesLoading,
   });
@@ -66,13 +74,25 @@ export default function Terms() {
   const isEmpty = terms.length === 0;
   const showLoading = !data && !error;
 
-  // Simulate progress while loading
+  let finishHref = "/learning/custom/quizzes";
+  if (location.pathname.includes("/existing/")) {
+    if (location.pathname.includes("/flashcards/")) {
+      finishHref = `/learning/existing/levels`;
+    } else if (levelId) {
+      finishHref = `/learning/existing/levels/${levelId}/quizzes`;
+    }
+  } else if (location.pathname.includes("/learning/documents/")) {
+    if (documentId) finishHref = `/learning/documents/${documentId}/study`;
+  } else if (category) {
+    finishHref = `/learning/custom/categories/${category}/quizzes`;
+  }
+
   useEffect(() => {
     if (showLoading) {
       setLoadingProgress(0);
       const interval = setInterval(() => {
         setLoadingProgress((prev) => {
-          if (prev >= 90) return prev; // Stop at 90% until data arrives
+          if (prev >= 90) return prev; 
           return prev + 10;
         });
       }, 200);
@@ -83,102 +103,82 @@ export default function Terms() {
     }
   }, [showLoading, data]);
 
+  useEffect(() => {
+    setCurrentTermIndex(0);
+  }, [terms.length]);
+
+  const handleNext = () => {
+    if (currentTermIndex < terms.length - 1) {
+      setCurrentTermIndex(currentTermIndex + 1);
+    }
+  };
+
+  const handlePrevious = () => {
+    if (currentTermIndex > 0) {
+      setCurrentTermIndex(currentTermIndex - 1);
+    }
+  };
+
   return (
-    <div style={{ padding: "2rem" }}>
-      <button onClick={() => navigate(-1)} style={{ marginBottom: "1rem" }}>
-        ← Back
-      </button>
+    <div className="terms-page">
 
-      <h1>{type === "existing" ? "Red Seal" : "Custom"} Terms</h1>
-
-      {/* Progress Bar */}
       {showLoading && (
-        <div style={{ marginTop: "1rem", marginBottom: "1rem" }}>
-          <div
-            style={{
-              width: "100%",
-              height: "8px",
-              backgroundColor: "#e5e7eb",
-              borderRadius: "9999px",
-              overflow: "hidden",
-            }}
-          >
+        <div className="terms-page-progress">
+          <div className="terms-page-progress-bar-container">
             <div
-              style={{
-                height: "100%",
-                width: `${loadingProgress}%`,
-                backgroundColor: "#fe4d13",
-                transition: "width 0.3s ease-in-out",
-                borderRadius: "9999px",
-              }}
+              className="terms-page-progress-bar-fill"
+              style={{ width: `${loadingProgress}%` }}
             />
           </div>
-          <div
-            style={{
-              marginTop: "0.5rem",
-              textAlign: "center",
-              fontSize: "0.875rem",
-              color: "#666",
-            }}
-          >
+          <div className="terms-page-progress-text">
             Loading terms... {loadingProgress}%
           </div>
         </div>
       )}
 
       {error && (
-        <div
-          style={{
-            backgroundColor: "#fee",
-            padding: "1rem",
-            borderRadius: "6px",
-            border: "1px solid #fcc",
-            marginTop: "1rem",
-          }}
-        >
+        <div className="terms-page-error">
           <strong>Error loading terms</strong>
-          <p style={{ margin: "0.5rem 0 0 0" }}>{error}</p>
+          <p>{error}</p>
         </div>
       )}
 
       {!error && data && (
         <>
-          {type === "existing" &&
-            data?.industryCount !== undefined &&
-            data?.generalCount !== undefined && (
-              <p style={{ color: "#666", marginBottom: "1rem" }}>
-                Total: {count} terms
-                {queryIndustryId &&
-                  ` (${data.industryCount} industry, ${data.generalCount} general)`}
-              </p>
-            )}
-
-          {type !== "existing" && count > 0 && (
-            <p style={{ color: "#666", marginBottom: "1rem" }}>
-              Total: {count} terms
-            </p>
-          )}
-
           {isEmpty ? (
             type !== "existing" ? (
               <EmptyState type="terms" />
             ) : (
-              <div>
+              <div className="terms-page-empty">
                 <p>No terms found for this level.</p>
               </div>
             )
           ) : (
-            <div style={{ marginTop: "2rem" }}>
-              {terms.map((term, index) => (
-                <TermCard
-                  key={term.id}
-                  term={term}
-                  index={index + 1}
-                  language={queryLanguage}
-                  type={type === "existing" ? "existing" : "custom"}
+        <div className="terms-page-content">
+          <div className="flashcard-header-container">
+            <button onClick={() => navigate(-1)} className="flashcard-back-button">
+              <img src={goBackIcon} alt="Go Back" />
+            </button>
+            <div className="flashcard-progress-wrapper">
+              <div className="flashcards-carousel-progress">
+                <div
+                  className="flashcards-carousel-progress-bar"
+                  style={{ width: `${((currentTermIndex + 1) / count) * 100}%` }}
                 />
-              ))}
+              </div>
             </div>
+          </div>
+          <FlashcardsCarousel
+            terms={terms}
+            currentIndex={currentTermIndex}
+            onNext={handleNext}
+            onPrevious={handlePrevious}
+            language={queryLanguage}
+            type={type === "existing" ? "existing" : "custom"}
+            totalCount={count}
+            finishHref={finishHref}
+          />
+        </div>
           )}
         </>
       )}

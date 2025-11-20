@@ -1,4 +1,3 @@
-// hooks/useQuizParams.ts
 import { useParams, useSearchParams } from "react-router-dom";
 import { useUserPreferences } from "./useUserPreferences";
 

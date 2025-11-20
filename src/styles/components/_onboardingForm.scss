@@ -1,0 +1,129 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+$onboarding-primary: $color-primary; 
+$onboarding-secondary: $color-quaternary-dark; 
+
+.onboarding-form {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: $spacing-xl;
+
+  &__header {
+    text-align: center;
+    margin-bottom: $spacing-md;
+  }
+
+  &__title {
+    font-size: $font-size-h1;
+    font-weight: $font-weight-bold;
+    color: $color-neutral;
+    margin-bottom: $spacing-sm;
+    line-height: $line-height-tight;
+  }
+
+  &__subtitle {
+    font-size: $font-size-body;
+    color: $color-neutral;
+    opacity: 0.8;
+    margin-top: $spacing-sm;
+    line-height: $line-height-normal;
+  }
+
+  &__options {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    width: 100%;
+  }
+
+  &__option {
+    padding: $spacing-md $spacing-lg;
+    border: 2px solid $onboarding-secondary;
+    border-radius: $border-radius-md;
+    background-color: transparent;
+    color: $onboarding-secondary;
+    font-size: $font-size-body;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-fast;
+    text-align: center;
+    min-height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+
+    &--selected {
+      background-color: $onboarding-primary;
+      border-color: $onboarding-primary;
+      color: white;
+      font-weight: $font-weight-bold;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    margin-top: $spacing-lg;
+    width: 100%;
+  }
+
+  &__button {
+    padding: $spacing-md $spacing-lg;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: $font-size-body;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: all $transition-fast;
+    text-align: center;
+    min-height: 48px;
+
+    &--primary {
+      background-color: $onboarding-primary;
+      border-color: $onboarding-primary;
+      color: white;
+      width: 100%;
+
+      &:disabled {
+        background-color: #ccc;
+        border-color: #ccc;
+        cursor: not-allowed;
+        opacity: 0.6;
+      }
+
+      &:not(:disabled):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+
+      &:not(:disabled):active {
+        transform: translateY(0);
+      }
+    }
+
+    &--skip {
+      background: transparent;
+      border: none;
+      color: $onboarding-secondary;
+      text-decoration: underline;
+      font-weight: $font-weight-regular;
+      padding: $spacing-sm;
+
+      &:hover {
+        opacity: 0.7;
+      }
+    }
+  }
+}

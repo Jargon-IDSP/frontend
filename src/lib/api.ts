@@ -1,6 +1,14 @@
 export const BACKEND_URL =
   import.meta.env.VITE_BACKEND_URL || "http://localhost:8080";
 
+export const industryIdToName: { [key: number]: string } = {
+  1: "Electrician",
+  2: "Plumber",
+  3: "Carpenter",
+  4: "Mechanic",
+  5: "Welder",
+};
+
 export type NormalizedQuestion = {
   id: string;
   prompt: string;
@@ -113,7 +121,6 @@ function findId(node: unknown, maxDepth = 4): string | undefined {
   return undefined;
 }
 
-// Keep as utility function for use in hooks
 export async function fetchRandomQuestion(
   token?: string
 ): Promise<NormalizedQuestion & { __raw?: unknown }> {

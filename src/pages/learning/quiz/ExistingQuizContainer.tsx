@@ -27,7 +27,7 @@ export function ExistingQuizContainer({
 
   const completeQuizMutation = useCompleteExistingQuiz();
 
-  const handleQuizComplete = async (score: number, totalQuestions: number) => {
+  const handleQuizComplete = (score: number, totalQuestions: number) => {
     if (!levelId) return;
 
     completeQuizMutation.mutate({
@@ -36,18 +36,22 @@ export function ExistingQuizContainer({
       totalQuestions,
       levelId,
       quizId: `quiz-${levelId}-${Date.now()}`,
+      quizNumber: quizNumber ? parseInt(String(quizNumber)) : undefined,
+      industryId: industryId ? parseInt(industryId) : undefined,
     });
   };
 
   return (
-    <QuizLoader isLoading={isLoading} error={error} onBack={onBack}>
-      <QuizComponent
-        questions={questions}
-        quizNumber={quizNumber}
-        onComplete={handleQuizComplete}
-        onBack={onBack}
-        preferredLanguage={language}
-      />
-    </QuizLoader>
+    <div className="container">
+      <QuizLoader isLoading={isLoading} error={error} onBack={onBack}>
+        <QuizComponent
+          questions={questions}
+          quizNumber={quizNumber}
+          onComplete={handleQuizComplete}
+          onBack={onBack}
+          preferredLanguage={language}
+        />
+      </QuizLoader>
+    </div>
   );
 }

@@ -1,67 +1,48 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import { Camera } from "lucide-react";
 import { BACKEND_URL } from "../../lib/api";
-import type { Friend, PendingRequest, SearchResult } from "../../types/friend";
-
-interface FriendsResponse {
-  data: Friend[];
-}
-
-interface PendingRequestsResponse {
-  data: PendingRequest[];
-}
-
-interface SearchResponse {
-  data: SearchResult[];
-}
+import type { SearchResult, SearchResponse } from "../../types/friend";
+import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
+import { getLanguageFlag } from "../../utils/languageFlagHelpers";
+import { useProfile } from "../../hooks/useProfile";
+import QRScannerModal from "../../components/QRScannerModal";
+import QRProfileDrawer from "../drawers/QRProfileDrawer";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
+import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
+import rockyWhiteLogo from "/rockyWhite.svg";
+import rockyLogo from "/rocky.svg";
+import "../../styles/pages/_friends.scss";
 
 export default function FriendsPage() {
   const [searchQuery, setSearchQuery] = useState("");
   const [searchResults, setSearchResults] = useState<SearchResult[]>([]);
   const [error, setError] = useState<string | null>(null);
+  const [isQRScannerOpen, setIsQRScannerOpen] = useState(false);
+  const [isQRDrawerOpen, setIsQRDrawerOpen] = useState(false);
   const { getToken } = useAuth();
   const navigate = useNavigate();
-  const queryClient = useQueryClient();
+  const { data: profile } = useProfile();
 
-  // Fetch friends
-  const { data: friends = [], isLoading: loading } = useQuery({
-    queryKey: ["friends"],
-    queryFn: async (): Promise<Friend[]> => {
+  // Fetch friend suggestions
+  const { data: suggestions = [], isLoading: suggestionsLoading } = useQuery({
+    queryKey: ["friendSuggestions"],
+    queryFn: async (): Promise<SearchResult[]> => {
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships`, {
+      const res = await fetch(`${BACKEND_URL}/friendships/suggestions`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
       if (!res.ok) {
-        throw new Error("Failed to fetch friends");
+        throw new Error("Failed to fetch suggestions");
       }
 
-      const data: FriendsResponse = await res.json();
+      const data: SearchResponse = await res.json();
       return data.data || [];
     },
-    staleTime: 30 * 1000, // 30 seconds
-    retry: 2,
-  });
-
-  // Fetch pending requests
-  const { data: pendingRequests = [] } = useQuery({
-    queryKey: ["pendingRequests"],
-    queryFn: async (): Promise<PendingRequest[]> => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships/pending`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to fetch pending requests");
-      }
-
-      const data: PendingRequestsResponse = await res.json();
-      return data.data || [];
-    },
-    staleTime: 30 * 1000, // 30 seconds
+    staleTime: 60 * 1000, // 1 minute
     retry: 2,
   });
 
@@ -98,423 +79,273 @@ export default function FriendsPage() {
     },
   });
 
-  // Send friend request mutation
-  const sendRequestMutation = useMutation({
-    mutationFn: async (addresseeId: string) => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ addresseeId }),
-      });
+  // Real-time search with debouncing
+  useEffect(() => {
+    const trimmedQuery = searchQuery.trim();
 
-      if (!res.ok) {
-        const errorData = await res.json();
-        throw new Error(errorData.error || "Failed to send friend request");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
+    if (trimmedQuery.length === 0) {
       setSearchResults([]);
-      setSearchQuery("");
-      alert("Friend request sent!");
-      queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
-    },
-    onError: (err: Error) => {
-      alert(err.message);
-    },
-  });
-
-  // Accept request mutation
-  const acceptRequestMutation = useMutation({
-    mutationFn: async (friendshipId: string) => {
-      const token = await getToken();
-      const res = await fetch(
-        `${BACKEND_URL}/friendships/${friendshipId}/accept`,
-        {
-          method: "PUT",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to accept request");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-      queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
-    },
-    onError: (err: Error) => {
-      console.error("Error accepting request:", err);
-    },
-  });
-
-  // Reject request mutation
-  const rejectRequestMutation = useMutation({
-    mutationFn: async (friendshipId: string) => {
-      const token = await getToken();
-      const res = await fetch(
-        `${BACKEND_URL}/friendships/${friendshipId}/reject`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!res.ok) {
-        throw new Error("Failed to reject request");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pendingRequests"] });
-    },
-    onError: (err: Error) => {
-      console.error("Error rejecting request:", err);
-    },
-  });
-
-  // Remove friend mutation
-  const removeFriendMutation = useMutation({
-    mutationFn: async (friendshipId: string) => {
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/friendships/${friendshipId}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!res.ok) {
-        throw new Error("Failed to remove friend");
-      }
-
-      return await res.json();
-    },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["friends"] });
-    },
-    onError: (err: Error) => {
-      console.error("Error removing friend:", err);
-    },
-  });
-
-  const searchUsers = () => {
-    setError(null);
-    searchUsersMutation.mutate(searchQuery);
-  };
-
-  const sendFriendRequest = (addresseeId: string) => {
-    sendRequestMutation.mutate(addresseeId);
-  };
-
-  const acceptRequest = (friendshipId: string) => {
-    acceptRequestMutation.mutate(friendshipId);
-  };
-
-  const rejectRequest = (friendshipId: string) => {
-    rejectRequestMutation.mutate(friendshipId);
-  };
-
-  const removeFriend = (friendshipId: string) => {
-    if (!confirm("Are you sure you want to remove this friend?")) return;
-    removeFriendMutation.mutate(friendshipId);
-  };
-
-  const getUserDisplayName = (user: Friend | PendingRequest | SearchResult) => {
-    if (user.username) return user.username;
-    if (user.firstName || user.lastName) {
-      return `${user.firstName || ""} ${user.lastName || ""}`.trim();
+      setError(null);
+      return;
     }
-    return user.email;
+
+    if (trimmedQuery.length < 2) {
+      setSearchResults([]);
+      setError(null);
+      return;
+    }
+
+    // Debounce: wait 500ms after user stops typing
+    const timeoutId = setTimeout(() => {
+      setError(null);
+      searchUsersMutation.mutate(trimmedQuery);
+    }, 500);
+
+    return () => clearTimeout(timeoutId);
+  }, [searchQuery]);
+
+  const handleClearSearch = () => {
+    setSearchQuery("");
+    setSearchResults([]);
+    setError(null);
+  };
+
+  const handleQRScanSuccess = (decodedText: string) => {
+    // Extract user ID from QR code
+    // QR code might be a URL like: https://app.jargon.com/user/123
+    // or https://app.jargon.com/profile/friends/123 or just a user ID
+
+    // If it's a URL, extract the user ID
+    const profileUrlMatch = decodedText.match(/\/profile\/friends\/([^\/\?]+)/);
+    const userUrlMatch = decodedText.match(/\/user\/([^\/\?]+)/);
+
+    if (profileUrlMatch) {
+      const userId = profileUrlMatch[1];
+      // Navigate directly to the friend profile page
+      navigate(`/profile/friends/${userId}`, {
+        state: { from: "/profile/friends" },
+      });
+      setIsQRScannerOpen(false);
+      return;
+    } else if (userUrlMatch) {
+      const userId = userUrlMatch[1];
+      // Navigate directly to the friend profile page
+      navigate(`/profile/friends/${userId}`, {
+        state: { from: "/profile/friends" },
+      });
+      setIsQRScannerOpen(false);
+      return;
+    }
+
+    // If it's not a profile URL, treat it as a search query
+    // This could be a user ID (starts with "user_"), username, or email
+    const trimmedText = decodedText.trim();
+
+    if (trimmedText && trimmedText.length > 0) {
+      // Close the scanner and search for the text
+      setIsQRScannerOpen(false);
+      setSearchQuery(trimmedText);
+
+      // If it looks like a user ID (starts with "user_"), search for it
+      // Otherwise search as normal (username, email, etc.)
+      searchUsersMutation.mutate(trimmedText);
+    } else {
+      setError("Invalid QR code format");
+    }
+  };
+
+  // Determine what to show in drawer
+  const showSuggestions =
+    searchQuery.trim().length === 0 && searchResults.length === 0;
+  const showSearchResults =
+    searchQuery.trim().length >= 2 && searchResults.length > 0;
+  const showEmptySearch =
+    searchQuery.trim().length >= 2 &&
+    searchResults.length === 0 &&
+    !searchUsersMutation.isPending;
+
+  const renderUserItem = (user: SearchResult) => {
+    const languageFlag = getLanguageFlag(user.language ?? null);
+    const isCurrentUser = user.id === profile?.id;
+
+    return (
+      <div
+        key={user.id}
+        className={`leaderboard-item leaderboard-item--regular ${
+          isCurrentUser ? "leaderboard-item--current-user" : ""
+        } leaderboard-item--clickable`}
+        onClick={() => {
+          if (!isCurrentUser) {
+            navigate(`/profile/friends/${user.id}`, {
+              state: { from: "/profile/friends" },
+            });
+          }
+        }}
+      >
+        <div className="leaderboard-item-content leaderboard-item-content--regular">
+          <img
+            src={rockyLogo}
+            alt="Rocky"
+            className="leaderboard-item-logo leaderboard-item-logo--regular"
+          />
+          <div className="leaderboard-item-text">
+            <span className="leaderboard-item-name">
+              {getUserDisplayName(user)}
+              {isCurrentUser && (
+                <span className="leaderboard-item-you">(You)</span>
+              )}
+            </span>
+          </div>
+        </div>
+        <div className="leaderboard-item-details">
+          {languageFlag && (
+            <img
+              src={languageFlag.src}
+              alt={languageFlag.alt}
+              className="leaderboard-item-flag"
+            />
+          )}
+          <span className="leaderboard-item-language">
+            {getLanguageCode(user.language ?? null)}
+          </span>
+        </div>
+      </div>
+    );
   };
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
-      <button
-        onClick={() => navigate("/profile")}
-        style={{ marginBottom: "1rem" }}
-      >
-        ← Back to Profile
-      </button>
-
-      <h1 style={{ marginBottom: "2rem" }}>Friends</h1>
-
-      {/* Search Section */}
-      <div
-        style={{
-          marginBottom: "2rem",
-          backgroundColor: "#fff",
-          padding: "1.5rem",
-          borderRadius: "8px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h2 style={{ marginBottom: "1rem" }}>Add Friends</h2>
-        <div style={{ display: "flex", gap: "0.5rem" }}>
-          <input
-            type="text"
-            placeholder="Search by username or email..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            onKeyPress={(e) => e.key === "Enter" && searchUsers()}
-            style={{
-              flex: 1,
-              padding: "0.75rem",
-              border: "1px solid #e5e7eb",
-              borderRadius: "6px",
-              fontSize: "1rem",
-            }}
-          />
-          <button
-            onClick={searchUsers}
-            disabled={searchUsersMutation.isPending}
-            style={{
-              padding: "0.75rem 1.5rem",
-              backgroundColor: "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: searchUsersMutation.isPending ? "not-allowed" : "pointer",
-              fontWeight: "600",
-            }}
-          >
-            {searchUsersMutation.isPending ? "Searching..." : "Search"}
-          </button>
-        </div>
-
-        {error && (
-          <div
-            style={{
-              marginTop: "1rem",
-              padding: "0.75rem",
-              backgroundColor: "#fee",
-              color: "#c00",
-              borderRadius: "6px",
-            }}
-          >
-            {error}
-          </div>
-        )}
-
-        {searchResults.length > 0 && (
-          <div style={{ marginTop: "1rem" }}>
-            {searchResults.map((user) => (
-              <div
-                key={user.id}
-                style={{
-                  display: "flex",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  padding: "1rem",
-                  borderBottom: "1px solid #e5e7eb",
-                }}
-              >
-                <div>
-                  <strong>{getUserDisplayName(user)}</strong>
-                  <p
-                    style={{
-                      margin: "0.25rem 0 0 0",
-                      fontSize: "0.875rem",
-                      color: "#6b7280",
-                    }}
-                  >
-                    Score: {user.score}
-                  </p>
-                </div>
-                {user.friendshipStatus === "none" && (
-                  <button
-                    onClick={() => sendFriendRequest(user.id)}
-                    disabled={sendRequestMutation.isPending}
-                    style={{
-                      padding: "0.5rem 1rem",
-                      backgroundColor: "#10b981",
-                      color: "white",
-                      border: "none",
-                      borderRadius: "6px",
-                      cursor: sendRequestMutation.isPending
-                        ? "not-allowed"
-                        : "pointer",
-                      fontWeight: "600",
-                    }}
-                  >
-                    {sendRequestMutation.isPending
-                      ? "Sending..."
-                      : "Add Friend"}
-                  </button>
-                )}
-                {user.friendshipStatus === "friends" && (
-                  <span style={{ color: "#10b981", fontWeight: "600" }}>
-                    ✓ Friends
-                  </span>
-                )}
-                {user.friendshipStatus === "pending_sent" && (
-                  <span style={{ color: "#6b7280", fontWeight: "600" }}>
-                    Request Sent
-                  </span>
-                )}
-                {user.friendshipStatus === "pending_received" && (
-                  <span style={{ color: "#f59e0b", fontWeight: "600" }}>
-                    Pending Request
-                  </span>
-                )}
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
-
-      {/* Pending Requests */}
-      {pendingRequests.length > 0 && (
-        <div
-          style={{
-            marginBottom: "2rem",
-            backgroundColor: "#fff",
-            padding: "1.5rem",
-            borderRadius: "8px",
-            border: "1px solid #e5e7eb",
-          }}
-        >
-          <h2 style={{ marginBottom: "1rem" }}>
-            Pending Requests ({pendingRequests.length})
-          </h2>
-          {pendingRequests.map((request) => (
-            <div
-              key={request.friendshipId}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem",
-                borderBottom: "1px solid #e5e7eb",
-              }}
+    <div className="container container--leaderboard">
+      <div className="leaderboard-page friends-page-new">
+        <div className="leaderboard-hero">
+          <div className="leaderboard-header">
+            <button
+              className="leaderboard-back-button"
+              onClick={() => navigate(-1)}
             >
-              <div>
-                <strong>{getUserDisplayName(request)}</strong>
-                <p
-                  style={{
-                    margin: "0.25rem 0 0 0",
-                    fontSize: "0.875rem",
-                    color: "#6b7280",
-                  }}
-                >
-                  Score: {request.score}
-                </p>
-              </div>
-              <div style={{ display: "flex", gap: "0.5rem" }}>
-                <button
-                  onClick={() =>
-                    request.friendshipId && acceptRequest(request.friendshipId)
-                  }
-                  disabled={acceptRequestMutation.isPending}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#10b981",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: acceptRequestMutation.isPending
-                      ? "not-allowed"
-                      : "pointer",
-                    fontWeight: "600",
-                  }}
-                >
-                  Accept
-                </button>
-                <button
-                  onClick={() =>
-                    request.friendshipId && rejectRequest(request.friendshipId)
-                  }
-                  disabled={rejectRequestMutation.isPending}
-                  style={{
-                    padding: "0.5rem 1rem",
-                    backgroundColor: "#ef4444",
-                    color: "white",
-                    border: "none",
-                    borderRadius: "6px",
-                    cursor: rejectRequestMutation.isPending
-                      ? "not-allowed"
-                      : "pointer",
-                    fontWeight: "600",
-                  }}
-                >
-                  Reject
-                </button>
-              </div>
+              <img src={goBackIcon} alt="Back" />
+            </button>
+            <div className="leaderboard-title-section">
+              <h1 className="leaderboard-title">Friends</h1>
+              <p className="view-friends-description">
+                Add more friends to compete with and share your custom lessons
+                with!
+              </p>
             </div>
-          ))}
-        </div>
-      )}
-
-      {/* Friends List */}
-      <div
-        style={{
-          backgroundColor: "#fff",
-          padding: "1.5rem",
-          borderRadius: "8px",
-          border: "1px solid #e5e7eb",
-        }}
-      >
-        <h2 style={{ marginBottom: "1rem" }}>My Friends ({friends.length})</h2>
-        {loading ? (
-          <p style={{ color: "#6b7280" }}>Loading...</p>
-        ) : friends.length === 0 ? (
-          <p style={{ color: "#6b7280" }}>
-            No friends yet. Search for users to add friends!
-          </p>
-        ) : (
-          friends.map((friend) => (
-            <div
-              key={friend.friendshipId}
-              style={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "1rem",
-                borderBottom: "1px solid #e5e7eb",
-              }}
-            >
-              <div>
-                <strong>{getUserDisplayName(friend)}</strong>
-                <p
-                  style={{
-                    margin: "0.25rem 0 0 0",
-                    fontSize: "0.875rem",
-                    color: "#6b7280",
-                  }}
-                >
-                  Score: {friend.score}
-                </p>
-              </div>
+            <div className="leaderboard-header-actions">
               <button
-                onClick={() =>
-                  friend.friendshipId && removeFriend(friend.friendshipId)
-                }
-                disabled={removeFriendMutation.isPending}
-                style={{
-                  padding: "0.5rem 1rem",
-                  backgroundColor: "#ef4444",
-                  color: "white",
-                  border: "none",
-                  borderRadius: "6px",
-                  cursor: removeFriendMutation.isPending
-                    ? "not-allowed"
-                    : "pointer",
-                  fontWeight: "600",
-                }}
+                className="view-friends-avatar-button"
+                onClick={() => navigate("/profile")}
+                aria-label="Profile"
               >
-                {removeFriendMutation.isPending ? "Removing..." : "Remove"}
+                <img
+                  src={rockyWhiteLogo}
+                  alt="Rocky"
+                  className="view-friends-avatar"
+                />
               </button>
             </div>
-          ))
-        )}
+          </div>
+
+          {/* Search Bar */}
+          <div className="friends-search-container-new">
+            <img
+              src={searchIconBlue}
+              alt="Search"
+              className="friends-search-icon"
+            />
+            <input
+              type="text"
+              className="friends-search-input-new"
+              placeholder="Search by username, email, or scan a QR code"
+              value={searchQuery}
+              onChange={(e) => {
+                setSearchQuery(e.target.value);
+              }}
+            />
+            <button
+              className="friends-search-camera-button"
+              onClick={() => setIsQRScannerOpen(true)}
+              aria-label="Scan QR code"
+              type="button"
+            >
+              <Camera size={18} />
+            </button>
+            {searchQuery.trim().length > 0 && (
+              <button
+                className="friends-search-clear-button"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+              >
+                ×
+              </button>
+            )}
+          </div>
+          {error && <div className="friends-error-message-new">{error}</div>}
+        </div>
+
+        <div className="leaderboard-drawer">
+          {showSuggestions && (
+            <>
+              {suggestionsLoading ? (
+                <div className="view-friends-loading">
+                  Loading suggestions...
+                </div>
+              ) : (
+                <>
+                  <h2 className="friends-suggestions-title">
+                    Friend Suggestions
+                  </h2>
+                  {suggestions.length === 0 ? (
+                    <div className="view-friends-empty">
+                      <p>No suggestions available</p>
+                    </div>
+                  ) : (
+                    <div className="leaderboard-list">
+                      {suggestions.map((user) => renderUserItem(user))}
+                    </div>
+                  )}
+                </>
+              )}
+            </>
+          )}
+
+          {showSearchResults && (
+            <div className="leaderboard-list">
+              {searchResults.map((user) => renderUserItem(user))}
+            </div>
+          )}
+
+          {showEmptySearch && (
+            <div className="view-friends-empty">
+              <p>No users found matching "{searchQuery}"</p>
+            </div>
+          )}
+
+          {searchUsersMutation.isPending && (
+            <div className="view-friends-loading">Searching...</div>
+          )}
+        </div>
       </div>
+      <div className="friends-share-qr-button-container">
+        <button
+          className="friends-share-qr-button"
+          onClick={() => setIsQRDrawerOpen(true)}
+        >
+          Share my QR code
+        </button>
+      </div>
+      <QRScannerModal
+        isOpen={isQRScannerOpen}
+        onClose={() => setIsQRScannerOpen(false)}
+        onScanSuccess={handleQRScanSuccess}
+      />
+      <QRProfileDrawer
+        open={isQRDrawerOpen}
+        onOpenChange={setIsQRDrawerOpen}
+        userId={profile?.id || ""}
+        displayName={getUserDisplayName(profile)}
+        username={profile?.username || profile?.email || ""}
+      />
     </div>
   );
 }

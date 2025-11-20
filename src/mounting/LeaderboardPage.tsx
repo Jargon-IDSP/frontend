@@ -1,118 +1,192 @@
-import React from "react";
-// import { useNavigate } from "react-router-dom";
-import rockyLogo from "/rocky.svg";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useLeaderboard } from "../hooks/useLeaderboard";
-import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
+import { useProfile } from "../hooks/useProfile";
+import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
+import Podium from "../components/Podium";
+import LeaderboardItem from "../components/LeaderboardItem";
+import LeaderboardHeader from "../components/LeaderboardHeader";
+import LoadingBar from "../components/LoadingBar";
+import SelfLeaderboard from "../components/SelfLeaderboard";
+import type { LeaderboardType } from "../types/leaderboardHeader";
 
 const LeaderboardPage: React.FC = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
+  const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>("general");
   const {
     data: users = [],
     isLoading: loading,
     error,
     refetch,
-  } = useLeaderboard();
+  } = useLeaderboard(leaderboardType === "private" ? "friends" : "general");
+  const { data: profile, isLoading: profileLoading } = useProfile();
 
-  if (loading) {
+  const userScore = profile?.score ?? 0;
+  const hasNoPoints = userScore === 0;
+
+  const isPrivateLeaderboard = leaderboardType === "private";
+  const isSelfLeaderboard = leaderboardType === "self";
+
+  const hasNoPrivateConnections =
+    isPrivateLeaderboard &&
+    users.length === 1 &&
+    users[0]?.id === profile?.id;
+
+  const hasInsufficientPrivateConnections =
+    isPrivateLeaderboard &&
+    users.length < 3;
+
+  const containerClass = "container container--leaderboard";
+
+  if (loading || profileLoading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>🏆 Leaderboard</h1>
-        <p>Loading...</p>
+      <div className={containerClass}>
+        <div className="leaderboard-page leaderboard-error">
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={false}
+          />
+          <LoadingBar isLoading={loading || profileLoading} text="Loading Leaderboard" />
+        </div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <h1>🏆 Leaderboard</h1>
-        <p style={{ color: "red" }}>
-          Error:{" "}
-          {error instanceof Error
-            ? error.message
-            : "Failed to fetch leaderboard"}
-        </p>
-        <button onClick={() => refetch()} style={{ padding: "0.5rem 1rem" }}>
-          Try Again
-        </button>
+      <div className={containerClass}>
+        <div className="leaderboard-page leaderboard-error">
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={false}
+          />
+          <p className="leaderboard-error-message">
+            Error:{" "}
+            {error instanceof Error
+              ? error.message
+              : "Failed to fetch leaderboard"}
+          </p>
+          <button
+            className="leaderboard-error-button"
+            onClick={() => refetch()}
+          >
+            Try Again
+          </button>
+        </div>
+      </div>
+    );
+  }
+
+  if (hasNoPoints) {
+    return (
+      <div className={containerClass}>
+        <div className="leaderboard-page">
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={false}
+          />
+          <div className="leaderboard-empty-state">
+            <img src={LeaderboardConnectAvatar} alt="Leaderboard Connect Avatar" className="leaderboard-empty-avatar" />
+            <p className="leaderboard-empty-message">
+              You haven't started earning points yet. Go and start learning!
+            </p>
+            <button
+              className="leaderboard-start-button"
+              onClick={() => navigate("/learning")}
+            >
+              Start Learning
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
 
   return (
-    <div style={{ padding: "2rem", maxWidth: "600px", margin: "0 auto" }}>
-      {/* <button onClick={() => navigate("/")} style={{ marginBottom: "1rem" }}>
-        ← Back to Dashboard
-      </button> */}
-      <h1 style={{ textAlign: "center", marginBottom: "2rem" }}>
-        🏆 Leaderboard
-      </h1>
+    <div className={containerClass}>
+      <div className="leaderboard-page">
+        <div className="leaderboard-hero">
+          <LeaderboardHeader
+            activeTab={leaderboardType}
+            onTabChange={setLeaderboardType}
+            showActions={true}
+          />
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "0.5rem" }}>
-        {users.map((user, index) => (
-          <div
-            key={user.id}
-            style={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              padding: "1rem",
-              backgroundColor: index < 3 ? "#f0f8ff" : "#f9f9f9",
-              border: index < 3 ? "2px solid #007bff" : "1px solid #ddd",
-              borderRadius: "8px",
-              fontSize: "1.1rem",
-            }}
-          >
-            <span
-              style={{
-                fontWeight: "bold",
-                color: index < 3 ? "#007bff" : "#333",
-                display: "flex",
-                alignItems: "center",
-                gap: "0.5rem",
-              }}
-            >
-              #{index + 1}
+          {hasInsufficientPrivateConnections ? (
+            <div className="leaderboard-empty-state">
               <img
-                src={rockyLogo}
-                alt="Rocky"
-                style={{
-                  width: "24px",
-                  height: "24px",
-                  filter: index < 3 ? "none" : "grayscale(0.3)",
-                }}
+                src={LeaderboardConnectAvatar}
+                alt="Leaderboard Connect Avatar"
+                className="leaderboard-empty-avatar"
               />
-              {getUserDisplayName(user)}
-            </span>
-            <div
-              style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}
-            >
-              <span style={{ fontWeight: "bold", color: "#28a745" }}>
-                {user.score.toLocaleString()}
-              </span>
-              <span
-                style={{
-                  fontWeight: "bold",
-                  color: "#6c757d",
-                  fontSize: "0.9rem",
-                  backgroundColor: "#f8f9fa",
-                  padding: "0.2rem 0.5rem",
-                  borderRadius: "4px",
-                  border: "1px solid #dee2e6",
-                }}
+              <p className="leaderboard-empty-message">
+                {hasNoPrivateConnections
+                  ? "You don't have any private connections yet. Follow friends to unlock the private leaderboard!"
+                  : "You need at least 2 friends to unlock the private leaderboard!"}
+              </p>
+              <button
+                className="leaderboard-start-button"
+                onClick={() => navigate("/profile/friends")}
               >
-                {getLanguageCode(user.language)}
-              </span>
+                Find Friends
+              </button>
             </div>
-          </div>
-        ))}
-      </div>
+          ) : (
+            <>
+              {users.length > 0 && (
+                <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
+              )}
+            </>
+          )}
+        </div>
 
-      {users.length === 0 && (
-        <p style={{ textAlign: "center", color: "#666", marginTop: "2rem" }}>
-          No users found in the leaderboard.
-        </p>
-      )}
+        {!hasInsufficientPrivateConnections && (
+          <div className="leaderboard-drawer">
+            {isSelfLeaderboard ? (
+              <SelfLeaderboard />
+            ) : (
+              <>
+                <div className="leaderboard-list">
+                  {users.slice(3).map((user, index) => {
+                    const actualRank = index + 4;
+                    const isCurrentUser = user.id === profile?.id;
+                    return (
+                      <LeaderboardItem
+                        key={user.id}
+                        user={user}
+                        rank={actualRank}
+                        isCurrentUser={isCurrentUser}
+                        isClickable={true}
+                        fromRoute="/leaderboard/full"
+                      />
+                    );
+                  })}
+                </div>
+
+                {users.length === 0 && (
+                  <p className="leaderboard-empty-list">
+                    {isPrivateLeaderboard
+                      ? "No private leaderboard entries yet. Invite friends to start competing!"
+                      : "No users found in the leaderboard."}
+                  </p>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {isPrivateLeaderboard && !hasInsufficientPrivateConnections && (
+          <button
+            className="leaderboard-friends-button"
+            onClick={() => navigate("/profile/friends")}
+          >
+            Find Friends
+          </button>
+        )}
+      </div>
     </div>
   );
 };

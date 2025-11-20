@@ -1,16 +1,59 @@
 import type { User } from "../hooks/useLeaderboard";
+import type { Friend, SearchResult, FriendProfile } from "../types/friend";
+import { industryIdToName } from "../lib/api";
 
-export function getUserDisplayName(user: User): string {
-  if (user.firstName && user.lastName) {
-    return `${user.firstName} ${user.lastName}`;
+// Overloaded function signatures for type safety
+export function getUserDisplayName(user: User): string;
+export function getUserDisplayName(user: Friend | SearchResult | FriendProfile): string;
+export function getUserDisplayName(user: {
+  username?: string | null;
+  firstName?: string | null;
+  lastName?: string | null;
+  email?: string;
+} | null | undefined): string;
+
+/**
+ * Get display name for a user (username, full name, or email)
+ * Supports multiple user types from different parts of the app
+ */
+export function getUserDisplayName(user: any): string {
+  if (!user) return "Loading...";
+
+  // Prioritize username if available
+  if (user.username) return user.username;
+
+  // Try to construct full name
+  if (user.firstName || user.lastName) {
+    return `${user.firstName || ""} ${user.lastName || ""}`.trim();
   }
-  if (user.firstName) {
-    return user.firstName;
+
+  // Fallback to email or anonymous
+  return user.email || "Anonymous User";
+}
+
+/**
+ * Get industry name from industry ID
+ */
+export function getIndustryName(industryId: number | null | undefined): string {
+  if (!industryId) return "Not set";
+  return industryIdToName[industryId] || "Not set";
+}
+
+/**
+ * Format date string to readable format
+ */
+export function formatDate(dateString: string | undefined): string {
+  if (!dateString) return "N/A";
+  try {
+    const date = new Date(dateString);
+    return date.toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      // day: "numeric",
+    });
+  } catch {
+    return "N/A";
   }
-  if (user.lastName) {
-    return user.lastName;
-  }
-  return "Anonymous User";
 }
 
 export function getLanguageCode(language: string | null): string {

@@ -13,30 +13,22 @@ export const useLearning = <T>({
 }: UseLearningOptions) => {
   const { getToken, isLoaded, isSignedIn } = useAuth();
 
-  // Memoize params to prevent unnecessary re-renders
   const paramsString = useMemo(
     () => JSON.stringify(params || {}),
     [params?.language, params?.industry_id]
   );
 
-  // Build the URL
   const url = useMemo(() => {
     const queryString = params
       ? "?" + new URLSearchParams(params).toString()
       : "";
-
-    // Special handling for document routes - they go directly under /learning/documents
-    // not /learning/custom/documents
     if (endpoint.startsWith("documents/")) {
-      // Document routes: /learning/documents/:documentId/terms
       return `${BACKEND_URL}/learning/${endpoint}${queryString}`;
     } else {
-      // Regular routes: /learning/existing/... or /learning/custom/...
       return `${BACKEND_URL}/learning/${type}/${endpoint}${queryString}`;
     }
   }, [type, endpoint, params]);
 
-  // Use TanStack Query
   const query = useQuery({
     queryKey: ["learning", type, endpoint, paramsString],
     queryFn: async (): Promise<ApiResponse<T>> => {
@@ -69,15 +61,17 @@ export const useLearning = <T>({
       return result;
     },
     enabled: enabled && isLoaded && isSignedIn,
-    staleTime: 5 * 60 * 1000, // 5 minutes - adjust based on your needs
-    retry: 2, // Retry failed requests twice
+    staleTime: 10 * 60 * 1000, // Consider data fresh for 10 minutes
+    gcTime: 30 * 60 * 1000, // Keep in cache for 30 minutes
+    retry: 2,
+    refetchOnWindowFocus: false, // Don't refetch when window regains focus
+    refetchOnMount: false, // Don't refetch on component mount if data exists
   });
 
   return {
     data: query.data ?? null,
     loading: query.isLoading,
     error: query.error?.message ?? null,
-    // Expose additional useful query states
     isError: query.isError,
     isFetching: query.isFetching,
     refetch: query.refetch,

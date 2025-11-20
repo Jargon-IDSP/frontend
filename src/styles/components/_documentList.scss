@@ -1,0 +1,186 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+// Document List Component
+.documents-list {
+  width: 100%;
+}
+
+.documents-list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-md;
+}
+
+.documents-list-title {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  margin: 0;
+  color: $color-quaternary-dark;
+}
+
+.documents-list-edit-toggle {
+  p {
+    font-size: $font-size-label;
+    font-weight: $font-weight-regular;
+    color: $color-neutral;
+    text-decoration: underline;
+}
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+  }
+
+  img {
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.documents-list-container {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-md;
+}
+
+.documents-list-item {
+  padding: $spacing-sm;
+  border: 2px solid #e5e7eb;
+  border-radius: $border-radius-md;
+  background-color: white;
+
+  &--clickable {
+    cursor: pointer;
+    transition: all $transition-fast;
+  }
+}
+
+.documents-list-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.documents-list-item-icon {
+  flex-shrink: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.documents-list-item-content {
+  flex: 1;
+}
+
+.documents-list-item-filename {
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  margin-bottom: $spacing-sm;
+  color: $color-neutral;
+}
+
+.documents-list-item-meta {
+  display: flex;
+  gap: $spacing-md;
+  font-size: 10px;
+  color: $color-neutral;
+}
+
+.documents-list-item-actions {
+  display: flex;
+  gap: $spacing-sm;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+// Action buttons (icon buttons)
+.documents-list-action-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-sm;
+  transition: all $transition-fast;
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+  }
+
+  img {
+    width: 25px;
+    height: 25px;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+
+// Status Badge
+.documents-list-status-badge {
+  color: $color-error;
+  font-weight: $font-weight-bold;
+}
+
+.documents-list-status-badge-separator {
+  color: #6b7280;
+}
+
+// Processing Badge
+.documents-list-processing {
+  padding: 0.75rem $spacing-lg;
+  background-color: $color-second-neutral;
+  color: $color-warning;
+  border: 1px solid $color-warning;
+  border-radius: $border-radius-sm;
+  font-size: $font-size-label;
+  font-weight: $font-weight-bold;
+}
+
+// Loading State
+.documents-list-loading {
+  padding: $spacing-md;
+  text-align: center;
+  color: $color-neutral;
+}
+
+// Error State
+.documents-list-error {
+  color: $color-error;
+  padding: $spacing-md;
+}
+
+// Empty State
+.documents-list-empty {
+  padding: $spacing-xl;
+  text-align: center;
+  background-color: #f9fafb;
+  border-radius: $border-radius-md;
+}
+
+.documents-list-empty-message {
+  color: #6b7280;
+  margin: 0;
+}
+

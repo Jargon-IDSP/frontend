@@ -1,28 +1,374 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Profile Page - Apply consistent layout
 .profile-page {
-  @include page-layout;
+  padding: 2rem 1rem 1rem 1rem;
+}
+
+.profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+  position: relative;
+}
+
+.profile-header-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0;
+}
+
+.profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.profile-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-normal;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.profile-notifications-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.profile-notifications-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: $color-error;
+  color: white;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: $font-weight-bold;
+  padding: 0 4px;
+  line-height: 1;
+  border: 2px solid white;
+  box-sizing: border-box;
+}
+
+// Settings container with dropdown
+.profile-settings-container {
+  position: relative;
+}
+
+.profile-settings-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-neutral;
+  transition: opacity $transition-normal;
+  background-color: $color-secondary;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+  }
+
+  svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .rocky-logo {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+// Settings dropdown menu
+.profile-settings-dropdown {
+  position: absolute;
+  top: calc(100% + $spacing-xs);
+  right: 0;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  z-index: $z-index-dropdown;
+  overflow: hidden;
+  margin-top: $spacing-xs;
+}
+
+.profile-settings-item {
+  width: 100%;
+  padding: $spacing-md;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-neutral;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+    color: $color-quaternary-dark;
+  }
+
+  &:first-child {
+    border-top-left-radius: $border-radius-md;
+    border-top-right-radius: $border-radius-md;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: $border-radius-md;
+    border-bottom-right-radius: $border-radius-md;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $color-quaternary-light;
+    color: $color-quaternary-dark;
+  }
 }
 
 .profile {
-  &-title {
-    font-size: $font-size-h1;
-    font-weight: $font-weight-bold;
-    color: $color-neutral;
-    margin-bottom: $spacing-lg;
-    text-align: center;
-  }
-
   &-content {
     margin-top: $spacing-lg;
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-xl;
+  }
 
-    > div:last-child {
-      display: flex;
-      gap: $spacing-md;
-      justify-content: center;
-      flex-wrap: wrap;
+  // Documents Section
+  &-documents {
+    width: 100%;
+  }
+
+  &-documents-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: $spacing-lg;
+  }
+
+  &-documents-title {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0;
+  }
+
+  &-documents-manage-button {
+    padding: $spacing-sm $spacing-md;
+    background: none;
+    border: 1px solid $color-quaternary;
+    border-radius: $border-radius-md;
+    color: $color-quaternary-dark;
+    font-size: $font-size-body;
+    font-weight: $font-weight-medium;
+    cursor: pointer;
+    transition: all $transition-fast;
+
+    &:hover {
+      background-color: $color-quaternary-light;
+      border-color: $color-quaternary-dark;
+    }
+
+    &:focus {
+      outline: 2px solid $color-quaternary-dark;
+      outline-offset: 2px;
+    }
+  }
+
+  // Action Buttons
+  &-actions {
+    display: flex;
+    gap: $spacing-md;
+    justify-content: center;
+    flex-wrap: wrap;
+  }
+
+  // Friends Button
+  &-friends-button {
+    padding: $spacing-md $spacing-xl;
+    background-color: $color-quaternary-dark;
+    color: white;
+    border: none;
+    border-radius: $border-radius-md;
+    font-size: $font-size-body;
+    font-weight: $font-weight-bold;
+    cursor: pointer;
+    transition: background-color $transition-fast;
+    width: 100%;
+    max-width: 400px;
+
+    &:hover {
+      background-color: $color-quaternary;
+    }
+
+    &:focus {
+      outline: 2px solid $color-quaternary-dark;
+      outline-offset: 2px;
+    }
+  }
+
+  // Badges Section
+  &-badges-section {
+    margin: $spacing-lg 0;
+    padding: $spacing-lg;
+    background: $color-second-neutral-light;
+    border: 1px solid $color-quaternary;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  &-badges-title {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0 0 $spacing-md 0;
+  }
+
+  &-badges-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    gap: $spacing-md;
+    justify-items: center;
+  }
+
+  &-badge-item {
+    width: 80px;
+    height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-md;
+    padding: $spacing-sm;
+    transition: transform $transition-fast;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  &-badge-icon {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+
+  &-no-badges {
+    text-align: center;
+    color: $color-neutral;
+    font-size: $font-size-body;
+    padding: $spacing-lg;
+    margin: 0;
+  }
+
+  // Profile Card
+  &-card {
+    display: flex;
+    align-items: center;
+    gap: $spacing-md;
+    padding: $spacing-lg;
+    background: white;
+    border: 1px solid $color-quaternary;
+    border-radius: $border-radius-lg;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    position: relative;
+  }
+
+  &-card-avatar {
+    flex-shrink: 0;
+    width: 80px;
+    height: 80px;
+    border-radius: $border-radius-full;
+    background-color: $color-secondary;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+
+    .profile-avatar-image {
+      width: 70%;
+      height: 70%;
+      object-fit: contain;
+    }
+  }
+
+  &-card-info {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &-card-name {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0 0 $spacing-xs 0;
+  }
+
+  &-card-industry {
+    font-size: $font-size-body;
+    color: $color-neutral;
+    margin: 0;
+  }
+
+  &-card-edit {
+    flex-shrink: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-sm;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: $border-radius-md;
+    transition: background-color $transition-fast;
+
+    &:hover {
+      background-color: $color-quaternary-light;
+    }
+
+    &:focus {
+      outline: 2px solid $color-quaternary-dark;
+      outline-offset: 2px;
+    }
+
+    img {
+      width: 30px;
+      height: 30px;
     }
   }
 
@@ -63,4 +409,206 @@
   margin-bottom: $spacing-md;
   background-color: rgba(196, 0, 0, 0.1);
   text-align: center;
+}
+
+// Manage Profile Page
+.manage-profile-page {
+  padding: 2rem 1rem 1rem 1rem;
+}
+
+.manage-profile-header {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.manage-profile-back {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: $color-quaternary-dark;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+  }
+}
+
+.manage-profile-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0;
+}
+
+.manage-profile-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+  align-items: center;
+}
+
+// Large Avatar Section
+.manage-profile-avatar {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: $spacing-xl;
+}
+
+.manage-profile-avatar-container {
+  position: relative;
+  width: 250px;
+  height: 250px;
+  margin: 0 auto;
+}
+
+.manage-profile-avatar-rocky {
+  position: absolute;
+  top: 50px;
+  left: 45px;
+  z-index: 1;
+}
+
+.manage-profile-avatar-tophat {
+  position: absolute;
+  top: -2px;
+  left: -10px;
+  width: 250px;
+  height: 125px;
+  z-index: 2;
+}
+
+.manage-profile-avatar-mustache {
+  position: absolute;
+  top: 75px;
+  left: 73px;
+  width: 125px;
+  height: 63px;
+  z-index: 2;
+}
+
+// Trades Section
+.manage-profile-trades {
+  width: 100%;
+  max-width: 600px;
+}
+
+.manage-profile-trades-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin-bottom: $spacing-lg;
+  text-align: center;
+}
+
+.manage-profile-trades-options {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.manage-profile-trade-option {
+  padding: $spacing-md $spacing-lg;
+  background: white;
+  border: 2px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-neutral;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: $color-second-neutral-dark;
+    border-color: $color-quaternary-dark;
+    color: $color-quaternary-dark;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--selected {
+    background-color: $color-secondary;
+    border-color: $color-quaternary-dark;
+    color: $color-quaternary-dark;
+    font-weight: $font-weight-bold;
+  }
+}
+
+.manage-profile-trades-actions {
+  display: flex;
+  justify-content: center;
+  margin-top: $spacing-lg;
+}
+
+.manage-profile-save-button {
+  padding: $spacing-md $spacing-xl;
+  background-color: $color-quaternary-dark;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: $color-quaternary;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.manage-profile-error {
+  text-align: center;
+  color: $color-error;
+  font-size: $font-size-body;
+  margin-top: $spacing-md;
+}
+
+
+.profile-account-modal-wrapper {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: $z-index-modal;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  // Match Clerk's default modal backdrop
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(4px);
+  
+  > div {
+    width: 100%;
+    max-width: 640px;
+    max-height: 90vh;
+    margin: $spacing-md;
+    
+    :global(.cl-rootBox) {
+      width: 100%;
+      height: auto;
+    }
+  }
 }

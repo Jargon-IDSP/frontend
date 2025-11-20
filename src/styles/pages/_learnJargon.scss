@@ -1,0 +1,59 @@
+@use 'sass:color';
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.learningOverview {
+  padding: 2rem 1rem 1rem 1rem;
+
+.learningOverviewHeader {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    gap: 2rem;
+    margin-bottom: 1rem;
+
+    .headerContent {
+        h1 {
+            font-size: $font-size-h1;
+            font-weight: $font-weight-bold;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 0.5rem;
+
+            .badge {
+                background-color: $color-primary;
+                color: white;
+                padding: 0.25rem 0.75rem;
+                border-radius: 1rem;
+                font-size: 0.875rem;
+                font-weight: $font-weight-regular;
+            }
+        }
+
+        p {
+            color: $color-neutral;
+            margin: 0;
+        }
+    }
+
+    img {
+        grid-column: 2;
+        transform: scaleX(-1);
+        max-width: 100%;
+        height: auto;
+    }
+}
+
+h2 {
+    font-size:$font-size-h2;
+    font-weight: $font-weight-bold;
+    margin-bottom: 0.5rem;
+}
+
+.navigation-card__content {
+    max-width: 100%;
+    border-radius: 15px;
+    margin-bottom: 0.5rem;
+}
+}

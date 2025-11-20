@@ -1,0 +1,61 @@
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.avatarPage {
+    padding: 1rem;
+
+    h1 {
+        font-size: $font-size-h1;
+        text-align: center;
+        margin-bottom: 3rem;
+    }
+
+    .avatarContainer {
+        position: relative;
+        width: 400px;
+        height: 400px;
+        margin: 0 auto;
+
+        .bodyAvatar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 200px;
+            height: 200px;
+            z-index: 1;
+
+            .rocky-avatar {
+                width: 100%;
+                height: 100%;
+                display: block;
+            }
+        }
+
+        .hatAvatar {
+            position: absolute;
+            top: -20%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 30px;
+            height: 30px;
+            z-index: 2;
+        }
+
+        .facialHairAvatar {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 50px;
+            height: 50px;
+            z-index: 3;
+        }
+
+        .avatar-accessory {
+            width: 100%;
+            height: 100%;
+        }
+    }
+}

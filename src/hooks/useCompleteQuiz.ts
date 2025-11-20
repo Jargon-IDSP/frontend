@@ -34,14 +34,12 @@ export function useCompleteQuiz() {
       return await response.json();
     },
     onSuccess: (_, variables) => {
-      // Changed 'data' to '_'
-      // Invalidate quiz attempts cache
+
       if (variables.quizId) {
         queryClient.invalidateQueries({
           queryKey: ["quizAttempts", variables.quizId],
         });
       }
-      // Invalidate category quiz cache if applicable
       if (variables.category) {
         queryClient.invalidateQueries({
           queryKey: ["categoryQuestions", variables.category],

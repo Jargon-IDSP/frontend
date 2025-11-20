@@ -4,7 +4,9 @@ import { useMyQuizzes } from "../../hooks/useMyQuizzes";
 import QuizShareModal from "../../components/learning/QuizShareModal";
 import Button from "../../components/learning/ui/Button";
 import Card from "../../components/learning/ui/Card";
+import LoadingBar from "../../components/LoadingBar";
 import { getUserDisplayName } from "../../types/friend";
+import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 export default function MyQuizzesPage() {
   const [shareModalQuiz, setShareModalQuiz] = useState<{
@@ -13,7 +15,6 @@ export default function MyQuizzesPage() {
   } | null>(null);
   const navigate = useNavigate();
 
-  // Use custom hook
   const {
     data: quizzes = [],
     isLoading: loading,
@@ -27,11 +28,11 @@ export default function MyQuizzesPage() {
   return (
     <div style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
       <Button
-        onClick={() => navigate("/learning/custom")}
+        onClick={() => navigate(-1)}
         variant="secondary"
         style={{ marginBottom: "1rem" }}
       >
-        ← Back to Custom Learning
+        <img src={goBackIcon} alt="Back Button" />    
       </Button>
 
       <div
@@ -49,7 +50,7 @@ export default function MyQuizzesPage() {
       </div>
 
       {loading ? (
-        <p>Loading...</p>
+        <LoadingBar isLoading={true} text="Loading quizzes" />
       ) : quizzes.length === 0 ? (
         <div style={{ textAlign: "center", padding: "3rem", color: "#6b7280" }}>
           <p style={{ fontSize: "1.125rem", marginBottom: "0.5rem" }}>
@@ -169,7 +170,7 @@ export default function MyQuizzesPage() {
           quizName={shareModalQuiz.name}
           onClose={() => setShareModalQuiz(null)}
           onShared={() => {
-            refetchQuizzes(); // Refresh to show updated share count
+            refetchQuizzes(); 
           }}
         />
       )}

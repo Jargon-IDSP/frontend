@@ -1,20 +1,12 @@
-import { useQuery } from "@tanstack/react-query";
-import { useAuth } from "@clerk/clerk-react";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
+import { useAuth, useClerk } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";
-
-export interface ProfileData {
-  id: string;
-  email: string;
-  username?: string;
-  firstName?: string;
-  lastName?: string;
-  score?: number;
-  // Add other profile fields here
-  [key: string]: any;
-}
+import type { ProfileData } from "../types/profile";
 
 export function useProfile() {
   const { getToken } = useAuth();
+  const { signOut } = useClerk();
+  const queryClient = useQueryClient();
 
   return useQuery({
     queryKey: ["profile"],
@@ -28,13 +20,24 @@ export function useProfile() {
       });
 
       if (!res.ok) {
+        // Handle unauthorized errors - session has expired
+        if (res.status === 401) {
+          // Clear all cached data
+          queryClient.clear();
+          // Sign out the user
+          await signOut();
+          // Redirect will happen automatically via Clerk
+          throw new Error("Session expired. Please log in again.");
+        }
+
         const errorData = await res.json();
         throw new Error(errorData.error || "Unable to fetch profile");
       }
 
-      return await res.json();
+      const data = await res.json();
+      return data.user || data;
     },
-    staleTime: 5 * 60 * 1000, // 5 minutes
+    staleTime: 5 * 60 * 1000, 
     retry: 2,
   });
 }

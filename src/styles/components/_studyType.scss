@@ -1,0 +1,202 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.document-study-options {
+  margin: 1rem;
+  &__title {
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .word-of-the-day-card {
+    margin-bottom: 1.5rem;
+    background-color: $color-primary;
+    box-shadow: 8px 8px 0 $color-quaternary-800;
+    border-radius: 5px;
+  }
+
+  .boss-quiz-score-card {
+    background: linear-gradient(135deg, #f5deb3 0%, #e8d5a8 100%);
+    border: 1px solid $color-quaternary-800;
+    border-radius: 12px;
+    box-shadow: 8px 8px 0 $color-quaternary-800;
+    padding: 2rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    text-align: center;
+
+    .score-label {
+      font-size: 1.5rem;
+      font-weight: $font-weight-medium;
+      color: $color-quaternary-dark;
+      margin-bottom: 0.5rem;
+    }
+
+    .score-value {
+      font-size: 4rem;
+      font-weight: $font-weight-bold;
+      color: $color-quaternary-800;
+      line-height: 1;
+    }
+  }
+}
+
+.studyTypeHead {
+  margin-top: 1.5rem;
+  margin-bottom: 0;
+
+  h2 {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0;
+    text-align: left;
+  }
+}
+
+.study-type {
+  border: 1px solid black;
+  border-radius: 5px;
+  margin-top: 0.5rem;
+  box-shadow: 8px 8px 0 $color-quaternary-800;
+  padding: 3rem;
+  position: relative;
+
+  &-with-score {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+    padding: 2rem 1rem;
+  }
+
+  &-score {
+    display: flex;
+    flex-direction: column;
+
+    .score-label {
+      font-size: 1rem;
+      font-weight: $font-weight-medium;
+      color: $color-quaternary-dark;
+      margin-bottom: 0.25rem;
+    }
+
+    .score-value {
+      font-size: 2rem;
+      font-weight: $font-weight-bold;
+      color: $color-quaternary-800;
+      line-height: 1;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    padding-right: 0.5rem;
+  }
+
+  .start_learning,
+  .study-type-actions {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-right: 0.5rem;
+
+    button {
+      outline: none;
+      font-family: inherit;
+      font-size: inherit;
+      cursor: pointer;
+
+      background-color: $color-secondary;
+      color: $color-quaternary-dark;
+      border-radius: 25px;
+      width: 100%;
+      max-width: 12rem;
+      height: 2rem;
+      min-width: 0;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      padding: 0 1rem;
+      transition: all 0.2s ease;
+
+      &:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $color-secondary;
+        outline-offset: 2px;
+      }
+
+      p {
+        margin: 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+    }
+  }
+
+  &-blue {
+      background-color: $color-quinary-100;
+      color: white;
+    }
+
+
+  &-red {
+      background-color: $color-secondary-100;
+      color: white;
+  }
+
+  &-locked {
+    background-color: $color-secondary-100 !important;
+    cursor: not-allowed;
+
+    .start_learning,
+    .study-type-actions {
+      display: flex;
+      flex-direction: column;
+      .lock-message {
+        color: $quaternary-200;
+        font-size: 0.75rem;
+        margin-top: 0.5rem;
+        margin-bottom: 0;
+        text-align: center;
+      }
+
+      button {
+        background-color: $color-secondary-200 !important;
+        color: $quaternary-200 !important;
+        cursor: not-allowed;
+        opacity: 1;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+
+        .button-lock-icon {
+          width: 1.25rem;
+          height: 1.25rem;
+          filter: brightness(0) saturate(100%) invert(69%) sepia(13%) saturate(445%) hue-rotate(326deg) brightness(89%) contrast(85%);
+        }
+
+        &:hover {
+          opacity: 1;
+          transform: none;
+        }
+
+        &:active {
+          transform: none;
+        }
+      }
+    }
+  }
+}

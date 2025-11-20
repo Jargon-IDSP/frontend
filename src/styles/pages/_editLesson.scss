@@ -1,0 +1,421 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+.container--edit-lesson {
+  padding: 0;
+}
+
+.edit-lesson-page {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  min-height: calc(100vh - 140px);
+  background: $color-secondary-100;
+  overflow: hidden;
+}
+
+.edit-lesson-hero {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: $spacing-xl $spacing-lg $spacing-xl;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+  flex-shrink: 0;
+  background-image: url('/editLessonBackground.svg');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}
+
+.edit-lesson-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0;
+}
+
+.edit-lesson-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.edit-lesson-delete-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.edit-lesson-title {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0;
+  flex: 1;
+  text-align: center;
+}
+
+.edit-lesson-icon-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-top: $spacing-lg;
+  width: 100%;
+}
+
+.edit-lesson-icon {
+  width: 160px;
+  height: 160px;
+  object-fit: contain;
+}
+
+.edit-lesson-drawer {
+  position: relative;
+  z-index: 3;
+  margin-top: 0;
+  padding: $spacing-lg 2.5rem;
+  background: $color-second-neutral-light;
+  border-radius: $border-radius-xl $border-radius-xl 0 0;
+  border-top: 1px solid $color-quaternary;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+  width: 100%;
+  overflow-y: auto;
+
+  &:before {
+    content: "";
+    position: absolute;
+    top: $spacing-sm;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 56px;
+    height: 6px;
+    border-radius: $border-radius-full;
+    background: $color-quaternary-light;
+  }
+}
+
+.edit-lesson-content {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xl;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.edit-lesson-category-card {
+  position: relative;
+  width: 100%;
+}
+
+.edit-lesson-category-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+  background-color: $color-secondary-400;
+  border-radius: 39px;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+}
+
+.edit-lesson-category-wrench-icon {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  margin-right: $spacing-sm;
+}
+
+.edit-lesson-category-value {
+  flex: 1;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-800;
+  text-align: left;
+}
+
+.edit-lesson-category-arrow {
+  width: 25px;
+  height: 25px;
+  transition: transform $transition-fast;
+  background-color: $color-tertiary-50;
+  padding: $spacing-xs;
+  margin-left: $spacing-sm;
+  border-radius: $border-radius-full;
+  border: 1.5px solid #614C4C;
+
+  &--open {
+    transform: rotate(180deg);
+  }
+}
+
+.edit-lesson-category-list {
+  display: flex;
+  flex-direction: column;
+  margin-left: $spacing-lg;
+  margin-right: $spacing-lg;
+  padding-left: $spacing-sm;
+  padding-right: $spacing-sm;
+  padding-bottom: $spacing-sm;
+  background-color: $color-second-neutral;
+  border-radius: 0 0 25px 25px;
+  border-top: none;
+  overflow: hidden;
+}
+
+.edit-lesson-category-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: calc($spacing-md * 0.85);
+  background: $color-second-neutral;
+  border: none;
+  border-bottom: 1px solid $color-secondary-200;
+  border-radius: 0;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+  font-size: $font-size-body;
+  color: $color-quaternary-dark;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.edit-lesson-category-option-wrench-icon {
+  width: 30px;
+  height: 30px;
+  object-fit: contain;
+  margin-right: $spacing-sm;
+}
+
+.edit-lesson-category-option-text {
+  flex: 1;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-800;
+  text-align: left;
+}
+
+.edit-lesson-shared-card {
+  position: relative;
+  width: 100%;
+}
+
+.edit-lesson-shared-button {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-right: $spacing-md;
+  padding-left: $spacing-md;
+  background-color: $color-primary-400;
+  border-radius: 39px;
+  cursor: pointer;
+  transition: all $transition-fast;
+  text-align: left;
+}
+
+.edit-lesson-shared-value {
+  flex: 1;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-light;
+  color: white;
+  text-align: left;
+}
+
+.edit-lesson-shared-arrow {
+  width: 25px;
+  height: 25px;
+  transition: transform $transition-fast;
+  background-color: $color-tertiary-50;
+  padding: $spacing-xs;
+  margin-left: $spacing-sm;
+  border-radius: $border-radius-full;
+  border: 1.5px solid #614C4C;
+
+  &--open {
+    transform: rotate(180deg);
+  }
+}
+
+.edit-lesson-shared-list {
+  display: flex;
+  flex-direction: column;
+  margin-left: $spacing-lg;
+  margin-right: $spacing-lg;
+  padding-left: $spacing-sm;
+  padding-right: $spacing-sm;
+  padding-bottom: $spacing-sm;
+  background-color: $color-primary-100;
+  border-radius: 0 0 25px 25px;
+  border-top: none;
+  overflow: hidden;
+}
+
+.edit-lesson-shared-option {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  padding: calc($spacing-md * 0.85);
+  background: $color-primary-100;
+  border: none;
+  border-bottom: 1px solid $color-quaternary-500;
+  text-align: left;
+  font-size: $font-size-body;
+  color: $color-quaternary-dark;
+  cursor: pointer;
+  transition: background-color $transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.edit-lesson-shared-checkbox {
+  position: relative;
+  width: 24px;
+  height: 24px;
+  margin-left: $spacing-md;
+  cursor: pointer;
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  border-radius: 50%;
+  border: 2px solid $color-quaternary-500;
+  background-color: transparent;
+  transition: all $transition-fast;
+  flex-shrink: 0;
+
+  &:checked {
+    background-color: $color-secondary-200;
+    border: 3px solid $color-secondary;
+  }
+
+  &:not(:checked) {
+    background-color: white;
+    border: 2px solid $color-secondary;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+  }
+}
+
+.edit-lesson-shared-option-text {
+  flex: 1;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-800;
+  text-align: left;
+}
+
+.edit-lesson-input-group {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.edit-lesson-label {
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-700;
+}
+
+.edit-lesson-input {
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  background: white;
+  color: $color-quaternary-dark;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-quinary;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+.edit-lesson-error {
+  color: $color-error;
+  font-size: $font-size-body;
+  margin: 0;
+}
+
+.edit-lesson-actions {
+  display: flex;
+  gap: $spacing-md;
+  justify-content: center;
+}
+
+.edit-lesson-button {
+  padding-top: $spacing-xs;
+  padding-bottom: $spacing-xs;
+  padding-left: $spacing-lg;
+  padding-right: $spacing-lg;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  border: none;
+  border-radius: 23px;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+
+  &--cancel {
+    background: white;
+    color: $color-error;
+  }
+
+  &--save {
+    background-color: $color-success-300;
+    color: white;
+  }
+}
+
+.edit-lesson-loading {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-quinary-50;
+}
+

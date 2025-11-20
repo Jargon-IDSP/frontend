@@ -1,0 +1,37 @@
+@use "../variables" as *;
+
+.edit-name-drawer-content {
+  padding: 0 $spacing-md $spacing-md $spacing-md;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+}
+
+.edit-name-drawer-input {
+  width: 100%;
+  padding: $spacing-sm;
+  font-size: $font-size-body;
+  border: 2px solid $color-quaternary-light;
+  border-radius: $border-radius-md;
+  outline: none;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    border-color: $color-primary;
+  }
+
+  &:disabled {
+    background-color: $color-second-neutral-light;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: $color-quaternary-light;
+  }
+}
+
+.edit-name-drawer-error {
+  color: red;
+  font-size: $font-size-small;
+  margin: 0;
+}

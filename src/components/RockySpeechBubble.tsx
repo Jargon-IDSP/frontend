@@ -1,11 +1,7 @@
 import React from 'react';
-import rockyYellowLogo from '/rockyYellow.svg';
-import textBubble from '/textBubble.svg';
-
-interface RockySpeechBubbleProps {
-  text: string;
-  className?: string;
-}
+import type { RockySpeechBubbleProps } from '../types/rockySpeechBubble';
+import rockyYellowLogo from '/rockyYellow.svg?url';
+import textBubble from '/textBubble.svg?url';
 
 const RockySpeechBubble: React.FC<RockySpeechBubbleProps> = ({ text, className = '' }) => {
   return (

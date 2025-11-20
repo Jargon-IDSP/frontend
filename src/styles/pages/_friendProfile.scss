@@ -1,0 +1,596 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+@use 'sass:color';
+
+.container--friend-profile {
+  padding: 0;
+  padding-bottom: calc(70px + #{$spacing-md});
+}
+
+.friend-profile-page {
+  padding: $spacing-lg;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+// Header
+.friend-profile-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.friend-profile-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.friend-profile-header-actions {
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.friend-profile-notifications-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  border-radius: $border-radius-md;
+  transition: background-color $transition-normal;
+
+  &:hover {
+    background-color: #f1eae8;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.friend-profile-notifications-icon-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.friend-profile-notifications-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+  background-color: $color-error;
+  color: white;
+  border-radius: 10px;
+  min-width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: $font-weight-bold;
+  padding: 0 4px;
+}
+
+.friend-profile-friendship-button {
+  // padding: $spacing-sm $spacing-lg;
+  border: none;
+  border-radius: $border-radius-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--add {
+    background-color: $color-quaternary-dark;
+    color: white;
+    padding-right: $spacing-xl;
+    padding-left: $spacing-xl;
+    padding-top: $spacing-sm;
+    padding-bottom: $spacing-sm;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($color-quaternary-dark, $lightness: -10%);
+      transform: translateY(-1px);
+    }
+  }
+
+  &--remove {
+    background-color: $color-error;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust($color-error, $lightness: -10%);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// Loading & Error States
+.friend-profile-loading,
+.friend-profile-error {
+  text-align: center;
+  padding: $spacing-xl;
+  font-size: $font-size-body;
+  color: $color-neutral;
+}
+
+.friend-profile-error {
+  color: $color-error;
+}
+
+// Not Friends Yet State
+.friend-profile-not-friends {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  padding: $spacing-xl;
+}
+
+.friend-profile-not-friends-content {
+  text-align: center;
+  max-width: 400px;
+}
+
+.friend-profile-not-friends-message {
+  font-size: $font-size-h2;
+  color: $color-neutral;
+  margin: $spacing-lg 0 $spacing-xl 0;
+  font-weight: $font-weight-medium;
+}
+
+// Profile Card
+.friend-profile-card {
+  background: $color-secondary-400;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  text-align: center;
+  margin-bottom: $spacing-lg;
+  position: relative;
+}
+
+.friend-profile-avatar {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto $spacing-md;
+  background-color: $color-second-neutral-50;
+  border: 1px solid $color-quaternary-dark;
+  border-radius: $border-radius-full;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 70%;
+    height: 70%;
+    object-fit: contain;
+  }
+}
+
+.friend-profile-name {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-800;
+  margin: 0 0 $spacing-xs 0;
+}
+
+.friend-profile-industry {
+  font-size: $font-size-body;
+  color: $color-quaternary-700;
+  margin: 0 0 $spacing-lg 0;
+}
+
+// Stats
+.friend-profile-stats {
+  display: flex;
+  justify-content: space-around;
+  gap: 0;
+  margin-top: $spacing-lg;
+}
+
+.friend-profile-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.friend-profile-stat-value {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-700;
+}
+
+.friend-profile-stat-label {
+  font-weight: $font-weight-bold;
+  font-size: $font-size-label;
+  color: $color-quaternary-700;
+  margin-top: $spacing-xs;
+}
+
+// Sections
+.friend-profile-section {
+  margin-bottom: $spacing-xl;
+}
+
+.friend-profile-section-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin-bottom: $spacing-md;
+}
+
+// Lessons
+.friend-profile-no-lessons {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-neutral;
+  font-size: $font-size-body;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-md;
+}
+
+.friend-profile-lessons-message {
+  font-size: $font-size-body;
+  color: $color-neutral;
+  margin: 0;
+  line-height: $line-height-normal;
+}
+
+.friend-profile-lessons-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.friend-profile-lesson-list-item {
+  padding: $spacing-md;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  display: flex;
+  align-items: center;
+  gap: $spacing-sm;
+}
+
+.friend-profile-lesson-wrench-icon {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.friend-profile-lesson-list-name {
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  flex: 1;
+}
+
+.friend-profile-lesson-edit-icon {
+  width: 30px;
+  height: 30px;
+  flex-shrink: 0;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+  margin-left: auto;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.friend-profile-lessons-view-more {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: $spacing-xs;
+  padding: $spacing-sm;
+  background: none;
+  border: none;
+  cursor: pointer;
+  color: $color-quaternary-700;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  transition: color $transition-fast;
+  margin-top: $spacing-xs;
+
+  &:hover {
+    color: $color-quaternary-dark;
+  }
+}
+
+.friend-profile-lessons-view-more-text {
+  font-size: $font-size-body;
+}
+
+.friend-profile-lessons-view-more-icon {
+  width: 16px;
+  height: 16px;
+  transition: transform $transition-normal;
+
+  &--expanded {
+    transform: rotate(180deg);
+  }
+}
+
+// Overview
+.friend-profile-overview {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.friend-profile-overview-item-1 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  background: $color-quinary-100;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.friend-profile-overview-item-2 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  background: $color-secondary-100;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.friend-profile-overview-item-3 {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 0.25rem;
+  background: $color-primary-100;
+  border-radius: $border-radius-md;
+  text-align: center;
+}
+
+.friend-profile-overview-icon {
+  width: 50px;
+  height: 50px;
+  margin-bottom: $spacing-xs;
+  flex-shrink: 0;
+}
+
+.friend-profile-overview-label {
+  font-size: $font-size-body;
+  color: $color-quaternary-700;
+  font-weight: $font-weight-bold;
+  margin: 0;
+}
+
+.friend-profile-overview-value {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-dark;
+  margin: 0;
+}
+
+// Badges Section in Friend Profile
+.friend-profile-badges-section {
+  margin-top: $spacing-lg;
+  padding: $spacing-lg;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+}
+
+.friend-profile-badges-subtitle {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  margin: 0 0 $spacing-md 0;
+}
+
+.friend-profile-badges-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: $spacing-sm;
+  justify-items: center;
+}
+
+.friend-profile-badge-item {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $border-radius-md;
+  padding: $spacing-xs;
+  transition: transform $transition-fast;
+
+  &:hover {
+    transform: scale(1.05);
+  }
+}
+
+.friend-profile-badge-icon {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.friend-profile-no-badges {
+  grid-column: 1 / -1; // Span all columns
+  text-align: center;
+  color: #393939;
+  font-size: 16px;
+  padding: 1rem;
+  margin: 0;
+}
+
+// Social / Connect With Me
+.friend-profile-social {
+  display: flex;
+  justify-content: center;
+  gap: $spacing-md;
+  margin-bottom: $spacing-lg;
+}
+
+.friend-profile-social-button {
+  width: 50px;
+  height: 50px;
+  background-color: $color-quaternary-light;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-full;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary;
+    transform: scale(1.05);
+  }
+}
+
+.friend-profile-actions {
+  display: flex;
+  justify-content: space-around;
+  gap: $spacing-md;
+}
+
+.friend-profile-action-link {
+  background: none;
+  border: none;
+  color: $color-neutral;
+  font-size: $font-size-label;
+  cursor: pointer;
+  padding: $spacing-sm;
+  transition: color $transition-fast;
+
+  &:hover {
+    color: $color-quaternary-dark;
+    text-decoration: underline;
+  }
+}
+
+// Pending Access Requests Banner
+.friend-profile-pending-requests-banner {
+  background-color: #fff3cd;
+  border: 1px solid #ffc107;
+  border-radius: $border-radius-md;
+  padding: $spacing-md;
+  margin-bottom: $spacing-md;
+}
+
+.friend-profile-pending-requests-title {
+  color: #856404;
+  margin-bottom: $spacing-sm;
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+}
+
+.friend-profile-pending-requests-message {
+  margin-bottom: $spacing-sm;
+  color: #856404;
+  font-size: $font-size-body;
+}
+
+.friend-profile-pending-requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+}
+
+.friend-profile-pending-request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: $spacing-sm;
+  background-color: white;
+  border-radius: $border-radius-sm;
+}
+
+.friend-profile-pending-request-name {
+  font-weight: $font-weight-medium;
+  color: $color-quaternary-dark;
+}
+
+.friend-profile-pending-request-actions {
+  display: flex;
+  gap: $spacing-xs;
+}
+
+.friend-profile-request-button {
+  padding: 6px 16px;
+  border: none;
+  border-radius: $border-radius-sm;
+  cursor: pointer;
+  font-weight: $font-weight-medium;
+  transition: all $transition-fast;
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  &--approve {
+    background-color: #28a745;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust(#28a745, $lightness: -10%);
+    }
+  }
+
+  &--deny {
+    background-color: #dc3545;
+    color: white;
+
+    &:hover:not(:disabled) {
+      background-color: color.adjust(#dc3545, $lightness: -10%);
+    }
+  }
+}
+
+// Request Pending Badge
+.friend-profile-lesson-request-pending {
+  color: #856404;
+  font-size: 12px;
+  font-weight: $font-weight-medium;
+  padding: 4px 8px;
+  background-color: #fff3cd;
+  border-radius: $border-radius-sm;
+  border: 1px solid #ffc107;
+}
+
+// Lock icon
+.friend-profile-lesson-lock {
+  cursor: pointer;
+  width: 20px;
+  height: 20px;
+}

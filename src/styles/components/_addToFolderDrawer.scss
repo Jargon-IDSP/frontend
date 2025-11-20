@@ -1,0 +1,46 @@
+.add-to-folder-drawer {
+  .radio-button-custom {
+    width: 1.25rem;
+    height: 1.25rem;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    border: 2px solid #FE4D13;
+    border-radius: 50%;
+    background-color: white;
+    position: relative;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: 2px solid #FE4D13;
+      outline-offset: 2px;
+    }
+
+    &:checked {
+      background-color: white;
+      border-color: #FE4D13;
+
+      &::after {
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 0.5rem;
+        height: 0.5rem;
+        border-radius: 50%;
+        background-color: #FE4D13;
+      }
+    }
+
+    &:hover {
+      border-color: #FE4D13;
+    }
+  }
+
+  .checkmark {
+    color: #FE4D13;
+  }
+}
+

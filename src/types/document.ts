@@ -29,6 +29,14 @@ export interface DocumentStatus {
   category: QuizCategory | null;
 }
 
+export interface DocumentStatusResponse {
+  status: DocumentStatus;
+  document: {
+    id: string;
+    filename: string;
+  };
+}
+
 export interface Translation extends Multilingual<'text'> {
   id: string;
   documentId: string;
@@ -68,4 +76,20 @@ export interface StatusResponse {
 
 export interface TranslationResponse {
   translation: Translation;
+}
+
+export interface Category {
+  id: number;
+  name: string;
+  documentCount: number;
+  isDefault: boolean;
+}
+
+export interface CategoriesResponse {
+  data: {
+    categories: Category[];
+  };
+  meta: {
+    count: number;
+  };
 }

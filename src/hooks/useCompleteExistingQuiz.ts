@@ -8,6 +8,7 @@ interface ExistingQuizCompletePayload {
   totalQuestions: number;
   levelId: string | number;
   industryId?: number;
+  quizNumber?: number;
   quizId: string;
 }
 
@@ -18,7 +19,7 @@ export function useCompleteExistingQuiz() {
   return useMutation({
     mutationFn: async (payload: ExistingQuizCompletePayload) => {
       const token = await getToken();
-      const response = await fetch(`${BACKEND_URL}/learning/quiz/complete`, {
+      const response = await fetch(`${BACKEND_URL}/learning/attempts/complete`, {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
@@ -34,11 +35,15 @@ export function useCompleteExistingQuiz() {
       return await response.json();
     },
     onSuccess: (_, variables) => {
-      // Invalidate existing quiz cache for this level
       queryClient.invalidateQueries({
         queryKey: ["existingQuiz", variables.levelId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ["quizAttempts"] });
+      queryClient.invalidateQueries({ queryKey: ["levels"] });
+      queryClient.invalidateQueries({ queryKey: ["userBadges"] });
+      queryClient.invalidateQueries({ queryKey: ["apprenticeshipProgress"] });
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
+      queryClient.invalidateQueries({ queryKey: ["leaderboard"] });
     },
     onError: (error: Error) => {
       console.error("Error saving quiz results:", error);

@@ -1,0 +1,390 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+
+
+.community-page {
+  background-color: $color-secondary-400;
+  width: 100%;
+  padding: 1rem;
+  position: relative;
+
+
+.community-header {
+  display: flex;
+  margin-top: 1rem;
+  align-items: flex-start;
+  position: relative;
+  z-index: 1;
+}
+
+.community-title-image {
+  height: auto;
+  width: 100%;
+  max-width: 400px;
+  object-fit: contain;
+}
+
+.community-header-actions {
+  align-items: center;
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  display: flex;
+  justify-content: flex-end;
+  z-index: 100;
+  gap: 0.5rem;
+
+  > * {
+    flex-shrink: 0;
+  }
+}
+
+.community-settings-icon {
+  background: $color-tertiary-100;
+  border: 1px solid black;
+  grid-column: 3;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity $transition-fast;
+  padding: 0;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  .rocky-logo {
+    width: 32px;
+    height: 32px;
+  }
+}
+
+// Tabs
+.community-tabs {
+  display: flex;
+  gap: 0;
+  margin-bottom: $spacing-lg;
+  margin-top: -$spacing-xl; // Negative margin to overlap image
+  border-radius: 9999px;
+  background: $color-primary-700;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+  overflow: hidden;
+  position: relative;
+  z-index: 2; // Ensure tabs are above the image
+}
+
+.community-tab {
+  flex: 1;
+  padding: 0.75rem 1.5rem;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-primary-800;
+  border: none;
+  border-radius: 9999px;
+  cursor: pointer;
+//   transition: all $transition-normal;
+  background: transparent;
+
+  &--active {
+    color: white;
+    background-color: $color-primary;
+    font-weight: $font-weight-bold;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  }
+}
+
+.community-content {
+//   min-height: 400px;
+  border: 1px solid $color-quaternary;
+  border-radius: 20px;
+}
+
+// Leaderboard Preview Card
+.leaderboard-preview-card {
+  background: $color-second-neutral-50;
+  border-radius: 20px;
+  padding: $spacing-xl;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all $transition-normal;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 300px); // Fill available space with padding
+  min-height: 400px;
+
+}
+
+// Use existing leaderboard list styles - just add flex to make it fill space
+.leaderboard-preview-card .leaderboard-list {
+  flex: 1;
+  overflow: hidden; // Prevent scrolling
+  margin-bottom: $spacing-lg;
+}
+
+.leaderboard-preview-empty {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-quinary-50;
+}
+
+// Empty state for users with no points
+.leaderboard-preview-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $spacing-xl;
+  height: 100%;
+  min-height: 300px;
+}
+
+.leaderboard-preview-empty-avatar {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-bottom: $spacing-xl;
+}
+
+.leaderboard-preview-empty-message {
+  font-size: 1.2rem;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary;
+  margin-bottom: $spacing-xl;
+  line-height: $line-height-relaxed;
+}
+
+.leaderboard-preview-start-button {
+  padding: 0.75rem $spacing-xl;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  background-color: $color-quinary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background-color $transition-normal;
+}
+
+.leaderboard-preview-loading {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-quinary-50;
+}
+
+// Friends Preview Card
+.friends-preview-card {
+  background: $color-second-neutral-50;
+  border-radius: 20px;
+  padding: $spacing-md;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all $transition-normal;
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  height: calc(100vh - 300px); // Fill available space with padding
+  min-height: 400px;
+}
+
+.friends-preview-card .friends-list {
+  flex: 1;
+  overflow: hidden; // Prevent scrolling
+  margin-bottom: $spacing-lg;
+}
+
+.friends-preview-empty {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-quinary-50;
+}
+
+// Empty state for users with no friends
+.friends-preview-empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: $spacing-xl;
+  height: 100%;
+  min-height: 300px;
+}
+
+.friends-preview-empty-image {
+  width: 100%;
+  max-width: 300px;
+  height: auto;
+  margin-bottom: $spacing-xl;
+}
+
+.friends-preview-header-image {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: $spacing-lg;
+}
+
+.friends-preview-header-img {
+  width: 100%;
+  max-width: 400px;
+  height: auto;
+  object-fit: contain;
+}
+
+.friends-preview-empty-message {
+  font-size: 1.2rem;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary;
+  margin-bottom: $spacing-xl;
+  line-height: $line-height-relaxed;
+}
+
+.friends-preview-add-button {
+  padding: 0.75rem $spacing-xl;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  background-color: $color-quinary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: background-color $transition-normal;
+
+  &:hover {
+    opacity: 0.9;
+  }
+}
+
+.friends-preview-loading {
+  text-align: center;
+  padding: $spacing-xl;
+  color: $color-quinary-50;
+}
+
+// Friends List Items
+.friends-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md;
+  margin-bottom: $spacing-sm;
+  background: white;
+  border-radius: $border-radius-md;
+  border-bottom: 1px solid $color-secondary-200;
+  transition: all $transition-fast;
+
+  &--current-user {
+    background: $color-primary-300;
+    border-color: $color-primary;
+  }
+}
+
+.friends-item-content {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  flex: 1;
+}
+
+.friends-item-logo {
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.friends-item-text {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-xs;
+  flex: 1;
+}
+
+.friends-item-name {
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary;
+}
+
+.friends-item-you {
+  color: $color-primary;
+  font-weight: $font-weight-bold;
+  margin-left: $spacing-xs;
+}
+
+.friends-item-details {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+}
+
+.friends-item-flag {
+  width: 28px;
+  height: 18px;
+  border-radius: 2px;
+  object-fit: cover;
+  box-shadow: 0 0 0 1px rgba(#000, 0.05);
+}
+
+.friends-item-language {
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-dark;
+  font-size: $font-size-label;
+  padding: 0.2rem 0.5rem;
+}
+
+.friends-preview-actions {
+  display: flex;
+  gap: $spacing-md;
+  padding-top: $spacing-md;
+  margin-top: auto;
+}
+
+.friends-preview-action-button {
+  flex: 1;
+  padding: 0.75rem $spacing-lg;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  border: none;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-normal;
+
+  &--add {
+    background-color: $color-quinary;
+    color: white;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+
+  &--view {
+    background-color: white;
+    color: $color-quinary;
+    border: 2px solid $color-quinary;
+
+    &:hover {
+      opacity: 0.9;
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 768px) {
+  .community-page {
+    padding: $spacing-md;
+    padding-bottom: 1.15rem;
+  }
+
+  .leaderboard-preview-card {
+    padding: $spacing-md;
+    padding-bottom: 0;
+  }
+}
+}

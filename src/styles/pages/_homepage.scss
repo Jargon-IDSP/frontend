@@ -1,17 +1,15 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-// Home Page - Apply consistent layout
 .home-page {
-  @include page-layout;
-}
+padding:1rem;
 
-// Top Header Section
 .top-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
   margin: $spacing-lg auto;
+  padding: 1rem 1rem 0 1rem;
   gap: $spacing-md;
 }
 
@@ -37,16 +35,109 @@
   display: flex;
   align-items: center;
   gap: $spacing-sm;
+  background-color: $color-secondary;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity $transition-fast;
+  border-radius: 50%;
+  width: 64px;
+  height: 64px;
+  justify-content: center;
+
+  &:hover {
+    opacity: 0.8;
+  }
 
   .rocky-logo {
-    width: 50px;
-    height: 50px;
+    width: 48px;
+    height: 48px;
+  }
+}
+
+// Settings container with dropdown
+.home-settings-container {
+  position: relative;
+}
+
+.home-settings-icon {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-sm;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-neutral;
+  transition: all $transition-normal;
+  border-radius: $border-radius-md;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+  }
+
+  &:focus {
+    outline: 2px solid $color-quaternary-dark;
+    outline-offset: 2px;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+// Settings dropdown menu
+.home-settings-dropdown {
+  position: absolute;
+  top: calc(100% + $spacing-xs);
+  right: 0;
+  background: white;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  min-width: 160px;
+  z-index: $z-index-dropdown;
+  overflow: hidden;
+  margin-top: $spacing-xs;
+}
+
+.home-settings-item {
+  width: 100%;
+  padding: $spacing-md;
+  background: none;
+  border: none;
+  text-align: left;
+  cursor: pointer;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-neutral;
+  transition: background-color $transition-fast;
+
+  &:hover {
+    background-color: $color-quaternary-light;
+    color: $color-quaternary-dark;
+  }
+
+  &:first-child {
+    border-top-left-radius: $border-radius-md;
+    border-top-right-radius: $border-radius-md;
+  }
+
+  &:last-child {
+    border-bottom-left-radius: $border-radius-md;
+    border-bottom-right-radius: $border-radius-md;
+  }
+
+  &:focus {
+    outline: none;
+    background-color: $color-quaternary-light;
+    color: $color-quaternary-dark;
   }
 }
 
 // Welcome Section - Container for all cards
 .welcome-section {
-  display: flex;
   flex-direction: column;
   gap: $spacing-lg;
 }
@@ -157,6 +248,7 @@
 
   // New Leaderboard Design
   .leaderboard-content-new {
+
     @include card-content;
     display: flex;
     gap: $spacing-md;
@@ -351,6 +443,7 @@
 
 // Upload File Card
 .upload-file-card {
+
   @include card-base;
 
   .upload-title {
@@ -359,13 +452,46 @@
   }
 
   .upload-content {
-    @include card-content;
     position: relative;
     min-height: 150px;
   }
 }
 
-// Word of the Day
+// Upload options grid (Generate / Translate)
+.upload-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: $spacing-lg;
+}
+
+.upload-option-card {
+  background-color: $color-second-neutral-dark;
+  border-radius: $spacing-sm;
+  padding: $spacing-md;
+  padding-bottom: $spacing-sm;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.upload-option-icon {
+  background-color: white;
+  border-radius: $spacing-sm;
+  padding: $spacing-lg;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: $spacing-sm;
+
+  img {
+    width: 64px;
+    height: 64px;
+  }
+}
+
+// Word of the Day - component handles its own styling
 .word-of-the-day {
   @include card-base;
 
@@ -374,87 +500,42 @@
     margin-bottom: 0;
     color: $color-quaternary-dark;
   }
-
-  &-card {
-    border-radius: $spacing-sm;
-    padding: $spacing-lg;
-    position: relative;
-    overflow: hidden;
-    box-sizing: border-box;
-
-    .today-term-card-image {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
-
-    .word-card-content {
-      position: relative;
-      z-index: 2;
-      text-align: center;
-      box-sizing: border-box;
-      
-      h3 {
-        font-size: $font-size-h3;
-        font-weight: $font-weight-bold;
-        color: $color-neutral;
-        margin: 0 0 $spacing-sm 0;
-      }
-    }
-  }
 }
 
-// Word Components (nested under word-of-the-day context)
-.word {
-  &-term {
-    font-size: 36px;
-    font-weight: $font-weight-bold;
-    color: $color-second-neutral-light;
-    margin-bottom: $spacing-sm;
-    text-transform: capitalize;
-    @include text-overflow;
-  }
-  
-  &-term-translated {
-    font-size: $font-size-h3;
-    font-weight: $font-weight-bold;
-    color: $color-second-neutral;
-    margin-bottom: $spacing-sm;
-    text-transform: capitalize;
-    @include text-overflow;
-  }
-  
-  &-definition {
-    font-size: $font-size-body;
-    color: $color-neutral;
-    line-height: 1.5;
-    margin-bottom: $spacing-sm;
-    @include text-overflow;
-  }
-  
-  &-meta {
-    display: flex;
-    justify-content: center;
-    gap: $spacing-sm;
-    flex-wrap: wrap;
+// Flashcard Loading States
+.flashcard-loading {
+  margin-bottom: 1rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &__bar-container {
+    width: 100%;
+    max-width: 100%;
+    height: 6px;
+    background-color: #e5e7eb;
+    border-radius: 9999px;
+    overflow: hidden;
+    box-sizing: border-box;
   }
 
-  &-industry,
-  &-level {
-    background-color: $color-quaternary-light;
-    color: $color-quaternary-light-dark;
-    padding: $spacing-xs $spacing-sm;
-    border-radius: $spacing-xs;
-    font-size: $font-size-label;
-    font-weight: $font-weight-regular;
+  &__bar-fill {
+    height: 100%;
+    background-color: #ffba0a80;
+    transition: width 0.3s ease-in-out;
+    border-radius: 9999px;
+  }
+
+  &__text {
+    text-align: center;
+    font-size: 0.875rem;
+    color: #FFFFFF;
   }
 }
 
 // Start Learning Card
 .start-learning-card {
+
   @include card-base;
 
   .learning-title {
@@ -539,4 +620,5 @@
     font-size: $font-size-label;
     line-height: 1.4;
   }
+}
 }

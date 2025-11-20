@@ -1,0 +1,91 @@
+@use '../variables' as *;
+
+.toast-container {
+  position: fixed;
+  top: $spacing-md;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: $z-index-tooltip;
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-sm;
+  max-width: 90%;
+  width: 400px;
+  pointer-events: none;
+
+  > * {
+    pointer-events: all;
+  }
+}
+
+.toast-notification {
+  background: white;
+  border-radius: $border-radius-lg;
+  padding: $spacing-md;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  cursor: pointer;
+  transition: transform $transition-fast, box-shadow $transition-fast;
+  border-left: 4px solid $color-success;
+  animation: slideIn 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+
+  &__icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+  }
+
+  &__content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  &__title {
+    font-weight: $font-weight-medium;
+    color: $color-neutral;
+    margin-bottom: 0.25rem;
+    font-size: $font-size-body;
+  }
+
+  &__message {
+    color: #6b7280;
+    font-size: $font-size-label;
+    line-height: $line-height-normal;
+  }
+
+  &__close {
+    background: none;
+    border: none;
+    font-size: 1.25rem;
+    color: #9ca3af;
+    cursor: pointer;
+    padding: $spacing-xs;
+    flex-shrink: 0;
+    transition: color $transition-fast;
+
+    &:hover {
+      color: $color-neutral;
+    }
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

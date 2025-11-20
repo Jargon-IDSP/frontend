@@ -1,0 +1,140 @@
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.categoriesPage {
+  width: 100vw;
+  max-width: min(480px, 100vw);
+  margin: 0 auto;
+  background-color: $secondary-500;
+  padding: 2rem 1rem 2rem 0.5rem;
+  box-sizing: border-box;
+  overflow-x: hidden;
+  min-height: 100vh;
+
+  .categoriesCard {
+    background-color: $second-neutral-50;
+    padding: 1rem 0;
+    border: 1px solid $quinary-500;
+    box-shadow: 8px 8px 0 $color-quaternary-800;
+    border-radius: 20px;
+
+  }
+}
+
+.categoriesHeader {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem;
+  margin-bottom: 1rem;
+
+  h1 {
+    margin: 0;
+    color: $color-quaternary-700;
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    text-align: left;
+    grid-column: 2;
+  }
+}
+
+.categoriesBackButton {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+  grid-column: 1;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.categoriesFolderIcon {
+  width: 28px;
+  height: 28px;
+  cursor: pointer;
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+.categoriesRightIcon {
+  grid-column: 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    cursor: pointer;
+
+    &:hover {
+      opacity: 0.7;
+    }
+  }
+}
+
+.categoriesBottomImages {
+  display: flex;
+  justify-content: center;
+  padding: 0 1.5rem 1rem 1.5rem;
+  margin-top: 1rem;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.categoriesList {
+  display: flex;
+  flex-direction: column;
+  border-radius: 25px;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  padding: 0 1.5rem;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.categoriesLoading,
+.categoriesError,
+.categoriesEmpty {
+  text-align: center;
+  padding: 2rem 1.5rem;
+}
+
+.categoriesError,
+.error-message {
+  color: #dc2626;
+  text-align: center;
+  padding: 2rem;
+}
+
+.category-folder-header--locked {
+  cursor: not-allowed !important;
+}
+
+.document-item--locked {
+  opacity: 0.6;
+  cursor: not-allowed !important;
+
+  &:hover {
+    background-color: transparent !important;
+  }
+}
+
+.session-lock-icon {
+  width: 16px;
+  height: 16px;
+  margin-right: 0.5rem;
+  vertical-align: middle;
+}

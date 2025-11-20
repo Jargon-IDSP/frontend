@@ -6,6 +6,11 @@ export interface WordOfTheDayData {
   level?: string;
 }
 
+export interface CachedWordData {
+  data: WordOfTheDayData;
+  date: string; 
+}
+
 export interface FlashcardResponse {
   data: {
     term: {
@@ -22,4 +27,11 @@ export interface FlashcardResponse {
       name: string;
     };
   };
+}
+
+export interface WordOfTheDayProps {
+  documentId?: string;
+  backgroundImage?: string;
+  backgroundColor?: string;
+  showButton?: boolean;
 }

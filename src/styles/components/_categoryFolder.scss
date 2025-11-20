@@ -1,0 +1,241 @@
+@use "sass:color";
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.category-folder {
+  border-radius: 25px;
+    background-color: $second-neutral-500;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  transition: all 0.2s ease;
+  width: 100%;
+  max-width: 100%;
+  font-family: $font-family-primary;
+  box-sizing: border-box;
+
+  &:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+
+  &--locked {
+    opacity: 0.8;
+
+    &:hover {
+      box-shadow: none;
+    }
+
+    .category-folder-header {
+      cursor: not-allowed !important;
+      background-color: $secondary-200;
+
+      &:hover {
+        background-color: $secondary-200;
+      }
+    }
+
+    .category-folder-actions {
+      background-color: $primary-200;
+    }
+  }
+
+}
+
+.category-folder-header {
+  display: flex;
+  background-color: $color-secondary;
+  justify-content: space-between;
+  align-items: center;
+  border-radius: 30px;
+  padding: 1rem 1.5rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+
+}
+
+.category-folder-actions {
+  display: flex;
+  align-items: center;
+  background-color: $color-primary;
+  border-radius: 20px;
+  gap: 0.75rem;
+}
+
+.category-folder-delete {
+  cursor: pointer;
+  color: #ffffff;
+  transition: all 0.2s ease;
+  padding: 0.2rem;
+
+  &:hover {
+    color: #ef4444;
+  }
+}
+
+.category-folder-delete-confirm {
+  padding: 1rem 1.5rem;
+  background-color: #fef2f2;
+  border-top: 1px solid #fee2e2;
+  border-bottom: 1px solid #fee2e2;
+
+  p {
+    margin: 0 0 1rem 0;
+    color: #1f2937;
+    font-size: 14px;
+  }
+}
+
+.category-folder-delete-actions {
+  display: flex;
+  gap: 0.75rem;
+  justify-content: flex-end;
+
+  button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    transition: all 0.2s ease;
+
+    &:hover:not(:disabled) {
+      background-color: #f9fafb;
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.delete-confirm-button {
+      background-color: #ef4444;
+      color: white;
+      border-color: #ef4444;
+
+      &:hover:not(:disabled) {
+        background-color: #dc2626;
+      }
+    }
+  }
+}
+
+.category-folder-title {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+
+  h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #1f2937;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .level-subtitle {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin: 0;
+  }
+}
+
+.folder-icon {
+  width: 40px;
+  height: 40px;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.document-count {
+  font-size: 14px;
+  color: #6b7280;
+  margin-left: 0.5rem;
+}
+
+.chevron {
+  transition: transform 0.2s ease;
+  color: #ffffff;
+  padding: 0.2rem;
+
+  &.open {
+    transform: rotate(180deg);
+  }
+}
+
+.category-folder-content {
+  padding: 0 0.5rem 1rem 0.5rem;
+  background-color: $second-neutral-500;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.folder-loading,
+.folder-empty {
+  text-align: center;
+  padding: 1.5rem;
+  color: $quaternary-900;
+  font-size: 14px;
+}
+
+.document-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.document-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem;
+  border-bottom: 1px solid $color-secondary;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  p {
+      color: $warning-800;
+
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  svg {
+    color: $color-quaternary-900;
+    transition: color 0.2s ease;
+  }
+}
+
+.document-info {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  flex: 1;
+}
+
+.document-name {
+  font-size: 15px;
+  font-weight: 500;
+  color: $warning-900;
+  font-family: $font-family-primary;
+}
+
+.document-stats {
+  display: flex;
+  gap: 1rem;
+
+  .stat {
+    font-size: 13px;
+    color: #6b7280;
+  }
+}

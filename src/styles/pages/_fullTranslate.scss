@@ -1,3 +1,80 @@
+@use '../variables' as *;
+@use '../mixins' as *;
+@use 'sass:color';
+
 .fullTranslationOverview {
-    background-color: red;
+  background-color: $color-second-neutral-light;
+  padding: 1rem;
+  min-height: 100vh;
+  max-width: 800px;
+  margin: 0 auto;
+
+    .top {
+    display: grid;
+    grid-template-columns: 0.3fr 1fr 0.3fr;
+    align-items: center;
+    margin: 1rem 0;
+    }
+
+     h1 {
+        grid-column: 2;
+        text-align: left;
+        font-size: $font-size-h1;
+        font-weight: $font-weight-bold;
+        color: $color-quaternary-dark;
+    }
+    h2 {
+        text-align: right;
+        margin-bottom: 1rem;
+        font-size: $font-size-h1;
+        font-weight: $font-weight-bold;
+        color: $color-quaternary-dark;
+    }
+
+
+  .full-translation-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: $spacing-md;
+    background-color: $color-second-neutral-light;
+    
+      .back-button {
+        background: none;
+        border: none;
+        padding: $spacing-sm;
+        cursor: pointer;
+        color: $color-quaternary;
+        
+      }
+    
+    .page-title {
+      font-family: $font-family-primary;
+      font-size: $font-size-h3;
+      font-weight: $font-weight-bold;
+      color: $color-quaternary;
+      text-align: center;
+      flex: 1;
+      margin: 0 $spacing-md;
+    }
+    
+    .menu-button {
+      background: none;
+      border: none;
+      padding: $spacing-sm;
+      cursor: pointer;
+      color: $color-quaternary;
+      
+      svg {
+        width: 24px;
+        height: 24px;
+      }
+    }
+  }
+
+  .content-text {
+        margin: 1.5rem 1rem 0 1rem;
+
+  }
+  
 }

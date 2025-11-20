@@ -1,3 +1,10 @@
+// Friendship status constants
+export const FriendshipStatus = {
+  FOLLOWING: "FOLLOWING",
+} as const;
+
+export type FriendshipStatusType = typeof FriendshipStatus[keyof typeof FriendshipStatus];
+
 export interface Friend {
   friendshipId: string | null;
   id: string;
@@ -6,6 +13,10 @@ export interface Friend {
   lastName: string | null;
   email: string;
   score: number;
+  industryId?: number | null;
+  language?: string | null;
+  status?: FriendshipStatusType | string;
+  isMutual?: boolean; // True if both users follow each other (friends)
 }
 
 export interface PendingRequest extends Friend {
@@ -15,6 +26,33 @@ export interface PendingRequest extends Friend {
 export interface SearchResult extends Friend {
   friendshipStatus: string;
   friendshipId: string | null;
+}
+
+export interface FriendProfile {
+  id: string;
+  username: string | null;
+  firstName: string | null;
+  lastName: string | null;
+  email: string;
+  score: number;
+  industryId: number | null;
+  defaultPrivacy?: string;
+  createdAt?: string;
+}
+
+export interface FriendQuiz {
+  id: string;
+  name: string;
+  isLocked?: boolean;
+}
+
+// API Response interfaces
+export interface FriendsResponse {
+  data: Friend[];
+}
+
+export interface SearchResponse {
+  data: SearchResult[];
 }
 
 // Utility function to get display name

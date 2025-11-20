@@ -1,0 +1,84 @@
+@use '../variables' as *;
+
+.flashcards-carousel {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2rem;
+  width: 100%;
+}
+
+.flashcards-carousel-counter {
+  text-align: center;
+  font-size: $font-size-label;
+  color: $color-tertiary;
+  font-weight: $font-weight-medium;
+}
+
+.flashcards-carousel-card {
+  width: 100%;
+  max-width: 100%;
+}
+
+.flashcards-carousel-navigation {
+  display: grid;
+  grid-template-columns: 1fr 2fr 1fr;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  max-width: 100%;
+}
+
+.flashcards-carousel-button {
+  min-width: 60px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: $spacing-sm;
+  background-color: transparent;
+  border: none;
+  transition: all 0.2s ease;
+  cursor: pointer;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+  }
+  
+  &:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  
+  img {
+    display: block;
+  }
+  
+  &.flashcards-carousel-finish {
+    background-color: $color-primary;
+    color: white;
+    min-width: 120px;
+    
+    &:hover {
+      box-shadow: 0 4px 12px rgba(254, 77, 19, 0.3);
+    }
+  }
+}
+
+.flashcards-carousel-progress {
+  width: 100%;
+  max-width: 100%;
+  height: 6px;
+  background-color: #e5e7eb;
+  border-radius: 3px;
+  overflow: hidden;
+
+  &-bar {
+    height: 100%;
+    background-color: $color-primary;
+    transition: width 0.3s ease-in-out;
+  }
+}
+
