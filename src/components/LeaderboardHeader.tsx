@@ -93,7 +93,7 @@ const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
                       className="leaderboard-settings-item"
                       onClick={() => {
                         setIsDropdownOpen(false);
-                        navigate("/profile/avatar");
+                        navigate("/avatar/edit");
                       }}
                     >
                       Avatar

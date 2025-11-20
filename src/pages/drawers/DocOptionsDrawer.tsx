@@ -9,6 +9,7 @@ import {
   DrawerFooter,
 } from "@/components/ui/drawer";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@clerk/clerk-react";
 import bookAddIcon from "@/assets/icons/bookAdd.svg";
 import pdfIconDrawer from "@/assets/icons/pdfIcon-drawer.svg";
 import shareIconDrawer from "@/assets/icons/shareIcon-drawer.svg";
@@ -18,6 +19,8 @@ import DeleteDrawer from "./DeleteDrawer";
 import ShareDrawer from "./ShareDrawer";
 import type { DocOptionsDrawerProps } from "../../types/docOptionsDrawer";
 
+const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
+
 export default function DocOptionsDrawer({
   open,
   onOpenChange,
@@ -25,6 +28,7 @@ export default function DocOptionsDrawer({
   documentName,
   quizId,
 }: DocOptionsDrawerProps) {
+  const { getToken } = useAuth();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
   const [isShareDrawerOpen, setIsShareDrawerOpen] = useState(false);
@@ -34,6 +38,39 @@ export default function DocOptionsDrawer({
     setTimeout(() => {
       setIsDrawerOpen(true);
     }, 200);
+  };
+
+  const handleDownload = async () => {
+    try {
+      if (!documentId) {
+        console.error("No document ID provided");
+        return;
+      }
+
+      const token = await getToken();
+      const response = await fetch(`${BACKEND_URL}/documents/${documentId}/download`, {
+        method: "GET",
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get download URL");
+      }
+
+      const data = await response.json();
+
+      // The backend returns { success: true, data: { downloadUrl: "..." } }
+      if (data.success && data.data?.downloadUrl) {
+        // Open the presigned URL in a new window for preview/download
+        window.open(data.data.downloadUrl, "_blank");
+        onOpenChange(false);
+      } else {
+        console.error("Invalid response format:", data);
+      }
+    } catch (error) {
+      console.error("Error downloading document:", error);
+      alert("Failed to download document. Please try again.");
+    }
   };
 
   const handleShare = () => {
@@ -81,7 +118,7 @@ export default function DocOptionsDrawer({
               <img src={bookAddIcon} alt="Book with a plus icon" />
               Generate a lesson
             </button>
-            <button className="button-drawer">
+            <button className="button-drawer" onClick={handleDownload}>
               <img src={pdfIconDrawer} alt="PDF icon" />
               Download to my device
             </button>

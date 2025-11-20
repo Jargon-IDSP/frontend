@@ -642,10 +642,11 @@
 }
 
 .self-leaderboard-medals {
+  margin: 0 auto;
+  gap: $spacing-sm;
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: $spacing-md;
   flex-wrap: wrap;
 }
 

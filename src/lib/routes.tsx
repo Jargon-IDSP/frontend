@@ -71,7 +71,7 @@ export const routes: RouteObject[] = [
     element: protect(<ProfilePage />),
   },
   {
-    path: "/profile/avatar",
+    path: "/avatar/edit",
     element: protect(<AvatarPage />),
   },
   {
