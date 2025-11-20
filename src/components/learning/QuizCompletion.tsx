@@ -4,6 +4,7 @@ import { useUserBadges } from "../../hooks/useUserBadges";
 import { useMemo, useEffect, useRef } from "react";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import confetti from "canvas-confetti";
+import confettiSound from "../../assets/sounds/confetti.mp3";
 
 const badgeModules = import.meta.glob<string>("../../assets/badges/**/*.svg", {
   eager: true,
@@ -40,7 +41,23 @@ export default function QuizCompletion({
   const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
+  const playSound = (soundUrl: string) => {
+    try {
+      const audio = new Audio(soundUrl);
+      audio.volume = 0.5; // Set volume to 50% to avoid being too loud
+      audio.play().catch((error) => {
+        // Silently handle errors (e.g., user hasn't interacted with page yet)
+        console.log("Could not play sound:", error);
+      });
+    } catch (error) {
+      console.log("Error playing sound:", error);
+    }
+  };
+
   useEffect(() => {
+    // Play confetti sound when component mounts
+    playSound(confettiSound);
+
     // Trigger confetti when component mounts
     const container = containerRef.current;
     if (!container) return;
