@@ -1,68 +1,41 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDocuments } from "../../hooks/useDocuments";
-import { useDeleteDocument } from "../../hooks/useDeleteDocument";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
 import ShareModal from "../../components/learning/ShareModal";
-import DeleteDrawer from "../drawers/DeleteDrawer";
 import { BACKEND_URL } from "../../lib/api";
 import type { Document, DocumentsListProps } from "../../types/document";
 import "../../styles/components/_documentList.scss";
 import fileIconB from "../../assets/icons/fileIconB.svg";
-import deleteIcon from "../../assets/icons/deleteIcon.svg";
 import shareIcon from "../../assets/icons/shareIcon.svg";
+import editIcon from "../../assets/icons/editIcon.svg";
 
 export function DocumentsList({ refresh }: DocumentsListProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
-  const [isEditMode, setIsEditMode] = useState(false);
-  const documentsListRef = useRef<HTMLDivElement>(null);
   const [shareModalQuiz, setShareModalQuiz] = useState<{
     id: string;
     name: string;
     documentId: string;
   } | null>(null);
-  const [deleteDrawerDoc, setDeleteDrawerDoc] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        documentsListRef.current &&
-        !documentsListRef.current.contains(event.target as Node) &&
-        isEditMode
-      ) {
-        setIsEditMode(false);
-      }
-    };
-
-    if (isEditMode) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [isEditMode]);
 
   const {
     data: documents = [],
     isLoading: loading,
     error,
   } = useDocuments(refresh);
-  const deleteMutation = useDeleteDocument();
 
   // Deduplicate documents by ID (in case cache returns duplicates)
   const uniqueDocuments = Array.from(
-    new Map(documents.map(doc => [doc.id, doc])).values()
+    new Map(documents.map((doc) => [doc.id, doc])).values()
   );
 
-  const processingDocuments = uniqueDocuments.filter((doc) => !doc.ocrProcessed);
+  const processingDocuments = uniqueDocuments.filter(
+    (doc) => !doc.ocrProcessed
+  );
   const processingDocId = processingDocuments.length > 0 ? processingDocuments[0].id : null;
 
   const { data: processingStatus } = useDocumentProcessingStatus({
@@ -74,10 +47,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
       queryClient.invalidateQueries({ queryKey: ["documents"] });
     }
   }, [processingStatus?.status.status, queryClient]);
-
-  const handleDelete = (documentId: string, documentName: string) => {
-    setDeleteDrawerDoc({ id: documentId, name: documentName });
-  };
 
   const handleShare = async (e: React.MouseEvent, documentId: string) => {
     e.stopPropagation();
@@ -119,18 +88,52 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   };
 
   const handleDocumentClick = (doc: Document) => {
-    if (isEditMode) {
-      return;
-    }
-
     if (doc.ocrProcessed) {
       navigate(`/learning/documents/${doc.id}/study`);
     }
   };
 
-  const handleDeleteClick = (e: React.MouseEvent, documentId: string, documentName: string) => {
+  const handleEditClick = async (e: React.MouseEvent, doc: Document) => {
     e.stopPropagation();
-    handleDelete(documentId, documentName);
+    try {
+      const token = await getToken();
+      if (!token) {
+        alert("Authentication required");
+        return;
+      }
+
+      const response = await fetch(
+        `${BACKEND_URL}/learning/documents/${doc.id}/quizzes`,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch lessons for this document");
+      }
+
+      const data = await response.json();
+      const quizzes = data.data || data.quizzes || [];
+
+      if (quizzes.length === 0) {
+        alert("No lessons found for this document yet.");
+        return;
+      }
+
+      const lesson = quizzes[0];
+      navigate(`/profile/lessons/${lesson.id}/edit`, {
+        state: {
+          lessonName: lesson.name || doc.filename,
+          from: "/profile",
+        },
+      });
+    } catch (error) {
+      console.error("Failed to open lesson editor:", error);
+      alert("Unable to edit this lesson right now. Please try again.");
+    }
   };
 
   const getStatusBadge = (doc: Document) => {
@@ -154,89 +157,122 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     );
   }
 
+  const documentsByMonth = uniqueDocuments.reduce((acc, doc) => {
+    const createdDate = new Date(doc.createdAt);
+    const monthKey = `${createdDate.getFullYear()}-${createdDate.getMonth()}`;
+    const monthLabel = createdDate.toLocaleString("default", {
+      month: "long",
+      year: "numeric",
+    });
+
+    if (!acc[monthKey]) {
+      acc[monthKey] = {
+        monthLabel,
+        items: [] as Document[],
+      };
+    }
+
+    acc[monthKey].items.push(doc);
+    return acc;
+  }, {} as Record<string, { monthLabel: string; items: Document[] }>);
+
+  const sortedMonthKeys = Object.keys(documentsByMonth).sort((a, b) => {
+    const [yearA, monthA] = a.split("-").map(Number);
+    const [yearB, monthB] = b.split("-").map(Number);
+    const dateA = new Date(yearA, monthA, 1).getTime();
+    const dateB = new Date(yearB, monthB, 1).getTime();
+    return dateB - dateA;
+  });
+
   if (uniqueDocuments.length === 0) {
     return (
       <div className="documents-list-empty">
         <p className="documents-list-empty-message">
-          No documents yet. Upload your first document above!
+          No documents yet. Upload your first document!
         </p>
       </div>
     );
   }
 
   return (
-    <div className="documents-list" ref={documentsListRef}>
-      <div className="documents-list-header">
-        <h2 className="documents-list-title">
-          My Documents
-        </h2>
-        <button
-          className="documents-list-edit-toggle"
-          onClick={() => setIsEditMode(!isEditMode)}
-          aria-label={isEditMode ? "Exit edit mode" : "Edit documents"}
-        >
-          <p>Edit</p>
-        </button>
-      </div>
+    <div className="documents-list">
+      {sortedMonthKeys.map((monthKey) => {
+        const bucket = documentsByMonth[monthKey];
+        return (
+          <div key={monthKey} className="documents-month-section">
+            <div className="documents-list-header">
+              <h2 className="documents-list-title">{bucket.monthLabel}</h2>
+            </div>
 
-      <div className="documents-list-container">
-        {uniqueDocuments.map((doc) => (
-          <div
-            key={doc.id}
-            className={`documents-list-item ${doc.ocrProcessed && !isEditMode ? 'documents-list-item--clickable' : ''}`}
-            onClick={() => handleDocumentClick(doc)}
-          >
-            <div className="documents-list-item-header">
-              <img src={fileIconB} alt="File Icon" className="documents-list-item-icon" />
-              <div className="documents-list-item-content">
-                <h3 className="documents-list-item-filename">
-                  {doc.filename}
-                </h3>
-                <div className="documents-list-item-meta">
-                  <span>
-                    Uploaded {new Date(doc.createdAt).toLocaleDateString()}
-                  </span>
-                  {getStatusBadge(doc) && (
-                    <>
-                      <span className="documents-list-status-badge-separator">•</span>
-                      <span>{getStatusBadge(doc)}</span>
-                    </>
-                  )}
-                </div>
-              </div>
+            <div className="documents-list-container">
+              {bucket.items.map((doc) => (
+                <div
+                  key={doc.id}
+                  className={`documents-list-item ${
+                    doc.ocrProcessed ? "documents-list-item--clickable" : ""
+                  }`}
+                  onClick={() => handleDocumentClick(doc)}
+                >
+                  <div className="documents-list-item-header">
+                    <img
+                      src={fileIconB}
+                      alt="File Icon"
+                      className="documents-list-item-icon"
+                    />
+                    <div className="documents-list-item-content">
+                      <h3 className="documents-list-item-filename">
+                        {doc.filename}
+                      </h3>
+                      <div className="documents-list-item-meta">
+                        <span>
+                          Uploaded{" "}
+                          {new Date(doc.createdAt).toLocaleDateString(undefined, {
+                            month: "short",
+                            day: "numeric",
+                          })}
+                        </span>
+                        {getStatusBadge(doc) && (
+                          <>
+                            <span className="documents-list-status-badge-separator">
+                              •
+                            </span>
+                            <span>{getStatusBadge(doc)}</span>
+                          </>
+                        )}
+                      </div>
+                    </div>
 
-              <div className="documents-list-item-actions">
-                {doc.ocrProcessed ? (
-                  <>
-                    <button
-                      className="documents-list-action-button documents-list-action-button-share"
-                      onClick={(e) => handleShare(e, doc.id)}
-                      aria-label="Share document"
-                    >
-                      <img src={shareIcon} alt="Share" />
-                    </button>
-                    
-                    {isEditMode && (
-                      <button
-                        className="documents-list-action-button documents-list-action-button-delete"
-                        onClick={(e) => handleDeleteClick(e, doc.id, doc.filename)}
-                        disabled={deleteMutation.isPending}
-                        aria-label="Delete document"
-                      >
-                        <img src={deleteIcon} alt="Delete" />
-                      </button>
-                    )}
-                  </>
-                ) : (
-                  <div className="documents-list-processing">
-                    Processing...
+                    <div className="documents-list-item-actions">
+                      {doc.ocrProcessed ? (
+                        <>
+                          <button
+                            className="documents-list-action-button documents-list-action-button-share"
+                            onClick={(e) => handleShare(e, doc.id)}
+                            aria-label="Share document"
+                          >
+                            <img src={shareIcon} alt="Share" />
+                          </button>
+                          <button
+                            className="documents-list-action-button documents-list-action-button-edit"
+                            onClick={(e) => handleEditClick(e, doc)}
+                            aria-label="Edit lesson"
+                          >
+                            <img src={editIcon} alt="Edit" />
+                          </button>
+                        </>
+                      ) : (
+                        <div className="documents-list-processing">
+                          Processing...
+                        </div>
+                      )}
+                    </div>
                   </div>
-                )}
-              </div>
+                </div>
+              ))}
             </div>
           </div>
-        ))}
-      </div>
+        );
+      })}
 
       {shareModalQuiz && (
         <ShareModal
@@ -247,13 +283,6 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
         />
       )}
 
-      <DeleteDrawer
-        open={deleteDrawerDoc !== null}
-        onOpenChange={(open) => !open && setDeleteDrawerDoc(null)}
-        documentId={deleteDrawerDoc?.id || ""}
-        documentName={deleteDrawerDoc?.name || ""}
-        navigateOnSuccess={false}
-      />
     </div>
   );
 }

@@ -24,9 +24,15 @@ const BossPage = () => {
   const { data: availableBadges, isLoading } = useAvailableBadges();
   const { data: progressData } = useApprenticeshipProgress();
 
+  const isLevel4 = levelId === "4";
+
+  // For level 4, use level 3's quiz data (since level 4 uses level 3 content)
+  // But the quiz will be permanently locked
+  const effectiveLevelId = isLevel4 ? 3 : (levelId ? parseInt(levelId) : undefined);
+
   // Fetch prebuilt quizzes for this level/industry
   const { data: prebuiltQuizzes } = usePrebuiltQuizzes(
-    levelId ? parseInt(levelId) : undefined,
+    effectiveLevelId,
     industryId ? parseInt(industryId) : undefined
   );
 
@@ -41,7 +47,11 @@ const BossPage = () => {
   const industryName = getIndustryName(industryId ? parseInt(industryId) : undefined);
 
   // Check if boss quiz is locked (requires completing quizzes 1 and 2 first)
+  // Level 4 is ALWAYS locked (permanently)
   const isBossQuizLocked = useMemo(() => {
+    // Level 4 challenge quiz is permanently locked
+    if (isLevel4) return true;
+
     if (!progressData || !levelId || !industryId) return true;
 
     const progress = progressData.find(
@@ -51,14 +61,16 @@ const BossPage = () => {
 
     // Boss quiz requires at least 2 quizzes completed
     return !progress || progress.quizzesCompleted < 2;
-  }, [progressData, levelId, industryId]);
+  }, [isLevel4, progressData, levelId, industryId]);
 
   const targetBadge = useMemo(() => {
-
     if (availableBadges && levelId && industryId) {
+      // Use the effective level ID for badge lookup
+      const badgeLevelId = isLevel4 ? 4 : parseInt(levelId);
+
       const found = availableBadges.find(
         (badge) => {
-          const matches = badge.levelId === parseInt(levelId) &&
+          const matches = badge.levelId === badgeLevelId &&
             badge.industryId === parseInt(industryId);
           if (matches) {
             console.log('✅ Found matching badge:', badge);
@@ -78,7 +90,7 @@ const BossPage = () => {
       return found || null;
     }
     return null;
-  }, [availableBadges, levelId, industryId]);
+  }, [availableBadges, levelId, industryId, isLevel4]);
 
   const badgeIconUrl = useMemo(() => {
     if (targetBadge?.iconUrl) {
@@ -120,7 +132,12 @@ const BossPage = () => {
                     <span className="apprenticeship"><h1>Apprenticeship</h1></span>
                     <span className="levelLabel"><h1>Level {levelId}</h1></span>
                     <span className="badge">{industryName}</span>
-                    <p className="description">Score 70% or more on this final level 1 quiz to unlock apprenticeship level 2 content</p>
+                    <p className="description">
+                      {isLevel4
+                        ? "Review terminology and study materials. The challenge quiz is permanently locked for Apprenticeship Level 4."
+                        : `Score 70% or more on this final level ${levelId} quiz to unlock apprenticeship level ${parseInt(levelId!) + 1} content`
+                      }
+                    </p>
                 </div>
                 </div>
 
@@ -132,7 +149,7 @@ const BossPage = () => {
 
       <div className="document-study-options">
         <div
-          onClick={() => navigate(`/learning/existing/levels/${levelId}/terms?industry_id=${industryId}&all=true`)}
+          onClick={() => navigate(`/learning/existing/levels/${effectiveLevelId}/terms?industry_id=${industryId}&all=true`)}
           style={{ cursor: 'pointer' }}
         >
           <WordOfTheDay backgroundColor="#FE4D13" showButton={true} />
@@ -141,18 +158,21 @@ const BossPage = () => {
         <StudyTypeCard
           name="Terminology"
           start_button_text="Start Learning"
-          onClick={() => navigate(`/learning/existing/levels/${levelId}/terminology?industry_id=${industryId}`)}
+          onClick={() => navigate(`/learning/existing/levels/${effectiveLevelId}/terminology?industry_id=${industryId}`)}
           color="blue"
         />
 
         <StudyTypeCard
           name="Quiz"
           start_button_text={bossQuizAttempt && bossQuizAttempt.completed ? "Take Quiz Again" : "Take Quiz"}
-          onClick={() => navigate(`/learning/existing/levels/${levelId}/quiz/take?quiz=3&industry_id=${industryId}`)}
+          onClick={() => navigate(`/learning/existing/levels/${effectiveLevelId}/quiz/take?quiz=3&industry_id=${industryId}`)}
           color="red"
           isLocked={isBossQuizLocked}
-          lockMessage={`*Complete all practice quizzes for Apprenticeship Level ${levelId} to unlock`}
-          score={bossQuizAttempt?.completed ? bossQuizAttempt.percentCorrect : undefined}
+          lockMessage={isLevel4
+            ? "*This quiz is locked"
+            : `*Complete all practice quizzes for Apprenticeship Level ${levelId} to unlock`
+          }
+          score={isLevel4 ? undefined : (bossQuizAttempt?.completed ? bossQuizAttempt.percentCorrect : undefined)}
         />
       </div>
     </div>

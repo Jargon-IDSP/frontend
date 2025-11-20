@@ -3,6 +3,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation } from "@tanstack/react-query";
 import { BACKEND_URL } from "../../lib/api";
 import { useNotificationContext } from "../../contexts/NotificationContext";
+import { useUserBadges } from "../../hooks/useUserBadges";
 import TranslateButton from "./TranslateButton";
 import ChatModal from "./ChatModal";
 import QuizCompletion from "./QuizCompletion";
@@ -17,6 +18,8 @@ import type { ChatRequest } from "../../types/api/chat";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import nextButton from "../../assets/icons/nextButton.svg";
 import backButton from "../../assets/icons/backButton.svg";
+import correctAnswerSound from "../../assets/sounds/correct_answer.mp3";
+import wrongAnswerSound from "../../assets/sounds/wrong_answer.mp3";
 
 export default function QuizComponent({
   questions,
@@ -28,6 +31,10 @@ export default function QuizComponent({
 }: QuizComponentProps) {
   const { getToken } = useAuth();
   const { showToast } = useNotificationContext();
+
+  // Preload user badges while quiz is in progress
+  // This ensures badges are already cached when completion page shows (prevents flicker)
+  useUserBadges();
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [selectedAnswer, setSelectedAnswer] = useState<string | null>(null);
@@ -212,8 +219,31 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     chatMutation.reset();
   };
 
+  const playSound = (soundUrl: string) => {
+    try {
+      const audio = new Audio(soundUrl);
+      audio.volume = 0.5; // Set volume to 50% to avoid being too loud
+      audio.play().catch((error) => {
+        // Silently handle errors (e.g., user hasn't interacted with page yet)
+        console.log("Could not play sound:", error);
+      });
+    } catch (error) {
+      console.log("Error playing sound:", error);
+    }
+  };
+
   const handleAnswerSelect = (choiceId: string) => {
     setSelectedAnswer(choiceId);
+
+    // Play sound effect immediately when answer is selected
+    const selectedChoice = currentQuestion.choices.find(
+      (c) => c.id === choiceId
+    );
+    if (selectedChoice?.isCorrect) {
+      playSound(correctAnswerSound);
+    } else {
+      playSound(wrongAnswerSound);
+    }
 
     if (isBossQuiz) {
       setTimeout(() => {

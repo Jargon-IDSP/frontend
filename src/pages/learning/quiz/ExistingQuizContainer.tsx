@@ -27,7 +27,7 @@ export function ExistingQuizContainer({
 
   const completeQuizMutation = useCompleteExistingQuiz();
 
-  const handleQuizComplete = async (score: number, totalQuestions: number) => {
+  const handleQuizComplete = (score: number, totalQuestions: number) => {
     if (!levelId) return;
 
     completeQuizMutation.mutate({

@@ -67,7 +67,7 @@ export default function CategoryStudy() {
           src={goBackIcon}
           alt="Go back"
           className="category-study__back-icon"
-          onClick={() => navigate(-1)}
+          onClick={() => navigate(justUploaded ? '/documents' : '/learning/custom/categories')}
         />
         <h1 className="category-study__header-title">
           {categoryName} Category

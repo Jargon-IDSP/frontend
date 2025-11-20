@@ -39,15 +39,10 @@ export function useCompleteExistingQuiz() {
         queryKey: ["existingQuiz", variables.levelId.toString()],
       });
       queryClient.invalidateQueries({ queryKey: ["quizAttempts"] });
-      // Invalidate levels cache to update completion status and unlock next levels
       queryClient.invalidateQueries({ queryKey: ["levels"] });
-      // Invalidate user badges cache to show newly earned badges
       queryClient.invalidateQueries({ queryKey: ["userBadges"] });
-      // Invalidate apprenticeship progress to update quiz completion counts
       queryClient.invalidateQueries({ queryKey: ["apprenticeshipProgress"] });
-      // Invalidate user profile to update total score
       queryClient.invalidateQueries({ queryKey: ["profile"] });
-      // Invalidate leaderboard to update weekly score
       queryClient.invalidateQueries({ queryKey: ["leaderboard"] });
     },
     onError: (error: Error) => {

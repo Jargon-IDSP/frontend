@@ -4,9 +4,12 @@ import { useState, useRef, useEffect, useMemo } from "react";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
 import { useUserBadges } from "../../hooks/useUserBadges";
+import { useCustomFlashcardStats } from "../../hooks/useCustomFlashcardStats";
 import PrivacyDrawer from "../drawers/PrivacyDrawer";
 import NotificationBell from "../../components/NotificationBell";
-import editIcon from '../../assets/icons/editIcon.svg';
+import MonthlyActivity from "../../components/MonthlyActivity";
+import SelfLeaderboard from "../../components/SelfLeaderboard";
+// import editIcon from '../../assets/icons/editIcon.svg'; // Commented out - may be used in commented profile-card
 import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_profile.scss';
 import '../../styles/pages/_friendProfile.scss';
@@ -33,6 +36,28 @@ export default function ProfilePage() {
   const [isPrivacyDrawerOpen, setIsPrivacyDrawerOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { data: userBadges } = useUserBadges();
+  const {
+    data: customWordCount = 0,
+    isLoading: customWordCountLoading,
+    isError: customWordCountError,
+  } = useCustomFlashcardStats();
+  const accountCreatedAt = data?.createdAt ? new Date(data.createdAt) : null;
+  const accountAgeDays = accountCreatedAt
+    ? Math.max(
+        1,
+        Math.floor(
+          (Date.now() - accountCreatedAt.getTime()) / (1000 * 60 * 60 * 24)
+        )
+      )
+    : null;
+  const customWordCountDisplay = customWordCountLoading
+    ? "…"
+    : customWordCountError
+    ? "—"
+    : customWordCount.toLocaleString();
+  const [activeProfileTab, setActiveProfileTab] = useState<
+    "archives" | "achievements"
+  >("archives");
 
   const error = queryError ? (queryError as Error).message : null;
 
@@ -140,7 +165,7 @@ export default function ProfilePage() {
                   className="profile-settings-item"
                   onClick={() => {
                     setIsDropdownOpen(false);
-                    navigate("/profile/avatar");
+                    navigate("/avatar/edit");
                   }}
                 >
                   Avatar
@@ -185,8 +210,42 @@ export default function ProfilePage() {
 
         {data && (
           <div className="profile-content">
-            {/* Profile Card */}
-            <div className="profile-card">
+            {/* Profile Avatar Section */}
+            <div className="profile-avatar-section">
+              <div className="profile-avatar-large">
+                <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-large-image" />
+              </div>
+              <h2 className="profile-avatar-name">
+                {data.firstName
+                  ? `${data.firstName}`
+                  : data.username || data.email || 'User'}
+              </h2>
+              <p className="profile-avatar-industry">
+                {data.industryId ? industryIdToName[data.industryId] || 'Not set' : 'Not set'}
+              </p>
+            </div>
+
+            {/* Monthly Activity */}
+            <MonthlyActivity />
+
+            {/* Quick Stats */}
+            <div className="profile-mini-cards">
+              <div className="profile-mini-card">
+                <p className="profile-mini-card-value">
+                  {customWordCountDisplay}
+                </p>
+                <p className="profile-mini-card-label">Vocabulary</p>
+              </div>
+              <div className="profile-mini-card">
+                <p className="profile-mini-card-value">
+                  {accountAgeDays ? accountAgeDays.toLocaleString() : "—"}
+                </p>
+                <p className="profile-mini-card-label">Days</p>
+              </div>
+            </div>
+
+            {/* Profile Card - Commented out for future use */}
+            {/* <div className="profile-card">
               <div className="profile-card-avatar">
                 <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-image" />
               </div>
@@ -207,43 +266,72 @@ export default function ProfilePage() {
               >
                 <img src={editIcon} alt="Edit" />
               </button>
-            </div>
+            </div> */}
 
-            {/* Friends Button */}
-            <div className="profile-actions">
-              <button
-                className="profile-friends-button"
-                onClick={() => navigate("/profile/friends")}
-              >
-                View Friends
-              </button>
-            </div>
+            {/* Sections Tabs */}
+            <div className="profile-sections">
+              <div className="profile-tabs">
+                <button
+                  type="button"
+                  className={`profile-tab-button ${
+                    activeProfileTab === "archives" ? "profile-tab-button--active" : ""
+                  }`}
+                  onClick={() => setActiveProfileTab("archives")}
+                >
+                  Document Archives
+                </button>
+                <button
+                  type="button"
+                  className={`profile-tab-button ${
+                    activeProfileTab === "achievements" ? "profile-tab-button--active" : ""
+                  }`}
+                  onClick={() => setActiveProfileTab("achievements")}
+                >
+                  Achievements
+                </button>
+              </div>
 
-            {/* Badges Section - using friend profile styling */}
-            <div className="friend-profile-badges-section">
-              <h4 className="friend-profile-badges-subtitle">
-                Badge Collection
-              </h4>
-              <div className="friend-profile-badges-grid">
-                {badgeIcons.length > 0 ? (
-                  badgeIcons.map((badge) => (
-                    <div key={badge.id} className="friend-profile-badge-item" title={badge.name}>
-                      <img
-                        src={badge.url}
-                        alt={badge.name}
-                        className="friend-profile-badge-icon"
-                      />
-                    </div>
-                  ))
+              <div className="profile-tab-panel">
+                {activeProfileTab === "archives" ? (
+                  <div className="profile-documents">
+                    <DocumentsList refresh={0} />
+                  </div>
                 ) : (
-                  <p className="friend-profile-no-badges">No badges earned yet.</p>
+                  <div className="profile-achievements">
+                    
+                    <div className="friend-profile-badges-section">
+                      <h4 className="friend-profile-badges-subtitle">
+                        Badge Collection
+                      </h4>
+                      <div className="friend-profile-badges-grid">
+                        {badgeIcons.length > 0 ? (
+                          badgeIcons.map((badge) => (
+                            <div
+                              key={badge.id}
+                              className="friend-profile-badge-item"
+                              title={badge.name}
+                            >
+                              <img
+                                src={badge.url}
+                                alt={badge.name}
+                                className="friend-profile-badge-icon"
+                              />
+                            </div>
+                          ))
+                        ) : (
+                          <p className="friend-profile-no-badges">
+                            No badges earned yet.
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    <div className="friend-profile-badges-section">
+                      <h4 className="friend-profile-badges-subtitle">Medals</h4>
+                      <SelfLeaderboard showPlacements={false} />
+                    </div>
+                  </div>
                 )}
               </div>
-            </div>
-
-            {/* Documents Section */}
-            <div className="profile-documents">
-              <DocumentsList refresh={0} />
             </div>
           </div>
         )}

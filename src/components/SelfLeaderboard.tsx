@@ -54,7 +54,13 @@ const getRankDisplay = (
   return { icon: null, text: `${rank}th` };
 };
 
-const SelfLeaderboard: React.FC = () => {
+type SelfLeaderboardProps = {
+  showPlacements?: boolean;
+};
+
+const SelfLeaderboard: React.FC<SelfLeaderboardProps> = ({
+  showPlacements = true,
+}) => {
   const { data, isLoading, error } = useSelfLeaderboard(12);
 
   if (isLoading) {
@@ -105,41 +111,42 @@ const SelfLeaderboard: React.FC = () => {
         </div>
       </div>
 
-      {/* Placements Section */}
-      <div className="self-leaderboard-placements">
-        <h2 className="self-leaderboard-placements-title">Placements</h2>
-        <div className="self-leaderboard-placements-list">
-          {placements.length === 0 ? (
-            <p className="self-leaderboard-empty">
-              No placements yet. Start learning to earn your first medal!
-            </p>
-          ) : (
-            placements.map((placement, index) => {
-              const { icon, text } = getRankDisplay(placement.rank);
-              return (
-                <div key={index} className="self-leaderboard-placement-item">
-                  <span className="self-leaderboard-placement-date">
-                    {formatWeekRange(
-                      placement.weekStartDate,
-                      placement.weekEndDate
-                    )}
-                  </span>
-                  <div className="self-leaderboard-placement-rank">
-                    {icon && (
-                      <span className="self-leaderboard-placement-icon">
-                        {icon}
-                      </span>
-                    )}
-                    <span className="self-leaderboard-placement-text">
-                      {text}
+      {showPlacements && (
+        <div className="self-leaderboard-placements">
+          <h2 className="self-leaderboard-placements-title">Placements</h2>
+          <div className="self-leaderboard-placements-list">
+            {placements.length === 0 ? (
+              <p className="self-leaderboard-empty">
+                No placements yet. Start learning to earn your first medal!
+              </p>
+            ) : (
+              placements.map((placement, index) => {
+                const { icon, text } = getRankDisplay(placement.rank);
+                return (
+                  <div key={index} className="self-leaderboard-placement-item">
+                    <span className="self-leaderboard-placement-date">
+                      {formatWeekRange(
+                        placement.weekStartDate,
+                        placement.weekEndDate
+                      )}
                     </span>
+                    <div className="self-leaderboard-placement-rank">
+                      {icon && (
+                        <span className="self-leaderboard-placement-icon">
+                          {icon}
+                        </span>
+                      )}
+                      <span className="self-leaderboard-placement-text">
+                        {text}
+                      </span>
+                    </div>
                   </div>
-                </div>
-              );
-            })
-          )}
+                );
+              })
+            )}
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };
