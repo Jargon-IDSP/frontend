@@ -88,9 +88,10 @@ export default function QuizCompletion({
     window.addEventListener("scroll", handleResize, true);
 
     const defaults = {
-      startVelocity: 30,
+      startVelocity: 15,
       spread: 360,
-      ticks: 60,
+      ticks: 100,
+      gravity: 0.6,
       zIndex: 0,
     };
 
