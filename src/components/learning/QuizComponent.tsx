@@ -217,8 +217,31 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     chatMutation.reset();
   };
 
+  const playSound = (soundFile: string) => {
+    try {
+      const audio = new Audio(`/sounds/${soundFile}`);
+      audio.volume = 0.5; // Set volume to 50% to avoid being too loud
+      audio.play().catch((error) => {
+        // Silently handle errors (e.g., user hasn't interacted with page yet)
+        console.log("Could not play sound:", error);
+      });
+    } catch (error) {
+      console.log("Error playing sound:", error);
+    }
+  };
+
   const handleAnswerSelect = (choiceId: string) => {
     setSelectedAnswer(choiceId);
+
+    // Play sound effect immediately when answer is selected
+    const selectedChoice = currentQuestion.choices.find(
+      (c) => c.id === choiceId
+    );
+    if (selectedChoice?.isCorrect) {
+      playSound("correct_answer.mp3");
+    } else {
+      playSound("wrong_answer.mp3");
+    }
 
     if (isBossQuiz) {
       setTimeout(() => {
