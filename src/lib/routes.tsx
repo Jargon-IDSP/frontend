@@ -33,6 +33,7 @@ import FilePreviewPage from "../pages/documents/FilePreviewPage";
 import IntroductionPage from "../pages/onboarding/IntroductionPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
+import AvatarCustomization from "../pages/onboarding/AvatarCustomization";
 import LearnJargon from "../pages/learning/LearnJargon";
 import BossPage from "../pages/learning/BossPage";
 
@@ -56,6 +57,10 @@ export const routes: RouteObject[] = [
   {
     path: "/onboarding/industry",
     element: protect(<IndustryPreferences />),
+  },
+  {
+    path: "/onboarding/avatar",
+    element: protect(<AvatarCustomization />),
   },
   {
     path: "/chat",

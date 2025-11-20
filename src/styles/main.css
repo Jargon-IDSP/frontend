@@ -3254,11 +3254,10 @@ button.back-button {
 }
 
 .self-leaderboard-medals {
-  margin: 0 auto;
-  gap: 0.5rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  gap: 1rem;
   flex-wrap: wrap;
 }
 
