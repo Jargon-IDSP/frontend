@@ -28,6 +28,7 @@ env
 *.njsproj
 *.sln
 *.sw?
+.history/
 
 .env
 dotenv

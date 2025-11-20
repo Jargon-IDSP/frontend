@@ -1,4 +1,9 @@
-export default function TopHat ({ color = "#2c3e50", className = "avatar-accessory TopHat" }) {
+interface TopHatProps {
+  color?: string;
+  className?: string;
+}
+
+export default function TopHat ({ color = "#2c3e50", className = "avatar-accessory TopHat" }: TopHatProps) {
   return (
   <svg
     viewBox="0 0 200 200"

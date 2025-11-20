@@ -10,7 +10,6 @@
 // Import pages
 @use 'pages/homepage';
 @use 'pages/avatar';
-@use 'pages/avatarCustomization';
 @use 'pages/splash';
 @use 'pages/profile';
 @use 'pages/documents';
@@ -61,3 +60,4 @@
 @use 'components/qrProfileDrawer';
 @use 'components/chatbox';
 @use 'components/processingDocumentCard';
+@use 'components/avatarCustomization';

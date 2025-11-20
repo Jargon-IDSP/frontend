@@ -142,7 +142,7 @@ export default function LoggedInHome() {
                       className="home-settings-item"
                       onClick={() => {
                         setIsDropdownOpen(false);
-                        navigate("/profile/avatar");
+                        navigate("/avatar");
                       }}
                     >
                       Avatar

@@ -1,4 +1,9 @@
-export default function Mustache ({ color = "#3d2817", className = "avatar-accessory Mustache" }) {
+interface MustacheProps {
+  color?: string;
+  className?: string;
+}
+
+export default function Mustache ({ color = "#3d2817", className = "avatar-accessory Mustache" }: MustacheProps) {
   return (
   <svg
     viewBox="0 0 200 200"
