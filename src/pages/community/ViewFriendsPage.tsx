@@ -9,6 +9,7 @@ import { getLanguageFlag } from "../../utils/languageFlagHelpers";
 import { useProfile } from "../../hooks/useProfile";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import rockyLogo from "/rocky.svg";
+import rockyWhiteLogo from "/rockyWhite.svg";
 import { AvatarDisplay } from "../../components/avatar";
 // Styles will be added later
 
