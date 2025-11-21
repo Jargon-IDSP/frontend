@@ -4,7 +4,6 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../hooks/useProfile";
 import { BACKEND_URL } from "../../lib/api";
-import FullAvatar from "../../components/avatar/fullAvatar";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
 const industryOptions = [
@@ -95,11 +94,6 @@ export default function ManageProfilePage() {
       </div>
 
       <div className="manage-profile-content">
-        {/* Large Avatar */}
-        <div className="manage-profile-avatar">
-                  <FullAvatar />
-        </div>
-
         {/* Trades Section */}
         <div className="manage-profile-trades">
           <h2 className="manage-profile-trades-title">Trades</h2>

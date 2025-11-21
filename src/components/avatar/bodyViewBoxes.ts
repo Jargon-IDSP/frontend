@@ -62,14 +62,6 @@ export function getBodyViewBox(spriteId: string): string {
   return BODY_VIEWBOXES[spriteId] || '0 0 300 300';
 }
 
-/**
- * Converts avatar sprite IDs to data attribute format for CSS selectors
- * Examples:
- * - 'body-1' → 'shape-01'
- * - 'hair-3' → 'hair-03'
- * - 'beard-2' → 'feature-02'
- * - 'shoe-1' → 'shoe-01'
- */
 export function toDataAttributeId(id: string, type: 'body' | 'hair' | 'facial' | 'shoes'): string {
   if (type === 'body') {
     const match = id.match(/body-(\d+)/);

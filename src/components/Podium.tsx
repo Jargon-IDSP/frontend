@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import type { PodiumProps } from "../types/podium";
-import rockyLogo from "/rocky.svg";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import { getLanguageFlag } from "../utils/languageFlagHelpers";
+import { AvatarDisplay } from "./avatar";
+import rockyLogo from "/rocky.svg";
 
 const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/leaderboard/full" }) => {
   const navigate = useNavigate();
@@ -40,11 +41,19 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/lea
             onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: fromRoute } })}
           >
             <div className="rocky-avatar">
-              <img
-                src={rockyLogo}
-                alt="Rocky"
-                className={`rocky-logo rank-${rank}`}
-              />
+              {user.avatar ? (
+                <AvatarDisplay
+                  config={user.avatar}
+                  size={60}
+                  className={`podium-avatar rank-${rank}`}
+                />
+              ) : (
+                <img
+                  src={rockyLogo}
+                  alt="Rocky"
+                  className={`rocky-logo rank-${rank}`}
+                />
+              )}
               {languageFlag && (
                 <span
                   className={`podium-flag podium-flag--rank-${rank}`}

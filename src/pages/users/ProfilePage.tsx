@@ -10,6 +10,7 @@ import NotificationBell from "../../components/NotificationBell";
 import rockyWhiteLogo from '../../../public/rockyWhite.svg';
 import MonthlyActivity from "../../components/MonthlyActivity";
 import SelfLeaderboard from "../../components/SelfLeaderboard";
+import { AvatarDisplay } from "../../components/avatar";
 // import editIcon from '../../assets/icons/editIcon.svg'; // Commented out - may be used in commented profile-card
 import settingsIcon from '../../assets/icons/settingsIcon.svg';
 import '../../styles/pages/_profile.scss';
@@ -214,7 +215,15 @@ export default function ProfilePage() {
             {/* Profile Avatar Section */}
             <div className="profile-avatar-section">
               <div className="profile-avatar-large">
-                <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-large-image" />
+                {data.avatar ? (
+                  <AvatarDisplay
+                    config={data.avatar}
+                    size={120}
+                    className="profile-avatar-large-avatar"
+                  />
+                ) : (
+                  <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-large-image" />
+                )}
               </div>
               <h2 className="profile-avatar-name">
                 {data.firstName

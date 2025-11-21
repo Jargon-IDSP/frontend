@@ -1,6 +1,7 @@
-import rockyWhiteLogo from "/rockyWhite.svg";
 import ProfileStatsCard from "./ProfileStatsCard";
 import type { ProfileCardProps } from "../types/profile";
+import { AvatarDisplay } from "./avatar";
+import rockyWhiteLogo from "/rockyWhite.svg";
 
 export default function ProfileCard({
   displayName,
@@ -8,11 +9,20 @@ export default function ProfileCard({
   followerCount,
   followingCount,
   lessonCount,
+  avatar,
 }: ProfileCardProps) {
   return (
     <div className="friend-profile-card">
       <div className="friend-profile-avatar">
-        <img src={rockyWhiteLogo} alt="User Avatar" />
+        {avatar ? (
+          <AvatarDisplay
+            config={avatar}
+            size={120}
+            className="friend-profile-avatar-display"
+          />
+        ) : (
+          <img src={rockyWhiteLogo} alt="User Avatar" />
+        )}
       </div>
       <h2 className="friend-profile-name">{displayName}</h2>
       <p className="friend-profile-industry">{industryName}</p>
