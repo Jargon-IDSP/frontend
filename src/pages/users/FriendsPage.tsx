@@ -12,7 +12,7 @@ import QRScannerModal from "../../components/QRScannerModal";
 import QRProfileDrawer from "../drawers/QRProfileDrawer";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
-import rockyWhiteLogo from "/rockyWhite.svg";
+// import rockyWhiteLogo from "/rockyWhite.svg";
 import rockyLogo from "/rocky.svg";
 import "../../styles/pages/_friends.scss";
 
@@ -231,7 +231,7 @@ export default function FriendsPage() {
                 with!
               </p>
             </div>
-            <div className="leaderboard-header-actions">
+            {/* <div className="leaderboard-header-actions">
               <button
                 className="view-friends-avatar-button"
                 onClick={() => navigate("/profile")}
@@ -243,7 +243,7 @@ export default function FriendsPage() {
                   className="view-friends-avatar"
                 />
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Search Bar */}

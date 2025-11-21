@@ -326,7 +326,11 @@ export default function ProfilePage() {
                         )}
                       </div>
                     </div>
-                    <div className="friend-profile-badges-section">
+                    <div
+                      className="friend-profile-badges-section"
+                      onClick={() => navigate("/leaderboard/full?tab=self")}
+                      style={{ cursor: "pointer" }}
+                    >
                       <h4 className="friend-profile-badges-subtitle">Medals</h4>
                       <SelfLeaderboard showPlacements={false} />
                     </div>
