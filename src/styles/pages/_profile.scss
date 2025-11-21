@@ -504,10 +504,9 @@
 // Mini Stats Cards
 .profile-mini-cards {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: $spacing-xl;
-  max-width: 600px;
-  margin: 0 auto;
+  grid-template-columns: 50% 50%;
+  max-width: 100%;
+  margin: 0;
 }
 
 .profile-mini-card {
@@ -517,6 +516,9 @@
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   display: flex;
   flex-direction: column;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 190px;
   gap: $spacing-xl;
 }
 
@@ -525,7 +527,7 @@
   font-weight: $font-weight-bold;
   color: white;
   text-align: right;
-
+  max-width: 100%;
   margin: 0;
 }
 
