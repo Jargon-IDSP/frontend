@@ -85,7 +85,7 @@ export function AvatarViewPage () {
             <Avatar config={config} renderMode="layered" />
           </div>
         )}
-        <button onClick={() => navigate('/avatar/edit')}></button>
+        <button onClick={() => navigate('/avatar/edit')}>Edit Avatar</button>
       </div>
     </div>
   );
