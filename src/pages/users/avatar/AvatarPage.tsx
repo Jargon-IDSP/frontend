@@ -1,4 +1,4 @@
-import Avatar from "@/components/avatar/Avatar";
+import Avatar from "../../../components/avatar/Avatar";
 import { AvatarCustomizer } from "../../../components/avatar/AvatarCustomizer";
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useAvatar } from '../../../hooks/useAvatar';

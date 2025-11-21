@@ -10,7 +10,7 @@ export default function DocumentsPage() {
     <div className="container">
       <div className="fallbackDocPage">
         <div className="documentHeader">
-        <button onClick={() => navigate("/home")}>
+        <button onClick={() => navigate("/")}>
         <img src={goBackIcon} alt="Back" />
       </button>
       <h1 className="page-title">AI Translate & Lesson</h1>

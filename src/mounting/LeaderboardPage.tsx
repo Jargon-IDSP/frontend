@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
 import LeaderboardConnectAvatar from "../assets/leaderboardConnectAvatar.svg";
@@ -12,7 +12,22 @@ import type { LeaderboardType } from "../types/leaderboardHeader";
 
 const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate();
-  const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>("general");
+  const [searchParams] = useSearchParams();
+  const tabParam = searchParams.get("tab");
+
+  // Initialize leaderboardType based on URL parameter
+  const initialTab = (tabParam === "general" || tabParam === "private" || tabParam === "self")
+    ? tabParam
+    : "general";
+
+  const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>(initialTab);
+
+  // Update state when URL parameter changes
+  useEffect(() => {
+    if (tabParam === "general" || tabParam === "private" || tabParam === "self") {
+      setLeaderboardType(tabParam);
+    }
+  }, [tabParam]);
   const {
     data: users = [],
     isLoading: loading,

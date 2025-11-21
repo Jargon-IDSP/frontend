@@ -4,7 +4,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useDocuments } from "../../hooks/useDocuments";
 import { useDocumentProcessingStatus } from "../../hooks/useDocumentProcessingStatus";
-import ShareModal from "../../components/learning/ShareModal";
+import ShareDrawer from "../drawers/ShareDrawer";
 import { BACKEND_URL } from "../../lib/api";
 import type { Document, DocumentsListProps } from "../../types/document";
 import "../../styles/components/_documentList.scss";
@@ -16,11 +16,8 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
-  const [shareModalQuiz, setShareModalQuiz] = useState<{
-    id: string;
-    name: string;
-    documentId: string;
-  } | null>(null);
+  const [isShareDrawerOpen, setIsShareDrawerOpen] = useState(false);
+  const [selectedQuizId, setSelectedQuizId] = useState<string | null>(null);
 
   const {
     data: documents = [],
@@ -70,11 +67,8 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
         const data = await response.json();
         const quizzes = data.data || data.quizzes || [];
         if (quizzes.length > 0) {
-          setShareModalQuiz({
-            id: quizzes[0].id,
-            name: quizzes[0].name,
-            documentId,
-          });
+          setSelectedQuizId(quizzes[0].id);
+          setIsShareDrawerOpen(true);
         } else {
           alert("No quizzes available for this document yet.");
         }
@@ -274,14 +268,11 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
         );
       })}
 
-      {shareModalQuiz && (
-        <ShareModal
-          isOpen={true}
-          quizId={shareModalQuiz.id}
-          quizName={shareModalQuiz.name}
-          onClose={() => setShareModalQuiz(null)}
-        />
-      )}
+      <ShareDrawer
+        open={isShareDrawerOpen}
+        onOpenChange={setIsShareDrawerOpen}
+        quizId={selectedQuizId}
+      />
 
     </div>
   );

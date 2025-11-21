@@ -7,10 +7,11 @@ import { useUserBadges } from "../../hooks/useUserBadges";
 import { useCustomFlashcardStats } from "../../hooks/useCustomFlashcardStats";
 import PrivacyDrawer from "../drawers/PrivacyDrawer";
 import NotificationBell from "../../components/NotificationBell";
+import rockyWhiteLogo from '../../../public/rockyWhite.svg';
 import MonthlyActivity from "../../components/MonthlyActivity";
 import SelfLeaderboard from "../../components/SelfLeaderboard";
 // import editIcon from '../../assets/icons/editIcon.svg'; // Commented out - may be used in commented profile-card
-import rockyWhiteLogo from '/rockyWhite.svg';
+import settingsIcon from '../../assets/icons/settingsIcon.svg';
 import '../../styles/pages/_profile.scss';
 import '../../styles/pages/_friendProfile.scss';
 
@@ -150,7 +151,7 @@ export default function ProfilePage() {
                 onClick={handleSettingsClick}
                 aria-label="Settings"
               >
-                <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
+                <img src={settingsIcon} alt="settings" className="settings-logo" />
               </button>
 
             {isDropdownOpen && (
@@ -325,7 +326,11 @@ export default function ProfilePage() {
                         )}
                       </div>
                     </div>
-                    <div className="friend-profile-badges-section">
+                    <div
+                      className="friend-profile-badges-section"
+                      onClick={() => navigate("/leaderboard/full?tab=self")}
+                      style={{ cursor: "pointer" }}
+                    >
                       <h4 className="friend-profile-badges-subtitle">Medals</h4>
                       <SelfLeaderboard showPlacements={false} />
                     </div>

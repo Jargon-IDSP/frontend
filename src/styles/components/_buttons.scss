@@ -146,7 +146,7 @@
   align-items: center;
   gap: $spacing-xs;
   padding: $spacing-sm $spacing-md;
-  background: none;
+  background-color: $color-primary;
   color: $color-quaternary-dark;
   cursor: pointer;
   transition: all 0.2s ease;

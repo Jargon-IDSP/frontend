@@ -26,30 +26,23 @@ const BossPage = () => {
 
   const isLevel4 = levelId === "4";
 
-  // For level 4, use level 3's quiz data (since level 4 uses level 3 content)
-  // But the quiz will be permanently locked
   const effectiveLevelId = isLevel4 ? 3 : (levelId ? parseInt(levelId) : undefined);
 
-  // Fetch prebuilt quizzes for this level/industry
   const { data: prebuiltQuizzes } = usePrebuiltQuizzes(
     effectiveLevelId,
     industryId ? parseInt(industryId) : undefined
   );
 
-  // Find the boss quiz (quiz number 3)
   const bossQuiz = useMemo(() => {
     return prebuiltQuizzes?.find(q => q.quizNumber === 3);
   }, [prebuiltQuizzes]);
 
-  // Fetch the user's attempt for the boss quiz
   const { data: bossQuizAttempt } = usePrebuiltQuizAttempt(bossQuiz?.id);
 
   const industryName = getIndustryName(industryId ? parseInt(industryId) : undefined);
 
-  // Check if boss quiz is locked (requires completing quizzes 1 and 2 first)
-  // Level 4 is ALWAYS locked (permanently)
+
   const isBossQuizLocked = useMemo(() => {
-    // Level 4 challenge quiz is permanently locked
     if (isLevel4) return true;
 
     if (!progressData || !levelId || !industryId) return true;
@@ -59,13 +52,11 @@ const BossPage = () => {
            p.industryId === parseInt(industryId)
     );
 
-    // Boss quiz requires at least 2 quizzes completed
     return !progress || progress.quizzesCompleted < 2;
   }, [isLevel4, progressData, levelId, industryId]);
 
   const targetBadge = useMemo(() => {
     if (availableBadges && levelId && industryId) {
-      // Use the effective level ID for badge lookup
       const badgeLevelId = isLevel4 ? 4 : parseInt(levelId);
 
       const found = availableBadges.find(
@@ -170,7 +161,7 @@ const BossPage = () => {
           isLocked={isBossQuizLocked}
           lockMessage={isLevel4
             ? "*This quiz is locked"
-            : `*Complete all practice quizzes for Apprenticeship Level ${levelId} to unlock`
+            : `*Score 70% or more in all practice quizzes for Apprenticeship Level ${levelId} to unlock`
           }
           score={isLevel4 ? undefined : (bossQuizAttempt?.completed ? bossQuizAttempt.percentCorrect : undefined)}
         />
