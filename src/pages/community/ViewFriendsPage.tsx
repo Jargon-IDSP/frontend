@@ -7,9 +7,9 @@ import type { Friend, FriendsResponse } from "../../types/friend";
 import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
 import { getLanguageFlag } from "../../utils/languageFlagHelpers";
 import { useProfile } from "../../hooks/useProfile";
-import rockyLogo from "/rocky.svg";
-import rockyWhiteLogo from "/rockyWhite.svg";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
+import rockyLogo from "/rocky.svg";
+import { AvatarDisplay } from "../../components/avatar";
 // Styles will be added later
 
 type TabType = "friends" | "followers" | "following";
@@ -124,11 +124,19 @@ const ViewFriendsPage: React.FC = () => {
             >
               <div className="leaderboard-item-content leaderboard-item-content--regular">
                 <span className="leaderboard-item-rank">{actualRank}</span>
-                <img
-                  src={rockyLogo}
-                  alt="Rocky"
-                  className="leaderboard-item-logo leaderboard-item-logo--regular"
-                />
+                {user.avatar ? (
+                  <AvatarDisplay
+                    config={user.avatar}
+                    size={48}
+                    className="leaderboard-item-avatar"
+                  />
+                ) : (
+                  <img
+                    src={rockyLogo}
+                    alt="Rocky"
+                    className="leaderboard-item-logo leaderboard-item-logo--regular"
+                  />
+                )}
                 <div className="leaderboard-item-text">
                   <span className="leaderboard-item-name">
                     {getUserDisplayName(user)}

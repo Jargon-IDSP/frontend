@@ -420,7 +420,7 @@
 .friend-profile-badges-grid {
   display: grid;
   grid-template-columns: repeat(5, 1fr);
-  gap: $spacing-sm;
+  max-width: 100%;
   justify-items: center;
 }
 

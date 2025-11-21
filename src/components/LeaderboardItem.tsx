@@ -1,9 +1,10 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import rockyLogo from "/rocky.svg";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import { getLanguageFlag } from "../utils/languageFlagHelpers";
 import type { LeaderboardItemProps } from "../types/leaderboardItem";
+import { AvatarDisplay } from "./avatar";
+import rockyLogo from "/rocky.svg";
 
 const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   user,
@@ -30,11 +31,19 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
     >
       <div className="leaderboard-item-content leaderboard-item-content--regular">
         <span className="leaderboard-item-rank">{rank}</span>
-        <img
-          src={rockyLogo}
-          alt="Rocky"
-          className="leaderboard-item-logo leaderboard-item-logo--regular"
-        />
+        {user.avatar ? (
+          <AvatarDisplay
+            config={user.avatar}
+            size={48}
+            className="leaderboard-item-avatar"
+          />
+        ) : (
+          <img
+            src={rockyLogo}
+            alt="Rocky"
+            className="leaderboard-item-logo leaderboard-item-logo--regular"
+          />
+        )}
         <div className="leaderboard-item-text">
           <span className="leaderboard-item-name">
             {getUserDisplayName(user)}

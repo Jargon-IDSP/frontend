@@ -40,7 +40,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
     }, [bodyId, bodyColor]);
 
     return (
-      <>
+      <div className="AvatarSprite">
         <div className="avatar-customization__shape-container">
           <svg
             ref={bodySvgRef}
@@ -94,7 +94,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
             className="avatar-layer avatar-layer--clothing"
           />
         )}
-      </>
+      </div>
     );
   }
 

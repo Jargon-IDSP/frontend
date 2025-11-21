@@ -25,6 +25,7 @@ import communityPageLeaderNoShowImg from '/communityPageLeaderNoShowImg.svg';
 import { BACKEND_URL } from "../../lib/api";
 import type { Friend, FriendsResponse } from "../../types/friend";
 import friendsNoShowImg from '../../../public/FriendsNoShowImg.svg';
+import { AvatarDisplay } from "../../components/avatar";
 // Styles are imported via main.scss
 
 const CommunityPage: React.FC = () => {
@@ -220,11 +221,19 @@ const CommunityPage: React.FC = () => {
                           }`}
                         >
                           <div className="friends-item-content">
-                            <img
-                              src={rockyLogo}
-                              alt="Rocky"
-                              className="friends-item-logo"
-                            />
+                            {friend.avatar ? (
+                              <AvatarDisplay
+                                config={friend.avatar}
+                                size={48}
+                                className="friends-item-avatar"
+                              />
+                            ) : (
+                              <img
+                                src={rockyLogo}
+                                alt="Rocky"
+                                className="friends-item-logo"
+                              />
+                            )}
                             <div className="friends-item-text">
                               <span className="friends-item-name">
                                 {getUserDisplayName(friend)}

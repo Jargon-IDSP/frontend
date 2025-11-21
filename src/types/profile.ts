@@ -1,3 +1,5 @@
+import type { AvatarConfig } from "./avatar";
+
 export interface ProfileData {
   id: string;
   email: string;
@@ -9,6 +11,7 @@ export interface ProfileData {
   industryId?: number | null;
   introductionViewed?: boolean;
   onboardingCompleted?: boolean;
+  avatar?: AvatarConfig | null;
   [key: string]: any;
 }
 
@@ -34,6 +37,7 @@ export interface ProfileCardProps {
   followerCount: number;
   followingCount: number;
   lessonCount: number;
+  avatar?: AvatarConfig | null;
 }
 
 export interface ProfileOverviewProps {
