@@ -403,17 +403,17 @@
 
 // Badges Section in Friend Profile
 .friend-profile-badges-section {
-  margin-top: $spacing-lg;
-  padding: $spacing-lg;
-  background: white;
-  border: 1px solid $color-quaternary;
+  margin-top: $spacing-md;
+  // padding: $spacing-lg;
+  // background: white;
+  // border: 1px solid $color-quaternary;
   border-radius: $border-radius-md;
 }
 
 .friend-profile-badges-subtitle {
   font-size: $font-size-h3;
   font-weight: $font-weight-bold;
-  color: $color-quaternary-dark;
+  color: $primary-500;
   margin: 0 0 $spacing-md 0;
 }
 
@@ -425,8 +425,8 @@
 }
 
 .friend-profile-badge-item {
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -588,9 +588,30 @@
   border: 1px solid #ffc107;
 }
 
-// Lock icon
-.friend-profile-lesson-lock {
+// Request Access Button (replaces lock icon)
+.friend-profile-lesson-request-button {
+  display: flex;
+  align-items: center;
+  gap: $spacing-xs;
+  padding: $spacing-xs $spacing-md;
+  background-color: $color-quaternary;
+  color: white;
+  border: none;
+  border-radius: $border-radius-md;
   cursor: pointer;
-  width: 20px;
-  height: 20px;
+  font-size: $font-size-label;
+  font-weight: $font-weight-medium;
+  transition: all $transition-fast;
+  flex-shrink: 0;
+  margin-left: auto;
+}
+
+.friend-profile-lesson-request-button-icon {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.friend-profile-lesson-request-button-text {
+  white-space: nowrap;
 }
