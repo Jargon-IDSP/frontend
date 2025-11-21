@@ -4,7 +4,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../mounting/HomePage";
 import ChatPage from "../mounting/ChatPage";
 import ProfilePage from "../pages/users/ProfilePage";
-import AvatarPage from "../pages/users/avatar/AvatarPage";
+import { AvatarEditPage, AvatarViewPage } from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import FriendProfilePage from "../pages/users/FriendProfilePage";
 import EditLessonPage from "../pages/users/EditLessonPage";
@@ -33,7 +33,6 @@ import FilePreviewPage from "../pages/documents/FilePreviewPage";
 import IntroductionPage from "../pages/onboarding/IntroductionPage";
 import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
-import AvatarCustomization from "../pages/onboarding/AvatarCustomization";
 import LearnJargon from "../pages/learning/LearnJargon";
 import BossPage from "../pages/learning/BossPage";
 
@@ -59,10 +58,6 @@ export const routes: RouteObject[] = [
     element: protect(<IndustryPreferences />),
   },
   {
-    path: "/onboarding/avatar",
-    element: protect(<AvatarCustomization />),
-  },
-  {
     path: "/chat",
     element: protect(<ChatPage />),
   },
@@ -70,9 +65,13 @@ export const routes: RouteObject[] = [
     path: "/profile",
     element: protect(<ProfilePage />),
   },
+    {
+    path: "/avatar",
+    element: protect(<AvatarViewPage />),
+  },
   {
     path: "/avatar/edit",
-    element: protect(<AvatarPage />),
+    element: protect(<AvatarEditPage />),
   },
   {
     path: "/profile/friends",

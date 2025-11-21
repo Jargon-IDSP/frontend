@@ -23,6 +23,7 @@ export interface AvatarProps {
   config: AvatarConfig;
   size?: number;           // Size in pixels, default 100
   className?: string;      // Additional CSS classes
+  renderMode?: 'svg' | 'layered'; // Rendering mode: svg (SVG coordinates) or layered (CSS positioning)
 }
 
 /**
@@ -31,7 +32,7 @@ export interface AvatarProps {
 export interface AvatarCustomizerProps {
   context?: 'onboarding' | 'profile';
   onSave?: (config: AvatarConfig) => void;
-  onNext?: () => void;
+  onBack?: () => void;
 }
 
 /**
@@ -57,4 +58,14 @@ export interface AvatarOptionItem {
   id: string;
   label: string;
   category: keyof Omit<AvatarOptions, 'expressions' | 'bodyColors'>;
+}
+
+/**
+ * Tab configuration for AvatarCustomizer
+ */
+export type TabId = 'body' | 'expression' | 'hair' | 'headwear' | 'features' | 'clothing' | 'shoes' | 'color';
+
+export interface Tab {
+  id: TabId;
+  label: string;
 }
