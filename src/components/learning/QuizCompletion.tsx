@@ -55,6 +55,14 @@ export default function QuizCompletion({
   };
 
   useEffect(() => {
+    // Only play confetti and sound if:
+    // - Not a boss quiz (always celebrate), OR
+    // - Boss quiz and passed (>= 70% score)
+    // Boss quizzes that fail (< 70%) should not show confetti or play sounds
+    const shouldCelebrate = !isBossQuiz || (isBossQuiz && passed);
+
+    if (!shouldCelebrate) return;
+
     // Play confetti sound when component mounts
     playSound(confettiSound);
 
@@ -146,7 +154,7 @@ export default function QuizCompletion({
         canvas.parentNode.removeChild(canvas);
       }
     };
-  }, []);
+  }, [isBossQuiz, passed]);
 
   const badgeIconUrl = useMemo(() => {
     if (latestBadge?.badge?.iconUrl) {
