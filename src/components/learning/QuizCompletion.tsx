@@ -55,14 +55,11 @@ export default function QuizCompletion({
   };
 
   useEffect(() => {
-    // Play confetti sound when component mounts
     playSound(confettiSound);
 
-    // Trigger confetti when component mounts
     const container = containerRef.current;
     if (!container) return;
 
-    // Create a custom canvas element positioned over the container
     const canvas = document.createElement("canvas");
     canvas.style.position = "fixed";
     canvas.style.pointerEvents = "none";
@@ -72,7 +69,6 @@ export default function QuizCompletion({
     document.body.appendChild(canvas);
     canvasRef.current = canvas;
 
-    // Create confetti instance for this canvas
     const myConfetti = confetti.create(canvas, {
       resize: true,
     });
@@ -84,7 +80,6 @@ export default function QuizCompletion({
       return Math.random() * (max - min) + min;
     }
 
-    // Update canvas size and position to match container
     function updateCanvasBounds() {
       if (!container) return;
       const rect = container.getBoundingClientRect();
@@ -96,10 +91,8 @@ export default function QuizCompletion({
       canvas.style.left = `${rect.left}px`;
     }
 
-    // Initial setup
     updateCanvasBounds();
 
-    // Update on resize/scroll
     const handleResize = () => updateCanvasBounds();
     window.addEventListener("resize", handleResize);
     window.addEventListener("scroll", handleResize, true);
@@ -119,11 +112,10 @@ export default function QuizCompletion({
         return clearInterval(interval);
       }
 
-      updateCanvasBounds(); // Update bounds on each frame for responsiveness
+      updateCanvasBounds();
       const particleCount = 50 * (timeLeft / duration);
 
-      // Launch confetti from both sides of the container
-      // Coordinates are relative to the canvas (0-1)
+
       myConfetti({
         ...defaults,
         particleCount,

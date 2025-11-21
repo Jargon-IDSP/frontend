@@ -10,7 +10,7 @@ import WordOfTheDay from '../components/WordOfTheDay';
 import NotificationBell from '../components/NotificationBell';
 import LoadingBar from '../components/LoadingBar';
 // import JargonLogo from '../components/Wordmark';
-import rockyWhiteLogo from '/rockyWhite.svg';
+// import rockyWhiteLogo from '/rockyWhite.svg';
 import todayTermCard from '../assets/todayTermCard.svg';
 
 export default function LoggedInHome() {
@@ -73,9 +73,9 @@ export default function LoggedInHome() {
     };
   }, []);
 
-  const handleSettingsClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // const handleSettingsClick = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
 
   const handleProfileClick = () => {
     setIsDropdownOpen(false);
@@ -122,13 +122,6 @@ export default function LoggedInHome() {
               </div>
               <NotificationBell />
               <div className="home-settings-container" ref={dropdownRef}>
-                <button
-                  className="rocky-logo-section"
-                  onClick={handleSettingsClick}
-                  aria-label="Settings"
-                >
-                  <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-                </button>
 
                 {isDropdownOpen && (
                   <div className="home-settings-dropdown">

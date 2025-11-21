@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
-import rockyWhiteLogo from '/rockyWhite.svg';
+// import rockyWhiteLogo from '/rockyWhite.svg';
 import goBackIcon from "../assets/icons/goBackIcon.svg";
 import NotificationBell from "./NotificationBell";
 import type { LeaderboardHeaderProps } from "../types/leaderboardHeader";
@@ -29,9 +29,9 @@ const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
     };
   }, []);
 
-  const handleSettingsClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
+  // const handleSettingsClick = () => {
+  //   setIsDropdownOpen(!isDropdownOpen);
+  // };
 
   const handleProfileClick = () => {
     setIsDropdownOpen(false);
@@ -73,13 +73,13 @@ const LeaderboardHeader: React.FC<LeaderboardHeaderProps> = ({
             <>
               <NotificationBell />
               <div className="leaderboard-settings-container" ref={dropdownRef}>
-                <button
+                {/* <button
                   className="leaderboard-settings-icon"
                   onClick={handleSettingsClick}
                   aria-label="Settings"
                 >
                   <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-                </button>
+                </button> */}
 
                 {isDropdownOpen && (
                   <div className="leaderboard-settings-dropdown">

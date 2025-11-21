@@ -19,7 +19,7 @@ import LeaderboardConnectAvatar from "../../assets/leaderboardConnectAvatar.svg"
 import findYourFriendsImg from '/findYourFriendsImg.svg';
 import noFriendsImg from '/noFriendsImg.svg';
 import rockyLogo from "/rocky.svg";
-import rockyWhiteLogo from '/rockyWhite.svg';
+// import rockyWhiteLogo from '/rockyWhite.svg';
 import communityPageLeaderShowImg from '/communityPageLeaderShowImg.svg';
 import communityPageLeaderNoShowImg from '/communityPageLeaderNoShowImg.svg';
 import { BACKEND_URL } from "../../lib/api";
@@ -93,13 +93,13 @@ const CommunityPage: React.FC = () => {
         </div>
         <div className="community-header-actions">
             <NotificationBell />
-            <button
+            {/* <button
               className="community-settings-icon"
               onClick={() => navigate("/profile")}
               aria-label="Profile"
             >
               <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-            </button>
+            </button> */}
           </div>
 
         <div className="community-tabs">
