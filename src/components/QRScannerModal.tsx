@@ -85,7 +85,7 @@ export default function QRScannerModal({
             aspectRatio: 1.0,
             disableFlip: false,
           },
-          (decodedText) => {
+          (decodedText: string) => {
             // Success callback
             onScanSuccess(decodedText);
             // Stop scanning after successful scan
@@ -93,7 +93,7 @@ export default function QRScannerModal({
               onClose();
             });
           },
-          (errorMessage) => {
+          (errorMessage: string) => {
             // Error callback - ignore most errors as they're just "no QR code found" messages
             // Only show actual errors
             if (errorMessage.includes("NotFoundException")) {
@@ -185,13 +185,13 @@ export default function QRScannerModal({
                       qrbox: { width: 250, height: 250 },
                       aspectRatio: 1.0,
                     },
-                    (decodedText) => {
+                    (decodedText: string) => {
                       onScanSuccess(decodedText);
                       stopScanner().then(() => {
                         onClose();
                       });
                     },
-                    (errorMessage) => {
+                    (errorMessage: string) => {
                       if (errorMessage.includes("NotFoundException")) {
                         return;
                       }

@@ -1,13 +1,17 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { Avatar, avatarOptions } from './Avatar';
-import { AvatarSprite } from './AvatarSprite';
-import { getBodyViewBox, toDataAttributeId } from './bodyViewBoxes';
-import type { AvatarConfig, AvatarCustomizerProps, Tab, TabId } from '../../types/avatar';
+import type { AvatarConfig } from '../../types/avatar';
 import { useAvatar } from '../../hooks/useAvatar';
 import { useUser } from '@clerk/clerk-react';
-import LoadingBar from '../LoadingBar';
 
-// This is how the tabs are defined in the frontend
+type TabId = 'body' | 'expression' | 'hair' | 'headwear' | 'features' | 'clothing' | 'shoes' | 'color';
+
+interface Tab {
+  id: TabId;
+  label: string;
+}
+
 const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
   { id: 'expression', label: 'Expression' },
@@ -19,14 +23,20 @@ const tabs: Tab[] = [
   { id: 'color', label: 'Color' },
 ];
 
-export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }: AvatarCustomizerProps = {}) {
+export function AvatarCustomizer() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const { user } = useUser();
   const { avatar, isLoading, updateAvatar, isUpdating } = useAvatar();
+
+  // Determine context from URL params
+  const searchParams = new URLSearchParams(location.search);
+  const context = (searchParams.get('context') as 'onboarding' | 'profile') || 'profile';
 
   const [activeTab, setActiveTab] = useState<TabId>('body');
   const [config, setConfig] = useState<AvatarConfig>({
     body: 'body-1',
-    bodyColor: '#ffba0a',
+    bodyColor: '#FFB6C1',
     expression: 'body-1-h1',
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
@@ -61,13 +71,23 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 3000);
 
-        if (onSaveCallback) {
-          onSaveCallback(config);
+        if (context === 'onboarding') {
+          // Navigate to next onboarding step
+          navigate('/');
         }
       },
     });
   };
 
+  const handleBack = () => {
+    if (context === 'profile') {
+      navigate('/profile');
+    } else {
+      navigate('/onboarding/industry');
+    }
+  };
+
+  // Get options for current tab
   const currentOptions = useMemo(() => {
     switch (activeTab) {
       case 'body':
@@ -156,77 +176,45 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   };
 
-  const renderOptionPreview = (optionId: string, category?: 'eyewear' | 'facial') => {
-    if (optionId === 'none') {
-      return <span className="avatar-option__label">None</span>;
-    }
-
-    if (activeTab === 'color') {
-      return null;
-    }
-
-    let className = "avatar-option__preview";
-
-    let viewBox = "0 0 300 300";
-
-    switch (activeTab) {
-      case 'body':
-      case 'expression':
-        className = "avatar-option__preview avatar-option__preview--body";
-        viewBox = getBodyViewBox(optionId);
-        break;
-
-      case 'hair':
-        className = "avatar-option__preview avatar-option__preview--hair";
-        break;
-
-      case 'headwear':
-        className = "avatar-option__preview avatar-option__preview--headwear";
-        break;
-
-      case 'features':
-        if (category === 'eyewear') {
-          className = "avatar-option__preview avatar-option__preview--eyewear";
-        } else if (category === 'facial') {
-          className = "avatar-option__preview avatar-option__preview--facial";
-        }
-        break;
-
-      case 'clothing':
-        className = "avatar-option__preview avatar-option__preview--clothing";
-        break;
-
-      case 'shoes':
-        className = "avatar-option__preview avatar-option__preview--shoes";
-        break;
-    }
-
+  if (isLoading) {
     return (
-      <AvatarSprite
-        spriteId={optionId}
-        className={className}
-        viewBox={viewBox}
-      />
+      <div className="avatar-customization">
+        <p>Loading...</p>
+      </div>
     );
-  };
-
-  const shapeDataId = toDataAttributeId(config.body || 'body-1', 'body');
-  const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
+  }
 
   return (
     <div className="avatar-customization">
-      <LoadingBar isLoading={isLoading} hasData={!!avatar} text="Loading avatar" />
-
-      <div className="avatar-customization__preview">
-        <div
-          className="avatar-customization__canvas"
-          data-shape={shapeDataId}
-          data-hair={hairDataId}
+      {/* Header with back button and progress */}
+      <div className="avatar-customization__top">
+        <button
+          type="button"
+          className="avatar-customization__back"
+          onClick={handleBack}
+          aria-label="Go back"
         >
-          {!isLoading && <Avatar config={config} renderMode="layered" />}
+          <svg viewBox="0 0 24 24" fill="currentColor">
+            <path d="M15.41 7.41 14 6l-6 6 6 6 1.41-1.41L10.83 12z" />
+          </svg>
+        </button>
+        {context === 'onboarding' && (
+          <div className="avatar-customization__progress">
+            <div className="avatar-customization__progress-fill" />
+          </div>
+        )}
+      </div>
+
+      <h1>Create your Rocky!</h1>
+
+      {/* Avatar Preview */}
+      <div className="avatar-customization__preview">
+        <div className="avatar-customization__canvas">
+          <Avatar config={config} size={250} />
         </div>
       </div>
 
+      {/* Username Display */}
       <label className="avatar-customization__input-label" htmlFor="avatarName">
         User Name
       </label>
@@ -239,6 +227,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         readOnly
       />
 
+      {/* Tabs */}
       <div className="avatar-customization__tabs">
         {tabs.map(tab => (
           <button
@@ -254,9 +243,10 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         ))}
       </div>
 
+      {/* Options Grid */}
       <div className="avatar-customization__options-grid">
         {currentOptions.map(option => {
-          const category = ('category' in option ? option.category : undefined) as 'eyewear' | 'facial' | undefined;
+          const category = 'category' in option ? (option.category as 'eyewear' | 'facial') : undefined;
           const selected = isSelected(option.id, category);
 
           return (
@@ -264,20 +254,24 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
               key={option.id}
               type="button"
               className={`avatar-option ${selected ? 'avatar-option--selected' : ''}`}
-              onClick={() => handleOptionSelect(option.id, category)}
-              aria-label={`Select ${option.label}`}
+              onClick={() => handleOptionSelect(option.id, category as 'eyewear' | 'facial' | undefined)}
               style={
                 activeTab === 'color' && option.id !== 'none'
                   ? { backgroundColor: option.id }
                   : undefined
               }
             >
-              {renderOptionPreview(option.id, category)}
+              {activeTab === 'color' && option.id !== 'none' ? (
+                <span className="avatar-option__color-swatch" />
+              ) : (
+                <span className="avatar-option__label">{option.label}</span>
+              )}
             </button>
           );
         })}
       </div>
 
+      {/* Save/Next Button */}
       <button
         type="button"
         className="avatar-customization__next"
@@ -287,7 +281,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         {isUpdating
           ? 'Saving...'
           : saveSuccess
-          ? 'Saved!'
+          ? '✓ Saved!'
           : context === 'onboarding'
           ? 'Next'
           : 'Save'}
