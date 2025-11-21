@@ -596,12 +596,17 @@ button.back-button {
   .documentHeader {
     display: flex;
     align-items: center;
+    
   h1 {
     font-family: $font-family-primary;
     font-size: $font-size-h1;
     text-align: start;
     color: $color-quaternary-800;
     font-weight: $font-weight-bold;
+  }
+
+    & button {
+    background-color: $color-second-neutral-light;
   }
 }
 

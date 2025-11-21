@@ -90,7 +90,7 @@ export default function IndustryPreferences() {
       } else {
         // Mark onboarding as just completed to prevent redirect loop
         sessionStorage.setItem('onboardingJustCompleted', 'true');
-        navigate('/');
+        navigate('/onboarding/avatar');
       }
     },
     onError: (error) => {

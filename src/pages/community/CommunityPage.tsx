@@ -19,12 +19,13 @@ import LeaderboardConnectAvatar from "../../assets/leaderboardConnectAvatar.svg"
 import findYourFriendsImg from '/findYourFriendsImg.svg';
 import noFriendsImg from '/noFriendsImg.svg';
 import rockyLogo from "/rocky.svg";
-import rockyWhiteLogo from '/rockyWhite.svg';
+// import rockyWhiteLogo from '/rockyWhite.svg';
 import communityPageLeaderShowImg from '/communityPageLeaderShowImg.svg';
 import communityPageLeaderNoShowImg from '/communityPageLeaderNoShowImg.svg';
 import { BACKEND_URL } from "../../lib/api";
 import type { Friend, FriendsResponse } from "../../types/friend";
 import friendsNoShowImg from '../../../public/FriendsNoShowImg.svg';
+import { AvatarDisplay } from "../../components/avatar";
 // Styles are imported via main.scss
 
 const CommunityPage: React.FC = () => {
@@ -93,13 +94,13 @@ const CommunityPage: React.FC = () => {
         </div>
         <div className="community-header-actions">
             <NotificationBell />
-            <button
+            {/* <button
               className="community-settings-icon"
               onClick={() => navigate("/profile")}
               aria-label="Profile"
             >
               <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-            </button>
+            </button> */}
           </div>
 
         <div className="community-tabs">
@@ -154,6 +155,7 @@ const CommunityPage: React.FC = () => {
                 </div>
               ) : (
                 <>
+                  
                   <div className="leaderboard-list">
                     {previewUsers.map((user, index) => {
                       const actualRank = index + 4;
@@ -169,7 +171,9 @@ const CommunityPage: React.FC = () => {
                       );
                     })}
                   </div>
-                  
+                  <p className="leaderboard-preview-view-more">
+                    Click to see full leaderboard
+                  </p>
                 </>
               )}
             </div>
@@ -217,11 +221,19 @@ const CommunityPage: React.FC = () => {
                           }`}
                         >
                           <div className="friends-item-content">
-                            <img
-                              src={rockyLogo}
-                              alt="Rocky"
-                              className="friends-item-logo"
-                            />
+                            {friend.avatar ? (
+                              <AvatarDisplay
+                                config={friend.avatar}
+                                size={48}
+                                className="friends-item-avatar"
+                              />
+                            ) : (
+                              <img
+                                src={rockyLogo}
+                                alt="Rocky"
+                                className="friends-item-logo"
+                              />
+                            )}
                             <div className="friends-item-text">
                               <span className="friends-item-name">
                                 {getUserDisplayName(friend)}

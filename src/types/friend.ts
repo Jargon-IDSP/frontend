@@ -1,3 +1,5 @@
+import type { AvatarConfig } from "./avatar";
+
 // Friendship status constants
 export const FriendshipStatus = {
   FOLLOWING: "FOLLOWING",
@@ -17,6 +19,7 @@ export interface Friend {
   language?: string | null;
   status?: FriendshipStatusType | string;
   isMutual?: boolean; // True if both users follow each other (friends)
+  avatar?: AvatarConfig | null;
 }
 
 export interface PendingRequest extends Friend {
@@ -38,6 +41,7 @@ export interface FriendProfile {
   industryId: number | null;
   defaultPrivacy?: string;
   createdAt?: string;
+  avatar?: AvatarConfig | null;
 }
 
 export interface FriendQuiz {

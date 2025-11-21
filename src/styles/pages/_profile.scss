@@ -3,6 +3,44 @@
 
 .profile-page {
   padding: 2rem 1rem 1rem 1rem;
+
+  .self-leaderboard {
+    margin-top: 0;
+    padding: 0;
+    display: flex;
+  
+
+    
+.self-leaderboard-medals {
+  gap: $spacing-sm;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.self-leaderboard-medal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: left;
+  padding: $spacing-md;
+  position: relative;
+
+  svg {
+    width: 48px;
+    height: 48px;
+    margin-bottom: $spacing-xs;
+  }
+}
+
+.self-leaderboard-medal-count {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: $color-quaternary-900;
+  margin-top: $spacing-sm;
+}
+}
 }
 
 .profile-header {
@@ -88,7 +126,6 @@
   justify-content: center;
   color: $color-neutral;
   transition: opacity $transition-normal;
-  background-color: $color-secondary;
   border-radius: 50%;
   width: 48px;
   height: 48px;
@@ -107,7 +144,7 @@
     height: 24px;
   }
 
-  .rocky-logo {
+  .settings-logo {
     width: 32px;
     height: 32px;
   }
@@ -167,7 +204,6 @@
     margin-top: $spacing-lg;
     display: flex;
     flex-direction: column;
-    gap: $spacing-xl;
   }
 
   // Documents Section
@@ -296,96 +332,338 @@
     margin: 0;
   }
 
-  // Profile Card
-  &-card {
+  // Profile Avatar Section (New Design)
+  &-avatar-section {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    gap: $spacing-md;
-    padding: $spacing-lg;
-    background: white;
-    border: 1px solid $color-quaternary;
-    border-radius: $border-radius-lg;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    position: relative;
+    gap: 0;
   }
 
-  &-card-avatar {
-    flex-shrink: 0;
-    width: 80px;
-    height: 80px;
-    border-radius: $border-radius-full;
-    background-color: $color-secondary;
+  &-avatar-large {
+    width: 200px;
+    height: 200px;
     display: flex;
     align-items: center;
     justify-content: center;
     overflow: hidden;
-
-    .profile-avatar-image {
-      width: 70%;
-      height: 70%;
-      object-fit: contain;
-    }
+    flex-shrink: 0;
+    margin-bottom: $spacing-sm;
   }
 
-  &-card-info {
-    flex: 1;
-    min-width: 0;
+  &-avatar-large-image {
+    width: 80%;
+    height: 80%;
+    object-fit: contain;
   }
 
-  &-card-name {
-    font-size: $font-size-h2;
+  &-avatar-name {
+    font-size: $font-size-h3;
     font-weight: $font-weight-bold;
     color: $color-quaternary-dark;
-    margin: 0 0 $spacing-xs 0;
-  }
-
-  &-card-industry {
-    font-size: $font-size-body;
-    color: $color-neutral;
     margin: 0;
+    text-align: center;
   }
 
-  &-card-edit {
-    flex-shrink: 0;
-    background: none;
-    border: none;
-    cursor: pointer;
-    padding: $spacing-sm;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: $border-radius-md;
-    transition: background-color $transition-fast;
+  &-avatar-industry {
+    font-size: $font-size-label;
+    color: white;
+    margin: 0;
+    text-align: center;
+    font-weight: $font-weight-medium;
+    background-color: $primary-500;
+    padding: $spacing-xs $spacing-md;
+    border-radius: 15px;
+  }
+}
 
-    &:hover {
-      background-color: $color-quaternary-light;
-    }
+// Monthly Activity Card
+.monthly-activity-card {
+  background-color: $secondary-500;
+  border-radius: $border-radius-lg;
+  padding: $spacing-lg;
+  padding-bottom: $spacing-sm;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: $spacing-md;
+  margin-top: $spacing-md;
+}
 
-    &:focus {
-      outline: 2px solid $color-quaternary-dark;
-      outline-offset: 2px;
-    }
+.monthly-activity-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-dark;
+}
 
-    img {
-      width: 30px;
-      height: 30px;
-    }
+.monthly-activity-bars {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: $spacing-md;
+  min-height: 200px;
+  padding: $spacing-md 0;
+}
+
+.monthly-activity-bar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: $spacing-sm;
+  flex: 1;
+  max-width: 60px;
+}
+
+.monthly-activity-bar-wrapper {
+  width: 100%;
+  height: 180px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  background-color: $secondary-50;
+  border-radius: $border-radius-xl;
+  position: relative;
+  overflow: hidden;
+}
+
+.monthly-activity-bar {
+  width: 100%;
+  min-height: 20px;
+  background-color: $primary-500;
+  border-radius: $border-radius-xl;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: height 0.3s ease;
+  position: relative;
+
+  &--current {
+    background-color: $primary-500;
+    box-shadow: 0 2px 8px rgba(8, 40, 192, 0.3);
   }
 
-  &-data {
-    background-color: $color-second-neutral;
-    border: 1px solid $color-neutral;
-    border-radius: $spacing-sm;
-    padding: $spacing-md;
-    margin-bottom: $spacing-lg;
-    
-    pre {
-      margin: 0;
-      font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
-      font-size: $font-size-label;
-      line-height: 1.4;
-      overflow: auto;
-    }
+  &--zero {
+    background-color: transparent;
+    min-height: auto;
+    height: auto;
+  }
+}
+
+.monthly-activity-bar-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  margin-bottom: $spacing-xs;
+}
+
+.monthly-activity-bar-value {
+  font-size: $font-size-label;
+  font-weight: $font-weight-regular;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1;
+
+  &--zero {
+    color: $primary-500;
+    text-shadow: none;
+  }
+}
+
+.monthly-activity-bar-days {
+  font-size: 10px;
+  font-weight: $font-weight-regular;
+  color: white;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+  line-height: 1;
+
+  &--zero {
+    color: $primary-500;
+    text-shadow: none;
+  }
+}
+
+.monthly-activity-bar-label {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.monthly-activity-month {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-regular;
+  color: $quaternary-700;
+}
+
+.monthly-activity-year {
+  font-size: 10px;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-500;
+}
+
+// Mini Stats Cards
+.profile-mini-cards {
+  display: grid;
+  grid-template-columns: 50% 50%;
+  max-width: 100%;
+  margin: 0;
+}
+
+.profile-mini-card {
+  background-color: $secondary-500;
+  border-radius: $border-radius-lg;
+  padding: $spacing-md $spacing-md;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+  width: 90%;
+  max-width: 190px;
+  gap: $spacing-xl;
+}
+
+.profile-mini-card-label {
+  font-size: $font-size-h3;
+  font-weight: $font-weight-bold;
+  color: white;
+  text-align: right;
+  max-width: 100%;
+  margin: 0;
+}
+
+.profile-mini-card-value {
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
+  color: white;
+  margin: 0;
+}
+
+// Sections Tabs
+.profile-sections {
+  width: 100%;
+  margin-top: $spacing-lg;
+}
+
+.profile-tabs {
+  display: inline-flex;
+  gap: $spacing-sm;
+}
+
+.profile-tab-button {
+  border: none;
+  border-radius: 23px;
+  background-color: $quaternary-200;
+  font-size: $font-size-label;
+  font-weight: $font-weight-medium;
+  color: white;
+  cursor: pointer;
+
+  &--active {
+    background-color: $quaternary-500;
+    color: white;
+  }
+}
+
+.profile-tab-panel {
+  border-radius: $border-radius-lg;
+  padding: $spacing-sm;
+}
+
+.profile-achievements {
+  display: flex;
+  flex-direction: column;
+  gap: $spacing-lg;
+}
+
+  // Profile Card - Commented out for possible future use
+  // &-card {
+  //   display: flex;
+  //   align-items: center;
+  //   gap: $spacing-md;
+  //   padding: $spacing-lg;
+  //   background: white;
+  //   border: 1px solid $color-quaternary;
+  //   border-radius: $border-radius-lg;
+  //   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  //   position: relative;
+  // }
+
+  // &-card-avatar {
+  //   flex-shrink: 0;
+  //   width: 80px;
+  //   height: 80px;
+  //   border-radius: $border-radius-full;
+  //   background-color: $color-secondary;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   overflow: hidden;
+
+  //   .profile-avatar-image {
+  //     width: 70%;
+  //     height: 70%;
+  //     object-fit: contain;
+  //   }
+  // }
+
+  // &-card-info {
+  //   flex: 1;
+  //   min-width: 0;
+  // }
+
+  // &-card-name {
+  //   font-size: $font-size-h2;
+  //   font-weight: $font-weight-bold;
+  //   color: $color-quaternary-dark;
+  //   margin: 0 0 $spacing-xs 0;
+  // }
+
+  // &-card-industry {
+  //   font-size: $font-size-body;
+  //   color: $color-neutral;
+  //   margin: 0;
+  // }
+
+  // &-card-edit {
+  //   flex-shrink: 0;
+  //   background: none;
+  //   border: none;
+  //   cursor: pointer;
+  //   padding: $spacing-sm;
+  //   display: flex;
+  //   align-items: center;
+  //   justify-content: center;
+  //   border-radius: $border-radius-md;
+  //   transition: background-color $transition-fast;
+
+  //   &:hover {
+  //     background-color: $color-quaternary-light;
+  //   }
+
+  //   &:focus {
+  //     outline: 2px solid $color-quaternary-dark;
+  //     outline-offset: 2px;
+  //   }
+
+  //   img {
+  //     width: 30px;
+  //     height: 30px;
+  //   }
+  // }
+
+.profile-data {
+  background-color: $color-second-neutral;
+  border: 1px solid $color-neutral;
+  border-radius: $spacing-sm;
+  padding: $spacing-md;
+  margin-bottom: $spacing-lg;
+  
+  pre {
+    margin: 0;
+    font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-size: $font-size-label;
+    line-height: 1.4;
+    overflow: auto;
   }
 }
 

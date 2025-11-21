@@ -12,8 +12,8 @@ import QRScannerModal from "../../components/QRScannerModal";
 import QRProfileDrawer from "../drawers/QRProfileDrawer";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
-import rockyWhiteLogo from "/rockyWhite.svg";
 import rockyLogo from "/rocky.svg";
+import { AvatarDisplay } from "../../components/avatar";
 import "../../styles/pages/_friends.scss";
 
 export default function FriendsPage() {
@@ -183,11 +183,19 @@ export default function FriendsPage() {
         }}
       >
         <div className="leaderboard-item-content leaderboard-item-content--regular">
-          <img
-            src={rockyLogo}
-            alt="Rocky"
-            className="leaderboard-item-logo leaderboard-item-logo--regular"
-          />
+          {user.avatar ? (
+            <AvatarDisplay
+              config={user.avatar}
+              size={48}
+              className="leaderboard-item-avatar"
+            />
+          ) : (
+            <img
+              src={rockyLogo}
+              alt="Rocky"
+              className="leaderboard-item-logo leaderboard-item-logo--regular"
+            />
+          )}
           <div className="leaderboard-item-text">
             <span className="leaderboard-item-name">
               {getUserDisplayName(user)}
@@ -231,7 +239,7 @@ export default function FriendsPage() {
                 with!
               </p>
             </div>
-            <div className="leaderboard-header-actions">
+            {/* <div className="leaderboard-header-actions">
               <button
                 className="view-friends-avatar-button"
                 onClick={() => navigate("/profile")}
@@ -243,7 +251,7 @@ export default function FriendsPage() {
                   className="view-friends-avatar"
                 />
               </button>
-            </div>
+            </div> */}
           </div>
 
           {/* Search Bar */}

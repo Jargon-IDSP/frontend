@@ -15,41 +15,13 @@
 
 .documents-list-title {
   font-size: $font-size-h3;
-  font-weight: $font-weight-bold;
+  font-weight: $font-weight-regular;
   margin: 0;
-  color: $color-quaternary-dark;
+  color: black;
 }
 
-.documents-list-edit-toggle {
-  p {
-    font-size: $font-size-label;
-    font-weight: $font-weight-regular;
-    color: $color-neutral;
-    text-decoration: underline;
-}
-  background: none;
-  border: none;
-  cursor: pointer;
-  padding: $spacing-xs;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: $border-radius-md;
-  transition: background-color $transition-fast;
-
-  &:hover {
-    background-color: $color-quaternary-light;
-  }
-
-  &:focus {
-    outline: 2px solid $color-quaternary-dark;
-    outline-offset: 2px;
-  }
-
-  img {
-    width: 20px;
-    height: 20px;
-  }
+.documents-month-section {
+  margin-bottom: $spacing-xl;
 }
 
 .documents-list-container {

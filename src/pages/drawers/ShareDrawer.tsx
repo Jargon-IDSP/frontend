@@ -10,6 +10,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
+import { useProfile } from "../../hooks/useProfile";
 import type { Friend } from "../../types/friend";
 import type { ShareDrawerProps } from "../../types/shareDrawer";
 import { getUserDisplayName } from "../../types/friend";
@@ -25,25 +26,12 @@ export default function ShareDrawer({
   const queryClient = useQueryClient();
   const [selectedFriends, setSelectedFriends] = useState<Set<string>>(new Set());
 
-  const { data: quizData } = useQuery({
-    queryKey: ["quizVisibility", quizId],
-    queryFn: async () => {
-      if (!quizId) return null;
-      const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/learning/custom/quiz/${quizId}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) return null;
-      const data = await res.json();
-      return data.data;
-    },
-    enabled: open && !!quizId,
-  });
-
-  const quizVisibility = quizData?.visibility || "PRIVATE";
-  const isPrivate = quizVisibility === "PRIVATE";
-  const isFriends = quizVisibility === "FRIENDS";
-  const isPublic = quizVisibility === "PUBLIC";
+  // Get user's default privacy setting
+  const { data: profile } = useProfile();
+  const defaultPrivacy = profile?.defaultPrivacy || "PRIVATE";
+  const isPrivate = defaultPrivacy === "PRIVATE";
+  const isFriends = defaultPrivacy === "FRIENDS";
+  const isPublic = defaultPrivacy === "PUBLIC";
   const isFriendsOrPublic = isFriends || isPublic;
 
   const { data: friends = [] } = useQuery({
@@ -186,7 +174,9 @@ export default function ShareDrawer({
           <DrawerDescription>
             {isPrivate
               ? "Select friends who can access this lesson"
-              : "To control who can access your lesson, please change the lesson's visibility settings"}
+              : isFriends
+              ? "All mutual friends can see all of your custom learnings. To limit visibility, adjust your privacy settings"
+              : "All users can see all of your custom learnings. To limit visibility, adjust your privacy settings"}
           </DrawerDescription>
         </DrawerHeader>
 

@@ -11,4 +11,16 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    watch: {
+      ignored: ['**/.history/**'],
+    },
+  },
+  css: {
+    preprocessorOptions: {
+      scss: {
+        // Exclude .history folder from SCSS compilation
+      },
+    },
+  },
 })

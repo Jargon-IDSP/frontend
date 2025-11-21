@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { BACKEND_URL } from "../lib/api";
+import type { AvatarConfig } from "../types/avatar";
 
 export interface User {
   id: string;
@@ -8,6 +9,7 @@ export interface User {
   lastName: string | null;
   score: number;
   language: string | null;
+  avatar?: AvatarConfig | null;
 }
 
 interface LeaderboardResponse {

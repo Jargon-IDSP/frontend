@@ -4,7 +4,7 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../mounting/HomePage";
 import ChatPage from "../mounting/ChatPage";
 import ProfilePage from "../pages/users/ProfilePage";
-import AvatarPage from "../pages/users/avatar/AvatarPage";
+import { AvatarEditPage, AvatarViewPage } from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import FriendProfilePage from "../pages/users/FriendProfilePage";
 import EditLessonPage from "../pages/users/EditLessonPage";
@@ -65,9 +65,13 @@ export const routes: RouteObject[] = [
     path: "/profile",
     element: protect(<ProfilePage />),
   },
+    {
+    path: "/avatar",
+    element: protect(<AvatarViewPage />),
+  },
   {
     path: "/avatar/edit",
-    element: protect(<AvatarPage />),
+    element: protect(<AvatarEditPage />),
   },
   {
     path: "/profile/friends",
