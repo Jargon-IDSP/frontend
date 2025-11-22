@@ -78,6 +78,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
           <AvatarSprite
             spriteId={config.eyewear}
             className="avatar-layer avatar-layer--eyewear"
+            dataAttributes={{ 'data-eyewear': config.eyewear }}
           />
         )}
 
@@ -85,6 +86,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
           <AvatarSprite
             spriteId={config.headwear}
             className="avatar-layer avatar-layer--headwear"
+            dataAttributes={{ 'data-headwear': config.headwear }}
           />
         )}
 
@@ -92,6 +94,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
           <AvatarSprite
             spriteId={config.clothing}
             className="avatar-layer avatar-layer--clothing"
+            dataAttributes={{ 'data-clothing': config.clothing }}
           />
         )}
       </div>

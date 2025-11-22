@@ -740,6 +740,7 @@ body {
 
 .avatar-edit-page, .avatar-view-page {
   padding: 1rem;
+  max-width: 480px;
 }
 .avatar-edit-page h1, .avatar-view-page h1 {
   font-size: 28px;
@@ -8928,11 +8929,11 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 }
 .avatar-customization {
   min-height: 100vh;
-  max-width: 430px;
-  margin: 0 auto;
-  padding: clamp(1rem, 4vw, 2rem) clamp(1rem, 4vw, 1.5rem) 3rem;
+  max-width: 350px;
+  width: 100%;
   background-color: #fffdf4;
   display: flex;
+  margin: auto;
   flex-direction: column;
   gap: 1rem;
 }
@@ -9020,14 +9021,18 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   border-radius: inherit;
 }
 .avatar-customization__preview {
-  background-color: #fff8dd;
   border: 2px solid rgb(244.6, 175.7126530612, 0);
   border-radius: 1.25rem;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+  padding: 1rem;
+  width: 100%;
+  max-width: 350px;
   height: 350px;
   overflow: hidden;
+  display: grid;
+  grid-template-columns: 100%;
+  grid-template-rows: 100%;
+  justify-items: center;
+  align-items: center;
 }
 .avatar-customization__canvas {
   width: 210px;
@@ -9047,172 +9052,27 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
      object-position: center bottom;
   width: 100%;
   height: 100%;
+  transition: all 0.3s ease-in-out;
 }
 .avatar-customization__canvas .avatar-layer--shoes {
-  transform: translateY(28%);
-  height: 60%;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: auto;
+  height: auto;
+  transition: all 0.3s ease-in-out;
 }
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -19%;
-  left: -8%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -19%;
-  left: -8%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -9%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -5%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -5%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -5%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.68);
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -7%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -6%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -19%;
-  left: -9%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -9%;
-  width: 80%;
-  transform: scale(0.75);
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -9%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -19%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.75);
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: -19%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.72);
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--shoes[data-shoes=shoe-02] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.75);
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--shoes[data-shoes=shoe-03] {
-  bottom: -20%;
-  left: -2%;
-  width: 80%;
-  transform: scale(0.72);
+.avatar-customization__canvas .avatar-layer--clothing {
+  position: absolute;
+  bottom: 0;
+  left: 105px;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  min-height: 63px;
+  max-height: 88px;
+  z-index: 1;
+  transition: all 0.3s ease-in-out;
 }
 .avatar-customization__canvas .avatar-layer--hair {
   bottom: auto;
@@ -9224,499 +9084,57 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   margin: 0;
   transform: translateX(-50%);
   z-index: 2;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-01] {
-  top: 12%;
-  left: 54%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-02] {
-  top: 10%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-03] {
-  top: 14%;
-  left: 60%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-04] {
-  top: -2%;
-  left: 56%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-05] {
-  top: 8%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-06] {
-  top: 5%;
-  left: 51%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-07] {
-  top: -8%;
-  left: 41%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-01] {
-  top: 9%;
-  left: 52%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-02] {
-  top: 2%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-03] {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-04] {
-  top: -5%;
-  left: 52%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-05] {
-  top: 0;
-  left: 45%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-06] {
-  top: -5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-02] .avatar-layer--hair[data-hair=hair-07] {
-  top: -10%;
-  left: 38%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-01] {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-02] {
-  top: -5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-03] {
-  top: 5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-04] {
-  top: -5%;
-  left: 52%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-05] {
-  top: -5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-06] {
-  top: -5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-03] .avatar-layer--hair[data-hair=hair-07] {
-  top: -10%;
-  left: 38%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-01] {
-  top: 4%;
-  left: 53%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-02] {
-  top: 0%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-03] {
-  top: 2%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-04] {
-  top: -5%;
-  left: 53%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-05] {
-  top: 6%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-06] {
-  top: -5%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-04] .avatar-layer--hair[data-hair=hair-07] {
-  top: -10%;
-  left: 38%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-01] {
-  top: -15%;
-  left: 50%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-02] {
-  top: -15%;
-  left: 52%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-03] {
-  top: -15%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-04] {
-  top: -25%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-05] {
-  top: -15%;
-  left: 53%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-06] {
-  top: -20%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-05] .avatar-layer--hair[data-hair=hair-07] {
-  top: -32%;
-  left: 35%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-01] {
-  top: 20%;
-  left: 57%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-02] {
-  top: 5%;
-  left: 58%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-03] {
-  top: 16%;
-  left: 58%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-04] {
-  top: 1%;
-  left: 58%;
-  transform: translateX(-50%);
-  min-height: 75%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-05] {
-  top: 8%;
-  left: 57%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-06] {
-  top: 5%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-06] .avatar-layer--hair[data-hair=hair-07] {
-  top: -2%;
-  left: 44%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-01] {
-  top: -25%;
-  left: 45%;
-  transform: translateX(-45%);
-  min-height: 80%;
-  max-height: 90%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-02] {
-  top: -30%;
-  left: 46%;
-  transform: translateX(-50%);
-  min-height: 60%;
-  max-height: 70%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-03] {
-  top: -30%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-04] {
-  top: -40%;
-  left: 45%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 90%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-05] {
-  top: -30%;
-  left: 45%;
-  transform: translateX(-50%);
-  min-height: 60%;
-  max-height: 70%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-06] {
-  top: -35%;
-  left: 45%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-07] .avatar-layer--hair[data-hair=hair-07] {
-  top: -40%;
-  left: 30%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 90%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-01] {
-  top: -12%;
-  left: 50%;
-  transform: translateX(-45%);
-  min-height: 80%;
-  max-height: 90%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-02] {
-  top: -25%;
-  left: 52%;
-  transform: translateX(-50%);
-  min-height: 55%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-03] {
-  top: -15%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-04] {
-  top: -20%;
-  left: 52%;
-  transform: translateX(-50%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-05] {
-  top: -15%;
-  left: 45%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-06] {
-  top: -18%;
-  left: 48%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-08] .avatar-layer--hair[data-hair=hair-07] {
-  top: -30%;
-  left: 37%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-01] {
-  top: 4%;
-  left: 59%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-02] {
-  top: -2%;
-  left: 53%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-03] {
-  top: 2%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-04] {
-  top: -6%;
-  left: 55;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-05] {
-  top: 6%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-06] {
-  top: -5%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-09] .avatar-layer--hair[data-hair=hair-07] {
-  top: -15%;
-  left: 40%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-01] {
-  top: 12%;
-  left: 54%;
-  transform: translateX(-45%);
-  min-height: 70%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-02] {
-  top: 10%;
-  left: 55%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-03] {
-  top: 14%;
-  left: 60%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-04] {
-  top: -2%;
-  left: 56%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-05] {
-  top: 8%;
-  left: 50%;
-  transform: translateX(-50%);
-  min-height: 50%;
-  max-height: 60%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-06] {
-  top: 5%;
-  left: 51%;
-  transform: translateX(-50%);
-  min-height: 40%;
-  max-height: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-01] .avatar-layer--hair[data-hair=hair-07] {
-  top: -8%;
-  left: 41%;
-  transform: translateX(-50%);
-  min-height: 80%;
-  max-height: 80%;
+  transition: all 0.3s ease-in-out;
 }
 .avatar-customization__canvas .avatar-layer--feature {
-  transform: translateY(-4%);
+  position: absolute;
+  bottom: auto;
+  top: 95px;
+  left: 105px;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  min-height: 38px;
+  max-height: 50px;
+  z-index: 2;
+  transition: all 0.3s ease-in-out;
+}
+.avatar-customization__canvas .avatar-layer--feature[data-facial=feature-01] {
+  top: 88px;
+  min-height: 63px;
+  max-height: 88px;
+}
+.avatar-customization__canvas .avatar-layer--eyewear {
+  position: absolute;
+  bottom: auto;
+  top: 80px;
+  left: 105px;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  min-height: 25px;
+  max-height: 38px;
+  z-index: 3;
+  transition: all 0.3s ease-in-out;
+}
+.avatar-customization__canvas .avatar-layer--eyewear[data-eyewear=welding-mask],
+.avatar-customization__canvas .avatar-layer--eyewear[data-eyewear=orange-mask] {
+  top: 50px;
+  min-height: 113px;
+  max-height: 138px;
+}
+.avatar-customization__canvas .avatar-layer--headwear {
+  position: absolute;
+  bottom: auto;
+  top: 0;
+  left: 105px;
+  transform: translateX(-50%);
+  width: auto;
+  height: auto;
+  min-height: 63px;
+  max-height: 88px;
+  z-index: 4;
+  transition: all 0.3s ease-in-out;
 }
 .avatar-customization__shape-container {
   position: absolute;
@@ -9739,6 +9157,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   max-height: 100%;
   -o-object-fit: contain;
      object-fit: contain;
+  transition: all 0.3s ease-in-out;
 }
 .avatar-customization__input-label {
   font-size: 0.95rem;
@@ -9857,4 +9276,964 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 .avatar-customization__next:hover {
   background-color: rgb(6.776, 33.88, 162.624);
   transform: translateY(-1px);
+}
+
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -3%;
+  width: 52%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -3%;
+  width: 52%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 2%;
+  left: -3%;
+  width: 52%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--shoes[data-shoes=shoe-01] {
+  left: 5%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3], .avatar-customization__canvas[data-shape=shape-01-h4] .avatar-layer--shoes[data-shoes=shoe-01] {
+  left: -2.1%;
+  width: 47%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--shoes[data-shoes=shoe-02] {
+  left: 5%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--shoes[data-shoes=shoe-03] {
+  left: -2%;
+  width: 54%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--shoes[data-shoes=shoe-03] {
+  left: 5%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-01] {
+  top: 25%;
+  left: 58%;
+  min-height: 50%;
+  max-height: 80%;
+  width: 110%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--hair[data-hair=hair-01] {
+  top: 20%;
+  left: 57%;
+  width: 110%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--hair[data-hair=hair-01] {
+  left: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--hair[data-hair=hair-01] {
+  left: 53%;
+  top: 27%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-02] {
+  top: 9%;
+  left: 55%;
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--hair[data-hair=hair-02] {
+  top: 1%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--hair[data-hair=hair-02] {
+  top: 1%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--hair[data-hair=hair-02] {
+  top: 8%;
+  left: 52%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h4] .avatar-layer--hair[data-hair=hair-02] {
+  top: 6%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-03] {
+  top: 9%;
+  left: 55%;
+  width: 50%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--hair[data-hair=hair-03] {
+  top: 0%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--hair[data-hair=hair-03] {
+  top: 0%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-04] {
+  top: 10%;
+  left: 54%;
+  width: 95%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--hair[data-hair=hair-04] {
+  top: 13%;
+  left: 52%;
+  width: 95%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-05] {
+  top: 8%;
+  left: 50%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--hair[data-hair=hair-05] {
+  top: 0%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--hair[data-hair=hair-05] {
+  top: 0%;
+  left: 52%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-06] {
+  top: 5%;
+  left: 51%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--hair[data-hair=hair-06] {
+  top: -2%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--hair[data-hair=hair-06] {
+  top: -2%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--hair[data-hair=hair-07] {
+  top: 3%;
+  left: 38%;
+  width: 95%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--hair[data-hair=hair-07] {
+  top: -2%;
+  left: 40%;
+  width: 95%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--hair[data-hair=hair-07] {
+  top: -2%;
+  left: 40%;
+  width: 95%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--hair[data-hair=hair-07] {
+  top: 6%;
+  left: 38%;
+  width: 95%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--headwear[data-headwear=cap] {
+  top: 18%;
+  left: 51%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--headwear[data-headwear=cap] {
+  top: 10%;
+  left: 51%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--headwear[data-headwear=cap] {
+  top: 12%;
+  left: 53%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--headwear[data-headwear=cap] {
+  top: 21%;
+  left: 51%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01][data-hair=hair-01] .avatar-layer--headwear[data-headwear=cap] {
+  top: 10%;
+  left: 54%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01][data-hair=hair-07] .avatar-layer--headwear[data-headwear=cap] {
+  top: 15%;
+  left: 54%;
+  width: 65%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=cap] {
+  top: 8%;
+  left: 54%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2][data-hair=hair-07] .avatar-layer--headwear[data-headwear=cap] {
+  top: 8%;
+  left: 54%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: 10%;
+  left: 51%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: 2%;
+  left: 51%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: 5%;
+  left: 52%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: 13%;
+  left: 50%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01][data-hair=hair-01] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: 4%;
+  left: 54%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01][data-hair=hair-07] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: 2%;
+  left: 54%;
+  width: 80%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: -5%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2][data-hair=hair-07] .avatar-layer--headwear[data-headwear=hard-hat] {
+  top: -5%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 10%;
+  left: 52%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 4%;
+  left: 54%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  left: 54%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 15%;
+  left: 52%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 5%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 0%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 6%;
+  left: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 8%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape^=shape-01][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 5%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 2%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 4%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 8%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 10%;
+  left: 52%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 4%;
+  left: 54%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  left: 54%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--headwear[data-headwear=round-hat-2] {
+  top: 15%;
+  left: 52%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 10%;
+  left: 50%;
+  width: 80%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 4%;
+  left: 50%;
+  width: 90%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 6%;
+  left: 54%;
+  width: 90%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 14%;
+  left: 52%;
+  width: 90%;
+}
+.avatar-customization__canvas[data-shape=shape-01][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 5%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 0%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 6%;
+  left: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 8%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h4][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 6%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 5%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 2%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 4%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 8%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h4][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
+  top: 6%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--eyewear[data-eyewear=glasses] {
+  top: 45%;
+  left: 61%;
+  width: 40%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--eyewear[data-eyewear=glasses] {
+  top: 41%;
+  left: 62%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--eyewear[data-eyewear=glasses] {
+  top: 43%;
+  left: 65%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--eyewear[data-eyewear=glasses] {
+  top: 48%;
+  left: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--eyewear[data-eyewear=welding-mask] {
+  top: 30%;
+  left: 56%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--eyewear[data-eyewear=welding-mask] {
+  width: 80%;
+  top: 25%;
+  left: 54%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--eyewear[data-eyewear=welding-mask] {
+  width: 75%;
+  top: 25%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--eyewear[data-eyewear=welding-mask] {
+  width: 75%;
+  top: 30%;
+  left: 50%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h4] .avatar-layer--eyewear[data-eyewear=welding-mask] {
+  width: 75%;
+  top: 30%;
+  left: 53%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--clothing[data-clothing=yellow-vest] {
+  top: 50%;
+  left: 56%;
+  width: 100%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -8%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -8%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 3%;
+  left: -10%;
+  width: 56%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-01] {
+  top: 9%;
+  left: 52%;
+  transform: translateX(-45%);
+  min-height: 70%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-02] {
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-03] {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-04] {
+  top: -5%;
+  left: 52%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-05] {
+  top: 0;
+  left: 45%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-06] {
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--hair[data-hair=hair-07] {
+  top: -10%;
+  left: 38%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -3%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -4%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 3%;
+  left: -5%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-01] {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-45%);
+  min-height: 70%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-02] {
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-03] {
+  top: 5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-04] {
+  top: -5%;
+  left: 52%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-05] {
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-06] {
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-03] .avatar-layer--hair[data-hair=hair-07] {
+  top: -10%;
+  left: 38%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -5%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -5%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 3%;
+  left: -6%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-01] {
+  top: 4%;
+  left: 53%;
+  transform: translateX(-45%);
+  min-height: 70%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-02] {
+  top: 0%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-03] {
+  top: 2%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-04] {
+  top: -5%;
+  left: 53%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-05] {
+  top: 6%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-06] {
+  top: -5%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-04] .avatar-layer--hair[data-hair=hair-07] {
+  top: -10%;
+  left: 38%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -6%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -6%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 2%;
+  left: -6%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-01] {
+  top: -15%;
+  left: 50%;
+  transform: translateX(-45%);
+  min-height: 70%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-02] {
+  top: -15%;
+  left: 52%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-03] {
+  top: -15%;
+  left: 55%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-04] {
+  top: -25%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-05] {
+  top: -15%;
+  left: 53%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-06] {
+  top: -20%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-05] .avatar-layer--hair[data-hair=hair-07] {
+  top: -32%;
+  left: 35%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -8%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -8%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 2%;
+  left: -6%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-01] {
+  top: 20%;
+  left: 57%;
+  transform: translateX(-45%);
+  min-height: 70%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-02] {
+  top: 5%;
+  left: 58%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-03] {
+  top: 16%;
+  left: 58%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-04] {
+  top: 1%;
+  left: 58%;
+  transform: translateX(-50%);
+  min-height: 75%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-05] {
+  top: 8%;
+  left: 57%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-06] {
+  top: 5%;
+  left: 55%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-06] .avatar-layer--hair[data-hair=hair-07] {
+  top: -2%;
+  left: 44%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -8%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -8%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 3%;
+  left: -9%;
+  width: 55%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-01] {
+  top: -25%;
+  left: 45%;
+  transform: translateX(-45%);
+  min-height: 80%;
+  max-height: 90%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-02] {
+  top: -30%;
+  left: 46%;
+  transform: translateX(-50%);
+  min-height: 60%;
+  max-height: 70%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-03] {
+  top: -30%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-04] {
+  top: -40%;
+  left: 45%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 90%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-05] {
+  top: -30%;
+  left: 45%;
+  transform: translateX(-50%);
+  min-height: 60%;
+  max-height: 70%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-06] {
+  top: -35%;
+  left: 45%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-07] .avatar-layer--hair[data-hair=hair-07] {
+  top: -40%;
+  left: 30%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 90%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -2%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 2%;
+  left: 0%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 2%;
+  left: 0%;
+  width: 53%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-01] {
+  top: -12%;
+  left: 50%;
+  transform: translateX(-45%);
+  min-height: 80%;
+  max-height: 90%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-02] {
+  top: -25%;
+  left: 52%;
+  transform: translateX(-50%);
+  min-height: 55%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-03] {
+  top: -15%;
+  left: 50%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-04] {
+  top: -20%;
+  left: 52%;
+  transform: translateX(-50%);
+  min-height: 70%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-05] {
+  top: -15%;
+  left: 45%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-06] {
+  top: -18%;
+  left: 48%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-08] .avatar-layer--hair[data-hair=hair-07] {
+  top: -30%;
+  left: 37%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--shoes[data-shoes=shoe-01] {
+  bottom: 3%;
+  left: -1%;
+  width: 50%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--shoes[data-shoes=shoe-02] {
+  bottom: 3%;
+  left: -1%;
+  width: 50%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--shoes[data-shoes=shoe-03] {
+  bottom: 2%;
+  left: -1%;
+  width: 50%;
+  min-height: 16%;
+  max-height: 20%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-01] {
+  top: 4%;
+  left: 59%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-02] {
+  top: -2%;
+  left: 53%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-03] {
+  top: 2%;
+  left: 55%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-04] {
+  top: -6%;
+  left: 55;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-05] {
+  top: 6%;
+  left: 55%;
+  transform: translateX(-50%);
+  min-height: 50%;
+  max-height: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-06] {
+  top: -5%;
+  left: 55%;
+  transform: translateX(-50%);
+  min-height: 40%;
+  max-height: 50%;
+}
+.avatar-customization__canvas[data-shape^=shape-09] .avatar-layer--hair[data-hair=hair-07] {
+  top: -15%;
+  left: 40%;
+  transform: translateX(-50%);
+  min-height: 80%;
+  max-height: 80%;
 }/*# sourceMappingURL=main.css.map */

@@ -64,9 +64,11 @@ export function getBodyViewBox(spriteId: string): string {
 
 export function toDataAttributeId(id: string, type: 'body' | 'hair' | 'facial' | 'shoes'): string {
   if (type === 'body') {
-    const match = id.match(/body-(\d+)/);
+    const match = id.match(/body-(\d+)(-h[1-4])?/);
     if (match) {
-      return `shape-${match[1].padStart(2, '0')}`;
+      const shapeNum = match[1].padStart(2, '0');
+      const subcategory = match[2] || '';
+      return `shape-${shapeNum}${subcategory}`;
     }
   } else if (type === 'hair') {
     const match = id.match(/hair-(\d+)/);

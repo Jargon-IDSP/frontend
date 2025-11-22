@@ -1,7 +1,8 @@
 import { useState, useEffect, useMemo } from 'react';
-import { Avatar, avatarOptions } from './Avatar';
+import { avatarOptions } from './Avatar';
+import { AvatarDisplay } from './AvatarDisplay';
 import { AvatarSprite } from './AvatarSprite';
-import { getBodyViewBox, toDataAttributeId } from './bodyViewBoxes';
+import { getBodyViewBox } from './bodyViewBoxes';
 import type { AvatarConfig, AvatarCustomizerProps, Tab, TabId } from '../../types/avatar';
 import { useAvatar } from '../../hooks/useAvatar';
 import { useUser } from '@clerk/clerk-react';
@@ -46,6 +47,12 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }));
   };
 
+  useEffect(() => {
+    if (config.headwear && config.hair && config.hair !== 'hair-1' && config.hair !== 'hair-7') {
+      updateConfig('hair', 'hair-1');
+    }
+  }, [config.headwear, config.hair]);
+
   const handleBodyChange = (body: string) => {
     setSelectedBody(body);
     setConfig(prev => ({
@@ -79,9 +86,13 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           ...expressions.map(id => ({ id, label: id.split('-').pop() || id }))
         ];
       case 'hair':
+        const hairOptions = config.headwear
+          ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
+          : avatarOptions.hair;
+
         return [
           { id: 'none', label: 'None' },
-          ...avatarOptions.hair.map(id => ({ id, label: id }))
+          ...hairOptions.map(id => ({ id, label: id }))
         ];
       case 'headwear':
         return [
@@ -109,7 +120,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       default:
         return [];
     }
-  }, [activeTab, selectedBody]);
+  }, [activeTab, selectedBody, config.headwear]);
 
   const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial') => {
     if (activeTab === 'body') {
@@ -210,21 +221,12 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     );
   };
 
-  const shapeDataId = toDataAttributeId(config.body || 'body-1', 'body');
-  const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
-
   return (
     <div className="avatar-customization">
       <LoadingBar isLoading={isLoading} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        <div
-          className="avatar-customization__canvas"
-          data-shape={shapeDataId}
-          data-hair={hairDataId}
-        >
-          {!isLoading && <Avatar config={config} renderMode="layered" />}
-        </div>
+        {!isLoading && <AvatarDisplay config={config} size={210} />}
       </div>
 
       <label className="avatar-customization__input-label" htmlFor="avatarName">
