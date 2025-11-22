@@ -29,7 +29,7 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
         : getAccessoryViewBox(spriteId));
 
     if (x !== undefined || y !== undefined) {
-      return <use href={href} x={x} y={y} />;
+      return <use href={href} xlinkHref={href} x={x} y={y} />;
     }
 
     const svgProps: React.SVGProps<SVGSVGElement> = {
@@ -53,7 +53,7 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
 
     return (
       <svg {...svgProps}>
-        <use href={href} />
+        <use href={href} xlinkHref={href} />
       </svg>
     );
   }
