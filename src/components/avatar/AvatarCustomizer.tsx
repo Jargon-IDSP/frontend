@@ -53,6 +53,21 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   }, [config.headwear, config.hair]);
 
+  // Remove beards when h1 expression is selected
+  useEffect(() => {
+    if (config.expression && config.expression.includes('-h1') && config.facial) {
+      updateConfig('facial', undefined);
+    }
+  }, [config.expression, config.facial]);
+
+  // Remove h1 expression when beard is selected
+  useEffect(() => {
+    if (config.facial && config.expression && config.expression.includes('-h1')) {
+      const baseBody = config.expression.split('-').slice(0, 2).join('-'); // e.g., "body-1-h1" -> "body-1"
+      updateConfig('expression', baseBody);
+    }
+  }, [config.facial]);
+
   const handleBodyChange = (body: string) => {
     setSelectedBody(body);
     setConfig(prev => ({
@@ -81,9 +96,12 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         return avatarOptions.bodies.map(id => ({ id, label: id }));
       case 'expression':
         const expressions = avatarOptions.expressions[selectedBody as keyof typeof avatarOptions.expressions] || [];
+        const filteredExpressions = config.facial
+          ? expressions.filter(id => !id.includes('-h1'))
+          : expressions;
         return [
           { id: selectedBody, label: 'Neutral' },
-          ...expressions.map(id => ({ id, label: id.split('-').pop() || id }))
+          ...filteredExpressions.map(id => ({ id, label: id.split('-').pop() || id }))
         ];
       case 'hair':
         const hairOptions = config.headwear
@@ -100,10 +118,13 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           ...avatarOptions.headwear.map(id => ({ id, label: id }))
         ];
       case 'features':
+        const facialOptions = (config.expression && config.expression.includes('-h1'))
+          ? avatarOptions.facial.filter(id => !id.startsWith('beard-'))
+          : avatarOptions.facial;
         return [
           { id: 'none', label: 'None' },
           ...avatarOptions.eyewear.map(id => ({ id, label: id, category: 'eyewear' as const })),
-          ...avatarOptions.facial.map(id => ({ id, label: id, category: 'facial' as const }))
+          ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const }))
         ];
       case 'clothing':
         return [
@@ -120,7 +141,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       default:
         return [];
     }
-  }, [activeTab, selectedBody, config.headwear]);
+  }, [activeTab, selectedBody, config.headwear, config.facial, config.expression]);
 
   const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial') => {
     if (activeTab === 'body') {

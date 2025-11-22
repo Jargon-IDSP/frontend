@@ -110,6 +110,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
     >
       <use
         href={`/avatar-sprites.svg#${bodyId}`}
+        xlinkHref={`/avatar-sprites.svg#${bodyId}`}
         x="30"
         y="60"
         style={{ fill: bodyColor }}

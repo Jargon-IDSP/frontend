@@ -9664,10 +9664,88 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: 30%;
   left: 53%;
 }
-.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--clothing[data-clothing=yellow-vest] {
-  top: 50%;
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--eyewear[data-eyewear=orange-mask] {
+  top: 30%;
   left: 56%;
-  width: 100%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--eyewear[data-eyewear=orange-mask] {
+  width: 80%;
+  top: 25%;
+  left: 58%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--eyewear[data-eyewear=orange-mask] {
+  width: 75%;
+  top: 30%;
+  left: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--eyewear[data-eyewear=orange-mask] {
+  width: 75%;
+  top: 35%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h4] .avatar-layer--eyewear[data-eyewear=orange-mask] {
+  width: 75%;
+  top: 34%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--feature[data-facial=feature-01] {
+  top: 55%;
+  left: 56%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape^=shape-01-h2] .avatar-layer--feature[data-facial=feature-01] {
+  top: 53%;
+  left: 60%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--facial[data-facial=feature-01] {
+  width: 80%;
+  top: 25%;
+  left: 58%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--facial[data-facial=feature-01] {
+  width: 75%;
+  top: 30%;
+  left: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--facial[data-facial=feature-01] {
+  width: 75%;
+  top: 35%;
+  left: 55%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h4] .avatar-layer--facial[data-facial=feature-01] {
+  width: 75%;
+  top: 34%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--feature[data-facial=feature-02] {
+  top: 70%;
+  left: 56%;
+  width: 60%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--feature[data-facial=feature-02] {
+  width: 75%;
+  top: 72%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--feature[data-facial=feature-03] {
+  top: 52%;
+  left: 58%;
+  width: 40%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--feature[data-facial=feature-03] {
+  left: 63%;
+  top: 50%;
+}
+.avatar-customization__canvas[data-shape=shape-01-h3] .avatar-layer--feature[data-facial=feature-03] {
+  left: 55%;
+  top: 52%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--clothing[data-clothing=yellow-vest] {
+  top: 45%;
+  left: 56%;
+  width: 80%;
 }
 
 .avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--shoes[data-shoes=shoe-01] {

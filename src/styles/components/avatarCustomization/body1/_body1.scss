@@ -499,15 +499,114 @@
     left: 53%;
   }
 
+      // orange mask
+  &[data-shape^="shape-01"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    top: 30%;
+    left: 56%;
+    width: 60%;
+  }
 
+  &[data-shape="shape-01-h1"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    width: 80%;
+    top: 25%;
+    left: 58%;
+  }
+
+   &[data-shape="shape-01-h2"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    width: 75%;
+    top: 30%;
+    left: 60%;
+  }
+
+   &[data-shape="shape-01-h3"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    width: 75%;
+    top: 35%;
+    left: 55%;
+  }
+
+   &[data-shape="shape-01-h4"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    width: 75%;
+    top: 34%;
+    left: 57%;
+  }
+
+  // beard
+  &[data-shape^="shape-01"] .avatar-layer--feature[data-facial="feature-01"] {
+    top: 55%;
+    left: 56%;
+    width: 60%;
+  }
+
+   &[data-shape^="shape-01-h2"] .avatar-layer--feature[data-facial="feature-01"] {
+    top: 53%;
+    left: 60%;
+    width: 60%;
+  }
+
+
+  &[data-shape="shape-01-h1"] .avatar-layer--facial[data-facial="feature-01"] {
+    width: 80%;
+    top: 25%;
+    left: 58%;
+  }
+
+   &[data-shape="shape-01-h2"] .avatar-layer--facial[data-facial="feature-01"]  {
+    width: 75%;
+    top: 30%;
+    left: 60%;
+  }
+
+   &[data-shape="shape-01-h3"] .avatar-layer--facial[data-facial="feature-01"]  {
+    width: 75%;
+    top: 35%;
+    left: 55%;
+  }
+
+   &[data-shape="shape-01-h4"] .avatar-layer--facial[data-facial="feature-01"]  {
+    width: 75%;
+    top: 34%;
+    left: 57%;
+  }
+
+    // goatee
+  &[data-shape^="shape-01"] .avatar-layer--feature[data-facial="feature-02"] {
+    top: 70%;
+    left: 56%;
+    width: 60%;
+  }
+
+
+   &[data-shape="shape-01-h3"] .avatar-layer--feature[data-facial="feature-02"] {
+    width: 75%;
+    top: 72%;
+    left: 57%;
+  }
+
+  // mustache
+    &[data-shape^="shape-01"] .avatar-layer--feature[data-facial="feature-03"] {
+    top: 52%;
+    left: 58%;
+    width: 40%;
+  }
+
+
+   &[data-shape="shape-01-h2"] .avatar-layer--feature[data-facial="feature-03"] {
+    left: 63%;
+    top: 50%;
+  }
+
+  &[data-shape="shape-01-h3"] .avatar-layer--feature[data-facial="feature-03"] {
+    left: 55%;
+    top: 52%;
+  }
 
 
 
 
   // vests
   &[data-shape^="shape-01"] .avatar-layer--clothing[data-clothing="yellow-vest"] {
-    top: 50%;
+    top: 45%;
     left: 56%;
-    width: 100%;
+    width: 80%;
   }
 }
