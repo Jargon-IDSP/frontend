@@ -25,10 +25,13 @@ export const ACCESSORY_VIEWBOXES: Record<string, string> = {
   'hard-hat': '0 0 130.06 95.6',
   'round-hat': '0 0 176.62 109.47',
   'round-hat-2': '0 0 167.36 116.66',
+  'round-hat-3': '0 0 162.49 72.08',
 
   // Eyewear
   'glasses': '0 0 94.58 32.5',
+  'goggles': '0 0 137.72 47.76',
   'orange-mask': '0 0 150.86 170.43',
+  'orange-mask-2': '0 0 155.09 209.54',
   'welding-mask': '0 0 162.38 172.07',
 
   // Facial hair
