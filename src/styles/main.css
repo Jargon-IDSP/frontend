@@ -9180,7 +9180,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 }
 .avatar-customization__tabs {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 0.5rem;
   margin-top: 0.75rem;
 }
@@ -9239,6 +9239,9 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   height: 60px;
 }
 .avatar-customization .avatar-option__preview--eyewear, .avatar-customization .avatar-option__preview--facial {
+  height: 50px;
+}
+.avatar-customization .avatar-option__preview--accessories {
   height: 50px;
 }
 .avatar-customization .avatar-option__preview--clothing {

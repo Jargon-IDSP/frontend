@@ -15,6 +15,7 @@ const tabs: Tab[] = [
   { id: 'hair', label: 'Hair' },
   { id: 'headwear', label: 'Headwear' },
   { id: 'features', label: 'Features' },
+  { id: 'accessories', label: 'Accessories' },
   { id: 'clothing', label: 'Clothing' },
   { id: 'shoes', label: 'Shoes' },
   { id: 'color', label: 'Color' },
@@ -126,6 +127,11 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           ...avatarOptions.eyewear.map(id => ({ id, label: id, category: 'eyewear' as const })),
           ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const }))
         ];
+      case 'accessories':
+        return [
+          { id: 'none', label: 'None' },
+          ...avatarOptions.accessories.map(id => ({ id, label: id }))
+        ];
       case 'clothing':
         return [
           { id: 'none', label: 'None' },
@@ -222,6 +228,10 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         } else if (category === 'facial') {
           className = "avatar-option__preview avatar-option__preview--facial";
         }
+        break;
+
+      case 'accessories':
+        className = "avatar-option__preview avatar-option__preview--accessories";
         break;
 
       case 'clothing':

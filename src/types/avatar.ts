@@ -1,15 +1,15 @@
 export interface AvatarConfig {
-  body?: string;           
-  expression?: string;  
-  hair?: string;           
-  headwear?: string;     
-  eyewear?: string;     
-  facial?: string;       
-  clothing?: string;       
-  shoes?: string;          
-  accessories?: string[];  
-  bodyColor?: string;     
-  unlockedItems?: string[]; 
+  body?: string;
+  expression?: string;
+  hair?: string;
+  headwear?: string;
+  eyewear?: string;
+  facial?: string;
+  clothing?: string;
+  shoes?: string;
+  accessories?: string;
+  bodyColor?: string;
+  unlockedItems?: string[];
 }
 
 export interface AvatarSpriteProps {
@@ -77,7 +77,7 @@ export interface AvatarOptionItem {
   category: keyof Omit<AvatarOptions, 'expressions' | 'bodyColors'>;
 }
 
-export type TabId = 'body' | 'expression' | 'hair' | 'headwear' | 'features' | 'clothing' | 'shoes' | 'color';
+export type TabId = 'body' | 'expression' | 'hair' | 'headwear' | 'features' | 'accessories' | 'clothing' | 'shoes' | 'color';
 
 export interface Tab {
   id: TabId;

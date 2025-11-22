@@ -32,8 +32,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
       fetchSymbolContent(bodyId).then(content => {
         if (content) {
           const coloredContent = content
-            .replace(/class="cls-21"/g, `class="cls-21" fill="${bodyColor}"`)
-            .replace(/class="cls-5"/g, `class="cls-5" fill="${bodyColor}"`);
+            .replace(/class="st49"/g, `class="st49" style="fill: ${bodyColor} !important"`);
           setBodyContent(coloredContent);
         }
       });
@@ -140,14 +139,9 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
         <AvatarSprite spriteId={config.headwear} x={70} y={5} />
       )}
 
-      {config.accessories?.map((accessory, index) => (
-        <AvatarSprite
-          key={index}
-          spriteId={accessory}
-          x={90}
-          y={90}
-        />
-      ))}
+      {config.accessories && (
+        <AvatarSprite spriteId={config.accessories} x={90} y={90} />
+      )}
     </svg>
   );
 }
@@ -187,8 +181,8 @@ export const avatarOptions = {
     'body-9': ['body-9-h1', 'body-9-h2', 'body-9-h3', 'body-9-h4']
   },
   hair: ['hair-1', 'hair-2', 'hair-3', 'hair-4', 'hair-5', 'hair-6', 'hair-7'],
-  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2'],
-  eyewear: ['glasses', 'welding-mask', 'orange-mask'],
+  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2', 'round-hat-3'],
+  eyewear: ['glasses', 'welding-mask', 'orange-mask', 'goggles', 'orange-mask-2'],
   facial: ['beard-1', 'beard-2', 'beard-3'],
   clothing: ['yellow-vest', 'orange-vest'],
   shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
