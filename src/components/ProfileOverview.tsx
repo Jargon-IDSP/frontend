@@ -5,6 +5,7 @@ import type { ProfileOverviewProps } from "../types/profile";
 
 export default function ProfileOverview({
   badgeCount,
+  medalCount,
   joinedDate,
 }: ProfileOverviewProps) {
   return (
@@ -36,7 +37,7 @@ export default function ProfileOverview({
             className="friend-profile-overview-icon"
           />
           <p className="friend-profile-overview-label">Medals:</p>
-          <p className="friend-profile-overview-value">0</p>
+          <p className="friend-profile-overview-value">{medalCount}</p>
         </div>
       </div>
     </div>

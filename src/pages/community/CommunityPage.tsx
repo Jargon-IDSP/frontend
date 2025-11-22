@@ -237,10 +237,10 @@ const CommunityPage: React.FC = () => {
                             <div className="friends-item-text">
                               <span className="friends-item-name">
                                 {getUserDisplayName(friend)}
-                                {isCurrentUser && (
-                                  <span className="friends-item-you">(You)</span>
-                                )}
                               </span>
+                              {isCurrentUser && (
+                                <span className="friends-item-you">(You)</span>
+                              )}
                             </div>
                           </div>
                           <div className="friends-item-details">

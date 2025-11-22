@@ -42,6 +42,10 @@ export interface FriendProfile {
   defaultPrivacy?: string;
   createdAt?: string;
   avatar?: AvatarConfig | null;
+  linkedinUrl?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  indeedUrl?: string;
 }
 
 export interface FriendQuiz {

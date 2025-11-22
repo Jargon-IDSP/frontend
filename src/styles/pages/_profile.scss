@@ -51,6 +51,46 @@
   position: relative;
 }
 
+.profile-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.profile-go-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: $spacing-xs;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
 .profile-header-title {
   font-size: $font-size-h1;
   font-weight: $font-weight-bold;
@@ -440,11 +480,6 @@
     box-shadow: 0 2px 8px rgba(8, 40, 192, 0.3);
   }
 
-  &--zero {
-    background-color: transparent;
-    min-height: auto;
-    height: auto;
-  }
 }
 
 .monthly-activity-bar-content {
@@ -462,11 +497,6 @@
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   line-height: 1;
-
-  &--zero {
-    color: $primary-500;
-    text-shadow: none;
-  }
 }
 
 .monthly-activity-bar-days {
@@ -475,11 +505,6 @@
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   line-height: 1;
-
-  &--zero {
-    color: $primary-500;
-    text-shadow: none;
-  }
 }
 
 .monthly-activity-bar-label {
@@ -890,3 +915,18 @@
     }
   }
 }
+
+.profile-help {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  button {
+    background-color: $color-second-neutral-light;
+  }
+    .callR {
+      font-weight: $font-weight-medium;
+      text-decoration: underline;
+    }
+  }

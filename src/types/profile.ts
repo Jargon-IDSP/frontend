@@ -12,6 +12,10 @@ export interface ProfileData {
   introductionViewed?: boolean;
   onboardingCompleted?: boolean;
   avatar?: AvatarConfig | null;
+  linkedinUrl?: string;
+  facebookUrl?: string;
+  instagramUrl?: string;
+  indeedUrl?: string;
   [key: string]: any;
 }
 
@@ -23,12 +27,6 @@ export interface BadgeIcon {
 
 export interface ProfileHeaderProps {
   from?: string;
-  isOwnProfile: boolean;
-  isFriend: boolean;
-  isFollowing: boolean;
-  onFriendshipAction: () => void;
-  isSendRequestPending: boolean;
-  isRemoveFriendPending: boolean;
 }
 
 export interface ProfileCardProps {
@@ -38,11 +36,25 @@ export interface ProfileCardProps {
   followingCount: number;
   lessonCount: number;
   avatar?: AvatarConfig | null;
+  isOwnProfile: boolean;
+  isFriend: boolean;
+  isFollowing: boolean;
+  onFriendshipAction: () => void;
+  isSendRequestPending: boolean;
+  isRemoveFriendPending: boolean;
 }
 
 export interface ProfileOverviewProps {
   badgeCount: number;
+  medalCount: number;
   joinedDate: string;
+}
+
+export interface ConnectWithMeProps {
+  LinkedInUrl?: string;
+  FacebookUrl?: string;
+  InstagramUrl?: string;
+  IndeedUrl?: string;
 }
 
 export interface BlockedUserViewProps {

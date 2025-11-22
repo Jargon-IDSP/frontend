@@ -273,6 +273,13 @@
   }
 }
 
+.edit-lesson-privacy-note {
+  font-size: $font-size-label;
+  color: $color-neutral;
+  margin: $spacing-sm $spacing-md;
+  font-style: italic;
+}
+
 .edit-lesson-shared-list {
   display: flex;
   flex-direction: column;
@@ -343,6 +350,14 @@
   font-weight: $font-weight-bold;
   color: $color-quaternary-800;
   text-align: left;
+}
+
+.edit-lesson-shared-empty {
+  text-align: center;
+  padding: $spacing-md;
+  color: $color-neutral;
+  font-size: $font-size-body;
+  font-style: italic;
 }
 
 .edit-lesson-input-group {

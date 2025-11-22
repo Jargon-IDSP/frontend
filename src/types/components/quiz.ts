@@ -36,7 +36,7 @@ export interface ChatMessage {
 export interface ChatModalProps {
   isOpen: boolean;
   onClose: () => void;
-  currentQuestion: string;
+  currentQuestion?: string;
   chatHistory: ChatMessage[];
   chatPrompt: string;
   onChatPromptChange: (value: string) => void;

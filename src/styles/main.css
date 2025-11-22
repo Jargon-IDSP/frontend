@@ -809,6 +809,42 @@ body {
   position: relative;
 }
 
+.profile-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+}
+.profile-back-button:hover {
+  opacity: 0.7;
+}
+.profile-back-button img {
+  width: 24px;
+  height: 24px;
+}
+
+.profile-go-back-button {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0.25rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 0.15s ease;
+}
+.profile-go-back-button:hover {
+  opacity: 0.7;
+}
+.profile-go-back-button img {
+  width: 24px;
+  height: 24px;
+}
+
 .profile-header-title {
   font-size: 28px;
   font-weight: 700;
@@ -1157,11 +1193,6 @@ body {
   background-color: #fe4d13;
   box-shadow: 0 2px 8px rgba(8, 40, 192, 0.3);
 }
-.monthly-activity-bar--zero {
-  background-color: transparent;
-  min-height: auto;
-  height: auto;
-}
 
 .monthly-activity-bar-content {
   display: flex;
@@ -1179,10 +1210,6 @@ body {
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   line-height: 1;
 }
-.monthly-activity-bar-value--zero {
-  color: #fe4d13;
-  text-shadow: none;
-}
 
 .monthly-activity-bar-days {
   font-size: 10px;
@@ -1190,10 +1217,6 @@ body {
   color: white;
   text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
   line-height: 1;
-}
-.monthly-activity-bar-days--zero {
-  color: #fe4d13;
-  text-shadow: none;
 }
 
 .monthly-activity-bar-label {
@@ -1509,6 +1532,21 @@ body {
 .profile-account-modal-wrapper > div :global(.cl-rootBox) {
   width: 100%;
   height: auto;
+}
+
+.profile-help {
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+.profile-help button {
+  background-color: #fffdf4;
+}
+.profile-help .callR {
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 .uploadPage {
@@ -3168,9 +3206,12 @@ button.back-button {
 }
 
 .leaderboard-empty-avatar {
-  width: 100%;
   max-width: 300px;
+  max-height: 250px;
+  width: 100%;
   height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
   margin-bottom: 2.5rem;
 }
 
@@ -3430,6 +3471,8 @@ button.back-button {
 }
 .leaderboard-item--current-user {
   border: 2px solid #fe4d13;
+  margin-left: -2px;
+  margin-right: -2px;
 }
 
 .leaderboard-item-you {
@@ -3442,7 +3485,6 @@ button.back-button {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex: 1;
 }
 .leaderboard-item-content--regular {
   color: #393939;
@@ -3459,6 +3501,7 @@ button.back-button {
   font-size: 16px;
   font-weight: 600;
   color: #6f2e17;
+  margin-right: 0.3rem;
 }
 
 .leaderboard-item-rank {
@@ -3504,7 +3547,6 @@ button.back-button {
   font-weight: 700;
   color: #652a15;
   font-size: 13px;
-  padding: 0.2rem 0.5rem;
 }
 
 .community-page {
@@ -3578,7 +3620,7 @@ button.back-button {
   padding: 0.75rem 1.5rem;
   font-size: 16px;
   font-weight: 600;
-  color: #8C2A0A;
+  color: #FFC8B6;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -3630,9 +3672,12 @@ button.back-button {
   min-height: 300px;
 }
 .community-page .leaderboard-preview-empty-avatar {
-  width: 100%;
   max-width: 300px;
+  max-height: 250px;
+  width: 100%;
   height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
   margin-bottom: 2.5rem;
 }
 .community-page .leaderboard-preview-empty-message {
@@ -3701,9 +3746,12 @@ button.back-button {
   min-height: 300px;
 }
 .community-page .friends-preview-empty-image {
-  width: 100%;
   max-width: 300px;
+  max-height: 250px;
+  width: 100%;
   height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
   margin-bottom: 2.5rem;
 }
 .community-page .friends-preview-header-image {
@@ -3764,7 +3812,6 @@ button.back-button {
   display: flex;
   align-items: center;
   gap: 1rem;
-  flex: 1;
 }
 .community-page .friends-item-logo {
   width: 40px;
@@ -3781,11 +3828,12 @@ button.back-button {
   font-size: 16px;
   font-weight: 600;
   color: #6f2e17;
+  margin-right: 0.3rem;
 }
 .community-page .friends-item-you {
   color: #fe4d13;
   font-weight: 700;
-  margin-left: 0.25rem;
+  font-size: 0.9rem;
 }
 .community-page .friends-item-details {
   display: flex;
@@ -3855,7 +3903,7 @@ button.back-button {
   background: rgba(230, 234, 249, 0.58);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2.5rem;
 }
 
 .view-friends-tab {
@@ -3937,8 +3985,8 @@ button.back-button {
   background: #E7E6DF;
   border: 1px solid black;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
 }
 .view-friends-avatar-button:hover {
   opacity: 0.7;
@@ -3947,6 +3995,7 @@ button.back-button {
 .view-friends-avatar {
   width: 60px;
   height: 60px;
+  transform: scaleX(-1);
 }
 
 .view-friends-add-button-container {
@@ -4254,7 +4303,7 @@ button.back-button {
 
 .friends-remove-button {
   padding: 0.5rem 1rem;
-  background-color: white;
+  background-color: #0724af;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -4264,12 +4313,12 @@ button.back-button {
 }
 
 .friends-unfollow-button {
-  height: 2.5rem;
-  padding: 0 1.5rem;
-  background-color: #c40000;
+  height: 2rem;
+  padding: 0;
+  background-color: #0724af;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 25%;
   cursor: pointer;
   font-weight: 600;
   flex-shrink: 0;
@@ -4699,6 +4748,13 @@ button.back-button {
   transform: rotate(180deg);
 }
 
+.edit-lesson-privacy-note {
+  font-size: 13px;
+  color: #393939;
+  margin: 0.5rem 1rem;
+  font-style: italic;
+}
+
 .edit-lesson-shared-list {
   display: flex;
   flex-direction: column;
@@ -4838,12 +4894,11 @@ button.back-button {
 
 .container--friend-profile {
   padding: 0;
-  padding-bottom: calc(70px + 1rem);
 }
 
 .friend-profile-page {
   padding: 1.5rem;
-  max-width: 1200px;
+  max-width: 480px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -4919,36 +4974,23 @@ button.back-button {
 }
 
 .friend-profile-friendship-button {
+  position: absolute;
+  background-color: #0828c0;
+  color: white;
+  padding: 0.3rem;
+  top: 5%;
+  right: 5%;
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
+  width: 100px;
+  height: 30px;
+  font-size: 13px;
+  font-weight: 300;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 .friend-profile-friendship-button:disabled {
   opacity: 0.6;
   cursor: not-allowed;
-}
-.friend-profile-friendship-button--add {
-  background-color: #652a15;
-  color: white;
-  padding-right: 2.5rem;
-  padding-left: 2.5rem;
-  padding-top: 0.5rem;
-  padding-bottom: 0.5rem;
-}
-.friend-profile-friendship-button--add:hover:not(:disabled) {
-  background-color: rgb(58.7786885246, 24.4426229508, 12.2213114754);
-  transform: translateY(-1px);
-}
-.friend-profile-friendship-button--remove {
-  background-color: #c40000;
-  color: white;
-}
-.friend-profile-friendship-button--remove:hover:not(:disabled) {
-  background-color: #910000;
-  transform: translateY(-1px);
 }
 
 .friend-profile-loading,
@@ -4984,17 +5026,19 @@ button.back-button {
 }
 
 .friend-profile-card {
+  position: relative;
   background: #ffc83b;
   border-radius: 12px;
   padding: 1.5rem;
   text-align: center;
+  padding-top: 4rem;
   margin-bottom: 1.5rem;
   position: relative;
 }
 
 .friend-profile-avatar {
-  width: 100px;
-  height: 100px;
+  width: 250px;
+  height: 250px;
   margin: 0 auto 1rem;
   background-color: #FFFEFC;
   border: 1px solid #652a15;
@@ -5074,9 +5118,24 @@ button.back-button {
   gap: 1rem;
 }
 
+.friend-profile-follow-lessons {
+  text-align: center;
+  padding: 2.5rem;
+  font-size: 16px;
+  font-weight: 700;
+  background: #fe8861;
+  border: 1px solid #6f2e17;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 5px 5px 0 #3d190d;
+  align-items: center;
+  gap: 1rem;
+}
+
 .friend-profile-lessons-message {
   font-size: 16px;
-  color: #393939;
+  color: #FFFFFF;
   margin: 0;
   line-height: 1.5;
 }
@@ -5088,13 +5147,26 @@ button.back-button {
 }
 
 .friend-profile-lesson-list-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
   padding: 1rem;
   background: white;
   border: 1px solid #6f2e17;
   border-radius: 8px;
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
+  max-width: 100%;
+}
+.friend-profile-lesson-list-item--locked {
+  background: #fe8861;
+  color: #FFFFFF;
+  border-color: #fe8861;
+}
+.friend-profile-lesson-list-item--locked .friend-profile-lesson-list-name {
+  color: #FFFFFF;
+}
+.friend-profile-lesson-list-item--incoming-request {
+  background: #fbf0e6;
+  border-color: #e59854;
 }
 
 .friend-profile-lesson-wrench-icon {
@@ -5108,6 +5180,7 @@ button.back-button {
   font-weight: 700;
   color: #652a15;
   flex: 1;
+  text-align: left;
 }
 
 .friend-profile-lesson-edit-icon {
@@ -5285,6 +5358,39 @@ button.back-button {
   transform: scale(1.05);
 }
 
+.connect-with-me-grid {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.connect-with-me-icon {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+  padding: 0.5rem;
+}
+.connect-with-me-icon:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+  border-color: #652a15;
+}
+.connect-with-me-icon:active {
+  transform: translateY(-1px);
+}
+.connect-with-me-icon img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+
 .friend-profile-actions {
   display: flex;
   justify-content: space-around;
@@ -5306,7 +5412,7 @@ button.back-button {
 }
 
 .friend-profile-pending-requests-banner {
-  background-color: #fff3cd;
+  background-color: #fe8861;
   border: 1px solid #ffc107;
   border-radius: 8px;
   padding: 1rem;
@@ -5314,7 +5420,7 @@ button.back-button {
 }
 
 .friend-profile-pending-requests-title {
-  color: #856404;
+  color: #FFFFFF;
   margin-bottom: 0.5rem;
   font-size: 20px;
   font-weight: 700;
@@ -5322,13 +5428,14 @@ button.back-button {
 
 .friend-profile-pending-requests-message {
   margin-bottom: 0.5rem;
-  color: #856404;
+  color: #FFFFFF;
   font-size: 16px;
 }
 
 .friend-profile-pending-requests-list {
   display: flex;
   flex-direction: column;
+  border-radius: 10px;
   gap: 0.5rem;
 }
 
@@ -5351,33 +5458,6 @@ button.back-button {
   gap: 0.25rem;
 }
 
-.friend-profile-request-button {
-  padding: 6px 16px;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.15s ease;
-}
-.friend-profile-request-button:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
-.friend-profile-request-button--approve {
-  background-color: #28a745;
-  color: white;
-}
-.friend-profile-request-button--approve:hover:not(:disabled) {
-  background-color: rgb(30.1449275362, 125.8550724638, 52);
-}
-.friend-profile-request-button--deny {
-  background-color: #dc3545;
-  color: white;
-}
-.friend-profile-request-button--deny:hover:not(:disabled) {
-  background-color: rgb(189.2151898734, 32.7848101266, 47.7721518987);
-}
-
 .friend-profile-lesson-request-pending {
   color: #856404;
   font-size: 12px;
@@ -5393,8 +5473,8 @@ button.back-button {
   align-items: center;
   gap: 0.25rem;
   padding: 0.25rem 1rem;
-  background-color: #6f2e17;
-  color: white;
+  background-color: #fe8861;
+  color: #3d190d;
   border: none;
   border-radius: 8px;
   cursor: pointer;
@@ -5402,7 +5482,13 @@ button.back-button {
   font-weight: 600;
   transition: all 0.15s ease;
   flex-shrink: 0;
-  margin-left: auto;
+}
+.friend-profile-lesson-request-button:hover:not(:disabled) {
+  text-decoration: underline;
+}
+.friend-profile-lesson-request-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .friend-profile-lesson-request-button-icon {
@@ -5413,6 +5499,43 @@ button.back-button {
 
 .friend-profile-lesson-request-button-text {
   white-space: nowrap;
+  color: #3d190d;
+  font-weight: 700;
+}
+
+.friend-profile-lesson-action-buttons {
+  display: flex;
+  gap: 0.5rem;
+  flex-shrink: 0;
+}
+
+.friend-profile-lesson-action-button {
+  padding: 0.25rem 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+.friend-profile-lesson-action-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+.friend-profile-lesson-action-button--approve {
+  background-color: #28a745;
+  color: white;
+}
+.friend-profile-lesson-action-button--approve:hover:not(:disabled) {
+  background-color: #003d04;
+}
+.friend-profile-lesson-action-button--deny {
+  background-color: #dc3545;
+  color: white;
+}
+.friend-profile-lesson-action-button--deny:hover:not(:disabled) {
+  background-color: #8b0000;
 }
 
 .learningOverview {
@@ -5484,7 +5607,6 @@ button.back-button {
   display: grid;
   grid-template-columns: auto 1fr auto;
   align-items: center;
-  gap: 1rem;
   padding: 1rem 1.5rem;
   margin-bottom: 1rem;
 }
