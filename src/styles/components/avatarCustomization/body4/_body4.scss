@@ -1,0 +1,86 @@
+// All positioning rules for shape-04 avatar body type
+
+.avatar-customization__canvas {
+
+  // Shape-04 + Shoe combinations
+  &[data-shape^="shape-04"] .avatar-layer--shoes[data-shoes="shoe-01"] {
+    bottom: 3%;
+    left: -5%;
+    width: 53%;
+    min-height: 16%;
+    max-height: 20%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--shoes[data-shoes="shoe-02"] {
+    bottom: 3%;
+    left: -5%;
+    width: 53%;
+    min-height: 16%;
+    max-height: 20%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--shoes[data-shoes="shoe-03"] {
+    bottom: 3%;
+    left: -6%;
+    width: 53%;
+    min-height: 16%;
+    max-height: 20%;
+  }
+
+  // Shape-04 + Hair combinations
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-01"] {
+    top: 4%;
+    left: 53%;
+    transform: translateX(-45%);
+    min-height: 70%;
+    max-height: 80%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-02"] {
+    top: 0%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 40%;
+    max-height: 60%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-03"] {
+    top: 2%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 40%;
+    max-height: 60%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-04"] {
+    top: -5%;
+    left: 53%;
+    transform: translateX(-50%);
+    min-height: 80%;
+    max-height: 80%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-05"] {
+    top: 6%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 50%;
+    max-height: 60%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-06"] {
+    top: -5%;
+    left: 50%;
+    transform: translateX(-50%);
+    min-height: 40%;
+    max-height: 50%;
+  }
+
+  &[data-shape^="shape-04"] .avatar-layer--hair[data-hair="hair-07"] {
+    top: -10%;
+    left: 38%;
+    transform: translateX(-50%);
+    min-height: 80%;
+    max-height: 80%;
+  }
+}
