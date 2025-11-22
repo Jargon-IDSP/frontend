@@ -3,7 +3,7 @@
   // Shape-02 + Shoe combinations for base body
   &[data-shape^="shape-02"] .avatar-layer--shoes[data-shoes="shoe-01"] {
     bottom: 3%;
-    left: -3%;
+    left: -9%;
     width: 52%;
     min-height: 16%;
     max-height: 20%;
@@ -11,7 +11,7 @@
 
   &[data-shape^="shape-02"] .avatar-layer--shoes[data-shoes="shoe-02"] {
     bottom: 3%;
-    left: -3%;
+    left: -9%;
     width: 52%;
     min-height: 16%;
     max-height: 20%;
@@ -19,37 +19,62 @@
 
   &[data-shape^="shape-02"] .avatar-layer--shoes[data-shoes="shoe-03"] {
     bottom: 2%;
-    left: -3%;
-    width: 52%;
+    left: -9%;
+    width: 60%;
     min-height: 16%;
     max-height: 20%;
   }
 
     // Shape-02 + Shoe combinations for base body 1
   &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-03"] {
-    left: -2%;
-    width: 54%;
+    left: -8%;
+    width: 66%;
+  }
+
+  &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-02"] {
+    left: -8%;
+    width: 66%;
+  }
+
+    &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-01"] {
+    left: -8%;
+    width: 66%;
   }
 
   // Shape-02 + Shoe combinations for base body 2
   &[data-shape="shape-02-h2"] .avatar-layer--shoes[data-shoes="shoe-01"] {
-    left: 5%;
+    left: 0%;
+    width: 66%;
   }
 
     &[data-shape="shape-02-h2"] .avatar-layer--shoes[data-shoes="shoe-03"] {
-    left: 5%;
+    left: 2.8%;
+    width: 67%;
   }
 
 
    &[data-shape="shape-02-h2"] .avatar-layer--shoes[data-shoes="shoe-02"] {
-    left: 5%;
+    left: 1.5%;
+    width: 67%;
   }
 
     // Shape-02 + Shoe combinations for base body 3 & 4
-  &[data-shape="shape-02-h3"],
-  &[data-shape="shape-02-h4"] .avatar-layer--shoes[data-shoes="shoe-01"] {
-    left: -2.1%;
-    width: 47%;
+   &[data-shape="shape-02-h3"] .avatar-layer--shoes[data-shoes="shoe-01"] {
+    left: -4%;
+    bottom: 3%;
+    width: 60%;
+  }
+
+&[data-shape="shape-02-h3"] .avatar-layer--shoes[data-shoes="shoe-02"] {
+    left: -4%;
+    bottom: 2%;
+    width: 60%;
+  }
+
+     &[data-shape="shape-02-h3"] .avatar-layer--shoes[data-shoes="shoe-03"] {
+    left: -1%;
+    bottom: 3%;
+    width: 60%;
   }
 
 
