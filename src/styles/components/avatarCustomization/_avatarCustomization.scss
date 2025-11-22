@@ -226,12 +226,13 @@
       transition: all 0.3s ease-in-out;
     }
 
-    // Masks are much larger than glasses
     .avatar-layer--eyewear[data-eyewear="welding-mask"],
-    .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    .avatar-layer--eyewear[data-eyewear="orange-mask"],
+    .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
       top: 50px;
+      width: 100%;
       min-height: 113px;
-      max-height: 138px;
+      max-height: 150px;
     }
 
     // positioning for hats etc
@@ -248,6 +249,23 @@
       min-height: 63px;
       max-height: 88px;
       z-index: 4;
+      transition: all 0.3s ease-in-out;
+    }
+
+    // positioning for accessories (makeup, beauty spots, etc)
+    // Base canvas: 210px × 250px
+
+    .avatar-layer--accessories {
+      position: absolute;
+      bottom: auto;
+      top: 90px;
+      left: 105px;
+      transform: translateX(-50%);
+      width: auto;
+      height: auto;
+      min-height: 5px;
+      max-height: 50px;
+      z-index: 1; // Behind beards and facial features (z-index: 2)
       transition: all 0.3s ease-in-out;
     }
   }

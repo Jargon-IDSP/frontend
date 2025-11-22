@@ -89,6 +89,14 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
           />
         )}
 
+        {config.accessories && (
+          <AvatarSprite
+            spriteId={config.accessories}
+            className="avatar-layer avatar-layer--accessories"
+            dataAttributes={{ 'data-accessories': config.accessories }}
+          />
+        )}
+
         {config.clothing && (
           <AvatarSprite
             spriteId={config.clothing}
@@ -186,7 +194,7 @@ export const avatarOptions = {
   facial: ['beard-1', 'beard-2', 'beard-3'],
   clothing: ['yellow-vest', 'orange-vest'],
   shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
-  accessories: ['name-tag', 'beauty-spot', 'blush', 'lashes-1', 'lashes-2'],
+  accessories: ['name-tag', 'beauty-spot', 'blush', 'lashes-1'],
   bodyColors: [
     '#ffba0a',
     '#ffdf8e', 

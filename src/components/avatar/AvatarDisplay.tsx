@@ -7,6 +7,11 @@ export function AvatarDisplay({ config, size = 100, className = '' }: AvatarDisp
   const shapeDataId = toDataAttributeId(bodyId, 'body');
   const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
   const headwearDataId = config.headwear || undefined;
+  const eyewearDataId = config.eyewear || undefined;
+  const accessoriesDataId = config.accessories || undefined;
+  const facialDataId = config.facial || undefined;
+  const shoesDataId = config.shoes || undefined;
+  const clothingDataId = config.clothing || undefined;
 
   const BASE_WIDTH = 210;
   const BASE_HEIGHT = 250;
@@ -26,6 +31,11 @@ export function AvatarDisplay({ config, size = 100, className = '' }: AvatarDisp
         data-shape={shapeDataId}
         data-hair={hairDataId}
         data-headwear={headwearDataId}
+        data-eyewear={eyewearDataId}
+        data-accessories={accessoriesDataId}
+        data-facial={facialDataId}
+        data-shoes={shoesDataId}
+        data-clothing={clothingDataId}
         style={{
           width: `${BASE_WIDTH}px`,
           height: `${BASE_HEIGHT}px`,

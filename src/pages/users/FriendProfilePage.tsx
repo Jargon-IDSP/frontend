@@ -444,6 +444,7 @@ export default function FriendProfilePage() {
             followerCount={followerCountData?.count ?? 0}
             followingCount={followingCountData?.count ?? 0}
             lessonCount={quizCountData?.count ?? 0}
+            avatar={friendProfile?.avatar}
           />
 
           {/* Pending Access Requests Banner */}
