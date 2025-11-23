@@ -110,18 +110,6 @@
   min-height: 0;
   width: 100%;
   overflow-y: auto;
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: $spacing-sm;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 56px;
-    height: 6px;
-    border-radius: $border-radius-full;
-    background: $color-quaternary-light;
-  }
 }
 
 .edit-lesson-content {

@@ -210,18 +210,6 @@
   flex: 1;
   min-height: 0;
 
-  &:before {
-    content: "";
-    position: absolute;
-    top: $spacing-sm;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 56px;
-    height: 6px;
-    border-radius: $border-radius-full;
-    background: $color-quaternary-light;
-  }
-
   @media (max-width: $tablet-min) {
     margin-top: calc(#{$spacing-xl} * -1.2);
     padding-top: $spacing-lg;

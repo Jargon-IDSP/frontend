@@ -2776,17 +2776,6 @@ button.back-button {
   flex: 1;
   min-height: 0;
 }
-.leaderboard-page .leaderboard-drawer:before {
-  content: "";
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f1eae8;
-}
 @media (max-width: 768px) {
   .leaderboard-page .leaderboard-drawer {
     margin-top: calc(2.5rem * -1.2);
@@ -4305,17 +4294,6 @@ button.back-button {
   min-height: 0;
   width: 100%;
   overflow-y: auto;
-}
-.edit-lesson-drawer:before {
-  content: "";
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f1eae8;
 }
 
 .edit-lesson-content {
