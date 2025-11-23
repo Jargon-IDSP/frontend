@@ -172,10 +172,19 @@
   height: 25px;
   transition: transform $transition-fast;
   background-color: $color-tertiary-50;
-  padding: $spacing-xs;
+  padding: 0;
   margin-left: $spacing-sm;
   border-radius: $border-radius-full;
-  border: 1.5px solid #614C4C;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
   &--open {
     transform: rotate(180deg);
@@ -263,10 +272,19 @@
   height: 25px;
   transition: transform $transition-fast;
   background-color: $color-tertiary-50;
-  padding: $spacing-xs;
+  padding: 0;
   margin-left: $spacing-sm;
   border-radius: $border-radius-full;
-  border: 1.5px solid #614C4C;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
   &--open {
     transform: rotate(180deg);

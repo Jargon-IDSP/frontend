@@ -11,7 +11,7 @@ import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import deleteIconBrown from "../../assets/icons/deleteIconBrown.svg";
 import lessonIconWrenchWhite from "../../assets/icons/lessonIconWrenchWhite.svg";
 import lessonIconWrench from "../../assets/icons/lessonIconWrench.svg";
-import downArrow from "../../assets/icons/downArrow.svg";
+import downArrowBrown from "../../assets/icons/downArrowBrown.svg";
 import DeleteDrawer from "../drawers/DeleteDrawer";
 import "../../styles/pages/_editLesson.scss";
 
@@ -388,7 +388,7 @@ const EditLessonPage: React.FC = () => {
                       {currentCategory?.name || "Uncategorized"}
                     </span>
                     <img
-                      src={downArrow}
+                      src={downArrowBrown}
                       alt="Toggle"
                       className={`edit-lesson-category-arrow ${
                         isCategoryExpanded
@@ -490,7 +490,7 @@ const EditLessonPage: React.FC = () => {
                       })()}
                     </span>
                     <img
-                      src={downArrow}
+                      src={downArrowBrown}
                       alt="Toggle"
                       className={`edit-lesson-shared-arrow ${
                         isSharedUsersExpanded
