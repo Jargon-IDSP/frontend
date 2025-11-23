@@ -398,37 +398,51 @@ const EditLessonPage: React.FC = () => {
                     />
                   </button>
                   {isCategoryExpanded && (
-                    <div className="edit-lesson-category-list">
-                      {categories
-                        .filter(
-                          (category) => category.id !== selectedCategoryId
-                        )
-                        .map((category, index, filteredCategories) => (
-                          <button
-                            key={category.id}
-                            type="button"
-                            className={`edit-lesson-category-option ${
-                              index === 0
-                                ? "edit-lesson-category-option--first"
-                                : ""
-                            } ${
-                              index === filteredCategories.length - 1
-                                ? "edit-lesson-category-option--last"
-                                : ""
-                            }`}
-                            onClick={() => handleCategorySelect(category.id)}
-                          >
-                            <img
-                              src={lessonIconWrench}
-                              alt="Folder"
-                              className="edit-lesson-category-option-wrench-icon"
-                            />
-                            <span className="edit-lesson-category-option-text">
-                              {category.name}
-                            </span>
-                          </button>
-                        ))}
-                    </div>
+                    <>
+                      <div className="edit-lesson-category-list">
+                        {categories
+                          .filter(
+                            (category) => category.id !== selectedCategoryId
+                          )
+                          .map((category, index, filteredCategories) => (
+                            <button
+                              key={category.id}
+                              type="button"
+                              className={`edit-lesson-category-option ${
+                                index === 0
+                                  ? "edit-lesson-category-option--first"
+                                  : ""
+                              } ${
+                                index === filteredCategories.length - 1
+                                  ? "edit-lesson-category-option--last"
+                                  : ""
+                              }`}
+                              onClick={() => handleCategorySelect(category.id)}
+                            >
+                              <img
+                                src={lessonIconWrench}
+                                alt="Folder"
+                                className="edit-lesson-category-option-wrench-icon"
+                              />
+                              <span className="edit-lesson-category-option-text">
+                                {category.name}
+                              </span>
+                            </button>
+                          ))}
+                      </div>
+                      <div className="edit-lesson-manage-folders-container">
+                        <button
+                          type="button"
+                          className="edit-lesson-manage-folders-button"
+                          onClick={() =>
+                            navigate("/learning/custom/categories")
+                          }
+                          disabled={updateNameMutation.isPending}
+                        >
+                          Manage folders
+                        </button>
+                      </div>
+                    </>
                   )}
                 </div>
               </div>

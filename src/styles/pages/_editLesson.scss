@@ -240,6 +240,35 @@
   text-align: left;
 }
 
+.edit-lesson-manage-folders-container {
+  display: flex;
+  justify-content: center;
+  padding: $spacing-md $spacing-lg;
+  margin-top: $spacing-sm;
+}
+
+.edit-lesson-manage-folders-button {
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-700;
+  background: transparent;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: $color-secondary-100;
+    border-color: $color-quaternary-500;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 .edit-lesson-shared-card {
   position: relative;
   width: 100%;
