@@ -159,9 +159,11 @@ export default function ChatModal({
         </DrawerHeader>
 
         <div className="chat-drawer__body" ref={drawerBodyRef}>
-          <div className="chat-drawer__question">
-            <strong>Current Question:</strong> {currentQuestion}
-          </div>
+          {currentQuestion && (
+            <div className="chat-drawer__question">
+              <strong>Current Question:</strong> {currentQuestion}
+            </div>
+          )}
 
           {chatHistory.length > 0 && (
             <div className="chat-drawer__messages" ref={chatMessagesRef}>
@@ -181,8 +183,9 @@ export default function ChatModal({
           {chatHistory.length === 0 && (
             <div className="chat-drawer__empty">
               <p>
-                Start a conversation with Rocky! Ask any question about the
-                current quiz question.
+                {currentQuestion
+                  ? "Start a conversation with Rocky! Ask any question about the current quiz question."
+                  : "Start a conversation with Rocky! Ask any question about your learning."}
               </p>
             </div>
           )}

@@ -12,6 +12,7 @@ import PendingAccessRequestsBanner from "../../components/PendingAccessRequestsB
 import ProfileHeader from "../../components/ProfileHeader";
 import ProfileCard from "../../components/ProfileCard";
 import ProfileOverview from "../../components/ProfileOverview";
+import ConnectWithMe from "../../components/ConnectWithMe";
 import { getUserDisplayName, getIndustryName, formatDate } from "../../utils/userHelpers";
 import { useFriendshipActions } from "../../hooks/useFriendshipActions";
 import { useQuizAccessRequests } from "../../hooks/useQuizAccessRequests";
@@ -193,6 +194,24 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
+  // Fetch user medals
+  const { data: userMedals, isLoading: isLoadingMedals } = useQuery({
+    queryKey: ["userMedals", friendId],
+    queryFn: async () => {
+      const token = await getToken();
+      const response = await fetch(`${BACKEND_URL}/weekly-tracking/user/${friendId}?weeks=12`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (!response.ok) {
+        return { medals: { gold: 0, silver: 0, bronze: 0 }, placements: [] };
+      }
+
+      const data = await response.json();
+      return data.data || { medals: { gold: 0, silver: 0, bronze: 0 }, placements: [] };
+    },
+    enabled: !!friendId,
+  });
 
   // Check friendship status
   const { data: friendshipStatus, isLoading: isLoadingFriendship } = useQuery({
@@ -400,6 +419,7 @@ export default function FriendProfilePage() {
     isLoadingFollowingCount ||
     isLoadingQuizCount ||
     isLoadingBadges ||
+    isLoadingMedals ||
     isLoadingQuizzes ||
     (isOwnProfile ? false : isLoadingMyRequests) ||
     (isOwnProfile ? false : isLoadingFriendship);
@@ -411,12 +431,6 @@ export default function FriendProfilePage() {
       {!isLoadingData && (
         <ProfileHeader
           from={(location.state as { from?: string })?.from}
-          isOwnProfile={isOwnProfile}
-          isFriend={friendshipStatus?.isFriend || false}
-          isFollowing={friendshipStatus?.isFollowing || false}
-          onFriendshipAction={handleFriendshipAction}
-          isSendRequestPending={sendRequestMutation.isPending}
-          isRemoveFriendPending={removeFriendMutation.isPending}
         />
       )}
 
@@ -445,6 +459,12 @@ export default function FriendProfilePage() {
             followingCount={followingCountData?.count ?? 0}
             lessonCount={quizCountData?.count ?? 0}
             avatar={friendProfile?.avatar}
+            isOwnProfile={isOwnProfile}
+            isFriend={friendshipStatus?.isFriend || false}
+            isFollowing={friendshipStatus?.isFollowing || false}
+            onFriendshipAction={handleFriendshipAction}
+            isSendRequestPending={sendRequestMutation.isPending}
+            isRemoveFriendPending={removeFriendMutation.isPending}
           />
 
           {/* Pending Access Requests Banner */}
@@ -466,17 +486,26 @@ export default function FriendProfilePage() {
             friendQuizzes={friendQuizzes}
             friendshipStatus={friendshipStatus}
             myRequestedQuizIds={myRequestedQuizIds}
+            pendingRequests={pendingRequests}
             isOwnProfile={isOwnProfile}
             getUserDisplayName={() => getUserDisplayName(friendProfile)}
-            handleFriendshipAction={handleFriendshipAction}
-            sendRequestMutationPending={sendRequestMutation.isPending}
             onLessonClick={handleLessonClick}
           />
 
           {/* Overview Section */}
           <ProfileOverview
             badgeCount={userBadges?.length || 0}
+            medalCount={(userMedals?.medals.gold || 0) + (userMedals?.medals.silver || 0) + (userMedals?.medals.bronze || 0)}
             joinedDate={formatDate(friendProfile?.createdAt)}
+          />
+
+          {/* Connect With Me Section */}
+          <ConnectWithMe
+            LinkedInUrl={friendProfile?.linkedinUrl}
+            FacebookUrl={friendProfile?.facebookUrl}
+            InstagramUrl={friendProfile?.instagramUrl}
+            IndeedUrl={friendProfile?.indeedUrl}
+            isOwnProfile={isOwnProfile}
           />
         </>
       )}

@@ -1,16 +1,21 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect, useMemo } from "react";
+import { useMutation } from "@tanstack/react-query";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
 import { useUserBadges } from "../../hooks/useUserBadges";
 import { useCustomFlashcardStats } from "../../hooks/useCustomFlashcardStats";
 import PrivacyDrawer from "../drawers/PrivacyDrawer";
 import NotificationBell from "../../components/NotificationBell";
+import ChatModal from "../../components/learning/ChatModal";
 import rockyWhiteLogo from '../../../public/rockyWhite.svg';
+import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import MonthlyActivity from "../../components/MonthlyActivity";
 import SelfLeaderboard from "../../components/SelfLeaderboard";
 import { AvatarDisplay } from "../../components/avatar";
+import { BACKEND_URL } from "../../lib/api";
+import type { ChatMessage } from "../../types/components/quiz";
 // import editIcon from '../../assets/icons/editIcon.svg'; // Commented out - may be used in commented profile-card
 import settingsIcon from '../../assets/icons/settingsIcon.svg';
 import '../../styles/pages/_profile.scss';
@@ -32,10 +37,13 @@ const industryIdToName: { [key: number]: string } = {
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { signOut } = useAuth();
+  const { signOut, getToken } = useAuth();
   const { data, error: queryError, isLoading } = useProfile();
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPrivacyDrawerOpen, setIsPrivacyDrawerOpen] = useState(false);
+  const [showChatModal, setShowChatModal] = useState(false);
+  const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
+  const [chatPrompt, setChatPrompt] = useState("");
   const dropdownRef = useRef<HTMLDivElement>(null);
   const { data: userBadges } = useUserBadges();
   const {
@@ -131,6 +139,79 @@ export default function ProfilePage() {
     }
   };
 
+  // Chat handlers
+  const handleOpenChat = () => {
+    setShowChatModal(true);
+  };
+
+  const handleCloseChat = () => {
+    setShowChatModal(false);
+  };
+
+  // Chat mutation
+  const chatMutation = useMutation({
+    mutationFn: async (prompt: string) => {
+      const token = await getToken();
+      const contextualPrompt = `You are a friendly, helpful tutor assisting immigrants learning skilled trades terminology in British Columbia, Canada. Your role is to explain concepts in simple, clear language. Give short, conversational answers (2-4 sentences) that are warm and encouraging. Use everyday examples when helpful.
+
+Student's question: ${prompt}
+
+Remember: Be supportive, keep it brief, and explain like you're talking to a friend who's learning English and trades at the same time.`;
+
+      const response = await fetch(`${BACKEND_URL}/chat`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ prompt: contextualPrompt }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to get response from Rocky");
+      }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("No response body");
+      }
+
+      let fullResponse = "";
+      const decoder = new TextDecoder();
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+        fullResponse += decoder.decode(value, { stream: true });
+      }
+
+      return fullResponse;
+    },
+    onSuccess: (response) => {
+      const assistantMessage: ChatMessage = {
+        role: "assistant",
+        content: response,
+        id: Date.now().toString(),
+      };
+      setChatHistory((prev) => [...prev, assistantMessage]);
+      setChatPrompt("");
+    },
+  });
+
+  const handleSendChat = async (e?: React.FormEvent) => {
+    e?.preventDefault();
+    if (!chatPrompt.trim() || chatMutation.isPending) return;
+
+    const userMessage: ChatMessage = {
+      role: "user",
+      content: chatPrompt,
+      id: Date.now().toString(),
+    };
+
+    setChatHistory((prev) => [...prev, userMessage]);
+    chatMutation.mutate(chatPrompt);
+  };
+
   return (
     <>
       {/* Privacy Settings Drawer */}
@@ -143,6 +224,13 @@ export default function ProfilePage() {
         <div className="profile-page">
           {/* Header with title and settings icon */}
           <div className="profile-header">
+          <button
+            className="profile-go-back-button"
+            onClick={() => navigate(-1)}
+            aria-label="Go Back"
+          >
+            <img src={goBackIcon} alt="Go Back" />
+          </button>
           <h1 className="profile-header-title">Profile</h1>
           <div className="profile-header-actions">
             <NotificationBell />
@@ -303,9 +391,14 @@ export default function ProfilePage() {
 
               <div className="profile-tab-panel">
                 {activeProfileTab === "archives" ? (
-                  <div className="profile-documents">
-                    <DocumentsList refresh={0} />
-                  </div>
+                  <>
+                    <div className="profile-documents">
+                      <DocumentsList refresh={0} />
+                    </div>
+                    <div className="profile-help">
+                      <button onClick={handleOpenChat}><span>Need Help? </span><span className="callR">Call Rocky!</span></button>
+                    </div>
+                  </>
                 ) : (
                   <div className="profile-achievements">
                     
@@ -351,6 +444,17 @@ export default function ProfilePage() {
         )}
         </div>
       </div>
+
+      {/* Chat Modal */}
+      <ChatModal
+        isOpen={showChatModal}
+        onClose={handleCloseChat}
+        chatHistory={chatHistory}
+        chatPrompt={chatPrompt}
+        onChatPromptChange={setChatPrompt}
+        onSendChat={handleSendChat}
+        isLoading={chatMutation.isPending}
+      />
     </>
   );
 }

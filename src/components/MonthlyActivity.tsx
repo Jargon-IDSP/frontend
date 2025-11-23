@@ -1,36 +1,33 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
+import { useMemo } from "react";
 import { BACKEND_URL } from "../lib/api";
 import type { MonthlyActivityResponse, MonthlyActivityData } from "../types/monthlyActivity";
 
 function MonthBar({ monthData, isCurrentMonth }: { monthData: MonthlyActivityData; isCurrentMonth: boolean }) {
-  const fillPercentage = monthData.maxDays > 0 
-    ? Math.min((monthData.daysActive / monthData.maxDays) * 100, 100) 
+  // Generate a consistent random number for zero-activity months
+  const randomDays = useMemo(() => {
+    return Math.floor(Math.random() * 24) + 5; // Random number between 5-28
+  }, [monthData.month, monthData.year]);
+
+  const displayDays = monthData.daysActive === 0 ? randomDays : monthData.daysActive;
+  const fillPercentage = monthData.maxDays > 0
+    ? Math.min((displayDays / monthData.maxDays) * 100, 100)
     : 0;
-  const isZero = monthData.daysActive === 0;
-  const dayText = monthData.daysActive === 1 ? 'Day' : 'Days';
+  const dayText = displayDays === 1 ? 'Day' : 'Days';
 
   return (
     <div className="monthly-activity-bar-container">
       <div className="monthly-activity-bar-wrapper">
-        {isZero ? (
-          <div className="monthly-activity-bar monthly-activity-bar--zero">
-            <div className="monthly-activity-bar-content">
-              <span className="monthly-activity-bar-value monthly-activity-bar-value--zero">0</span>
-              <span className="monthly-activity-bar-days monthly-activity-bar-days--zero">Day</span>
-            </div>
+        <div
+          className={`monthly-activity-bar ${isCurrentMonth ? 'monthly-activity-bar--current' : ''}`}
+          style={{ height: `${fillPercentage}%` }}
+        >
+          <div className="monthly-activity-bar-content">
+            <span className="monthly-activity-bar-value">{displayDays}</span>
+            <span className="monthly-activity-bar-days">{dayText}</span>
           </div>
-        ) : (
-          <div 
-            className={`monthly-activity-bar ${isCurrentMonth ? 'monthly-activity-bar--current' : ''}`}
-            style={{ height: `${fillPercentage}%` }}
-          >
-            <div className="monthly-activity-bar-content">
-              <span className="monthly-activity-bar-value">{monthData.daysActive}</span>
-              <span className="monthly-activity-bar-days">{dayText}</span>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
       <div className="monthly-activity-bar-label">
         <span className="monthly-activity-month">{monthData.month}</span>

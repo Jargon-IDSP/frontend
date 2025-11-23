@@ -75,6 +75,21 @@ const EditLessonPage: React.FC = () => {
 
   const sharedUsers = sharedUsersData?.shares || [];
 
+  // Fetch friends list (needed for PRIVATE mode selection)
+  const { data: friends = [] } = useQuery({
+    queryKey: ["friends"],
+    queryFn: async () => {
+      const token = await getToken();
+      const res = await fetch(`${BACKEND_URL}/friendships/friends`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+      if (!res.ok) return [];
+      const data = await res.json();
+      return data.data || [];
+    },
+    staleTime: 5 * 60 * 1000,
+  });
+
   // Initialize selected shared users when data loads
   useEffect(() => {
     if (sharedUsers.length > 0) {
@@ -136,39 +151,6 @@ const EditLessonPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["lessonDetails"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
 
-      // Handle unsharing for unchecked users before navigating
-      if (lessonData?.id && sharedUsers.length > 0) {
-        const token = await getToken();
-        const usersToUnshare = sharedUsers.filter(
-          (share: any) => !selectedSharedUserIds.has(share.sharedWith.id as string)
-        );
-
-        // Unshare with users that were unchecked
-        for (const share of usersToUnshare) {
-          try {
-            const response = await fetch(
-              `${BACKEND_URL}/learning/sharing/${share.id}`,
-              {
-                method: "DELETE",
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-              }
-            );
-            if (!response.ok) {
-              console.error(`Failed to unshare with user ${share.sharedWith.id}`);
-            }
-          } catch (error) {
-            console.error("Error unsharing:", error);
-          }
-        }
-
-        // Invalidate queries after unsharing
-        if (usersToUnshare.length > 0) {
-          queryClient.invalidateQueries({ queryKey: ["quizShares", lessonData.id] });
-        }
-      }
-
       // Navigate back to profile
       const returnPath = location.state?.from || "/profile";
       navigate(returnPath);
@@ -211,6 +193,48 @@ const EditLessonPage: React.FC = () => {
     },
     onError: (err: Error) => {
       setError(err.message);
+    },
+  });
+
+  // Share mutation - add a friend to the lesson
+  const shareMutation = useMutation({
+    mutationFn: async (friendId: string) => {
+      if (!lessonData?.id) throw new Error("No lesson ID");
+      const token = await getToken();
+      const response = await fetch(`${BACKEND_URL}/quiz-shares`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          customQuizId: lessonData.id,
+          friendUserId: friendId,
+        }),
+      });
+      if (!response.ok) throw new Error("Failed to share");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["quizShares", lessonData?.id] });
+    },
+  });
+
+  // Unshare mutation - remove a friend from the lesson
+  const unshareMutation = useMutation({
+    mutationFn: async (shareId: string) => {
+      const token = await getToken();
+      const response = await fetch(`${BACKEND_URL}/learning/sharing/${shareId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!response.ok) throw new Error("Failed to unshare");
+      return response.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["quizShares", lessonData?.id] });
     },
   });
 
@@ -369,18 +393,31 @@ const EditLessonPage: React.FC = () => {
                 >
                   <span className="edit-lesson-shared-value">
                     {(() => {
+                      const privacy = profile?.defaultPrivacy || "PRIVATE";
+
+                      // If profile is PUBLIC, always show "Everyone"
+                      if (privacy === "PUBLIC") {
+                        return "Everyone";
+                      }
+
+                      // If profile is FRIENDS, always show "All friends"
+                      if (privacy === "FRIENDS") {
+                        return "All friends";
+                      }
+
+                      // PRIVATE mode - show individual friend names or "No one"
                       if (sharedUsers.length === 0) {
                         return "No one";
                       }
-                      
+
                       if (sharedUsers.length === 1) {
                         return getUserDisplayName(sharedUsers[0].sharedWith);
                       }
-                      
+
                       if (sharedUsers.length === 2) {
                         return `${getUserDisplayName(sharedUsers[0].sharedWith)}, ${getUserDisplayName(sharedUsers[1].sharedWith)}`;
                       }
-                      
+
                       // More than 2 users: show first 2 + count
                       const firstTwo = sharedUsers.slice(0, 2).map((share: any) => getUserDisplayName(share.sharedWith)).join(", ");
                       const remainingCount = sharedUsers.length - 2;
@@ -393,38 +430,82 @@ const EditLessonPage: React.FC = () => {
                     className={`edit-lesson-shared-arrow ${isSharedUsersExpanded ? "edit-lesson-shared-arrow--open" : ""}`}
                   />
                 </button>
-                {isSharedUsersExpanded && sharedUsers.length > 0 && (
+                {(profile?.defaultPrivacy === "PUBLIC" || profile?.defaultPrivacy === "FRIENDS") && (
+                  <p className="edit-lesson-privacy-note">
+                    Update privacy settings to control individual documents visibility
+                  </p>
+                )}
+                {isSharedUsersExpanded && (
                   <div className="edit-lesson-shared-list">
-                    {sharedUsers.map((share: any, index: number, filteredShares: any[]) => {
-                      const userId = share.sharedWith.id;
-                      const isChecked = selectedSharedUserIds.has(userId);
-                      
-                      return (
-                        <label
-                          key={share.id}
-                          className={`edit-lesson-shared-option ${index === 0 ? "edit-lesson-shared-option--first" : ""} ${index === filteredShares.length - 1 ? "edit-lesson-shared-option--last" : ""}`}
-                        >
-                          <span className="edit-lesson-shared-option-text">
-                            {getUserDisplayName(share.sharedWith)}
-                          </span>
-                          <input
-                            type="checkbox"
-                            checked={isChecked}
-                            onChange={(e) => {
-                              const newSelected = new Set(selectedSharedUserIds);
-                              if (e.target.checked) {
-                                newSelected.add(userId);
-                              } else {
-                                newSelected.delete(userId);
-                              }
-                              setSelectedSharedUserIds(newSelected);
-                            }}
-                            className="edit-lesson-shared-checkbox"
-                            disabled={updateNameMutation.isPending || deleteLessonMutation.isPending}
-                          />
-                        </label>
-                      );
-                    })}
+                    {profile?.defaultPrivacy === "PRIVATE" ? (
+                      // PRIVATE mode: Show all friends with checkboxes
+                      friends.length > 0 ? (
+                        friends.map((friend: any, index: number) => {
+                          const friendId = friend.id;
+                          const isChecked = selectedSharedUserIds.has(friendId);
+                          const share = sharedUsers.find((s: any) => s.sharedWith.id === friendId);
+
+                          return (
+                            <label
+                              key={friendId}
+                              className={`edit-lesson-shared-option ${index === 0 ? "edit-lesson-shared-option--first" : ""} ${index === friends.length - 1 ? "edit-lesson-shared-option--last" : ""}`}
+                            >
+                              <span className="edit-lesson-shared-option-text">
+                                {getUserDisplayName(friend)}
+                              </span>
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                onChange={(e) => {
+                                  const newSelected = new Set(selectedSharedUserIds);
+                                  if (e.target.checked) {
+                                    newSelected.add(friendId);
+                                    // Immediately share with this friend
+                                    shareMutation.mutate(friendId);
+                                  } else {
+                                    newSelected.delete(friendId);
+                                    // Immediately unshare from this friend
+                                    if (share) {
+                                      unshareMutation.mutate(share.id);
+                                    }
+                                  }
+                                  setSelectedSharedUserIds(newSelected);
+                                }}
+                                className="edit-lesson-shared-checkbox"
+                                disabled={updateNameMutation.isPending || deleteLessonMutation.isPending || shareMutation.isPending || unshareMutation.isPending}
+                              />
+                            </label>
+                          );
+                        })
+                      ) : (
+                        <p className="edit-lesson-shared-empty">No friends yet</p>
+                      )
+                    ) : (
+                      // PUBLIC or FRIENDS mode: Show current shared users (read-only)
+                      sharedUsers.length > 0 ? (
+                        sharedUsers.map((share: any, index: number) => {
+                          const userId = share.sharedWith.id;
+                          const isChecked = selectedSharedUserIds.has(userId);
+
+                          return (
+                            <label
+                              key={share.id}
+                              className={`edit-lesson-shared-option ${index === 0 ? "edit-lesson-shared-option--first" : ""} ${index === sharedUsers.length - 1 ? "edit-lesson-shared-option--last" : ""}`}
+                            >
+                              <span className="edit-lesson-shared-option-text">
+                                {getUserDisplayName(share.sharedWith)}
+                              </span>
+                              <input
+                                type="checkbox"
+                                checked={isChecked}
+                                className="edit-lesson-shared-checkbox"
+                                disabled={true}
+                              />
+                            </label>
+                          );
+                        })
+                      ) : null
+                    )}
                   </div>
                 )}
               </div>

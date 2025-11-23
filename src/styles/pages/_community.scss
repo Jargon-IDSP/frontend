@@ -82,7 +82,7 @@
   padding: 0.75rem 1.5rem;
   font-size: $font-size-body;
   font-weight: $font-weight-medium;
-  color: $color-primary-800;
+  color: $color-primary-100;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -147,9 +147,11 @@
 }
 
 .leaderboard-preview-empty-avatar {
-  width: 100%;
   max-width: 300px;
+  max-height: 250px;
+  width: 100%;
   height: auto;
+  object-fit: contain;
   margin-bottom: $spacing-xl;
 }
 
@@ -229,9 +231,11 @@
 }
 
 .friends-preview-empty-image {
-  width: 100%;
   max-width: 300px;
+  max-height: 250px;
+  width: 100%;
   height: auto;
+  object-fit: contain;
   margin-bottom: $spacing-xl;
 }
 
@@ -301,7 +305,6 @@
   display: flex;
   align-items: center;
   gap: $spacing-md;
-  flex: 1;
 }
 
 .friends-item-logo {
@@ -321,12 +324,13 @@
   font-size: $font-size-body;
   font-weight: $font-weight-medium;
   color: $color-quaternary;
+  margin-right: 0.3rem;;
 }
 
 .friends-item-you {
   color: $color-primary;
   font-weight: $font-weight-bold;
-  margin-left: $spacing-xs;
+  font-size: 0.9rem;
 }
 
 .friends-item-details {

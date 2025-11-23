@@ -9,7 +9,7 @@
   background: rgba(230, 234, 249, 0.58);
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
-  margin-bottom: $spacing-lg;
+  margin-bottom: $spacing-xl;
 }
 
 .view-friends-tab {
@@ -99,8 +99,8 @@
   background: $color-tertiary-100;
   border: 1px solid black;
   border-radius: 50%;
-  width: 80px;
-  height: 80px;
+  width: 100px;
+  height: 100px;
 
   &:hover {
     opacity: 0.7;
@@ -110,6 +110,7 @@
 .view-friends-avatar {
   width: 60px;
   height: 60px;
+  transform: scaleX(-1);
 }
 
 .view-friends-add-button-container {

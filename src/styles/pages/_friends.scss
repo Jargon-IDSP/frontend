@@ -281,7 +281,7 @@
 
 .friends-remove-button {
   padding: $spacing-sm $spacing-md;
-  background-color: white;
+  background-color: $quinary-600;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -292,12 +292,12 @@
 }
 
 .friends-unfollow-button {
-  height: 2.5rem;
-  padding: 0 $spacing-lg;
-  background-color: $color-error;
+  height: 2rem;
+  padding: 0;
+  background-color: $quinary-600;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 25%;
   cursor: pointer;
   font-weight: $font-weight-medium;
   flex-shrink: 0;
