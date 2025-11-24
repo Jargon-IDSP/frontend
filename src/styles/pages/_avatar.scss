@@ -2,18 +2,17 @@
 @use "../variables" as *;
 @use "../mixins" as *;
 
-.avatar-edit-page, .avatar-view-page {
+.avatar-edit-page, .avatar-view-page, .avatar-onboarding-page {
     padding: 1rem;
     max-width: 480px;
+    position: relative;
 
     h1 {
         font-size: $font-size-h1;
         font-family: $font-family-primary;
-        font-weight: $font-weight-bold;
-        color: $color-primary-800;
+        font-weight: $font-weight-medium;
+        color: $color-quaternary-500;
         text-align: left;
-        margin-bottom: 3rem;
+        align-items: center;
     }
-
-
 }
