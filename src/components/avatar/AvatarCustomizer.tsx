@@ -13,12 +13,7 @@ const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
   { id: 'expression', label: 'Expression' },
   { id: 'hair', label: 'Hair' },
-  { id: 'headwear', label: 'Headwear' },
-  { id: 'features', label: 'Features' },
-  { id: 'accessories', label: 'Accessories' },
-  { id: 'clothing', label: 'Clothing' },
-  { id: 'shoes', label: 'Shoes' },
-  { id: 'color', label: 'Color' },
+  { id: 'accessories', label: 'Make up' },
 ];
 
 export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }: AvatarCustomizerProps = {}) {
@@ -94,7 +89,14 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   const currentOptions = useMemo(() => {
     switch (activeTab) {
       case 'body':
-        return avatarOptions.bodies.map(id => ({ id, label: id }));
+        return [
+          // Shape section
+          { id: '__subtitle__', label: 'Shape', isSubtitle: true },
+          ...avatarOptions.bodies.map(id => ({ id, label: id })),
+          // Color section
+          { id: '__subtitle__color__', label: 'Color', isSubtitle: true },
+          ...avatarOptions.bodyColors.map(color => ({ id: color, label: color }))
+        ];
       case 'expression':
         const expressions = avatarOptions.expressions[selectedBody as keyof typeof avatarOptions.expressions] || [];
         const filteredExpressions = config.facial
@@ -108,60 +110,123 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         const hairOptions = config.headwear
           ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
           : avatarOptions.hair;
-
-        return [
-          { id: 'none', label: 'None' },
-          ...hairOptions.map(id => ({ id, label: id }))
-        ];
-      case 'headwear':
-        return [
-          { id: 'none', label: 'None' },
-          ...avatarOptions.headwear.map(id => ({ id, label: id }))
-        ];
-      case 'features':
         const facialOptions = (config.expression && config.expression.includes('-h1'))
           ? avatarOptions.facial.filter(id => !id.startsWith('beard-'))
           : avatarOptions.facial;
+
         return [
-          { id: 'none', label: 'None' },
-          ...avatarOptions.eyewear.map(id => ({ id, label: id, category: 'eyewear' as const })),
+          // Hair section
+          { id: '__subtitle__hair__', label: 'Hair', isSubtitle: true },
+          { id: 'none-hair', label: 'None' },
+          ...hairOptions.map(id => ({ id, label: id })),
+          // Facial Hair section
+          { id: '__subtitle__facial__', label: 'Facial Hair', isSubtitle: true },
+          { id: 'none-facial', label: 'None', category: 'facial' as const },
           ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const }))
         ];
       case 'accessories':
+        // Filter out masks from eyewear since they're now in headwear
+        const eyewearOptions = avatarOptions.eyewear.filter(id => id !== 'orange-mask' && id !== 'orange-mask-2');
+        
         return [
-          { id: 'none', label: 'None' },
-          ...avatarOptions.accessories.map(id => ({ id, label: id }))
+          // Eyewear section
+          { id: '__subtitle__eyewear__', label: 'Eyewear', isSubtitle: true },
+          { id: 'none-eyewear', label: 'None', category: 'eyewear' as const },
+          ...eyewearOptions.map(id => ({ id, label: id, category: 'eyewear' as const })),
+          // Headwear section
+          { id: '__subtitle__headwear__', label: 'Headwear', isSubtitle: true },
+          { id: 'none-headwear', label: 'None', category: 'headwear' as const },
+          ...avatarOptions.headwear.map(id => ({ id, label: id, category: 'headwear' as const })),
+          // Clothing section
+          { id: '__subtitle__clothing__', label: 'Clothing', isSubtitle: true },
+          { id: 'none-clothing', label: 'None', category: 'clothing' as const },
+          ...avatarOptions.clothing.map(id => ({ id, label: id, category: 'clothing' as const })),
+          // Shoes section
+          { id: '__subtitle__shoes__', label: 'Shoes', isSubtitle: true },
+          { id: 'none-shoes', label: 'None', category: 'shoes' as const },
+          ...avatarOptions.shoes.map(id => ({ id, label: id, category: 'shoes' as const })),
+          // Accessories section
+          { id: '__subtitle__accessories__', label: 'Make up', isSubtitle: true },
+          { id: 'none-accessories', label: 'None', category: 'accessories' as const },
+          ...avatarOptions.accessories.map(id => ({ id, label: id, category: 'accessories' as const }))
         ];
-      case 'clothing':
-        return [
-          { id: 'none', label: 'None' },
-          ...avatarOptions.clothing.map(id => ({ id, label: id }))
-        ];
-      case 'shoes':
-        return [
-          { id: 'none', label: 'None' },
-          ...avatarOptions.shoes.map(id => ({ id, label: id }))
-        ];
-      case 'color':
-        return avatarOptions.bodyColors.map(color => ({ id: color, label: color }));
       default:
         return [];
     }
   }, [activeTab, selectedBody, config.headwear, config.facial, config.expression]);
 
-  const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial') => {
+  const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
+    // Ignore subtitle clicks
+    if (optionId.startsWith('__subtitle__')) {
+      return;
+    }
+
+    // Handle "none" options with category-specific IDs
+    if (optionId.startsWith('none-')) {
+      const noneCategory = optionId.split('-')[1] as 'hair' | 'facial' | 'eyewear' | 'headwear' | 'clothing' | 'shoes' | 'accessories';
+      if (activeTab === 'hair') {
+        if (noneCategory === 'facial') {
+          updateConfig('facial', undefined);
+        } else {
+          updateConfig('hair', undefined);
+        }
+      } else if (activeTab === 'accessories') {
+        if (noneCategory === 'eyewear') {
+          updateConfig('eyewear', undefined);
+        } else if (noneCategory === 'headwear') {
+          // Clear both headwear and eyewear if it's a mask
+          if (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2') {
+            updateConfig('eyewear', undefined);
+          }
+          updateConfig('headwear', undefined);
+        } else if (noneCategory === 'clothing') {
+          updateConfig('clothing', undefined);
+        } else if (noneCategory === 'shoes') {
+          updateConfig('shoes', undefined);
+        } else if (noneCategory === 'accessories') {
+          updateConfig('accessories', undefined);
+        }
+      }
+      return;
+    }
+
     if (activeTab === 'body') {
-      handleBodyChange(optionId);
+      // Check if it's a color (hex color) or body shape
+      if (optionId.startsWith('#')) {
+        updateConfig('bodyColor', optionId);
+      } else {
+        handleBodyChange(optionId);
+      }
     } else if (activeTab === 'expression') {
       updateConfig('expression', optionId);
-    } else if (activeTab === 'color') {
-      updateConfig('bodyColor', optionId);
-    } else if (activeTab === 'features') {
-      if (optionId === 'none') {
-        updateConfig('eyewear', undefined);
-        updateConfig('facial', undefined);
-      } else if (category) {
-        updateConfig(category, optionId);
+    } else if (activeTab === 'hair') {
+      if (category === 'facial') {
+        updateConfig('facial', optionId);
+      } else {
+        updateConfig('hair', optionId);
+      }
+    } else if (activeTab === 'accessories') {
+      if (category === 'eyewear') {
+        updateConfig('eyewear', optionId);
+      } else if (category === 'headwear') {
+        if (optionId === 'orange-mask' || optionId === 'orange-mask-2') {
+          // Masks are stored as eyewear, not headwear
+          updateConfig('eyewear', optionId);
+          updateConfig('headwear', undefined);
+        } else {
+          // Regular headwear
+          updateConfig('headwear', optionId);
+          // Clear eyewear if it's a mask
+          if (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2') {
+            updateConfig('eyewear', undefined);
+          }
+        }
+      } else if (category === 'clothing') {
+        updateConfig('clothing', optionId);
+      } else if (category === 'shoes') {
+        updateConfig('shoes', optionId);
+      } else if (category === 'accessories') {
+        updateConfig('accessories', optionId);
       }
     } else {
       const key = activeTab as keyof AvatarConfig;
@@ -169,22 +234,59 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   };
 
-  const isSelected = (optionId: string, category?: 'eyewear' | 'facial') => {
+  const isSelected = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
     if (activeTab === 'body') {
-      return selectedBody === optionId;
+      if (optionId.startsWith('#')) {
+        return config.bodyColor === optionId;
+      } else {
+        return selectedBody === optionId;
+      }
     } else if (activeTab === 'expression') {
       return config.expression === optionId;
-    } else if (activeTab === 'color') {
-      return config.bodyColor === optionId;
-    } else if (activeTab === 'features') {
-      if (optionId === 'none') {
-        return !config.eyewear && !config.facial;
-      } else if (category === 'eyewear') {
-        return config.eyewear === optionId;
+      } else if (activeTab === 'accessories') {
+        if (optionId.startsWith('none-')) {
+          const noneCategory = optionId.split('-')[1];
+          if (noneCategory === 'eyewear') {
+            return !config.eyewear;
+          } else if (noneCategory === 'headwear') {
+            return !config.headwear && !(config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
+          } else if (noneCategory === 'clothing') {
+            return !config.clothing;
+          } else if (noneCategory === 'shoes') {
+            return !config.shoes;
+          } else if (noneCategory === 'accessories') {
+            return !config.accessories;
+          }
+          return false;
+        } else if (category === 'eyewear') {
+          return config.eyewear === optionId;
+        } else if (category === 'headwear') {
+          if (optionId === 'orange-mask' || optionId === 'orange-mask-2') {
+            return config.eyewear === optionId;
+          } else {
+            return config.headwear === optionId;
+          }
+        } else if (category === 'clothing') {
+          return config.clothing === optionId;
+        } else if (category === 'shoes') {
+          return config.shoes === optionId;
+        } else if (category === 'accessories') {
+          return config.accessories === optionId;
+        }
+        return false;
+    } else if (activeTab === 'hair') {
+      if (optionId.startsWith('none-')) {
+        const noneCategory = optionId.split('-')[1];
+        if (noneCategory === 'facial') {
+          return !config.facial;
+        } else {
+          return !config.hair;
+        }
       } else if (category === 'facial') {
         return config.facial === optionId;
+      } else {
+        return config.hair === optionId;
       }
-      return false;
     } else {
       const key = activeTab as keyof AvatarConfig;
       if (optionId === 'none') {
@@ -194,53 +296,44 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   };
 
-  const renderOptionPreview = (optionId: string, category?: 'eyewear' | 'facial') => {
-    if (optionId === 'none') {
+  const renderOptionPreview = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
+    if (optionId === 'none' || optionId.startsWith('none-')) {
       return <span className="avatar-option__label">None</span>;
     }
 
-    if (activeTab === 'color') {
+    // Colors don't need preview
+    if (optionId.startsWith('#')) {
       return null;
     }
 
     let className = "avatar-option__preview";
-
     let viewBox = "0 0 300 300";
 
-    switch (activeTab) {
-      case 'body':
-      case 'expression':
+    if (activeTab === 'body') {
+      // Body shapes
+      if (!optionId.startsWith('#')) {
         className = "avatar-option__preview avatar-option__preview--body";
         viewBox = getBodyViewBox(optionId);
-        break;
-
-      case 'hair':
-        className = "avatar-option__preview avatar-option__preview--hair";
-        break;
-
-      case 'headwear':
+      }
+    } else if (activeTab === 'expression') {
+      className = "avatar-option__preview avatar-option__preview--body";
+      viewBox = getBodyViewBox(optionId);
+    } else if (activeTab === 'hair') {
+      className = "avatar-option__preview avatar-option__preview--hair";
+    } else if (activeTab === 'accessories') {
+      if (category === 'eyewear') {
+        className = "avatar-option__preview avatar-option__preview--eyewear";
+      } else if (category === 'headwear') {
         className = "avatar-option__preview avatar-option__preview--headwear";
-        break;
-
-      case 'features':
-        if (category === 'eyewear') {
-          className = "avatar-option__preview avatar-option__preview--eyewear";
-        } else if (category === 'facial') {
-          className = "avatar-option__preview avatar-option__preview--facial";
-        }
-        break;
-
-      case 'accessories':
-        className = "avatar-option__preview avatar-option__preview--accessories";
-        break;
-
-      case 'clothing':
+      } else if (category === 'clothing') {
         className = "avatar-option__preview avatar-option__preview--clothing";
-        break;
-
-      case 'shoes':
+      } else if (category === 'shoes') {
         className = "avatar-option__preview avatar-option__preview--shoes";
-        break;
+      } else if (category === 'accessories') {
+        className = "avatar-option__preview avatar-option__preview--accessories";
+      } else if (category === 'facial') {
+        className = "avatar-option__preview avatar-option__preview--facial";
+      }
     }
 
     return (
@@ -260,17 +353,19 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         {!isLoading && <AvatarDisplay config={config} size={210} />}
       </div>
 
-      <label className="avatar-customization__input-label" htmlFor="avatarName">
-        User Name
-      </label>
-      <input
-        id="avatarName"
-        type="text"
-        className="avatar-customization__input"
-        value={user?.username || user?.firstName || 'User'}
-        disabled
-        readOnly
-      />
+      <div className="avatar-customization__input-container">
+        <label className="avatar-customization__input-label" htmlFor="avatarName">
+          User Name
+        </label>
+        <input
+          id="avatarName"
+          type="text"
+          className="avatar-customization__input"
+          value={user?.username || user?.firstName || 'User'}
+          disabled
+          readOnly
+        />
+      </div>
 
       <div className="avatar-customization__tabs">
         {tabs.map(tab => (
@@ -288,9 +383,22 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       </div>
 
       <div className="avatar-customization__options-grid">
-        {currentOptions.map(option => {
-          const category = ('category' in option ? option.category : undefined) as 'eyewear' | 'facial' | undefined;
+        {currentOptions.map((option) => {
+          // Handle subtitles
+          if ('isSubtitle' in option && option.isSubtitle) {
+            return (
+              <div
+                key={option.id}
+                className="avatar-customization__subtitle"
+              >
+                {option.label}
+              </div>
+            );
+          }
+
+          const category = ('category' in option ? option.category : undefined) as 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | undefined;
           const selected = isSelected(option.id, category);
+          const isColor = option.id.startsWith('#');
 
           return (
             <button
@@ -300,7 +408,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
               onClick={() => handleOptionSelect(option.id, category)}
               aria-label={`Select ${option.label}`}
               style={
-                activeTab === 'color' && option.id !== 'none'
+                isColor
                   ? { backgroundColor: option.id }
                   : undefined
               }
