@@ -1,11 +1,12 @@
 import React from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import type { DocumentNavProps } from "../types/documentNav";
 import translateFileIcon from "../assets/icons/translateFileIcon.svg";
 import fileIconB from "../assets/icons/fileIconB.svg";
 import lessonIcon from "../assets/icons/lessonIcon.svg";
 import lessonIconB from "../assets/icons/lessonIconB.svg";
 import goBackIcon from "../assets/icons/goBackIcon.svg";
-import optionsIcon from "../assets/icons/optionsIcon.svg";
+import editIcon from "../assets/icons/editIcon.svg";
 
 const DocumentNav: React.FC<DocumentNavProps> = ({
   activeTab,
@@ -14,8 +15,24 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
   onDocumentClick,
   onBackClick,
   onSubtitleClick,
+  lessonId,
 }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
   const isLessonDisabled = !onLessonClick;
+
+  const handleSubtitleClick = () => {
+    if (lessonId) {
+      navigate(`/profile/lessons/${lessonId}/edit`, {
+        state: {
+          from: location.pathname,
+          lessonName: title,
+        },
+      });
+    } else if (onSubtitleClick) {
+      onSubtitleClick();
+    }
+  };
 
   return (
     <>
@@ -27,13 +44,13 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
           style={{ cursor: onBackClick ? "pointer" : "default" }}
         />
         <h1>{title}</h1>
-        {onSubtitleClick && (
+        {(onSubtitleClick || lessonId) && (
           <button
             // className="subtitle-button"
             className="button-options"
-            onClick={onSubtitleClick}
+            onClick={handleSubtitleClick}
           >
-            <img src={optionsIcon} alt="options" />
+            <img src={editIcon} alt="options" />
           </button>
         )}
       </div>

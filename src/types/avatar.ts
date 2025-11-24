@@ -77,7 +77,7 @@ export interface AvatarOptionItem {
   category: keyof Omit<AvatarOptions, 'expressions' | 'bodyColors'>;
 }
 
-export type TabId = 'body' | 'expression' | 'hair' | 'headwear' | 'features' | 'accessories' | 'clothing' | 'shoes' | 'color';
+export type TabId = 'body' | 'expression' | 'hair' | 'accessories';
 
 export interface Tab {
   id: TabId;

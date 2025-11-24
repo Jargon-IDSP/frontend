@@ -6,4 +6,5 @@ export interface DocumentNavProps {
   onDocumentClick?: () => void;
   onBackClick?: () => void;
   onSubtitleClick?: () => void;
+  lessonId?: string;
 }

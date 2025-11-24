@@ -827,7 +827,7 @@
   }
 
   // Hide name-tag for h1 (crossed arms - name tag doesn't work)
-  &[data-shape="shape-02-h1"] .avatar-layer--accessories[data-accessories="name-tag"] {
+  &[data-shape="shape-02-h1"] .avatar-layer--clothing[data-clothing="name-tag"] {
     display: none;
   }
 

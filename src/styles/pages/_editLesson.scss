@@ -110,18 +110,6 @@
   min-height: 0;
   width: 100%;
   overflow-y: auto;
-
-  &:before {
-    content: "";
-    position: absolute;
-    top: $spacing-sm;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 56px;
-    height: 6px;
-    border-radius: $border-radius-full;
-    background: $color-quaternary-light;
-  }
 }
 
 .edit-lesson-content {
@@ -172,10 +160,19 @@
   height: 25px;
   transition: transform $transition-fast;
   background-color: $color-tertiary-50;
-  padding: $spacing-xs;
+  padding: 0;
   margin-left: $spacing-sm;
   border-radius: $border-radius-full;
-  border: 1.5px solid #614C4C;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
   &--open {
     transform: rotate(180deg);
@@ -231,6 +228,35 @@
   text-align: left;
 }
 
+.edit-lesson-manage-folders-container {
+  display: flex;
+  justify-content: center;
+  padding: $spacing-md $spacing-lg;
+  margin-top: $spacing-sm;
+}
+
+.edit-lesson-manage-folders-button {
+  padding: $spacing-sm $spacing-lg;
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-700;
+  background: transparent;
+  border: 1px solid $color-quaternary;
+  border-radius: $border-radius-md;
+  cursor: pointer;
+  transition: all $transition-fast;
+
+  &:hover:not(:disabled) {
+    background-color: $color-secondary-100;
+    border-color: $color-quaternary-500;
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
 .edit-lesson-shared-card {
   position: relative;
   width: 100%;
@@ -263,10 +289,19 @@
   height: 25px;
   transition: transform $transition-fast;
   background-color: $color-tertiary-50;
-  padding: $spacing-xs;
+  padding: 0;
   margin-left: $spacing-sm;
   border-radius: $border-radius-full;
-  border: 1.5px solid #614C4C;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
 
   &--open {
     transform: rotate(180deg);

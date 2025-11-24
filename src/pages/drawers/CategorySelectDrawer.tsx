@@ -13,7 +13,10 @@ import { useCreateCategory } from "@/hooks/useCreateCategory";
 import { useNotificationContext } from "@/contexts/NotificationContext";
 import { AddFolderModal } from "../../components/AddFolderModal";
 import folderIcon from "../../assets/icons/folderIcon.svg";
-import type { CategorySelectDrawerProps, Category } from "../../types/categorySelectDrawer";
+import type {
+  CategorySelectDrawerProps,
+  Category,
+} from "../../types/categorySelectDrawer";
 
 // Default category descriptions
 const DEFAULT_DESCRIPTIONS: Record<string, string> = {
@@ -46,8 +49,7 @@ export default function CategorySelectDrawer({
       id: cat.id,
       name: cat.name,
       description:
-        DEFAULT_DESCRIPTIONS[cat.name] ||
-        `Custom category: ${cat.name}`,
+        DEFAULT_DESCRIPTIONS[cat.name] || `Custom category: ${cat.name}`,
     }));
   }, [categoriesData]);
 
@@ -92,7 +94,9 @@ export default function CategorySelectDrawer({
 
           <div className="flex-1 overflow-y-auto px-4 pb-4">
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">Loading categories...</div>
+              <div className="text-center py-8 text-gray-500">
+                Loading categories...
+              </div>
             ) : (
               <>
                 {categories.length > 0 ? (
@@ -108,7 +112,9 @@ export default function CategorySelectDrawer({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-base">{category.name}</h3>
+                          <h3 className="font-semibold text-base">
+                            {category.name}
+                          </h3>
                           {selectedId === category.id && (
                             <div className="text-[#fe4d13] text-lg ml-2">✓</div>
                           )}
@@ -117,7 +123,9 @@ export default function CategorySelectDrawer({
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">No categories available</div>
+                  <div className="text-center py-8 text-gray-500">
+                    No categories available
+                  </div>
                 )}
 
                 {/* Add New link */}
@@ -126,7 +134,11 @@ export default function CategorySelectDrawer({
                     onClick={() => setIsModalOpen(true)}
                     className="flex items-center gap-2 text-[#fe4d13] hover:text-[#e74611] cursor-pointer transition-colors underline"
                   >
-                    <img src={folderIcon} alt="Add folder" className="w-5 h-5" />
+                    <img
+                      src={folderIcon}
+                      alt="Add folder"
+                      className="w-5 h-5"
+                    />
                     <span className="font-medium">Add a Custom Category</span>
                   </button>
                 </div>

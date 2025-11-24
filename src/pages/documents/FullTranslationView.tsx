@@ -19,13 +19,8 @@ export default function FullTranslationView() {
   const { getToken } = useAuth();
 
   // Check if this is a friend's lesson from location state
-  const isFriendLesson = (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
-
-  const handleOptions = () => {
-    if (!isFriendLesson) {
-      setIsDrawerOpen(true);
-    }
-  };
+  const isFriendLesson =
+    (location.state as { isFriendLesson?: boolean })?.isFriendLesson || false;
 
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
@@ -42,16 +37,19 @@ export default function FullTranslationView() {
     queryFn: async () => {
       if (!id) return null;
       const token = await getToken();
-      const res = await fetch(`${BACKEND_URL}/learning/documents/${id}/overview`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
+      const res = await fetch(
+        `${BACKEND_URL}/learning/documents/${id}/overview`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       if (!res.ok) return null;
       const data = await res.json();
       return data.data;
     },
     enabled: !!id,
   });
-  
+
   // Check document ownership
   const document = data?.translation?.document || null;
   const { isOwner } = useDocumentAccess(document);
@@ -69,8 +67,8 @@ export default function FullTranslationView() {
 
   if (isLoading) {
     return (
-        <div className="container">
-          <div className="fullTranslationOverview">
+      <div className="container">
+        <div className="fullTranslationOverview">
           <div className="loading-container">
             <LoadingBar isLoading={true} hasData={!!data} hasError={!!error} />
           </div>
@@ -81,8 +79,8 @@ export default function FullTranslationView() {
 
   if (processing && !translation) {
     return (
-        <div className="container">
-          <div className="fullTranslationOverview">
+      <div className="container">
+        <div className="fullTranslationOverview">
           <div className="loading-container">
             <h2 className="loading-title">Processing Document...</h2>
             <p className="loading-description">
@@ -109,12 +107,14 @@ export default function FullTranslationView() {
 
   if (error || !translation) {
     return (
-        <div className="container">
-          <div className="fullTranslationOverview">
+      <div className="container">
+        <div className="fullTranslationOverview">
           <div className="error-container">
             <h2 className="error-title">Error</h2>
             <p className="error-message">
-              {error instanceof Error ? error.message : "Translation not found."}
+              {error instanceof Error
+                ? error.message
+                : "Translation not found."}
             </p>
             <div className="error-buttons">
               <button onClick={() => navigate(-1)}>
@@ -147,6 +147,48 @@ export default function FullTranslationView() {
   const documentTitle =
     translation?.document?.filename || "Document Translation";
 
+  const handleEditClick = async () => {
+    if (isFriendLesson) return;
+
+    // If we already have the quiz ID, navigate directly
+    if (quizData?.id) {
+      navigate(`/profile/lessons/${quizData.id}/edit`, {
+        state: {
+          from: location.pathname,
+          lessonName: documentTitle,
+        },
+      });
+      return;
+    }
+
+    // Otherwise, fetch the quiz ID first
+    try {
+      const token = await getToken();
+      const res = await fetch(
+        `${BACKEND_URL}/learning/documents/${id}/quizzes`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+
+      if (res.ok) {
+        const data = await res.json();
+        const quizzes = data.data || data.quizzes || [];
+        if (quizzes.length > 0) {
+          const lesson = quizzes[0];
+          navigate(`/profile/lessons/${lesson.id}/edit`, {
+            state: {
+              from: location.pathname,
+              lessonName: documentTitle,
+            },
+          });
+        }
+      }
+    } catch (error) {
+      console.error("Failed to fetch lesson ID:", error);
+    }
+  };
+
   const isProcessingComplete = hasFlashcards && hasQuiz;
   const canStudy =
     isProcessingComplete || (hasQuickFlashcards && hasQuickQuestions);
@@ -161,15 +203,16 @@ export default function FullTranslationView() {
         quizId={quizData?.id || null}
       />
 
-        <div className="container">
-          <div className="fullTranslationOverview">
+      <div className="container">
+        <div className="fullTranslationOverview">
           <DocumentNav
             activeTab="document"
             title={documentTitle}
             subtitle={isOwner ? "..." : ""}
             onLessonClick={canStudy ? handleLessonClick : undefined}
             onBackClick={handleBackClick}
-            onSubtitleClick={isOwner ? handleOptions : undefined}
+            onSubtitleClick={isOwner ? handleEditClick : undefined}
+            lessonId={isOwner && quizData?.id ? quizData.id : undefined}
           />
 
           <div className="content-container">

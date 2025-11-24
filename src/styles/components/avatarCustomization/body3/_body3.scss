@@ -793,26 +793,26 @@
   }
 
 
-  // Accessories start here
+  // Clothing start here (name-tag moved from accessories)
   // Shape-03 + mustache combinations for base body
-  &[data-shape^="shape-03"] .avatar-layer--accessories[data-accessories="name-tag"] {
+  &[data-shape^="shape-03"] .avatar-layer--clothing[data-clothing="name-tag"] {
     top: 68%;
     left: 54%;
     width: 35%;
   }
 
   // Hide name-tag for h1 (crossed arms - name tag doesn't work)
-  &[data-shape="shape-03-h1"] .avatar-layer--accessories[data-accessories="name-tag"] {
+  &[data-shape="shape-03-h1"] .avatar-layer--clothing[data-clothing="name-tag"] {
     display: none;
   }
 
-   &[data-shape="shape-03-h2"] .avatar-layer--accessories[data-accessories="name-tag"] {
+   &[data-shape="shape-03-h2"] .avatar-layer--clothing[data-clothing="name-tag"] {
     top: 68%;
     left: 62%;
     width: 35%;
   }
 
-     &[data-shape="shape-03-h4"] .avatar-layer--accessories[data-accessories="name-tag"] {
+     &[data-shape="shape-03-h4"] .avatar-layer--clothing[data-clothing="name-tag"] {
     top: 69%;
     left: 59%;
     width: 35%;
