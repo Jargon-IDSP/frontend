@@ -38,7 +38,7 @@ export default function AccountPage() {
   const [selectedIndustryId, setSelectedIndustryId] = useState<number | null>(null);
   const [showIndustryDropdown, setShowIndustryDropdown] = useState(false);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('••••••••••••');
+  const [password] = useState('••••••••••••');
 
   // Initialize form with profile data
   useEffect(() => {
