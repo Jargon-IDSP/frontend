@@ -9322,6 +9322,9 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   z-index: 0;
   transition: all 0.3s ease-in-out;
 }
+.avatar-customization #Layer_1 {
+  display: none !important;
+}
 .avatar-customization__input-container {
   display: flex;
   align-items: center;
@@ -9338,7 +9341,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 }
 .avatar-customization__input {
   flex: 1;
-  max-width: 350px;
   border: 2px solid rgba(141, 156, 226, 0.4);
   border-radius: 8px;
   padding: 0.65rem 0.85rem;

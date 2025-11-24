@@ -12,13 +12,30 @@ function processAvatarSprites() {
 
   // Extract color mappings
   const colorMap = new Map();
-  const styleRegex = /\.st(\d+)\s*\{[^}]*fill:\s*([^;]+);/g;
-  let match;
 
-  while ((match = styleRegex.exec(svgContent)) !== null) {
-    const className = `st${match[1]}`;
-    const color = match[2].trim();
-    colorMap.set(className, color);
+  // First, find all style rules with fill properties
+  const styleBlockRegex = /<style>([\s\S]*?)<\/style>/;
+  const styleMatch = svgContent.match(styleBlockRegex);
+
+  if (styleMatch) {
+    const styleContent = styleMatch[1];
+    // Match rules with fill, handling both single and comma-separated selectors
+    const ruleRegex = /([^{}]+)\s*\{([^}]*?fill:\s*([^;]+);[^}]*)\}/g;
+    let match;
+
+    while ((match = ruleRegex.exec(styleContent)) !== null) {
+      const selectors = match[1].split(',').map(s => s.trim());
+      const color = match[3].trim();
+
+      selectors.forEach(selector => {
+        // Extract class name from selector like ".st9" or ".st10"
+        const classMatch = selector.match(/\.st(\d+)/);
+        if (classMatch) {
+          const className = `st${classMatch[1]}`;
+          colorMap.set(className, color);
+        }
+      });
+    }
   }
 
   console.log(`Found ${colorMap.size} color classes in SVG`);
@@ -29,10 +46,14 @@ function processAvatarSprites() {
 
   colorMap.forEach((color, className) => {
     if (!BODY_COLOR_CLASSES.has(className)) {
+      // Match class="stX" and replace with inline fill attribute
       const classRegex = new RegExp(`class="${className}"`, 'g');
       const matches = (svgContent.match(classRegex) || []).length;
-      processedContent = processedContent.replace(classRegex, `fill="${color}"`);
-      replacementCount += matches;
+
+      if (matches > 0) {
+        processedContent = processedContent.replace(classRegex, `fill="${color}"`);
+        replacementCount += matches;
+      }
     }
   });
 
