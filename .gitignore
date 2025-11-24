@@ -9,6 +9,7 @@ lerna-debug.log*
 .env
 dotenv
 env
+.claude
 
 node_modules
 dist
@@ -33,3 +34,6 @@ env
 .env
 dotenv
 env
+
+# Avatar sprite backup
+public/avatar-sprites.backup.svg

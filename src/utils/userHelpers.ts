@@ -63,10 +63,10 @@ export function getLanguageCode(language: string | null): string {
     english: "ENG",
     chinese: "CHN",
     tagalog: "TGL",
-    french: "FR",
-    korean: "KO",
-    spanish: "ES",
-    punjabi: "PA",
+    french: "FRA",
+    korean: "KOR",
+    spanish: "SPA",
+    punjabi: "PAN",
   };
 
   return languageMap[language.toLowerCase()] || "ENG";

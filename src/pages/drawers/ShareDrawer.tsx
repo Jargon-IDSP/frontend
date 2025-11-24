@@ -24,7 +24,9 @@ export default function ShareDrawer({
 }: ShareDrawerProps) {
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
-  const [selectedFriends, setSelectedFriends] = useState<Set<string>>(new Set());
+  const [selectedFriends, setSelectedFriends] = useState<Set<string>>(
+    new Set()
+  );
 
   // Get user's default privacy setting
   const { data: profile } = useProfile();
@@ -62,21 +64,28 @@ export default function ShareDrawer({
       );
       if (!res.ok) return [];
       const data = await res.json();
-      return data.data?.shares || [];
+      const shares = data.data?.shares || [];
+      // Ensure we always return an array, even if the API returns an object
+      return Array.isArray(shares) ? shares : [];
     },
     enabled: open && !!quizId,
   });
 
   useEffect(() => {
-    console.log('🔄 ShareDrawer useEffect:', {
+    console.log("🔄 ShareDrawer useEffect:", {
       quizId,
       isFriendsOrPublic,
       friendsCount: friends.length,
-      currentSharesCount: currentShares.length,
+      currentSharesCount: Array.isArray(currentShares)
+        ? currentShares.length
+        : 0,
       currentShares,
     });
 
     if (!quizId) return;
+
+    // Ensure currentShares is always an array
+    const sharesArray = Array.isArray(currentShares) ? currentShares : [];
 
     setSelectedFriends((prevSelected) => {
       let newSelectedIds: Set<string>;
@@ -85,7 +94,9 @@ export default function ShareDrawer({
         newSelectedIds = new Set<string>(friends.map((f) => f.id));
       } else {
         newSelectedIds = new Set<string>(
-          currentShares.map((share: any) => share.sharedWith.id as string)
+          sharesArray
+            .map((share: any) => share.sharedWith?.id as string)
+            .filter(Boolean)
         );
       }
 
@@ -96,7 +107,7 @@ export default function ShareDrawer({
         return prevSelected;
       }
 
-      console.log('✅ Setting selected friends:', Array.from(newSelectedIds));
+      console.log("✅ Setting selected friends:", Array.from(newSelectedIds));
       return newSelectedIds;
     });
   }, [currentShares, quizId, friends, isFriendsOrPublic]);
@@ -128,9 +139,8 @@ export default function ShareDrawer({
   const unshareMutation = useMutation({
     mutationFn: async (friendId: string) => {
       const token = await getToken();
-      const share = currentShares.find(
-        (s: any) => s.sharedWith.id === friendId
-      );
+      const sharesArray = Array.isArray(currentShares) ? currentShares : [];
+      const share = sharesArray.find((s: any) => s.sharedWith?.id === friendId);
       if (!share) return;
 
       const response = await fetch(
@@ -153,7 +163,7 @@ export default function ShareDrawer({
   });
 
   const handleToggleFriend = (friendId: string) => {
-    if (!isPrivate) return; 
+    if (!isPrivate) return;
 
     const newSelected = new Set(selectedFriends);
     if (newSelected.has(friendId)) {
@@ -189,7 +199,9 @@ export default function ShareDrawer({
             friends.map((friend) => (
               <label
                 key={friend.id}
-                className={`share-drawer-friend ${!isPrivate ? "share-drawer-friend-disabled" : ""}`}
+                className={`share-drawer-friend ${
+                  !isPrivate ? "share-drawer-friend-disabled" : ""
+                }`}
               >
                 <input
                   type="checkbox"

@@ -1,9 +1,132 @@
+import { useRef, useState, useEffect } from 'react';
+import { AvatarSprite } from './AvatarSprite';
+import { getBodyViewBox, toDataAttributeId } from './bodyViewBoxes';
 import type { AvatarConfig, AvatarProps } from '../../types/avatar';
 
-export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
+// Fetch symbol content from SVG sprite sheet
+async function fetchSymbolContent(symbolId: string): Promise<string | null> {
+  try {
+    const response = await fetch('/avatar-sprites.svg');
+    const svgText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const symbol = doc.getElementById(symbolId);
+    if (!symbol) return null;
+    return symbol.innerHTML;
+  } catch (error) {
+    console.error('Failed to fetch symbol:', error);
+    return null;
+  }
+}
+
+export function Avatar({ config, size = 100, className = '', renderMode = 'svg' }: AvatarProps) {
   // Use the body with expression if provided, otherwise use base body
   const bodyId = config.expression || config.body || 'body-1';
-  const bodyColor = config.bodyColor || '#FFB6C1';
+  const bodyColor = config.bodyColor || '#ffba0a';
+
+  if (renderMode === 'layered') {
+    const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
+    const bodySvgRef = useRef<SVGSVGElement>(null);
+    const [bodyContent, setBodyContent] = useState<string>('');
+
+    useEffect(() => {
+      fetchSymbolContent(bodyId).then(content => {
+        if (content) {
+          // Apply body color to all body color classes for Safari iOS compatibility
+          // Using inline fill attribute instead of CSS to bypass shadow DOM issues
+          const BODY_COLOR_CLASSES = [
+            'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
+            'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
+          ];
+
+          let coloredContent = content;
+          BODY_COLOR_CLASSES.forEach(className => {
+            const regex = new RegExp(`class="${className}"`, 'g');
+            coloredContent = coloredContent.replace(
+              regex,
+              `class="${className}" fill="${bodyColor}"`
+            );
+          });
+
+          setBodyContent(coloredContent);
+        }
+      });
+    }, [bodyId, bodyColor]);
+
+    // Don't render until body content is loaded to prevent sprite sheet flash
+    if (!bodyContent) {
+      return null;
+    }
+
+    return (
+      <div className="AvatarSprite">
+        <div className="avatar-customization__shape-container">
+          <svg
+            ref={bodySvgRef}
+            className="avatar-layer avatar-layer--shape"
+            viewBox={getBodyViewBox(bodyId)}
+            dangerouslySetInnerHTML={{ __html: bodyContent }}
+          />
+        </div>
+
+        {config.shoes && (
+          <AvatarSprite
+            spriteId={config.shoes}
+            className="avatar-layer avatar-layer--shoes"
+            dataAttributes={{ 'data-shoes': toDataAttributeId(config.shoes, 'shoes') }}
+          />
+        )}
+
+        {config.hair && (
+          <AvatarSprite
+            spriteId={config.hair}
+            className="avatar-layer avatar-layer--hair"
+            dataAttributes={hairDataId ? { 'data-hair': hairDataId } : undefined}
+          />
+        )}
+
+        {config.facial && (
+          <AvatarSprite
+            spriteId={config.facial}
+            className="avatar-layer avatar-layer--feature"
+            dataAttributes={{ 'data-facial': toDataAttributeId(config.facial, 'facial') }}
+          />
+        )}
+
+        {config.eyewear && (
+          <AvatarSprite
+            spriteId={config.eyewear}
+            className="avatar-layer avatar-layer--eyewear"
+            dataAttributes={{ 'data-eyewear': config.eyewear }}
+          />
+        )}
+
+        {config.headwear && (
+          <AvatarSprite
+            spriteId={config.headwear}
+            className="avatar-layer avatar-layer--headwear"
+            dataAttributes={{ 'data-headwear': config.headwear }}
+          />
+        )}
+
+        {config.accessories && (
+          <AvatarSprite
+            spriteId={config.accessories}
+            className="avatar-layer avatar-layer--accessories"
+            dataAttributes={{ 'data-accessories': config.accessories }}
+          />
+        )}
+
+        {config.clothing && (
+          <AvatarSprite
+            spriteId={config.clothing}
+            className="avatar-layer avatar-layer--clothing"
+            dataAttributes={{ 'data-clothing': config.clothing }}
+          />
+        )}
+      </div>
+    );
+  }
 
   return (
     <svg
@@ -15,6 +138,7 @@ export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
       {/* Base body (includes expression if using body-X-hY format) */}
       <use
         href={`/avatar-sprites.svg#${bodyId}`}
+        xlinkHref={`/avatar-sprites.svg#${bodyId}`}
         x="30"
         y="60"
         style={{ fill: bodyColor }}
@@ -50,15 +174,9 @@ export function Avatar({ config, size = 100, className = '' }: AvatarProps) {
         <use href={`/avatar-sprites.svg#${config.headwear}`} x="70" y="5" />
       )}
 
-      {/* Additional accessories */}
-      {config.accessories?.map((accessory: string, index: number) => (
-        <use
-          key={index}
-          href={`/avatar-sprites.svg#${accessory}`}
-          x="90"
-          y="90"
-        />
-      ))}
+      {config.accessories && (
+        <AvatarSprite spriteId={config.accessories} x={90} y={90} />
+      )}
     </svg>
   );
 }
@@ -122,12 +240,12 @@ export const avatarOptions = {
     'body-9': ['body-9-h1', 'body-9-h2', 'body-9-h3', 'body-9-h4']
   },
   hair: ['hair-1', 'hair-2', 'hair-3', 'hair-4', 'hair-5', 'hair-6', 'hair-7'],
-  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2'],
-  eyewear: ['glasses', 'welding-mask', 'orange-mask'],
+  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2', 'round-hat-3', 'orange-mask', 'orange-mask-2'],
+  eyewear: ['glasses', 'welding-mask', 'goggles'],
   facial: ['beard-1', 'beard-2', 'beard-3'],
-  clothing: ['yellow-vest', 'orange-vest'],
+  clothing: ['yellow-vest', 'orange-vest', 'name-tag'],
   shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
-  accessories: ['name-tag', 'beauty-spot', 'blush', 'lashes-1', 'lashes-2'],
+  accessories: ['beauty-spot', 'blush', 'lashes-1'],
   bodyColors: [
     '#FFB6C1', // Light Pink (default)
     '#FF69B4', // Hot Pink

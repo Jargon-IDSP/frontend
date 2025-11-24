@@ -1,29 +1,7 @@
 import React from 'react';
-
-// Typescript interface for Avatars
-export interface AvatarSpriteProps {
-  spriteId: string;
-
-  className?: string;
-
-  viewBox?: string;
-
-  size?: number;
-
-  width?: number;
-
-  height?: number;
-
-  style?: React.CSSProperties;
-
-  dataAttributes?: Record<string, string>;
-
-  x?: number | string;
-
-  y?: number | string;
-
-  spritePath?: string;
-}
+import { getBodyViewBox } from './bodyViewBoxes';
+import { getAccessoryViewBox } from './accessoryViewBoxes';
+import type { AvatarSpriteProps } from '../../types/avatar';
 
 
 export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
@@ -31,7 +9,7 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
     {
       spriteId,
       className,
-      viewBox = "0 0 300 300",
+      viewBox,
       size,
       width,
       height,
@@ -40,19 +18,25 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
       x,
       y,
       spritePath = "/avatar-sprites.svg",
+      bodyColor,
     },
     ref
   ) => {
     const href = `${spritePath}#${spriteId}`;
 
+    const resolvedViewBox = viewBox ||
+      (getBodyViewBox(spriteId) !== '0 0 300 300'
+        ? getBodyViewBox(spriteId)
+        : getAccessoryViewBox(spriteId));
+
     if (x !== undefined || y !== undefined) {
-      return <use href={href} x={x} y={y} />;
+      return <use href={href} xlinkHref={href} x={x} y={y} />;
     }
 
     const svgProps: React.SVGProps<SVGSVGElement> = {
       ref,
       className,
-      viewBox,
+      viewBox: resolvedViewBox,
       style,
       ...dataAttributes,
     };
@@ -68,9 +52,14 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
       svgProps.height = height;
     }
 
+    const useProps: React.SVGProps<SVGUseElement> = {};
+    if (bodyColor) {
+      useProps.style = { fill: bodyColor };
+    }
+
     return (
       <svg {...svgProps}>
-        <use href={href} />
+        <use href={href} xlinkHref={href} {...useProps} />
       </svg>
     );
   }

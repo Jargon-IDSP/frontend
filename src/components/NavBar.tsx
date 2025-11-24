@@ -46,12 +46,27 @@ export default function NavBar() {
     }
   };
 
+  const isCommunityActive = (path: string) => {
+    // Check if current path is a community-related page
+    if (path === "/community") {
+      return (
+        location.pathname === "/community" ||
+        location.pathname.startsWith("/community/") ||
+        location.pathname === "/leaderboard/full" ||
+        location.pathname.startsWith("/profile/friends")
+      );
+    }
+    return false;
+  };
+
   return (
     <>
       <nav className="navbar">
           <div className="nav-items">
             {navItems.map((item) => {
-              const isActive = location.pathname === item.path;
+              const isActive = item.path === "/community"
+                ? isCommunityActive(item.path)
+                : location.pathname === item.path;
 
               return (
                 <button

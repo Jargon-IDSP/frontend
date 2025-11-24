@@ -186,10 +186,18 @@ const ViewFriendsPage: React.FC = () => {
             <div className="leaderboard-header-actions">
               <button
                 className="view-friends-avatar-button"
-                onClick={() => navigate("/profile")}
+                onClick={() => navigate(`/profile/friends/${profile?.id}`)}
                 aria-label="Profile"
               >
-                <img src={rockyWhiteLogo} alt="Rocky" className="view-friends-avatar" />
+                {profile?.avatar ? (
+                  <AvatarDisplay
+                    config={profile.avatar}
+                    size={60}
+                    className="view-friends-avatar"
+                  />
+                ) : (
+                  <img src={rockyWhiteLogo} alt="Rocky" className="view-friends-avatar" />
+                )}
               </button>
             </div>
           </div>

@@ -19,12 +19,12 @@ const industryOptions: OnboardingOption[] = [
 ];
 
 const industryIdToName: { [key: number]: string } = {
-  1: 'general',
-  2: 'electrician',
-  3: 'plumber',
-  4: 'carpenter',
-  5: 'mechanic',
-  6: 'welder',
+  0: 'general',
+  1: 'electrician',
+  2: 'plumber',
+  3: 'carpenter',
+  4: 'mechanic',
+  5: 'welder',
 };
 
 interface OnboardingData {

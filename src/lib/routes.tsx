@@ -4,7 +4,9 @@ import ProtectedRoute from "../components/ProtectedRoute";
 import HomePage from "../mounting/HomePage";
 import ChatPage from "../mounting/ChatPage";
 import ProfilePage from "../pages/users/ProfilePage";
-import { AvatarEditPage, AvatarViewPage } from "../pages/users/avatar/AvatarPage";
+import SettingsPage from "../pages/users/SettingsPage";
+import AccountPage from "../pages/users/AccountPage";
+import { AvatarEditPage, AvatarViewPage, AvatarOnboardingPage } from "../pages/users/avatar/AvatarPage";
 import FriendsPage from "../pages/users/FriendsPage";
 import FriendProfilePage from "../pages/users/FriendProfilePage";
 import EditLessonPage from "../pages/users/EditLessonPage";
@@ -58,12 +60,24 @@ export const routes: RouteObject[] = [
     element: protect(<IndustryPreferences />),
   },
   {
+    path: "/onboarding/avatar",
+    element: protect(<AvatarOnboardingPage />),
+  },
+  {
     path: "/chat",
     element: protect(<ChatPage />),
   },
   {
     path: "/profile",
     element: protect(<ProfilePage />),
+  },
+  {
+    path: "/settings",
+    element: protect(<SettingsPage />),
+  },
+  {
+    path: "/account",
+    element: protect(<AccountPage />),
   },
     {
     path: "/avatar",

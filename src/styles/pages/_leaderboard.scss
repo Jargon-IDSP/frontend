@@ -210,18 +210,6 @@
   flex: 1;
   min-height: 0;
 
-  &:before {
-    content: "";
-    position: absolute;
-    top: $spacing-sm;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 56px;
-    height: 6px;
-    border-radius: $border-radius-full;
-    background: $color-quaternary-light;
-  }
-
   @media (max-width: $tablet-min) {
     margin-top: calc(#{$spacing-xl} * -1.2);
     padding-top: $spacing-lg;
@@ -407,9 +395,11 @@
 }
 
 .leaderboard-empty-avatar {
-  width: 100%;
   max-width: 300px;
+  max-height: 250px;
+  width: 100%;
   height: auto;
+  object-fit: contain;
   margin-bottom: $spacing-xl;
 }
 
@@ -679,6 +669,8 @@
 
   &--current-user {
     border: 2px solid $color-primary;
+    margin-left: -2px;
+    margin-right: -2px;
   }
 }
 
@@ -692,7 +684,6 @@
   display: flex;
   align-items: center;
   gap: $spacing-md;
-  flex: 1;
 
   &--regular {
     color: $color-neutral;
@@ -710,6 +701,7 @@
   font-size: $font-size-body;
   font-weight: $font-weight-medium;
   color: $color-quaternary;
+  margin-right: 0.3rem;
 }
 
 .leaderboard-item-rank {
@@ -756,5 +748,4 @@
   font-weight: $font-weight-bold;
   color: $color-quaternary-dark;
   font-size: $font-size-label;
-  padding: 0.2rem 0.5rem;
 }

@@ -10,6 +10,7 @@ import lessonIconWrench from "../assets/icons/lessonIconWrench.svg";
 import editIconRed from "../assets/icons/editIconRed.svg";
 import downArrow from "../assets/icons/downArrow.svg";
 import { useNotificationContext } from "../contexts/NotificationContext";
+import { useQuizAccessRequests } from "../hooks/useQuizAccessRequests";
 
 interface FriendLessonsSectionProps {
   friendId: string;
@@ -22,10 +23,9 @@ interface FriendLessonsSectionProps {
     isFollowing: boolean;
   } | undefined;
   myRequestedQuizIds: string[];
+  pendingRequests: Array<{ quizId: string; quizName: string }>;
   isOwnProfile: boolean;
   getUserDisplayName: () => string;
-  handleFriendshipAction: () => void;
-  sendRequestMutationPending: boolean;
   onLessonClick: (lessonId: string) => void;
 }
 
@@ -71,7 +71,7 @@ function getLessonDisplayMode(
         // FRIENDS + NOT FRIENDS: Show follow prompt
         return {
           mode: "prompt_follow",
-          message: "Follow {name} to view their lessons",
+          message: "Follow to see all of {name}'s current lessons",
         };
       }
 
@@ -102,24 +102,32 @@ function getLessonDisplayMode(
   }
 }
 
-// Helper function to check if a lesson should show a lock icon
+// Helper function to check if a lesson should show a lock icon or incoming request
 function shouldShowLockIcon(
   quiz: FriendQuiz,
   displayMode: string,
-  myRequestedQuizIds: string[]
-): { showLock: boolean; showPending: boolean } {
+  myRequestedQuizIds: string[],
+  pendingRequests: Array<{ quizId: string; quizName: string }>
+): { showLock: boolean; showPending: boolean; showIncomingRequest: boolean } {
+  // Check if this quiz has an incoming request (someone requesting access to owner's quiz)
+  const hasIncomingRequest = pendingRequests.some(req => req.quizId === quiz.id);
+  if (hasIncomingRequest) {
+    return { showLock: false, showPending: false, showIncomingRequest: true };
+  }
+
   if (displayMode !== "show_locked") {
-    return { showLock: false, showPending: false };
+    return { showLock: false, showPending: false, showIncomingRequest: false };
   }
 
   if (!quiz.isLocked) {
-    return { showLock: false, showPending: false };
+    return { showLock: false, showPending: false, showIncomingRequest: false };
   }
 
   const isPending = myRequestedQuizIds.includes(quiz.id);
   return {
     showLock: !isPending,
     showPending: isPending,
+    showIncomingRequest: false,
   };
 }
 
@@ -129,10 +137,9 @@ export default function FriendLessonsSection({
   friendQuizzes,
   friendshipStatus,
   myRequestedQuizIds,
+  pendingRequests,
   isOwnProfile,
   getUserDisplayName,
-  handleFriendshipAction,
-  sendRequestMutationPending,
   onLessonClick,
 }: FriendLessonsSectionProps) {
   const navigate = useNavigate();
@@ -140,6 +147,12 @@ export default function FriendLessonsSection({
   const queryClient = useQueryClient();
   const { showToast } = useNotificationContext();
   const [isExpanded, setIsExpanded] = useState(false);
+
+  // Approve and deny mutations for incoming requests
+  const { approveQuizAccessMutation, denyQuizAccessMutation } = useQuizAccessRequests({
+    friendId,
+    friendName: getUserDisplayName(),
+  });
 
   // Request quiz access mutation
   const requestQuizAccessMutation = useMutation({
@@ -233,26 +246,37 @@ export default function FriendLessonsSection({
     return (
       <div className="friend-profile-lessons-list">
         {lessonsToShow.map((quiz) => {
-          const { showLock, showPending } = shouldShowLockIcon(
+          const { showLock, showPending, showIncomingRequest } = shouldShowLockIcon(
             quiz,
             displayMode.mode,
-            myRequestedQuizIds
+            myRequestedQuizIds,
+            pendingRequests
           );
           const isClickable = !quiz.isLocked || displayMode.mode !== "show_locked";
+
+          // Determine the card class based on state
+          let cardClassName = "friend-profile-lesson-list-item";
+          if (showLock) {
+            cardClassName += " friend-profile-lesson-list-item--locked";
+          } else if (showIncomingRequest) {
+            cardClassName += " friend-profile-lesson-list-item--incoming-request";
+          }
 
           return (
             <div
               key={quiz.id}
-              className="friend-profile-lesson-list-item"
-              onClick={() => isClickable && onLessonClick(quiz.id)}
-              style={{ cursor: isClickable ? "pointer" : "default" }}
+              className={cardClassName}
+              onClick={() => isClickable && !showIncomingRequest && onLessonClick(quiz.id)}
+              style={{ cursor: isClickable && !showIncomingRequest ? "pointer" : "default" }}
             >
-              <img
-                src={lessonIconWrench}
-                alt="Lesson"
-                className="friend-profile-lesson-wrench-icon"
-              />
-              <span className="friend-profile-lesson-list-name">{quiz.name}</span>
+              {!showLock && (
+                <img
+                  src={lessonIconWrench}
+                  alt="Lesson"
+                  className="friend-profile-lesson-wrench-icon"
+                />
+              )}
+              <div className="friend-profile-lesson-list-name">{quiz.name}</div>
 
               {showPending && (
                 <span className="friend-profile-lesson-request-pending">
@@ -268,17 +292,44 @@ export default function FriendLessonsSection({
                     e.stopPropagation();
                     requestQuizAccessMutation.mutate(quiz.id);
                   }}
-                  disabled={requestQuizAccessMutation.isPending || sendRequestMutationPending}
+                  disabled={requestQuizAccessMutation.isPending}
                 >
+                  <span className="friend-profile-lesson-request-button-text">
+                    Request
+                  </span>
                   <img
                     src={lockIcon}
                     alt="Locked"
                     className="friend-profile-lesson-request-button-icon"
                   />
-                  <span className="friend-profile-lesson-request-button-text">
-                    Request Access
-                  </span>
                 </button>
+              )}
+
+              {showIncomingRequest && (
+                <div className="friend-profile-lesson-action-buttons">
+                  <button
+                    type="button"
+                    className="friend-profile-lesson-action-button friend-profile-lesson-action-button--approve"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      approveQuizAccessMutation.mutate(quiz.id);
+                    }}
+                    disabled={approveQuizAccessMutation.isPending || denyQuizAccessMutation.isPending}
+                  >
+                    Approve
+                  </button>
+                  <button
+                    type="button"
+                    className="friend-profile-lesson-action-button friend-profile-lesson-action-button--deny"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      denyQuizAccessMutation.mutate(quiz.id);
+                    }}
+                    disabled={approveQuizAccessMutation.isPending || denyQuizAccessMutation.isPending}
+                  >
+                    Deny
+                  </button>
+                </div>
               )}
 
               {isOwnProfile && (
@@ -290,11 +341,11 @@ export default function FriendLessonsSection({
                     e.stopPropagation();
                     // Navigate to edit lesson page
                     const currentPath = window.location.pathname;
-                    const userId = currentPath.includes("/profile/friends/") 
-                      ? currentPath.split("/profile/friends/")[1] 
+                    const userId = currentPath.includes("/profile/friends/")
+                      ? currentPath.split("/profile/friends/")[1]
                       : "me";
                     navigate(`/profile/lessons/${quiz.id}/edit`, {
-                      state: { 
+                      state: {
                         from: currentPath,
                         userId: userId !== "me" ? userId : undefined,
                         lessonName: quiz.name
@@ -327,20 +378,11 @@ export default function FriendLessonsSection({
     );
   };
 
-  // Render prompt message with optional button
+  // Render prompt message
   const renderPrompt = () => {
     return (
-      <div className="friend-profile-no-lessons">
+      <div className="friend-profile-follow-lessons">
         <p className="friend-profile-lessons-message">{message}</p>
-        {displayMode.mode === "prompt_follow" && (
-          <button
-            className="friend-profile-friendship-button friend-profile-friendship-button--add"
-            onClick={handleFriendshipAction}
-            disabled={sendRequestMutationPending}
-          >
-            {sendRequestMutationPending ? "..." : "Follow"}
-          </button>
-        )}
       </div>
     );
   };

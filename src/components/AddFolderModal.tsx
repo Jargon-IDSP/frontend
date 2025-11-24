@@ -64,9 +64,7 @@ export function AddFolderModal({
               disabled={isSubmitting}
               autoFocus
             />
-            {error && (
-              <p className="add-folder-modal__error">{error}</p>
-            )}
+            {error && <p className="add-folder-modal__error">{error}</p>}
           </div>
 
           <div className="add-folder-modal__actions">
@@ -91,4 +89,3 @@ export function AddFolderModal({
     </div>
   );
 }
-

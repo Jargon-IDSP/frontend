@@ -2776,17 +2776,6 @@ button.back-button {
   flex: 1;
   min-height: 0;
 }
-.leaderboard-page .leaderboard-drawer:before {
-  content: "";
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f1eae8;
-}
 @media (max-width: 768px) {
   .leaderboard-page .leaderboard-drawer {
     margin-top: calc(2.5rem * -1.2);
@@ -4306,17 +4295,6 @@ button.back-button {
   width: 100%;
   overflow-y: auto;
 }
-.edit-lesson-drawer:before {
-  content: "";
-  position: absolute;
-  top: 0.5rem;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 56px;
-  height: 6px;
-  border-radius: 50%;
-  background: #f1eae8;
-}
 
 .edit-lesson-content {
   display: flex;
@@ -4608,7 +4586,7 @@ button.back-button {
 
 .friend-profile-page {
   padding: 1.5rem;
-  max-width: 1200px;
+  max-width: 480px;
   margin: 0 auto;
   width: 100%;
   box-sizing: border-box;
@@ -4853,13 +4831,14 @@ button.back-button {
 
 .friend-profile-lesson-list-item {
   padding: 1rem;
+  flex-direction: column;
   background: white;
   border: 1px solid #6f2e17;
   border-radius: 8px;
   display: flex;
   align-items: center;
   gap: 0.5rem;
-}
+
 
 .friend-profile-lesson-wrench-icon {
   width: 40px;
@@ -4872,6 +4851,7 @@ button.back-button {
   font-weight: 700;
   color: #652a15;
   flex: 1;
+}
 }
 
 .friend-profile-lesson-edit-icon {

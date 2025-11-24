@@ -45,6 +45,11 @@ export default function DeleteDrawer({
       onOpenChange(false);
       if (navigateOnSuccess) {
         navigate("/learning/custom");
+      } else if (onCancel) {
+        // Call onCancel after successful deletion when custom navigation is needed
+        setTimeout(() => {
+          onCancel();
+        }, 200);
       }
     },
   });

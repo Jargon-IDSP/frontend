@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router-dom";
 import ProfileStatsCard from "./ProfileStatsCard";
 import type { ProfileCardProps } from "../types/profile";
 import { AvatarDisplay } from "./avatar";
@@ -10,9 +11,41 @@ export default function ProfileCard({
   followingCount,
   lessonCount,
   avatar,
+  isOwnProfile,
+  isFriend,
+  isFollowing,
+  onFriendshipAction,
+  isSendRequestPending,
+  isRemoveFriendPending,
 }: ProfileCardProps) {
+  const navigate = useNavigate();
+  const showUnfollowButton = isFriend || isFollowing;
+
   return (
     <div className="friend-profile-card">
+       {isOwnProfile ? (
+          <button
+            className="friend-profile-friendship-button friend-profile-friendship-button--own"
+            onClick={() => navigate('/profile')}
+          >
+            Your Profile
+          </button>
+        ) : (
+          <button
+            className={`friend-profile-friendship-button ${
+              showUnfollowButton
+                ? "friend-profile-friendship-button--remove"
+                : "friend-profile-friendship-button--add"
+            }`}
+            onClick={onFriendshipAction}
+            disabled={isSendRequestPending || isRemoveFriendPending}
+          >
+            {showUnfollowButton
+              ? (isRemoveFriendPending ? "..." : "Unfollow")
+              : (isSendRequestPending ? "..." : "Follow")
+            }
+          </button>
+        )}
       <div className="friend-profile-avatar">
         {avatar ? (
           <AvatarDisplay

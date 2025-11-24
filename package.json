@@ -5,9 +5,10 @@
   "type": "module",
   "scripts": {
     "start": "vite",
-    "build": "tsc -b && vite build",
+    "build": "npm run process-sprites && tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "process-sprites": "node scripts/process-avatar-sprites.cjs"
   },
   "dependencies": {
     "@clerk/clerk-react": "^5.49.0",

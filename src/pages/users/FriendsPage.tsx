@@ -239,22 +239,8 @@ export default function FriendsPage() {
                 with!
               </p>
             </div>
-            {/* <div className="leaderboard-header-actions">
-              <button
-                className="view-friends-avatar-button"
-                onClick={() => navigate("/profile")}
-                aria-label="Profile"
-              >
-                <img
-                  src={rockyWhiteLogo}
-                  alt="Rocky"
-                  className="view-friends-avatar"
-                />
-              </button>
-            </div> */}
           </div>
 
-          {/* Search Bar */}
           <div className="friends-search-container-new">
             <img
               src={searchIconBlue}
