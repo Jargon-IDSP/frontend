@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useState, useRef, useEffect, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
@@ -37,14 +37,12 @@ const industryIdToName: { [key: number]: string } = {
 
 export default function ProfilePage() {
   const navigate = useNavigate();
-  const { signOut, getToken } = useAuth();
+  const { getToken } = useAuth();
   const { data, error: queryError, isLoading } = useProfile();
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [isPrivacyDrawerOpen, setIsPrivacyDrawerOpen] = useState(false);
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatPrompt, setChatPrompt] = useState("");
-  const dropdownRef = useRef<HTMLDivElement>(null);
   const { data: userBadges } = useUserBadges();
   const {
     data: customWordCount = 0,
@@ -90,53 +88,8 @@ export default function ProfilePage() {
     }).filter((icon): icon is { id: string; name: string; url: string } => icon !== null && icon.url !== null);
   }, [userBadges]);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
-        setIsDropdownOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, []);
-
   const handleSettingsClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
-  };
-
-  const handleProfileClick = () => {
-    setIsDropdownOpen(false);
-    navigate("/profile");
-  };
-
-  const handlePrivacyClick = () => {
-    setIsDropdownOpen(false);
-    setIsPrivacyDrawerOpen(true);
-  };
-
-  const handleLanguagesClick = () => {
-    setIsDropdownOpen(false);
-    navigate("/onboarding/language");
-  };
-
-  const handleIndustryClick = () => {
-    setIsDropdownOpen(false);
-    navigate("/onboarding/industry");
-  };
-
-  const handleLogoutClick = async () => {
-    try {
-      setIsDropdownOpen(false);
-      await signOut({ redirectUrl: "/" });
-    } catch (error) {
-      console.error("Logout error:", error);
-      // Force navigation even if signOut fails
-      window.location.href = "/";
-    }
+    navigate("/settings");
   };
 
   // Chat handlers
@@ -234,59 +187,13 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
           <h1 className="profile-header-title">Profile</h1>
           <div className="profile-header-actions">
             <NotificationBell />
-            <div className="profile-settings-container" ref={dropdownRef}>
-              <button
-                className="profile-settings-icon"
-                onClick={handleSettingsClick}
-                aria-label="Settings"
-              >
-                <img src={settingsIcon} alt="settings" className="settings-logo" />
-              </button>
-
-            {isDropdownOpen && (
-              <div className="profile-settings-dropdown">
-                <button
-                  className="profile-settings-item"
-                  onClick={handleProfileClick}
-                >
-                  Profile
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    navigate("/avatar/edit");
-                  }}
-                >
-                  Avatar
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handlePrivacyClick}
-                >
-                  Privacy
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handleLanguagesClick}
-                >
-                  Languages
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handleIndustryClick}
-                >
-                  Industry
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handleLogoutClick}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-            </div>
+            <button
+              className="profile-settings-icon"
+              onClick={handleSettingsClick}
+              aria-label="Settings"
+            >
+              <img src={settingsIcon} alt="settings" className="settings-logo" />
+            </button>
           </div>
         </div>
 
