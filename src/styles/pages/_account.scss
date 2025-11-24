@@ -1,0 +1,319 @@
+@use '../variables' as *;
+
+.account-page {
+  min-height: 100vh;
+  padding-bottom: 120px;
+}
+
+.account-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $spacing-lg;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: white;
+}
+
+.account-back-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.account-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary-dark;
+  margin: 0;
+}
+
+.account-header-spacer {
+  width: 40px;
+}
+
+.account-loading {
+  padding: $spacing-xl;
+  text-align: center;
+  color: $color-neutral;
+}
+
+// Avatar Section
+.account-avatar-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: $spacing-xl $spacing-lg;
+  gap: $spacing-md;
+}
+
+.account-avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-color: $tertiary-100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.account-avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.account-avatar-placeholder {
+  width: 60px;
+  height: 60px;
+}
+
+.account-edit-avatar-button {
+  background: none;
+  border: none;
+  color: $color-primary;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  cursor: pointer;
+  padding: 0;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+}
+
+// Form Section
+.account-form {
+  padding: 0 $spacing-lg;
+}
+
+.account-form-group {
+  margin-bottom: $spacing-lg;
+}
+
+.account-form-label {
+  display: block;
+  font-size: $font-size-label;
+  font-weight: $font-weight-medium;
+  color: $color-neutral;
+  margin-bottom: $spacing-sm;
+}
+
+.account-form-input {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  font-family: $font-family-primary;
+  color: $color-quaternary-dark;
+  background-color: white;
+  border: 1px solid $tertiary-200;
+  border-radius: $border-radius-md;
+  transition: border-color $transition-fast;
+
+  &:focus {
+    outline: none;
+    border-color: $color-primary;
+  }
+
+  &:disabled {
+    background-color: $tertiary-50;
+    color: $neutral-400;
+    cursor: not-allowed;
+  }
+
+  &::placeholder {
+    color: $neutral-300;
+  }
+}
+
+// Dropdown Styles
+.account-dropdown-container {
+  position: relative;
+}
+
+.account-dropdown-trigger {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  font-family: $font-family-primary;
+  color: $color-quaternary-dark;
+  background-color: white;
+  border: 1px solid $tertiary-200;
+  border-radius: $border-radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color $transition-fast;
+  text-align: left;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+}
+
+.account-dropdown-selected {
+  color: $color-quaternary-dark;
+}
+
+.account-dropdown-placeholder {
+  color: $neutral-300;
+}
+
+.account-dropdown-arrow {
+  width: 20px;
+  height: 20px;
+  transition: transform $transition-normal;
+
+  &--open {
+    transform: rotate(180deg);
+  }
+}
+
+.account-dropdown-menu {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background-color: white;
+  border: 1px solid $tertiary-200;
+  border-radius: $border-radius-md;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  z-index: 100;
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+.account-dropdown-item {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  font-family: $font-family-primary;
+  color: $color-quaternary-dark;
+  background: none;
+  border: none;
+  border-bottom: 1px solid $tertiary-100;
+  cursor: pointer;
+  text-align: left;
+  transition: background-color $transition-fast;
+
+  &:last-child {
+    border-bottom: none;
+  }
+
+  &:hover {
+    background-color: $tertiary-50;
+  }
+
+  &--selected {
+    background-color: $color-primary-100;
+    color: $color-primary;
+    font-weight: $font-weight-medium;
+  }
+}
+
+// Language Button
+.account-language-button {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  font-family: $font-family-primary;
+  color: $color-quaternary-dark;
+  background-color: white;
+  border: 1px solid $tertiary-200;
+  border-radius: $border-radius-md;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: border-color $transition-fast;
+
+  &:hover {
+    border-color: $color-primary;
+  }
+}
+
+.account-language-arrow {
+  width: 20px;
+  height: 20px;
+  transform: rotate(-90deg);
+}
+
+// Delete Account Section
+.account-delete-section {
+  padding: $spacing-xl $spacing-lg;
+  margin-top: $spacing-lg;
+}
+
+.account-delete-button {
+  width: 100%;
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  background-color: transparent;
+  border: 2px solid $color-primary;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-normal;
+  margin-bottom: $spacing-sm;
+
+  &:hover {
+    background-color: $color-primary;
+    color: white;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}
+
+.account-delete-warning {
+  font-size: $font-size-label;
+  color: $neutral-400;
+  text-align: center;
+  margin: 0;
+  line-height: $line-height-normal;
+}
+
+// Save Button
+.account-save-button {
+  width: calc(100% - #{$spacing-lg * 2});
+  margin: $spacing-xl $spacing-lg;
+  padding: $spacing-md;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: white;
+  background-color: $color-quaternary-dark;
+  border: none;
+  border-radius: $border-radius-lg;
+  cursor: pointer;
+  transition: all $transition-normal;
+
+  &:hover:not(:disabled) {
+    background-color: $color-quaternary-500;
+  }
+
+  &:active:not(:disabled) {
+    transform: scale(0.98);
+  }
+
+  &:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+}
