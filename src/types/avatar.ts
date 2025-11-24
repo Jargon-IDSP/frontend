@@ -34,6 +34,8 @@ export interface AvatarSpriteProps {
   y?: number | string;
 
   spritePath?: string;
+
+  bodyColor?: string;
 }
 
 export interface AvatarDisplayProps {

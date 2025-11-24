@@ -310,16 +310,19 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
 
     let className = "avatar-option__preview";
     let viewBox = "0 0 300 300";
+    let bodyColor: string | undefined;
 
     if (activeTab === 'body') {
       // Body shapes
       if (!optionId.startsWith('#')) {
         className = "avatar-option__preview avatar-option__preview--body";
         viewBox = getBodyViewBox(optionId);
+        bodyColor = config.bodyColor || '#ffba0a';
       }
     } else if (activeTab === 'expression') {
       className = "avatar-option__preview avatar-option__preview--body";
       viewBox = getBodyViewBox(optionId);
+      bodyColor = config.bodyColor || '#ffba0a';
     } else if (activeTab === 'hair') {
       className = "avatar-option__preview avatar-option__preview--hair";
     } else if (activeTab === 'accessories') {
@@ -343,6 +346,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         spriteId={optionId}
         className={className}
         viewBox={viewBox}
+        bodyColor={bodyColor}
       />
     );
   };

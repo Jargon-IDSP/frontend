@@ -18,6 +18,7 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
       x,
       y,
       spritePath = "/avatar-sprites.svg",
+      bodyColor,
     },
     ref
   ) => {
@@ -49,6 +50,13 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
     }
     if (height !== undefined) {
       svgProps.height = height;
+    }
+
+    if (bodyColor) {
+      svgProps.style = {
+        ...svgProps.style,
+        fill: bodyColor,
+      };
     }
 
     return (
