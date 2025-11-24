@@ -4823,6 +4823,14 @@ button.back-button {
   text-align: left;
 }
 
+.edit-lesson-shared-empty {
+  text-align: center;
+  padding: 1rem;
+  color: #393939;
+  font-size: 16px;
+  font-style: italic;
+}
+
 .edit-lesson-input-group {
   display: flex;
   flex-direction: column;
