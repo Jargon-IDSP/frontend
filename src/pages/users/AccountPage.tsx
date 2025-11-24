@@ -133,7 +133,7 @@ export default function AccountPage() {
             {profile?.avatar ? (
               <AvatarDisplay
                 config={profile.avatar}
-                size={100}
+                size={70}
                 className="account-avatar-image"
               />
             ) : (

@@ -8,6 +8,9 @@ import ChatModal from "../../components/learning/ChatModal";
 import type { ChatMessage } from "../../types/components/quiz";
 import { BACKEND_URL } from "../../lib/api";
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
+import reportIssueIcon from '../../assets/icons/reportIssue.svg';
+import faqIcon from '../../assets/icons/faq.svg';
+import needHelpIcon from '../../assets/icons/needHelp.svg';
 import '../../styles/pages/_settings.scss';
 
 // Language mapping for display
@@ -217,11 +220,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             }}
           >
             <div className="settings-item-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <line x1="12" y1="16" x2="12" y2="12" />
-                <line x1="12" y1="8" x2="12.01" y2="8" />
-              </svg>
+              <img src={reportIssueIcon} alt="Report Issue" />
             </div>
             <span className="settings-item-label">Report an issue</span>
             <svg className="settings-item-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -237,11 +236,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             }}
           >
             <div className="settings-item-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <circle cx="12" cy="12" r="10" />
-                <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3" />
-                <line x1="12" y1="17" x2="12.01" y2="17" />
-              </svg>
+              <img src={faqIcon} alt="FAQ" />
             </div>
             <span className="settings-item-label">FAQ</span>
             <svg className="settings-item-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -254,9 +249,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             onClick={handleOpenChat}
           >
             <div className="settings-item-icon">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-              </svg>
+              <img src={needHelpIcon} alt="Need Help" />
             </div>
             <span className="settings-item-label">Need Help</span>
             <svg className="settings-item-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
