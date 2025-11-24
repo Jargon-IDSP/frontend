@@ -1,0 +1,187 @@
+@use '../variables' as *;
+
+.settings-page {
+  min-height: 100vh;
+  padding-bottom: 100px;
+}
+
+.settings-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: $spacing-md $spacing-lg;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.settings-back-button {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+
+  img {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+.settings-title {
+  font-size: $font-size-h2;
+  font-weight: $font-weight-medium;
+  color: $color-quaternary-dark;
+  margin: 0;
+}
+
+.settings-header-spacer {
+  width: 40px;
+}
+
+.settings-section {
+  margin: $spacing-lg 0;
+  padding: 0 $spacing-lg;
+}
+
+.settings-section-title {
+  font-size: $font-size-label;
+  font-weight: $font-weight-medium;
+  color: $color-neutral;
+  margin-bottom: $spacing-md;
+  text-transform: uppercase;
+  letter-spacing: $letter-spacing-wide;
+}
+
+.settings-item {
+  display: flex;
+  align-items: center;
+  gap: $spacing-md;
+  padding: $spacing-md 0;
+  background: none;
+  border: none;
+  border-bottom: 1px solid $tertiary-200;
+  cursor: pointer;
+  width: 100%;
+  text-align: left;
+  transition: opacity $transition-fast;
+
+  &:hover {
+    opacity: 0.7;
+  }
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.settings-item-icon {
+  width: 24px;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $color-quaternary-dark;
+  flex-shrink: 0;
+}
+
+.settings-item-label {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $color-quaternary-dark;
+  flex: 1;
+}
+
+.settings-item-value {
+  font-size: $font-size-body;
+  font-weight: $font-weight-regular;
+  color: $neutral-400;
+  margin-right: $spacing-sm;
+}
+
+.settings-item-arrow {
+  width: 20px;
+  height: 20px;
+  color: $neutral-400;
+  flex-shrink: 0;
+}
+
+// Toggle Switch Styles
+.settings-toggle {
+  position: relative;
+  display: inline-block;
+  width: 51px;
+  height: 31px;
+  flex-shrink: 0;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+
+    &:checked + .settings-toggle-slider {
+      background-color: $color-quaternary-dark;
+
+      &:before {
+        transform: translateX(20px);
+      }
+    }
+
+    &:focus + .settings-toggle-slider {
+      box-shadow: 0 0 1px $color-quaternary-dark;
+    }
+  }
+}
+
+.settings-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: $transition-normal;
+  border-radius: 34px;
+
+  &:before {
+    position: absolute;
+    content: "";
+    height: 23px;
+    width: 23px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: $transition-normal;
+    border-radius: 50%;
+  }
+}
+
+// Logout Button
+.settings-logout-button {
+  display: block;
+  width: calc(100% - #{$spacing-lg * 2});
+  margin: $spacing-xl $spacing-lg;
+  padding: $spacing-md;
+  background-color: transparent;
+  border: 2px solid $color-primary;
+  border-radius: $border-radius-lg;
+  font-size: $font-size-body;
+  font-weight: $font-weight-medium;
+  color: $color-primary;
+  cursor: pointer;
+  transition: all $transition-normal;
+
+  &:hover {
+    background-color: $color-primary;
+    color: white;
+  }
+
+  &:active {
+    transform: scale(0.98);
+  }
+}

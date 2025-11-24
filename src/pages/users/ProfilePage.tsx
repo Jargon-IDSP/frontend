@@ -105,7 +105,7 @@ export default function ProfilePage() {
   }, []);
 
   const handleSettingsClick = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+    navigate("/settings");
   };
 
   const handleProfileClick = () => {
@@ -234,59 +234,13 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
           <h1 className="profile-header-title">Profile</h1>
           <div className="profile-header-actions">
             <NotificationBell />
-            <div className="profile-settings-container" ref={dropdownRef}>
-              <button
-                className="profile-settings-icon"
-                onClick={handleSettingsClick}
-                aria-label="Settings"
-              >
-                <img src={settingsIcon} alt="settings" className="settings-logo" />
-              </button>
-
-            {isDropdownOpen && (
-              <div className="profile-settings-dropdown">
-                <button
-                  className="profile-settings-item"
-                  onClick={handleProfileClick}
-                >
-                  Profile
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    navigate("/avatar/edit");
-                  }}
-                >
-                  Avatar
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handlePrivacyClick}
-                >
-                  Privacy
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handleLanguagesClick}
-                >
-                  Languages
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handleIndustryClick}
-                >
-                  Industry
-                </button>
-                <button
-                  className="profile-settings-item"
-                  onClick={handleLogoutClick}
-                >
-                  Logout
-                </button>
-              </div>
-            )}
-            </div>
+            <button
+              className="profile-settings-icon"
+              onClick={handleSettingsClick}
+              aria-label="Settings"
+            >
+              <img src={settingsIcon} alt="settings" className="settings-logo" />
+            </button>
           </div>
         </div>
 
