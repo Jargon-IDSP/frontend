@@ -9,6 +9,7 @@ lerna-debug.log*
 .env
 dotenv
 env
+.claude
 
 node_modules
 dist
