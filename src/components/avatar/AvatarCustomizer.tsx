@@ -13,7 +13,7 @@ const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
   { id: 'expression', label: 'Expression' },
   { id: 'hair', label: 'Hair' },
-  { id: 'accessories', label: 'Make up' },
+  { id: 'accessories', label: 'Accessories' },
 ];
 
 export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }: AvatarCustomizerProps = {}) {
