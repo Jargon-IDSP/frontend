@@ -189,12 +189,12 @@ export const avatarOptions = {
     'body-9': ['body-9-h1', 'body-9-h2', 'body-9-h3', 'body-9-h4']
   },
   hair: ['hair-1', 'hair-2', 'hair-3', 'hair-4', 'hair-5', 'hair-6', 'hair-7'],
-  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2', 'round-hat-3'],
-  eyewear: ['glasses', 'welding-mask', 'orange-mask', 'goggles', 'orange-mask-2'],
+  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2', 'round-hat-3', 'orange-mask', 'orange-mask-2'],
+  eyewear: ['glasses', 'welding-mask', 'goggles'],
   facial: ['beard-1', 'beard-2', 'beard-3'],
-  clothing: ['yellow-vest', 'orange-vest'],
+  clothing: ['yellow-vest', 'orange-vest', 'name-tag'],
   shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
-  accessories: ['name-tag', 'beauty-spot', 'blush', 'lashes-1'],
+  accessories: ['beauty-spot', 'blush', 'lashes-1'],
   bodyColors: [
     '#ffba0a',
     '#ffdf8e', 
