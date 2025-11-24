@@ -52,16 +52,14 @@ export const AvatarSprite = React.forwardRef<SVGSVGElement, AvatarSpriteProps>(
       svgProps.height = height;
     }
 
+    const useProps: React.SVGProps<SVGUseElement> = {};
     if (bodyColor) {
-      svgProps.style = {
-        ...svgProps.style,
-        fill: bodyColor,
-      };
+      useProps.style = { fill: bodyColor };
     }
 
     return (
       <svg {...svgProps}>
-        <use href={href} xlinkHref={href} />
+        <use href={href} xlinkHref={href} {...useProps} />
       </svg>
     );
   }
