@@ -8,6 +8,63 @@ import { useAvatar } from '../../hooks/useAvatar';
 import { useUser } from '@clerk/clerk-react';
 import LoadingBar from '../LoadingBar';
 
+// Body color classes that need dynamic coloring
+const BODY_COLOR_CLASSES = [
+  'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
+  'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
+];
+
+// Fetch and color symbol content for body/expression previews
+async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<string | null> {
+  try {
+    const response = await fetch('/avatar-sprites.svg');
+    const svgText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const symbol = doc.getElementById(symbolId);
+    if (!symbol) return null;
+
+    let content = symbol.innerHTML;
+
+    // Apply body color to all body color classes
+    BODY_COLOR_CLASSES.forEach(className => {
+      const regex = new RegExp(`class="${className}"`, 'g');
+      content = content.replace(regex, `class="${className}" fill="${bodyColor}"`);
+    });
+
+    return content;
+  } catch (error) {
+    console.error('Failed to fetch symbol:', error);
+    return null;
+  }
+}
+
+// Component for body/expression preview with embedded SVG
+function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
+  spriteId: string;
+  bodyColor: string;
+  className: string;
+  viewBox: string;
+}) {
+  const [content, setContent] = useState<string>('');
+
+  useEffect(() => {
+    fetchColoredSymbol(spriteId, bodyColor).then(result => {
+      if (result) setContent(result);
+    });
+  }, [spriteId, bodyColor]);
+
+  if (!content) return null;
+
+  return (
+    <svg
+      className={className}
+      viewBox={viewBox}
+      dangerouslySetInnerHTML={{ __html: content }}
+    />
+  );
+}
+
 // This is how the tabs are defined in the frontend
 const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
@@ -341,12 +398,23 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       }
     }
 
+    // Use BodyPreview for body/expression to avoid Safari shadow DOM issues
+    if (bodyColor) {
+      return (
+        <BodyPreview
+          spriteId={optionId}
+          bodyColor={bodyColor}
+          className={className}
+          viewBox={viewBox}
+        />
+      );
+    }
+
     return (
       <AvatarSprite
         spriteId={optionId}
         className={className}
         viewBox={viewBox}
-        bodyColor={bodyColor}
       />
     );
   };
