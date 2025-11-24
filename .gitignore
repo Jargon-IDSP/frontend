@@ -33,3 +33,6 @@ env
 .env
 dotenv
 env
+
+# Avatar sprite backup
+public/avatar-sprites.backup.svg

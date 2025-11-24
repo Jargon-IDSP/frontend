@@ -31,12 +31,31 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
     useEffect(() => {
       fetchSymbolContent(bodyId).then(content => {
         if (content) {
-          const coloredContent = content
-            .replace(/class="st49"/g, `class="st49" style="fill: ${bodyColor} !important"`);
+          // Apply body color to all body color classes for Safari iOS compatibility
+          // Using inline fill attribute instead of CSS to bypass shadow DOM issues
+          const BODY_COLOR_CLASSES = [
+            'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
+            'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
+          ];
+
+          let coloredContent = content;
+          BODY_COLOR_CLASSES.forEach(className => {
+            const regex = new RegExp(`class="${className}"`, 'g');
+            coloredContent = coloredContent.replace(
+              regex,
+              `class="${className}" fill="${bodyColor}"`
+            );
+          });
+
           setBodyContent(coloredContent);
         }
       });
     }, [bodyId, bodyColor]);
+
+    // Don't render until body content is loaded to prevent sprite sheet flash
+    if (!bodyContent) {
+      return null;
+    }
 
     return (
       <div className="AvatarSprite">

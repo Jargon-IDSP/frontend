@@ -140,7 +140,9 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           // Clothing section
           { id: '__subtitle__clothing__', label: 'Clothing', isSubtitle: true },
           { id: 'none-clothing', label: 'None', category: 'clothing' as const },
-          ...avatarOptions.clothing.map(id => ({ id, label: id, category: 'clothing' as const })),
+          ...avatarOptions.clothing
+            .filter(id => id !== 'yellow-vest' && id !== 'orange-vest')
+            .map(id => ({ id, label: id, category: 'clothing' as const })),
           // Shoes section
           { id: '__subtitle__shoes__', label: 'Shoes', isSubtitle: true },
           { id: 'none-shoes', label: 'None', category: 'shoes' as const },
