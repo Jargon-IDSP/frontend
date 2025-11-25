@@ -31,6 +31,7 @@ export default function SettingsPage() {
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatPrompt, setChatPrompt] = useState("");
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
 
   // Get display name for the current language
   const currentLanguage = profile?.language || 'english';
@@ -117,6 +118,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     setChatHistory((prev) => [...prev, userMessage]);
     chatMutation.mutate(chatPrompt);
   };
+  const handleToggleTheme = () => {
+    setIsDarkTheme((prev) => !prev);
+  };
+
+  const handleThemeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    handleToggleTheme();
+  };
+
+  const themeLabel = isDarkTheme ? "Dark" : "Light";
 
   return (
     <div className="container">
@@ -189,6 +200,33 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             <svg className="settings-item-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="9 18 15 12 9 6" />
             </svg>
+          </button>
+
+          <button
+            type="button"
+            className="settings-item"
+            onClick={handleToggleTheme}
+          >
+            <div className="settings-item-icon">
+              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
+                <path d="M9.86932 20C15.3201 20 19.7386 15.523 19.7386 10C19.7386 4.477 15.3201 0 9.86932 0C4.4185 0 0 4.477 0 10C0 15.523 4.4185 20 9.86932 20ZM9.86932 18.5V1.5C12.0942 1.5 14.228 2.39553 15.8012 3.98959C17.3744 5.58365 18.2582 7.74566 18.2582 10C18.2582 12.2543 17.3744 14.4163 15.8012 16.0104C14.228 17.6045 12.0942 18.5 9.86932 18.5Z" fill="black" />
+              </svg>
+            </div>
+            <span className="settings-item-label">Theme</span>
+            <span className="settings-item-value">{themeLabel}</span>
+            <label
+              className="settings-toggle"
+              aria-label="Toggle theme"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <input
+                type="checkbox"
+                checked={isDarkTheme}
+                onChange={handleThemeInputChange}
+                aria-checked={isDarkTheme}
+              />
+              <span className="settings-toggle-slider" aria-hidden="true" />
+            </label>
           </button>
 
           <button

@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { avatarOptions } from './Avatar';
 import { AvatarDisplay } from './AvatarDisplay';
 import { AvatarSprite } from './AvatarSprite';
@@ -65,6 +65,8 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
     />
   );
 }
+
+// This is how the tabs are defined in the frontend
 const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
   { id: 'expression', label: 'Expression' },
@@ -72,20 +74,15 @@ const tabs: Tab[] = [
   { id: 'accessories', label: 'Accessories' },
 ];
 
-export function AvatarCustomizer() {
-  const navigate = useNavigate();
-  const location = useLocation();
+export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }: AvatarCustomizerProps = {}) {
   const { user } = useUser();
   const { avatar, isLoading, updateAvatar, isUpdating } = useAvatar();
-
-  // Determine context from URL params
-  const searchParams = new URLSearchParams(location.search);
-  const context = (searchParams.get('context') as 'onboarding' | 'profile') || 'profile';
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<TabId>('body');
   const [config, setConfig] = useState<AvatarConfig>({
     body: 'body-1',
-    bodyColor: '#FFB6C1',
+    bodyColor: '#ffba0a',
     expression: 'body-1-h1',
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
@@ -141,23 +138,37 @@ export function AvatarCustomizer() {
         setSaveSuccess(true);
         setTimeout(() => setSaveSuccess(false), 3000);
 
-        if (context === 'onboarding') {
-          // Navigate to next onboarding step
-          navigate('/');
+        if (onSaveCallback) {
+          onSaveCallback(config);
+        }
+
+        // Redirect to profile after save (only in profile context)
+        if (context === 'profile') {
+          // Small delay to show "Saved!" feedback
+          setTimeout(() => {
+            navigate('/profile');
+          }, 800);
         }
       },
     });
   };
 
-  const handleBack = () => {
-    if (context === 'profile') {
-      navigate('/profile');
-    } else {
-      navigate('/onboarding/industry');
-    }
+  const handleReset = () => {
+    setConfig(prev => ({
+      body: prev.body,
+      expression: prev.expression,
+      bodyColor: prev.bodyColor,
+      // Remove all accessories
+      hair: undefined,
+      headwear: undefined,
+      eyewear: undefined,
+      facial: undefined,
+      clothing: undefined,
+      shoes: undefined,
+      accessories: undefined,
+    }));
   };
 
-  // Get options for current tab
   const currentOptions = useMemo(() => {
     switch (activeTab) {
       case 'body':
@@ -425,7 +436,6 @@ export function AvatarCustomizer() {
       );
     }
 
-    // For other items, use AvatarSprite
     return (
       <AvatarSprite
         spriteId={optionId}
@@ -457,7 +467,6 @@ export function AvatarCustomizer() {
         />
       </div>
 
-      {/* Tabs */}
       <div className="avatar-customization__tabs">
         {tabs.map(tab => (
           <button
@@ -473,7 +482,6 @@ export function AvatarCustomizer() {
         ))}
       </div>
 
-      {/* Options Grid */}
       <div className="avatar-customization__options-grid">
         {currentOptions.map((option) => {
           // Handle subtitles
@@ -498,26 +506,19 @@ export function AvatarCustomizer() {
               type="button"
               className={`avatar-option ${selected ? 'avatar-option--selected' : ''}`}
               onClick={() => handleOptionSelect(option.id, category)}
+              aria-label={`Select ${option.label}`}
               style={
                 isColor
                   ? { backgroundColor: option.id }
                   : undefined
               }
             >
-              {isColor ? (
-                <span className="avatar-option__color-swatch" />
-              ) : (
-                <>
-                  {renderOptionPreview(option.id, category)}
-                  <span className="avatar-option__label">{option.label}</span>
-                </>
-              )}
+              {renderOptionPreview(option.id, category)}
             </button>
           );
         })}
       </div>
 
-      {/* Save/Next Button */}
       <button
         type="button"
         className="avatar-customization__next"
@@ -527,10 +528,18 @@ export function AvatarCustomizer() {
         {isUpdating
           ? 'Saving...'
           : saveSuccess
-          ? '✓ Saved!'
+          ? 'Saved!'
           : context === 'onboarding'
           ? 'Next'
           : 'Save'}
+      </button>
+
+      <button
+        type="button"
+        className="avatar-customization__reset"
+        onClick={handleReset}
+      >
+        Reset Accessories
       </button>
     </div>
   );

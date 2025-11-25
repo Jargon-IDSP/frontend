@@ -1,9 +1,9 @@
-import { useRef, useState, useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { AvatarProps } from '../../types/avatar';
 import { AvatarSprite } from './AvatarSprite';
 import { getBodyViewBox, toDataAttributeId } from './bodyViewBoxes';
-import type { AvatarConfig, AvatarProps } from '../../types/avatar';
 
-// Fetch symbol content from SVG sprite sheet
+
 async function fetchSymbolContent(symbolId: string): Promise<string | null> {
   try {
     const response = await fetch('/avatar-sprites.svg');
@@ -20,7 +20,6 @@ async function fetchSymbolContent(symbolId: string): Promise<string | null> {
 }
 
 export function Avatar({ config, size = 100, className = '', renderMode = 'svg' }: AvatarProps) {
-  // Use the body with expression if provided, otherwise use base body
   const bodyId = config.expression || config.body || 'body-1';
   const bodyColor = config.bodyColor || '#ffba0a';
 
@@ -135,7 +134,6 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
       viewBox="-20 -20 340 340"
       className={className}
     >
-      {/* Base body (includes expression if using body-X-hY format) */}
       <use
         href={`/avatar-sprites.svg#${bodyId}`}
         xlinkHref={`/avatar-sprites.svg#${bodyId}`}
@@ -144,34 +142,28 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
         style={{ fill: bodyColor }}
       />
 
-      {/* Shoes - render first so they appear behind body */}
       {config.shoes && (
-        <use href={`/avatar-sprites.svg#${config.shoes}`} x="30" y="220" />
+        <AvatarSprite spriteId={config.shoes} x={30} y={220} />
       )}
 
-      {/* Clothing */}
       {config.clothing && (
-        <use href={`/avatar-sprites.svg#${config.clothing}`} x="30" y="110" />
+        <AvatarSprite spriteId={config.clothing} x={30} y={110} />
       )}
 
-      {/* Hair */}
       {config.hair && (
-        <use href={`/avatar-sprites.svg#${config.hair}`} x="90" y="30" />
+        <AvatarSprite spriteId={config.hair} x={90} y={30} />
       )}
 
-      {/* Facial hair */}
       {config.facial && (
-        <use href={`/avatar-sprites.svg#${config.facial}`} x="105" y="120" />
+        <AvatarSprite spriteId={config.facial} x={105} y={120} />
       )}
 
-      {/* Eyewear */}
       {config.eyewear && (
-        <use href={`/avatar-sprites.svg#${config.eyewear}`} x="80" y="85" />
+        <AvatarSprite spriteId={config.eyewear} x={80} y={85} />
       )}
 
-      {/* Headwear - render last so it appears on top */}
       {config.headwear && (
-        <use href={`/avatar-sprites.svg#${config.headwear}`} x="70" y="5" />
+        <AvatarSprite spriteId={config.headwear} x={70} y={5} />
       )}
 
       {config.accessories && (
@@ -181,34 +173,11 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg' 
   );
 }
 
-// Example usage component
 export function AvatarExample() {
-  const exampleConfig: AvatarConfig = {
-    body: 'body-1',
-    expression: 'body-1-h2', // happy expression with body-1
-    hair: 'hair-1',
-    headwear: 'hard-hat',
-    eyewear: 'glasses',
-    facial: 'beard-1',
-    clothing: 'yellow-vest',
-    shoes: 'shoe-1',
-    accessories: ['name-tag']
-  };
 
   return (
     <div>
-      <h2>Avatar Examples</h2>
       
-      {/* Small avatar */}
-      <Avatar config={exampleConfig} size={50} />
-      
-      {/* Medium avatar */}
-      <Avatar config={exampleConfig} size={100} />
-      
-      {/* Large avatar */}
-      <Avatar config={exampleConfig} size={200} />
-      
-      {/* Different configuration */}
       <Avatar 
         config={{
           body: 'body-2',
@@ -222,7 +191,6 @@ export function AvatarExample() {
   );
 }
 
-// Helper function to get all available options
 export const avatarOptions = {
   bodies: [
     'body-1', 'body-2', 'body-3', 'body-4', 'body-5',
@@ -247,16 +215,21 @@ export const avatarOptions = {
   shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
   accessories: ['beauty-spot', 'blush', 'lashes-1'],
   bodyColors: [
-    '#FFB6C1', // Light Pink (default)
-    '#FF69B4', // Hot Pink
-    '#FFA07A', // Light Salmon
-    '#FFD700', // Gold
-    '#98FB98', // Pale Green
-    '#87CEEB', // Sky Blue
-    '#DDA0DD', // Plum
-    '#F0E68C', // Khaki
-    '#D2691E', // Chocolate
-    '#A0522D', // Sienna
+    '#ffba0a',
+    '#ffdf8e', 
+    '#ffc8b6', 
+    '#f3cfb0', 
+    '#bd9f94',
+    '#8c5845', 
+    '#652a15', 
+    '#cbc9b9', 
+    '#a29f89', 
+    '#8c887a', 
+    '#7e7c6b', 
+    '#c2c2c2', 
+    '#616161', 
+    '#b2bceb', 
+    '#3953cd',  
   ]
 };
 
