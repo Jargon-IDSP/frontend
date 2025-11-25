@@ -604,23 +604,6 @@ export function AvatarCustomizer({
           {!isLoading && <AvatarDisplay config={config} size={210} />}
         </div>
 
-        <div className="avatar-customization__input-container">
-          <label
-            className="avatar-customization__input-label"
-            htmlFor="avatarName"
-          >
-            User Name
-          </label>
-          <input
-            id="avatarName"
-            type="text"
-            className="avatar-customization__input"
-            value={user?.username || user?.firstName || "User"}
-            disabled
-            readOnly
-          />
-        </div>
-
         <div className="avatar-customization__tabs">
           {tabs.map((tab) => (
             <button
@@ -638,6 +621,22 @@ export function AvatarCustomizer({
       </div>
 
       <div className="avatar-customization__scrollable-section">
+        <div className="avatar-customization__input-container">
+          <label
+            className="avatar-customization__input-label"
+            htmlFor="avatarName"
+          >
+            User Name
+          </label>
+          <input
+            id="avatarName"
+            type="text"
+            className="avatar-customization__input"
+            value={user?.username || user?.firstName || "User"}
+            disabled
+            readOnly
+          />
+        </div>
         <div className="avatar-customization__options-grid">
           {currentOptions.map((option) => {
             // Handle subtitles
