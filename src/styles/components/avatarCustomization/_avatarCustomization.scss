@@ -290,9 +290,10 @@
   }
 
   &__input-container {
-    display: flex;
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: 0.75rem;
     align-items: center;
-    justify-content: center;
     margin-left: 1rem;
     margin-right: 1rem;
   }
@@ -302,7 +303,6 @@
     color: $color-quaternary-dark;
     font-weight: $font-weight-medium;
     white-space: nowrap;
-    margin-right: 0.75rem;
   }
 
   &__input {
@@ -313,6 +313,8 @@
     font-family: $font-family-primary;
     outline: none;
     background-color: $color-second-neutral-light;
+    min-width: 0;
+    width: 100%;
 
     &:focus {
       border-color: $color-primary;
