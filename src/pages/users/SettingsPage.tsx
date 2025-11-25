@@ -32,6 +32,7 @@ export default function SettingsPage() {
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatPrompt, setChatPrompt] = useState("");
   const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [showLogoutDrawer, setShowLogoutDrawer] = useState(false);
 
   // Get display name for the current language
   const currentLanguage = profile?.language || 'english';
@@ -125,6 +126,14 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   const handleThemeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     event.stopPropagation();
     handleToggleTheme();
+  };
+
+  const handleOpenLogoutDrawer = () => setShowLogoutDrawer(true);
+  const handleCloseLogoutDrawer = () => setShowLogoutDrawer(false);
+
+  const handleConfirmLogout = async () => {
+    await handleLogout();
+    setShowLogoutDrawer(false);
   };
 
   const themeLabel = isDarkTheme ? "Dark" : "Light";
@@ -301,7 +310,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         {/* Logout Button */}
         <button
           className="settings-logout-button"
-          onClick={handleLogout}
+          onClick={handleOpenLogoutDrawer}
         >
           Log out
         </button>
@@ -323,6 +332,26 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         onSendChat={handleSendChat}
         isLoading={chatMutation.isPending}
       />
+
+      {showLogoutDrawer && (
+        <div
+          className="logout-drawer-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={handleCloseLogoutDrawer}
+        >
+          <div className="logout-drawer" onClick={(event) => event.stopPropagation()}>
+            <span className="logout-drawer-handle" aria-hidden="true" />
+            <p className="logout-drawer-title">Do you want to log out your account?</p>
+            <button className="logout-drawer-confirm" onClick={handleConfirmLogout}>
+              Yes
+            </button>
+            <button className="logout-drawer-cancel" onClick={handleCloseLogoutDrawer}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
