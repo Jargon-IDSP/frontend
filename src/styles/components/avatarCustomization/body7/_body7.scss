@@ -743,17 +743,16 @@
     left: 57%;
   }
 
-  // Continue from here
   // Shape-07 + glasses combinations for base body 2
   &[data-shape="shape-07-h2"] .avatar-layer--eyewear[data-eyewear="glasses"] {
-    top: 43%;
-    left: 65%;
+    top: 26.5%;
+    left: 60.5%;
   }
 
   // Shape-07 + glasses combinations for base body 3
   &[data-shape="shape-07-h3"] .avatar-layer--eyewear[data-eyewear="glasses"] {
-    top: 48%;
-    left: 60%;
+    top: 37%;
+    left: 57%;
   }
 
   // eye wear end here
@@ -762,100 +761,102 @@
   // Shape-07 + welding mask combinations for base body
   &[data-shape^="shape-07"]
     .avatar-layer--eyewear[data-eyewear="welding-mask"] {
-    top: 30%;
-    left: 56%;
+    top: 12%;
+    left: 47%;
     width: 60%;
   }
 
+  // Continue from here
   // Shape-07 + welding mask combinations for base body 1
   &[data-shape="shape-07-h1"]
     .avatar-layer--eyewear[data-eyewear="welding-mask"] {
-    width: 80%;
-    top: 25%;
-    left: 54%;
+    top: -2%;
+    width: 65%;
+    left: 50%;
   }
 
   // Shape-07 + welding mask combinations for base body 2
   &[data-shape="shape-07-h2"]
     .avatar-layer--eyewear[data-eyewear="welding-mask"] {
+    top: -2%;
+    left: 49%;
     width: 75%;
-    top: 25%;
-    left: 55%;
   }
 
   // Shape-07 + welding mask combinations for base body 3
   &[data-shape="shape-07-h3"]
     .avatar-layer--eyewear[data-eyewear="welding-mask"] {
+    top: 10%;
+    left: 48%;
     width: 75%;
-    top: 30%;
-    left: 50%;
   }
 
   // Shape-07 + welding mask combinations for base body 4
   &[data-shape="shape-07-h4"]
     .avatar-layer--eyewear[data-eyewear="welding-mask"] {
+    top: 5%;
+    left: 49%;
     width: 75%;
-    top: 30%;
-    left: 53%;
   }
 
   // Shape-07 + orange mask combinations for base body
   &[data-shape^="shape-07"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
-    top: 30%;
-    left: 56%;
+    top: 22%;
+    left: 53%;
     width: 60%;
   }
 
   // Shape-07 + orange mask combinations for base body 1
   &[data-shape="shape-07-h1"]
     .avatar-layer--eyewear[data-eyewear="orange-mask"] {
-    width: 80%;
-    top: 25%;
+    top: 13%;
     left: 58%;
+    width: 80%;
   }
 
   // Shape-07 + orange mask combinations for base body 2
   &[data-shape="shape-07-h2"]
     .avatar-layer--eyewear[data-eyewear="orange-mask"] {
-    width: 75%;
-    top: 30%;
-    left: 60%;
+    top: 15%;
+    left: 59%;
+    width: 70%;
   }
 
   // Shape-07 + orange mask combinations for base body 3
   &[data-shape="shape-07-h3"]
     .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    top: 25%;
+    left: 56%;
     width: 75%;
-    top: 35%;
-    left: 55%;
   }
 
   // Shape-07 + orange mask combinations for base body 4
   &[data-shape="shape-07-h4"]
     .avatar-layer--eyewear[data-eyewear="orange-mask"] {
+    top: 23%;
+    left: 55%;
     width: 75%;
-    top: 34%;
-    left: 57%;
   }
 
   // Shape-07 + orange mask 2 combinations for base body
   &[data-shape^="shape-07"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 31.5%;
-    left: 59%;
+    top: 21%;
+    left: 55%;
   }
 
+  // Continue from here
   // Shape-07 + orange mask 2 combinations for base body 1
   &[data-shape="shape-07-h1"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 25%;
+    top: 18%;
     left: 61%;
   }
 
   // Shape-07 + orange mask 2 combinations for base body 2
   &[data-shape="shape-07-h2"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 29%;
+    top: 20%;
     left: 63%;
   }
 
