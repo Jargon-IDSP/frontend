@@ -9389,7 +9389,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 .avatar-customization__input-container {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
   justify-content: center;
   margin-left: 1rem;
   margin-right: 1rem;
@@ -9399,9 +9398,9 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   color: #652a15;
   font-weight: 600;
   white-space: nowrap;
+  margin-right: 0.75rem;
 }
 .avatar-customization__input {
-  flex: 1;
   border: 2px solid rgba(141, 156, 226, 0.4);
   border-radius: 8px;
   padding: 0.65rem 0.85rem;
@@ -9533,6 +9532,28 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 .avatar-customization__next:hover {
   background-color: rgb(6.776, 33.88, 162.624);
   transform: translateY(-1px);
+}
+.avatar-customization__reset {
+  margin-top: 1rem;
+  margin-left: 1rem;
+  margin-right: 1rem;
+  padding: 0.75rem 1.5rem;
+  background: transparent;
+  border: 2px solid #fe4d13;
+  color: #fe4d13;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 600;
+  transition: all 0.15s ease;
+}
+.avatar-customization__reset:hover {
+  background: rgba(254, 77, 19, 0.1);
+  border-color: rgb(241.3772151899, 60.3443037975, 1.0227848101);
+  color: rgb(241.3772151899, 60.3443037975, 1.0227848101);
+}
+.avatar-customization__reset:active {
+  transform: scale(0.98);
 }
 
 .avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--shoes[data-shoes=shoe-01] {
