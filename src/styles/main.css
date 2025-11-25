@@ -9401,7 +9401,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   margin-right: 0.75rem;
 }
 .avatar-customization__input {
-  flex: 1;
   border: 2px solid rgba(141, 156, 226, 0.4);
   border-radius: 8px;
   padding: 0.65rem 0.85rem;
