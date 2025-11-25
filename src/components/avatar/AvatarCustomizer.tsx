@@ -254,7 +254,7 @@ export function AvatarCustomizer({
         const facialOptions =
           config.expression && config.expression.includes("-h1")
             ? avatarOptions.facial.filter((id) => !id.startsWith("beard-"))
-            : avatarOptions.facial;
+          : avatarOptions.facial;
 
         return [
           // Hair section
@@ -279,7 +279,7 @@ export function AvatarCustomizer({
         const eyewearOptions = avatarOptions.eyewear.filter(
           (id) => id !== "orange-mask" && id !== "orange-mask-2"
         );
-
+        
         return [
           // Eyewear section
           { id: "__subtitle__eyewear__", label: "Eyewear", isSubtitle: true },
@@ -462,7 +462,7 @@ export function AvatarCustomizer({
       if (optionId.startsWith("none-")) {
         const noneCategory = optionId.split("-")[1];
         if (noneCategory === "eyewear") {
-          return !config.eyewear;
+            return !config.eyewear;
         } else if (noneCategory === "headwear") {
           return (
             !config.headwear &&
@@ -472,29 +472,29 @@ export function AvatarCustomizer({
             )
           );
         } else if (noneCategory === "clothing") {
-          return !config.clothing;
+            return !config.clothing;
         } else if (noneCategory === "shoes") {
-          return !config.shoes;
+            return !config.shoes;
         } else if (noneCategory === "accessories") {
-          return !config.accessories;
-        }
-        return false;
+            return !config.accessories;
+          }
+          return false;
       } else if (category === "eyewear") {
-        return config.eyewear === optionId;
+          return config.eyewear === optionId;
       } else if (category === "headwear") {
         if (optionId === "orange-mask" || optionId === "orange-mask-2") {
-          return config.eyewear === optionId;
-        } else {
-          return config.headwear === optionId;
-        }
+            return config.eyewear === optionId;
+          } else {
+            return config.headwear === optionId;
+          }
       } else if (category === "clothing") {
-        return config.clothing === optionId;
+          return config.clothing === optionId;
       } else if (category === "shoes") {
-        return config.shoes === optionId;
+          return config.shoes === optionId;
       } else if (category === "accessories") {
-        return config.accessories === optionId;
-      }
-      return false;
+          return config.accessories === optionId;
+        }
+        return false;
     } else if (activeTab === "hair") {
       if (optionId.startsWith("none-")) {
         const noneCategory = optionId.split("-")[1];
@@ -600,23 +600,23 @@ export function AvatarCustomizer({
       />
 
       <div className="avatar-customization__header-section">
-        <div className="avatar-customization__preview">
-          {!isLoading && <AvatarDisplay config={config} size={210} />}
-        </div>
+      <div className="avatar-customization__preview">
+        {!isLoading && <AvatarDisplay config={config} size={210} />}
+      </div>
 
-        <div className="avatar-customization__tabs">
+      <div className="avatar-customization__tabs">
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              type="button"
-              className={`avatar-customization__tab ${
+          <button
+            key={tab.id}
+            type="button"
+            className={`avatar-customization__tab ${
                 tab.id === activeTab ? "avatar-customization__tab--active" : ""
-              }`}
-              onClick={() => setActiveTab(tab.id)}
-            >
-              {tab.label}
-            </button>
-          ))}
+            }`}
+            onClick={() => setActiveTab(tab.id)}
+          >
+            {tab.label}
+          </button>
+        ))}
         </div>
       </div>
 
@@ -637,16 +637,16 @@ export function AvatarCustomizer({
             readOnly
           />
         </div>
-        <div className="avatar-customization__options-grid">
-          {currentOptions.map((option) => {
-            // Handle subtitles
+      <div className="avatar-customization__options-grid">
+        {currentOptions.map((option) => {
+          // Handle subtitles
             if ("isSubtitle" in option && option.isSubtitle) {
-              return (
+            return (
                 <div key={option.id} className="avatar-customization__subtitle">
-                  {option.label}
-                </div>
-              );
-            }
+                {option.label}
+              </div>
+            );
+          }
 
             const category = (
               "category" in option ? option.category : undefined
@@ -658,48 +658,48 @@ export function AvatarCustomizer({
               | "shoes"
               | "accessories"
               | undefined;
-            const selected = isSelected(option.id, category);
+          const selected = isSelected(option.id, category);
             const isColor = option.id.startsWith("#");
 
-            return (
-              <button
-                key={option.id}
-                type="button"
+          return (
+            <button
+              key={option.id}
+              type="button"
                 className={`avatar-option ${
                   selected ? "avatar-option--selected" : ""
                 }`}
-                onClick={() => handleOptionSelect(option.id, category)}
-                aria-label={`Select ${option.label}`}
+              onClick={() => handleOptionSelect(option.id, category)}
+              aria-label={`Select ${option.label}`}
                 style={isColor ? { backgroundColor: option.id } : undefined}
-              >
-                {renderOptionPreview(option.id, category)}
-              </button>
-            );
-          })}
-        </div>
+            >
+              {renderOptionPreview(option.id, category)}
+            </button>
+          );
+        })}
+      </div>
 
-        <button
-          type="button"
-          className="avatar-customization__next"
-          onClick={handleSave}
-          disabled={isUpdating}
-        >
-          {isUpdating
+      <button
+        type="button"
+        className="avatar-customization__next"
+        onClick={handleSave}
+        disabled={isUpdating}
+      >
+        {isUpdating
             ? "Saving..."
-            : saveSuccess
+          : saveSuccess
             ? "Saved!"
             : context === "onboarding"
             ? "Next"
             : "Save"}
-        </button>
+      </button>
 
-        <button
-          type="button"
-          className="avatar-customization__reset"
-          onClick={handleReset}
-        >
-          Reset Accessories
-        </button>
+      <button
+        type="button"
+        className="avatar-customization__reset"
+        onClick={handleReset}
+      >
+        Reset Accessories
+      </button>
       </div>
     </div>
   );
