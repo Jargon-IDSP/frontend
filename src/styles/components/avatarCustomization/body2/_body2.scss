@@ -2,9 +2,9 @@
 
   // Shape-02 + Shoe combinations for base body
   &[data-shape^="shape-02"] .avatar-layer--shoes[data-shoes="shoe-01"] {
-    bottom: 2.8%;
+    bottom: 3%;
     left: -7.6%;
-    width: 52%;
+    width: 53%;
     min-height: 14.8%;
     max-height: 18.5%;
   }
@@ -26,17 +26,19 @@
   }
 
     // Shape-02 + Shoe combinations for base body 1
-  &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-03"] {
+
+  &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-01"] {
     left: -6.5%;
     width: 66%;
   }
+
 
   &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-02"] {
     left: -6.5%;
     width: 66%;
   }
 
-    &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-01"] {
+    &[data-shape="shape-02-h1"] .avatar-layer--shoes[data-shoes="shoe-03"] {
     left: -6.5%;
     width: 66%;
   }

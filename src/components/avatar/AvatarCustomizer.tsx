@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { avatarOptions } from './Avatar';
 import { AvatarDisplay } from './AvatarDisplay';
 import { AvatarSprite } from './AvatarSprite';
@@ -76,6 +77,7 @@ const tabs: Tab[] = [
 export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }: AvatarCustomizerProps = {}) {
   const { user } = useUser();
   const { avatar, isLoading, updateAvatar, isUpdating } = useAvatar();
+  const navigate = useNavigate();
 
   const [activeTab, setActiveTab] = useState<TabId>('body');
   const [config, setConfig] = useState<AvatarConfig>({
@@ -139,8 +141,32 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         if (onSaveCallback) {
           onSaveCallback(config);
         }
+
+        // Redirect to profile after save (only in profile context)
+        if (context === 'profile') {
+          // Small delay to show "Saved!" feedback
+          setTimeout(() => {
+            navigate('/profile');
+          }, 800);
+        }
       },
     });
+  };
+
+  const handleReset = () => {
+    setConfig(prev => ({
+      body: prev.body,
+      expression: prev.expression,
+      bodyColor: prev.bodyColor,
+      // Remove all accessories
+      hair: undefined,
+      headwear: undefined,
+      eyewear: undefined,
+      facial: undefined,
+      clothing: undefined,
+      shoes: undefined,
+      accessories: undefined,
+    }));
   };
 
   const currentOptions = useMemo(() => {
@@ -506,6 +532,14 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           : context === 'onboarding'
           ? 'Next'
           : 'Save'}
+      </button>
+
+      <button
+        type="button"
+        className="avatar-customization__reset"
+        onClick={handleReset}
+      >
+        Reset Accessories
       </button>
     </div>
   );
