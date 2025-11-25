@@ -56,7 +56,11 @@ export function useAvatar() {
       return result.avatarConfig;
     },
     onSuccess: () => {
+      // Invalidate avatar cache
       queryClient.invalidateQueries({ queryKey: ["avatar"] });
+
+      // CRITICAL: Also invalidate profile cache to ensure immediate update
+      queryClient.invalidateQueries({ queryKey: ["profile"] });
     },
   });
 

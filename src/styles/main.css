@@ -10180,9 +10180,9 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 }
 
 .avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--shoes[data-shoes=shoe-01] {
-  bottom: 2.8%;
+  bottom: 3%;
   left: -7.6%;
-  width: 52%;
+  width: 53%;
   min-height: 14.8%;
   max-height: 18.5%;
 }
@@ -10200,7 +10200,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   min-height: 14.8%;
   max-height: 18.5%;
 }
-.avatar-customization__canvas[data-shape=shape-02-h1] .avatar-layer--shoes[data-shoes=shoe-03] {
+.avatar-customization__canvas[data-shape=shape-02-h1] .avatar-layer--shoes[data-shoes=shoe-01] {
   left: -6.5%;
   width: 66%;
 }
@@ -10208,7 +10208,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: -6.5%;
   width: 66%;
 }
-.avatar-customization__canvas[data-shape=shape-02-h1] .avatar-layer--shoes[data-shoes=shoe-01] {
+.avatar-customization__canvas[data-shape=shape-02-h1] .avatar-layer--shoes[data-shoes=shoe-03] {
   left: -6.5%;
   width: 66%;
 }
