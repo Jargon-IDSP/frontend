@@ -74,12 +74,12 @@ export function AvatarOnboardingPage() {
   return (
     <div className="container">
       <div className="avatar-edit-page">
-        <img 
-          src={logoOrangeIcon} 
-          alt="Jargon Logo" 
-          className="avatar-customization__logo"
-        />
-        <div className="avatar-customization__top">
+        <div className="avatar-customization__header">
+          <img 
+            src={logoOrangeIcon} 
+            alt="Jargon Logo" 
+            className="avatar-customization__logo"
+          />
           <div className="avatar-customization__header-row">
             <button
               type="button"
