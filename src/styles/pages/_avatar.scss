@@ -3,14 +3,9 @@
 @use "../mixins" as *;
 
 .avatar-edit-page, .avatar-view-page, .avatar-onboarding-page {
-    padding: 0;
+    padding: 1rem;
     max-width: 480px;
     position: relative;
-    height: calc(100vh - 70px);
-    overflow-y: auto;
-    overflow-x: hidden;
-    display: flex;
-    flex-direction: column;
 
     h1 {
         font-size: $font-size-h1;
