@@ -845,32 +845,31 @@
     left: 55%;
   }
 
-  // Continue from here
   // Shape-07 + orange mask 2 combinations for base body 1
   &[data-shape="shape-07-h1"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 18%;
+    top: 16%;
     left: 61%;
   }
 
   // Shape-07 + orange mask 2 combinations for base body 2
   &[data-shape="shape-07-h2"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 20%;
-    left: 63%;
+    top: 14%;
+    left: 62%;
   }
 
   // Shape-07 + orange mask 2 combinations for base body 3
   &[data-shape="shape-07-h3"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 33%;
+    top: 24.5%;
     left: 58%;
   }
 
   // Shape-07 + orange mask 2 combinations for base body 4
   &[data-shape="shape-07-h4"]
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 32%;
+    top: 23%;
     left: 59%;
   }
 
@@ -880,74 +879,86 @@
 
   // Shape-07 + beard 1 combinations for base body
   &[data-shape^="shape-07"] .avatar-layer--feature[data-facial="feature-01"] {
-    top: 55%;
-    left: 56%;
+    top: 45%;
+    left: 51%;
     width: 60%;
   }
 
   // Shape-07 + beard 1 combinations for base body 2 (beards do not work with crossed arms for base body 1 - so I omitted this option)
   &[data-shape^="shape-07-h2"]
     .avatar-layer--feature[data-facial="feature-01"] {
-    top: 53%;
-    left: 60%;
+    top: 42%;
+    left: 55%;
     width: 60%;
   }
 
   // Shape-07 + beard 1 combinations for base body 3 (beards do not work with crossed arms for base body 1 - so I omitted this option)
-  &[data-shape="shape-07-h3"] .avatar-layer--facial[data-facial="feature-01"] {
-    width: 75%;
+  &[data-shape="shape-07-h3"] .avatar-layer--feature[data-facial="feature-01"] {
     top: 35%;
     left: 55%;
+    width: 75%;
   }
 
   // Shape-07 + beard 1 combinations for base body 4 (beards do not work with crossed arms for base body 1 - so I omitted this option)
-  &[data-shape="shape-07-h4"] .avatar-layer--facial[data-facial="feature-01"] {
+  &[data-shape="shape-07-h3"] .avatar-layer--feature[data-facial="feature-01"] {
+    top: 46%;
+    left: 54%;
     width: 75%;
-    top: 34%;
-    left: 57%;
   }
   // beard ends here
 
   // Shape-07 + goatee combinations for base body 2
   &[data-shape^="shape-07"] .avatar-layer--feature[data-facial="feature-02"] {
-    top: 70%;
-    left: 56%;
+    top: 62%;
+    left: 50%;
     width: 60%;
   }
 
   // Shape-07 + goatee combinations for base body 2 (beards do not work with crossed arms for base body 1 - so I omitted this option)
-  &[data-shape="shape-07-h3"] .avatar-layer--feature[data-facial="feature-02"] {
+  &[data-shape="shape-07-h2"] .avatar-layer--feature[data-facial="feature-02"] {
+    top: 60%;
+    left: 55%;
     width: 75%;
-    top: 72%;
-    left: 57%;
+  }
+
+  &[data-shape="shape-07-h3"] .avatar-layer--feature[data-facial="feature-02"] {
+    top: 65%;
+    left: 53%;
+    width: 75%;
+  }
+
+  &[data-shape="shape-07-h4"] .avatar-layer--feature[data-facial="feature-02"] {
+    top: 63%;
+    left: 56%;
+    width: 75%;
   }
 
   // goatee ends here
 
   // Shape-07 + mustache combinations for base body
   &[data-shape^="shape-07"] .avatar-layer--feature[data-facial="feature-03"] {
-    top: 52%;
-    left: 58%;
+    top: 42%;
+    left: 40%;
     width: 40%;
   }
 
   // Shape-07 + mustache combinations for base body 2
   &[data-shape="shape-07-h2"] .avatar-layer--feature[data-facial="feature-03"] {
-    left: 63%;
-    top: 50%;
+    top: 39%;
+    left: 53%;
   }
 
   // Shape-07 + mustache combinations for base body 3
   &[data-shape="shape-07-h3"] .avatar-layer--feature[data-facial="feature-03"] {
-    left: 55%;
-    top: 52%;
+    top: 44%;
+    left: 49%;
   }
 
   // Clothing start here (name-tag moved from accessories)
   // Shape-07 + mustache combinations for base body
   &[data-shape^="shape-07"] .avatar-layer--clothing[data-clothing="name-tag"] {
-    top: 68%;
-    left: 54%;
+    top: 55%;
+    left: 40%;
     width: 35%;
   }
 
@@ -959,23 +970,30 @@
 
   &[data-shape="shape-07-h2"]
     .avatar-layer--clothing[data-clothing="name-tag"] {
-    top: 68%;
-    left: 62%;
+    top: 59%;
+    left: 52%;
+    width: 35%;
+  }
+
+  &[data-shape="shape-07-h3"]
+    .avatar-layer--clothing[data-clothing="name-tag"] {
+    top: 60%;
+    left: 49%;
     width: 35%;
   }
 
   &[data-shape="shape-07-h4"]
     .avatar-layer--clothing[data-clothing="name-tag"] {
-    top: 69%;
-    left: 59%;
+    top: 60%;
+    left: 53%;
     width: 35%;
   }
 
   // Blush
   &[data-shape^="shape-07"]
     .avatar-layer--accessories[data-accessories="blush"] {
-    top: 45%;
-    left: 55%;
+    top: 35%;
+    left: 52%;
     width: 150%;
     min-height: 40px;
     max-height: 90px;
@@ -989,26 +1007,21 @@
 
   &[data-shape="shape-07-h2"]
     .avatar-layer--accessories[data-accessories="blush"] {
-    top: 28%;
-    left: 62%;
-    max-height: 70px;
-  }
-
-  &[data-shape="shape-07-h2"]
-    .avatar-layer--accessories[data-accessories="blush"] {
-    top: 46%;
+    top: 25%;
+    left: 58%;
+    max-height: 75px;
   }
 
   &[data-shape="shape-07-h3"]
     .avatar-layer--accessories[data-accessories="blush"] {
-    top: 47%;
+    top: 34%;
   }
 
   // Beauty spot
   &[data-shape^="shape-07"]
     .avatar-layer--accessories[data-accessories="beauty-spot"] {
-    top: 50%;
-    left: 60%;
+    top: 45%;
+    left: 55%;
     width: 5%;
     min-height: 3px;
     max-height: 8px;
@@ -1022,21 +1035,21 @@
 
   &[data-shape="shape-07-h2"]
     .avatar-layer--accessories[data-accessories="beauty-spot"] {
-    top: 45%;
+    top: 40%;
     left: 69%;
   }
 
   &[data-shape="shape-07-h3"]
     .avatar-layer--accessories[data-accessories="beauty-spot"] {
-    top: 60%;
+    top: 50%;
     left: 50%;
   }
 
   // Lashes
   &[data-shape^="shape-07"]
     .avatar-layer--accessories[data-accessories="lashes-1"] {
-    top: 40%;
-    left: 57%;
+    top: 29%;
+    left: 45%;
     width: 35%;
     min-height: 15px;
     max-height: 25px;
@@ -1044,26 +1057,26 @@
 
   &[data-shape^="shape-07-h1"]
     .avatar-layer--accessories[data-accessories="lashes-1"] {
-    top: 33.5%;
-    left: 60%;
+    top: 22%;
+    left: 52%;
   }
 
   &[data-shape^="shape-07-h2"]
     .avatar-layer--accessories[data-accessories="lashes-1"] {
-    top: 37%;
-    left: 65%;
+    top: 23%;
+    left: 56%;
   }
 
   &[data-shape^="shape-07-h3"]
     .avatar-layer--accessories[data-accessories="lashes-1"] {
-    top: 43%;
-    left: 54%;
+    top: 33%;
+    left: 50%;
   }
 
   &[data-shape^="shape-07-h4"]
     .avatar-layer--accessories[data-accessories="lashes-1"] {
-    top: 40%;
-    left: 58%;
+    top: 30%;
+    left: 55%;
   }
 
   // lashes 2
