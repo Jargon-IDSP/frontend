@@ -134,9 +134,31 @@
     -moz-osx-font-smoothing: grayscale;
   }
 
+  html {
+    /* Ensure full screen coverage including safe areas */
+    height: 100%;
+    height: -webkit-fill-available;
+  }
+
   body {
     @apply bg-background text-foreground;
-    @apply m-0 min-h-screen min-w-[320px] grid place-items-center;
+    @apply m-0 min-w-[320px] grid place-items-center;
+    /* Use full viewport height including safe areas */
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    /* Account for safe area insets (home indicator area) */
+    padding-bottom: env(safe-area-inset-bottom);
+    /* Prevent overscroll bounce that might reveal home indicator */
+    overscroll-behavior-y: none;
+  }
+
+  #root {
+    /* Ensure root container uses full height */
+    width: 100%;
+    min-height: 100vh;
+    min-height: -webkit-fill-available;
+    /* Account for safe area insets */
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   a {
