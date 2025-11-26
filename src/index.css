@@ -132,33 +132,45 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    /* Safe area insets for iOS home indicator */
+    --safe-area-inset-bottom: env(safe-area-inset-bottom);
+    --safe-area-inset-top: env(safe-area-inset-top);
+    --safe-area-inset-left: env(safe-area-inset-left);
+    --safe-area-inset-right: env(safe-area-inset-right);
   }
 
   html {
-    /* Ensure full screen coverage including safe areas */
-    height: 100%;
-    height: -webkit-fill-available;
+    /* Prevent overscroll bounce on iOS */
+    overscroll-behavior: none;
+    /* Support for iOS safe areas */
+    padding-bottom: env(safe-area-inset-bottom);
   }
 
   body {
     @apply bg-background text-foreground;
-    @apply m-0 min-w-[320px] grid place-items-center;
-    /* Use full viewport height including safe areas */
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    /* Account for safe area insets (home indicator area) */
+    @apply m-0 min-h-screen min-w-[320px] grid place-items-center;
+    padding: 0;
+    /* Support for iOS safe areas (home indicator) */
     padding-bottom: env(safe-area-inset-bottom);
-    /* Prevent overscroll bounce that might reveal home indicator */
-    overscroll-behavior-y: none;
+    padding-left: env(safe-area-inset-left);
+    padding-right: env(safe-area-inset-right);
+    /* iOS specific: disable touch callout menu */
+    -webkit-touch-callout: none;
   }
 
-  #root {
-    /* Ensure root container uses full height */
-    width: 100%;
-    min-height: 100vh;
-    min-height: -webkit-fill-available;
-    /* Account for safe area insets */
-    padding-bottom: env(safe-area-inset-bottom);
+  /* Disable text selection on touch devices for app-like feel */
+  @supports (touch-action: manipulation) {
+    body {
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    /* Re-enable text selection for inputs and text areas */
+    input,
+    textarea,
+    [contenteditable] {
+      -webkit-user-select: text;
+      user-select: text;
+    }
   }
 
   a {
