@@ -132,45 +132,11 @@
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    /* Safe area insets for iOS home indicator */
-    --safe-area-inset-bottom: env(safe-area-inset-bottom);
-    --safe-area-inset-top: env(safe-area-inset-top);
-    --safe-area-inset-left: env(safe-area-inset-left);
-    --safe-area-inset-right: env(safe-area-inset-right);
-  }
-
-  html {
-    /* Prevent overscroll bounce on iOS */
-    overscroll-behavior: none;
-    /* Support for iOS safe areas */
-    padding-bottom: env(safe-area-inset-bottom);
   }
 
   body {
     @apply bg-background text-foreground;
     @apply m-0 min-h-screen min-w-[320px] grid place-items-center;
-    padding: 0;
-    /* Support for iOS safe areas (home indicator) */
-    padding-bottom: env(safe-area-inset-bottom);
-    padding-left: env(safe-area-inset-left);
-    padding-right: env(safe-area-inset-right);
-    /* iOS specific: disable touch callout menu */
-    -webkit-touch-callout: none;
-  }
-
-  /* Disable text selection on touch devices for app-like feel */
-  @supports (touch-action: manipulation) {
-    body {
-      -webkit-user-select: none;
-      user-select: none;
-    }
-    /* Re-enable text selection for inputs and text areas */
-    input,
-    textarea,
-    [contenteditable] {
-      -webkit-user-select: text;
-      user-select: text;
-    }
   }
 
   a {
