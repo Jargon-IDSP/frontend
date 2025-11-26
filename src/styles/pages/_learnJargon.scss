@@ -8,12 +8,14 @@
   .lessonFolders {
     display: grid;
     grid-template-columns: 50% 50%;
+    align-items: center;
+    margin: auto;
     grid-template-rows: 5fr 5fr;
 
     .prebuilt {
         grid-row: 1;
         grid-column: span 2;
-        max-width: 100%;
+        width: 100%;
         margin-bottom: 1rem;
     }
 
@@ -21,12 +23,14 @@
         grid-row: 2;
         grid-column: 1;
         padding-right: 0.5rem;
+        width: 100%;
     }
 
     .friends {
         grid-row: 2;
         grid-column: 2;
-        padding: 0.5rem;
+        padding-left: 0.5rem;
+        width: 100%;
     }
   }
 
