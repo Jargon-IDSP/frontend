@@ -3,23 +3,27 @@
 @use '../../mixins' as *;
 
 .avatar-customization {
-  max-width: 480px;
   width: 100%;
   background-color: $color-second-neutral-light;
   display: flex;
   text-align: center;
-  margin: auto;
+  margin: auto; 
   flex-direction: column;
   gap: 1rem;
 
+  &__header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.1rem;
+    width: 100%;
+    margin-bottom: 1rem;
+  }
+
   &__logo {
-    position: absolute;
-    top: 1rem;
-    left: 1rem;
-    width: 100px;
-    height: 100px;
+    width: 75px;
+    height: 75px;
     object-fit: contain;
-    z-index: 10;
+    align-self: flex-start;
   }
 
   &__top {
@@ -34,21 +38,21 @@
     display: flex;
     align-items: center;
     position: relative;
+    left: -15px;
     width: 100%;
+    gap: 0.2rem;
   }
 
   &__back {
     background: none;
     border: none;
-    padding: 0.5rem;
+    padding: 0;
     color: $color-primary;
     display: flex;
-    align-items: center;
     border-radius: $border-radius-full;
     transition: background-color $transition-fast;
     flex-shrink: 0;
     z-index: 1;
-    margin-left: -0.75rem;
 
     &:hover {
       background-color: color.adjust($color-primary, $alpha: -0.8);
@@ -61,25 +65,22 @@
   }
 
   &__title {
-    text-align: center;
+    text-align: left;
     margin: 0;
     width: 100%;
     font-weight: 300;
-    margin-left: 0.75rem;
+    margin-top: 0.2rem;
   }
 
   &__progress-wrapper {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+    flex: 1;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
   }
 
   &__progress {
-    width: 70%;
+    width: 100%;
     height: 10px;
     border-radius: 999px;
     background: color.adjust($color-secondary, $alpha: -0.6);
@@ -288,10 +289,10 @@
   }
 
   &__input-container {
-    display: flex;
-    align-items: center;
+    display: grid;
+    grid-template-columns: auto 1fr;
     gap: 0.75rem;
-    justify-content: center;
+    align-items: center;
     margin-left: 1rem;
     margin-right: 1rem;
   }
@@ -304,7 +305,6 @@
   }
 
   &__input {
-    flex: 1;
     border: 2px solid color.adjust($color-quinary-200, $alpha: -0.6);
     border-radius: $border-radius-md;
     padding: 0.65rem 0.85rem;
@@ -312,6 +312,8 @@
     font-family: $font-family-primary;
     outline: none;
     background-color: $color-second-neutral-light;
+    min-width: 0;
+    width: 100%;
 
     &:focus {
       border-color: $color-primary;
@@ -458,6 +460,31 @@
     &:hover {
       background-color: color.adjust($color-quinary, $lightness: -6%);
       transform: translateY(-1px);
+    }
+  }
+
+  &__reset {
+    margin-top: 1rem;
+    margin-left: 1rem;
+    margin-right: 1rem;
+    padding: 0.75rem 1.5rem;
+    background: transparent;
+    border: 2px solid $color-primary;
+    color: $color-primary;
+    border-radius: $border-radius-md;
+    cursor: pointer;
+    font-size: 1rem;
+    font-weight: $font-weight-medium;
+    transition: all $transition-fast;
+
+    &:hover {
+      background: color.adjust($color-primary, $alpha: -0.9);
+      border-color: color.adjust($color-primary, $lightness: -6%);
+      color: color.adjust($color-primary, $lightness: -6%);
+    }
+
+    &:active {
+      transform: scale(0.98);
     }
   }
 }

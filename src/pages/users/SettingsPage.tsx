@@ -11,6 +11,7 @@ import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import reportIssueIcon from '../../assets/icons/reportIssue.svg';
 import faqIcon from '../../assets/icons/faq.svg';
 import needHelpIcon from '../../assets/icons/needHelp.svg';
+import themeIcon from '../../assets/icons/theme-icon.svg';
 import '../../styles/pages/_settings.scss';
 
 // Language mapping for display
@@ -137,12 +138,10 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   };
 
   const themeLabel = isDarkTheme ? "Dark" : "Light";
-  const settingsContainerClass = `container${isDarkTheme ? " settings-container--dark" : ""}`;
-  const settingsPageClass = `settings-page${isDarkTheme ? " settings-page--dark" : ""}`;
 
   return (
-    <div className={settingsContainerClass}>
-      <div className={settingsPageClass}>
+    <div className={`container${isDarkTheme ? " settings-container--dark" : ""}`}>
+      <div className={`settings-page${isDarkTheme ? " settings-page--dark" : ""}`}>
         {/* Header */}
         <div className="settings-header">
           <button
@@ -219,9 +218,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             onClick={handleToggleTheme}
           >
             <div className="settings-item-icon">
-              <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                <path d="M9.86932 20C15.3201 20 19.7386 15.523 19.7386 10C19.7386 4.477 15.3201 0 9.86932 0C4.4185 0 0 4.477 0 10C0 15.523 4.4185 20 9.86932 20ZM9.86932 18.5V1.5C12.0942 1.5 14.228 2.39553 15.8012 3.98959C17.3744 5.58365 18.2582 7.74566 18.2582 10C18.2582 12.2543 17.3744 14.4163 15.8012 16.0104C14.228 17.6045 12.0942 18.5 9.86932 18.5Z" fill="currentColor" />
-              </svg>
+              <img src={themeIcon} alt="Theme" />
             </div>
             <span className="settings-item-label">Theme</span>
             <span className="settings-item-value">{themeLabel}</span>
