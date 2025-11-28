@@ -11,6 +11,7 @@ import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import reportIssueIcon from '../../assets/icons/reportIssue.svg';
 import faqIcon from '../../assets/icons/faq.svg';
 import needHelpIcon from '../../assets/icons/needHelp.svg';
+import themeIcon from '../../assets/icons/theme-icon.svg';
 import '../../styles/pages/_settings.scss';
 
 // Language mapping for display
@@ -31,6 +32,8 @@ export default function SettingsPage() {
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatPrompt, setChatPrompt] = useState("");
+  const [isDarkTheme, setIsDarkTheme] = useState(false);
+  const [showLogoutDrawer, setShowLogoutDrawer] = useState(false);
 
   // Get display name for the current language
   const currentLanguage = profile?.language || 'english';
@@ -117,10 +120,28 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     setChatHistory((prev) => [...prev, userMessage]);
     chatMutation.mutate(chatPrompt);
   };
+  const handleToggleTheme = () => {
+    setIsDarkTheme((prev) => !prev);
+  };
+
+  const handleThemeInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    event.stopPropagation();
+    handleToggleTheme();
+  };
+
+  const handleOpenLogoutDrawer = () => setShowLogoutDrawer(true);
+  const handleCloseLogoutDrawer = () => setShowLogoutDrawer(false);
+
+  const handleConfirmLogout = async () => {
+    await handleLogout();
+    setShowLogoutDrawer(false);
+  };
+
+  const themeLabel = isDarkTheme ? "Dark" : "Light";
 
   return (
-    <div className="container">
-      <div className="settings-page">
+    <div className={`container${isDarkTheme ? " settings-container--dark" : ""}`}>
+      <div className={`settings-page${isDarkTheme ? " settings-page--dark" : ""}`}>
         {/* Header */}
         <div className="settings-header">
           <button
@@ -189,6 +210,31 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
             <svg className="settings-item-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
               <polyline points="9 18 15 12 9 6" />
             </svg>
+          </button>
+
+          <button
+            type="button"
+            className="settings-item"
+            onClick={handleToggleTheme}
+          >
+            <div className="settings-item-icon">
+              <img src={themeIcon} alt="Theme" />
+            </div>
+            <span className="settings-item-label">Theme</span>
+            <span className="settings-item-value">{themeLabel}</span>
+            <label
+              className="settings-toggle"
+              aria-label="Toggle theme"
+              onClick={(event) => event.stopPropagation()}
+            >
+              <input
+                type="checkbox"
+                checked={isDarkTheme}
+                onChange={handleThemeInputChange}
+                aria-checked={isDarkTheme}
+              />
+              <span className="settings-toggle-slider" aria-hidden="true" />
+            </label>
           </button>
 
           <button
@@ -261,7 +307,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         {/* Logout Button */}
         <button
           className="settings-logout-button"
-          onClick={handleLogout}
+          onClick={handleOpenLogoutDrawer}
         >
           Log out
         </button>
@@ -283,6 +329,26 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         onSendChat={handleSendChat}
         isLoading={chatMutation.isPending}
       />
+
+      {showLogoutDrawer && (
+        <div
+          className="logout-drawer-overlay"
+          role="dialog"
+          aria-modal="true"
+          onClick={handleCloseLogoutDrawer}
+        >
+          <div className="logout-drawer" onClick={(event) => event.stopPropagation()}>
+            <span className="logout-drawer-handle" aria-hidden="true" />
+            <p className="logout-drawer-title">Do you want to log out your account?</p>
+            <button className="logout-drawer-confirm" onClick={handleConfirmLogout}>
+              Yes
+            </button>
+            <button className="logout-drawer-cancel" onClick={handleCloseLogoutDrawer}>
+              Cancel
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
