@@ -125,3 +125,12 @@
   -webkit-box-orient: vertical;
 }
 
+.flip-card-hint {
+  margin-top: auto;
+  font-size: $font-size-tag;
+  color: rgba(0, 0, 0, 0.45);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  padding-top: $spacing-md;
+}
+

@@ -1,7 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { NavigationCard } from "../../components/learning/ui/Card";
-import HappyRocky from "../../components/avatar/rocky/HappyRocky";
+// import { NavigationCard } from "../../components/learning/ui/Card";
+import rockyWink from "../../../public/learningFolders/rockyWink.svg";
+import friends from "../../../public/learningFolders/friends.svg";
+import generated from "../../../public/learningFolders/generated.svg";
+import prebuilt from "../../../public/learningFolders/prebuilt.svg";
 import { useProfile } from "../../hooks/useProfile";
 import { getIndustryName } from "../../hooks/useUserPreferences";
 import DocumentDrawer from "../drawers/DocumentDrawer";
@@ -28,34 +31,43 @@ export default function LearnJargon() {
               Let’s learn and get some badges today! Who knows maybe we’ll even get on the leaderboard this week...
             </p>
           </div>
-          <HappyRocky />
+          <img src={rockyWink} alt="Happy Rocky" />
         </div>
 
         <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
 
-         <NavigationCard
+         {/* <NavigationCard
           title=""
           description=""
           cardType="industry"
           buttonText={` ${industryName} Courses`}
           onClick={() => navigate("/learning/existing/levels")}
-        />
+        /> */}
 
-        <NavigationCard
+        <div className="lessonFolders">
+
+        <img className="prebuilt" src={prebuilt} alt="Prebuilt Lessons" onClick={() => navigate("/learning/existing/levels")}/>
+
+        <img className="generated" src={generated} alt="Custom Lessons" onClick={() => navigate("/learning/custom/categories")}/>
+
+        <img className="friends" src={friends} alt="Custom Lessons" onClick={() => navigate("/learning/shared")}/>
+        </div>
+
+        {/* <NavigationCard
           title=""
           description=""
           cardType="generated"
           buttonText="View Lessons"
           onClick={() => navigate("/learning/custom/categories")}
-        />
+        /> */}
 
-        <NavigationCard
+        {/* <NavigationCard
           title=""
           description=""
           cardType="friends"
           buttonText="Friend's Lessons"
           onClick={() => navigate("/learning/shared")}
-        />
+        /> */}
       </div>
     </div>
   );

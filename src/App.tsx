@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useUser } from "@clerk/clerk-react";
 import { routes } from "./lib/routes";
 import NavBar from "./components/NavBar";
+import ScrollToTop from "./components/ScrollToTop";
 import { useProfile } from "./hooks/useProfile";
 import { NotificationProvider } from "./contexts/NotificationContext";
 
@@ -56,6 +57,7 @@ export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Router>
+        <ScrollToTop />
         <NotificationProvider>
           <main>
             <AppRoutes />
