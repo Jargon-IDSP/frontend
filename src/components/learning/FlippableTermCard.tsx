@@ -51,6 +51,7 @@ export default function FlippableTermCard({
                 <div className="flip-card-definition-text">
                     {term.definition || 'No definition available'}
                 </div>
+            <div className="flip-card-hint">Tap to flip card</div>
           </div>
         </div>
 
@@ -66,6 +67,7 @@ export default function FlippableTermCard({
                     {term.nativeDefinition || 'No definition available'}
                 </div>
             </div>
+            <div className="flip-card-hint">Tap to flip card</div>
           </div>
         </div>
       </div>
