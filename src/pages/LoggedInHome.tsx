@@ -2,14 +2,15 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../hooks/useProfile';
-import TopLeaderboard from '../components/TopLeaderboard';
+// import TopLeaderboard from '../components/TopLeaderboard';
 import UploadFileCard from '../components/UploadFileCard';
 import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
+import AiUploadCard from '../components/AiUploadCard';
 import WordOfTheDay from '../components/WordOfTheDay';
 import NotificationBell from '../components/NotificationBell';
 import LoadingBar from '../components/LoadingBar';
-// import JargonLogo from '../components/Wordmark';
+import homePageRockys from '../assets/homePageRockys.svg';
 // import rockyWhiteLogo from '/rockyWhite.svg';
 import todayTermCard from '../assets/todayTermCard.svg';
 
@@ -22,44 +23,34 @@ export default function LoggedInHome() {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check if user needs to see introduction or complete onboarding on first login
   useEffect(() => {
     if (!isLoading && user && profile) {
       const justCompleted = sessionStorage.getItem('onboardingJustCompleted') === 'true';
 
-      // Clear the just completed flag after checking
       if (justCompleted) {
         sessionStorage.removeItem('onboardingJustCompleted');
       }
 
-      // Only check skip flag during the current session (sessionStorage, not localStorage)
-      // This way, skip only persists within a single session, not across logins
       const hasSkippedThisSession = sessionStorage.getItem('onboardingSkippedThisSession') === 'true';
 
-      // Check if user has viewed the introduction page (from database)
       const introductionViewed = profile?.introductionViewed ?? false;
 
-      // If introduction hasn't been viewed, redirect to introduction page first
       if (!introductionViewed && !hasSkippedThisSession && !justCompleted) {
         navigate('/onboarding/introduction', { replace: true });
         return;
       }
 
-      // If introduction has been viewed but onboarding not completed, redirect to onboarding
       if (!profile.onboardingCompleted && !hasSkippedThisSession && !justCompleted && introductionViewed) {
         navigate('/onboarding/language', { replace: true });
         return;
       }
 
-      // If we get here, user doesn't need redirect, show the home page
       setIsCheckingRedirect(false);
     } else if (isLoading || !user) {
-      // Still loading or no user, keep checking
       setIsCheckingRedirect(true);
     }
   }, [user, profile, isLoading, navigate]);
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -73,9 +64,6 @@ export default function LoggedInHome() {
     };
   }, []);
 
-  // const handleSettingsClick = () => {
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
 
   const handleProfileClick = () => {
     setIsDropdownOpen(false);
@@ -98,12 +86,10 @@ export default function LoggedInHome() {
       await signOut({ redirectUrl: "/" });
     } catch (error) {
       console.error("Logout error:", error);
-      // Force navigation even if signOut fails
       window.location.href = "/";
     }
   };
 
-  // Maintain consistent container structure in both loading and loaded states
   return (
     <div className='container'>
       <div className="home-page">
@@ -164,12 +150,14 @@ export default function LoggedInHome() {
             </div>
 
             <div className="welcome-section">
-              {/* <JargonLogo /> */}
               <WordOfTheDay backgroundImage={todayTermCard} />
               <DailyCheckIn />
               <StartLearningCard />
               <UploadFileCard />
-              <TopLeaderboard />
+              <AiUploadCard />
+              <div className='homepageRockys'>
+              <img src={homePageRockys} alt="Home Page Rockys" />
+            </div>
             </div>
           </>
         )}

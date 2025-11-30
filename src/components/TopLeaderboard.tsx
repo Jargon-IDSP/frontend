@@ -40,13 +40,13 @@ const TopLeaderboard: React.FC = () => {
               className="btn btn-leaderboard"
               onClick={() => navigate("/leaderboard/full")}
             >
-              Check Leaderboard
+              Leaderboard
             </button>
             <button
-              className="btn btn-continue-learning"
-              onClick={() => navigate("/learning")}
+              className="btn btn-view-friends"
+              onClick={() => navigate("/community/friends")}
             >
-              Continue Learning
+              View Friends
             </button>
           </div>
         </div>

@@ -103,7 +103,7 @@
     width: 100%;
     padding: 0.75rem;
     margin-top: 1rem;
-    background-color: $color-quaternary;
+    background-color: $color-primary;
     color: white;
     border: none;
     border-radius: $border-radius-md;
@@ -113,6 +113,6 @@
     font-size: $font-size-body;
 
     &:hover {
-        background-color: $color-quaternary-dark;
+        text-decoration: underline;
     }
 }

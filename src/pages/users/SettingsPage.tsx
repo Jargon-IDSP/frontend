@@ -55,6 +55,9 @@ export default function SettingsPage() {
 
   const handleCloseChat = () => {
     setShowChatModal(false);
+    setChatPrompt("");
+    setChatHistory([]);
+    chatMutation.reset();
   };
 
   // Chat mutation
@@ -103,7 +106,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         id: Date.now().toString(),
       };
       setChatHistory((prev) => [...prev, assistantMessage]);
-      setChatPrompt("");
+      // Input already cleared in handleSendChat
     },
   });
 
@@ -111,14 +114,17 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
     e?.preventDefault();
     if (!chatPrompt.trim() || chatMutation.isPending) return;
 
+    const promptToSend = chatPrompt.trim();
+    setChatPrompt("");  // Clear immediately for better UX
+
     const userMessage: ChatMessage = {
       role: "user",
-      content: chatPrompt,
+      content: promptToSend,
       id: Date.now().toString(),
     };
 
     setChatHistory((prev) => [...prev, userMessage]);
-    chatMutation.mutate(chatPrompt);
+    chatMutation.mutate(promptToSend);
   };
   const handleToggleTheme = () => {
     setIsDarkTheme((prev) => !prev);

@@ -12,14 +12,8 @@ const StartLearningCard: React.FC = () => {
   return (
     <div className="start-learning-card">
       <h2 className="learning-title">Start Learning</h2>
-      <div className="learning-content">
+      <div className="learning-content" onClick={handleContinueLearning}>
         <img src={StartLearningImage} alt="Start Learning" className="learning-image" />
-        <button 
-          className="btn btn-primary learning-button"
-          onClick={handleContinueLearning}
-        >
-          Continue Learning
-        </button>
       </div>
     </div>
   );

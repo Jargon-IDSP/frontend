@@ -439,7 +439,7 @@ const EditLessonPage: React.FC = () => {
                           }
                           disabled={updateNameMutation.isPending}
                         >
-                          Manage folders
+                          Manage Custom Folders
                         </button>
                       </div>
                     </>
@@ -513,16 +513,16 @@ const EditLessonPage: React.FC = () => {
                       }`}
                     />
                   </button>
-                  {(profile?.defaultPrivacy === "PUBLIC" ||
-                    profile?.defaultPrivacy === "FRIENDS") && (
-                    <p className="edit-lesson-privacy-note">
-                      Update privacy settings to control individual documents
-                      visibility
-                    </p>
-                  )}
                   {isSharedUsersExpanded && (
                     <div className="edit-lesson-shared-list">
-                      {profile?.defaultPrivacy === "PRIVATE" ? (
+                      {profile?.defaultPrivacy === "PUBLIC" ||
+                      profile?.defaultPrivacy === "FRIENDS" ? (
+                        // PUBLIC or FRIENDS mode: Show only the centered notice
+                        <p className="edit-lesson-privacy-note edit-lesson-privacy-note--centered">
+                          Update privacy settings to control individual documents
+                          visibility
+                        </p>
+                      ) : (
                         // PRIVATE mode: Show all friends with checkboxes
                         friends.length > 0 ? (
                           friends.map((friend: any, index: number) => {
@@ -584,38 +584,7 @@ const EditLessonPage: React.FC = () => {
                             No friends yet
                           </p>
                         )
-                      ) : // PUBLIC or FRIENDS mode: Show current shared users (read-only)
-                      sharedUsers.length > 0 ? (
-                        sharedUsers.map((share: any, index: number) => {
-                          const userId = share.sharedWith.id;
-                          const isChecked = selectedSharedUserIds.has(userId);
-
-                          return (
-                            <label
-                              key={share.id}
-                              className={`edit-lesson-shared-option ${
-                                index === 0
-                                  ? "edit-lesson-shared-option--first"
-                                  : ""
-                              } ${
-                                index === sharedUsers.length - 1
-                                  ? "edit-lesson-shared-option--last"
-                                  : ""
-                              }`}
-                            >
-                              <span className="edit-lesson-shared-option-text">
-                                {getUserDisplayName(share.sharedWith)}
-                              </span>
-                              <input
-                                type="checkbox"
-                                checked={isChecked}
-                                className="edit-lesson-shared-checkbox"
-                                disabled={true}
-                              />
-                            </label>
-                          );
-                        })
-                      ) : null}
+                      )}
                     </div>
                   )}
                 </div>

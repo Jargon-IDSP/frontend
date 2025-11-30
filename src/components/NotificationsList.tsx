@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
@@ -16,46 +16,6 @@ import HappyRocky from "./avatar/rocky/HappyRocky";
 import communityIcon from "@/assets/icons/navbar/bold/communityIconBold.svg";
 import courseIcon from "@/assets/icons/navbar/bold/courseIconB.svg";
 import type { Notification } from "@/types/notification";
-
-interface NotificationActorInfo {
-    name?: string;
-}
-
-const PROFILE_ACTOR_REGEX = /\/profile(?:\/friends)?\/([^/?#]+)/;
-
-function extractActorId(notification: Notification): string | null {
-    if (notification.actionUrl) {
-        const match = notification.actionUrl.match(PROFILE_ACTOR_REGEX);
-        if (match?.[1]) {
-            return match[1];
-        }
-    }
-
-    return null;
-}
-
-function extractNameFromMessage(message?: string): string | null {
-    if (!message) return null;
-    const verbs = [
-        "followed",
-        "requested",
-        "saved",
-        "is",
-        "has",
-        "wants",
-        "liked",
-        "commented",
-    ];
-    for (const verb of verbs) {
-        const verbIndex = message.toLowerCase().indexOf(` ${verb}`);
-        if (verbIndex > 0) {
-            return message.slice(0, verbIndex).trim();
-        }
-    }
-
-    const sentence = message.split(/[.!?]/)[0]?.trim();
-    return sentence || null;
-}
 
 function getNotificationIcon(
     notification: Notification
@@ -116,73 +76,6 @@ export function NotificationsList() {
             return data.data;
         },
         enabled: !!selectedNotification?.lessonRequestId,
-    });
-
-    const actorIds = useMemo(() => {
-        if (!notifications) return [];
-        const ids = notifications
-            .map((notification) => extractActorId(notification))
-            .filter((id): id is string => Boolean(id));
-        return Array.from(new Set(ids));
-    }, [notifications]);
-
-    const { data: notificationActors } = useQuery({
-        queryKey: ["notification-actors", actorIds],
-        enabled: actorIds.length > 0,
-        queryFn: async (): Promise<Record<string, NotificationActorInfo>> => {
-            const token = await getToken();
-            if (!token) return {};
-
-            const results = await Promise.all(
-                actorIds.map(async (actorId) => {
-                    try {
-                        const res = await fetch(
-                            `${BACKEND_URL}/api/users/${actorId}`,
-                            {
-                                headers: { Authorization: `Bearer ${token}` },
-                            }
-                        );
-
-                        if (!res.ok) {
-                            return null;
-                        }
-
-                        const payload = await res.json();
-                        const user = payload.data || payload.user || payload;
-                        if (!user) return null;
-                        const displayName =
-                            user.username ||
-                            [user.firstName, user.lastName]
-                                .filter(Boolean)
-                                .join(" ")
-                                .trim() ||
-                            user.email ||
-                            "";
-
-                        return { id: actorId, name: displayName };
-                    } catch (error) {
-                        console.error(
-                            "Failed to load avatar for user",
-                            actorId,
-                            error
-                        );
-                        return null;
-                    }
-                })
-            );
-
-            return results.reduce<Record<string, NotificationActorInfo>>(
-                (acc, entry) => {
-                    if (entry) {
-                        acc[entry.id] = {
-                            name: entry.name,
-                        };
-                    }
-                    return acc;
-                },
-                {}
-            );
-        },
     });
 
     useEffect(() => {
@@ -330,14 +223,6 @@ export function NotificationsList() {
                         notification.message ||
                         (notification as { body?: string }).body ||
                         "You have a new update.";
-                    const actorId = extractActorId(notification);
-                    const actorInfo = actorId
-                        ? notificationActors?.[actorId]
-                        : undefined;
-                    const actorName =
-                        actorInfo?.name ||
-                        extractNameFromMessage(notification.message) ||
-                        displayTitle;
 
                     const iconType = getNotificationIcon(notification);
 

@@ -311,8 +311,17 @@
 .edit-lesson-privacy-note {
   font-size: $font-size-label;
   color: $color-neutral;
-  margin: $spacing-sm $spacing-md;
+  margin: $spacing-md;
+  padding: $spacing-md;
   font-style: italic;
+  text-align: center;
+
+  &--centered {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 60px;
+  }
 }
 
 .edit-lesson-shared-list {
@@ -453,13 +462,13 @@
 
 
   &--cancel {
-    background: white;
+    background: $second-neutral-50;
     color: $color-error;
   }
 
   &--save {
     background-color: $color-success-300;
-    color: white;
+    color: $second-neutral-50;
   }
 }
 
