@@ -10,22 +10,27 @@ padding:1rem;
   justify-content: space-between;
   align-items: center;
   margin: $spacing-lg auto;
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem 1rem 0 0.2rem;
   gap: $spacing-md;
+
+  .notification-bell {
+    margin-top: -3.5rem;
+    margin-right: -$spacing-lg;
+  }
 }
 
 .welcome-text-section {
   flex: 1;
 
   .welcome-text {
-    color: $color-quaternary-dark;
+    color: $quaternary-700;
     font-size: $font-size-h2;
     font-weight: $font-weight-light;
     margin: 0 0 $spacing-xs 0;
   }
   
   .welcome-title {
-    color: $color-quaternary-dark;
+    color: $quaternary-500;
     font-size: $font-size-h1;
     font-weight: $font-weight-bold;
     margin: 0;
@@ -166,7 +171,7 @@ padding:1rem;
   &-title {
     @include card-title;
     margin-bottom: $spacing-md;
-    color: $color-quaternary-dark;
+    color: $quaternary-700;
   }
 }
 
@@ -233,7 +238,7 @@ padding:1rem;
   .leaderboard-title {
     @include card-title;
     margin-left: 0;
-    color: $color-quaternary-dark;
+    color: $quaternary-700;
   }
 
   .leaderboard-content {
@@ -469,7 +474,7 @@ padding:1rem;
 
   .community-title {
     @include card-title;
-    color: $color-quaternary-dark;
+    color: $quaternary-700;
   }
 
   .community-content {
@@ -545,8 +550,7 @@ padding:1rem;
 
   .camera-title {
     @include card-title;
-    color: $color-quaternary-dark;
-    margin-bottom: $spacing-md;
+    color: $quaternary-700;
   }
 
   .camera-content {
@@ -676,7 +680,7 @@ padding:1rem;
 
   .learning-title {
     @include card-title;
-    color: $color-quaternary-dark;
+    color: $quaternary-700;
   }
 
   .learning-content {
