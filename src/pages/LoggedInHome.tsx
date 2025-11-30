@@ -13,6 +13,7 @@ import LoadingBar from '../components/LoadingBar';
 // import rockyWhiteLogo from '/rockyWhite.svg';
 import todayTermCard from '../assets/todayTermCard.svg';
 import InstantHelpCard from '../components/InstantHelpCard';
+import RockyFriends from '../assets/homePageRockys.svg';
 
 export default function LoggedInHome() {
   const { user } = useUser();
@@ -172,6 +173,7 @@ export default function LoggedInHome() {
               <InstantHelpCard />
               <CommunityCard />
               <UploadFileCard />
+              <img src={RockyFriends} alt="Rocky friends graphic" className='rocky-friends'/>
             </div>
           </>
         )}
