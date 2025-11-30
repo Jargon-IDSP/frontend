@@ -122,6 +122,10 @@ button.back-button {
   text-align: center;
 }
 
+.upload-section {
+  background-color: $second-neutral-50;
+}
+
 // Document Sections
 .ocr-section,
 .documents-section {
@@ -138,7 +142,7 @@ button.back-button {
 
 .preview {
   &-content {
-    background-color: $color-second-neutral-light;
+    background-color: $second-neutral-50;
     border: 1px dashed $color-quinary;
     border-radius: $spacing-sm;
     padding: $spacing-lg;
@@ -606,7 +610,7 @@ button.back-button {
   }
 
     & button {
-    background-color: $color-second-neutral-light;
+    background-color: $second-neutral-50;
   }
 }
 

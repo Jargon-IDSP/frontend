@@ -228,6 +228,10 @@
   font-weight: 500;
   color: $warning-900;
   font-family: $font-family-primary;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .document-stats {

@@ -64,6 +64,10 @@
   font-weight: $font-weight-bold;
   margin-bottom: $spacing-sm;
   color: $color-neutral;
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .documents-list-item-meta {

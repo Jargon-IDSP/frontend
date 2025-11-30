@@ -331,7 +331,7 @@ padding:1rem;
   }
 
   .btn-leaderboard,
-  .btn-continue-learning {
+  .btn-view-friends {
     display: inline-flex;
     align-items: center;
     justify-content: center;
@@ -441,7 +441,6 @@ padding:1rem;
   line-height: 1.2;
 }
 
-// Upload File Card
 .upload-file-card {
 
   @include card-base;
@@ -451,34 +450,41 @@ padding:1rem;
     color: $color-quaternary-dark;
   }
 
-  .upload-content {
+  .shortcuts-container {
     position: relative;
     min-height: 150px;
   }
+
+  h2 {
+    font-size: $font-size-h3;
+    font-family: $font-family-primary;
+    color: $quaternary-700;
+    font-weight: $font-weight-bold;
+    margin-top: 1rem;
+  }
 }
 
-// Upload options grid (Generate / Translate)
-.upload-options {
+.shortcuts-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: $spacing-lg;
+  gap: $spacing-md;
 }
 
-.upload-option-card {
-  background-color: $color-second-neutral-dark;
+.shortcut-card {
+  background-color: $secondary-500;
   border-radius: $spacing-sm;
-  padding: $spacing-md;
-  padding-bottom: $spacing-sm;
+  padding: $spacing-sm;
   display: flex;
   flex-direction: column;
   align-items: center;
+  width: 100%;
+  margin: auto;
   justify-content: space-between;
 }
 
-.upload-option-icon {
-  background-color: white;
+.shortcut-icon {
+  background-color: $color-second-neutral-light;
   border-radius: $spacing-sm;
-  padding: $spacing-lg;
   width: 100%;
   display: flex;
   align-items: center;
@@ -486,12 +492,12 @@ padding:1rem;
   margin-bottom: $spacing-sm;
 
   img {
-    width: 64px;
-    height: 64px;
+    width: 100%;
+    height: 150px;
+    padding: 0.5rem 0.2rem 0 0.2rem;
   }
 }
 
-// Word of the Day - component handles its own styling
 .word-of-the-day {
   @include card-base;
 
@@ -502,7 +508,6 @@ padding:1rem;
   }
 }
 
-// Flashcard Loading States
 .flashcard-loading {
   margin-bottom: 1rem;
   width: 100%;
@@ -533,7 +538,6 @@ padding:1rem;
   }
 }
 
-// Start Learning Card
 .start-learning-card {
 
   @include card-base;
@@ -543,14 +547,7 @@ padding:1rem;
     color: $color-quaternary-dark;
   }
 
-  .learning-content {
-    @include card-content;
-    background-color: $color-second-neutral-dark;
-    border: 10px solid $color-second-neutral-dark;
-    padding: 0;
-    display: flex;
-    flex-direction: column;
-  }
+
   
   .learning-description {
     font-size: $font-size-body;
@@ -558,11 +555,11 @@ padding:1rem;
     margin-bottom: $spacing-lg;
   }
   
-  .learning-button {
+  .upload-document-button {
     width: 100%;
     margin: 0;
-    background-color: $color-quaternary-dark;
-    border: 1px solid $color-quaternary-dark;
+    background-color: #365CCC;
+    border: 1px solid #365CCC;
     border-radius: $spacing-sm;
     margin-top: $spacing-sm;
     padding: $spacing-md;
@@ -571,7 +568,7 @@ padding:1rem;
     color: white;
   }
 
-  .learning-image {
+  .translate-icon {
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -579,7 +576,6 @@ padding:1rem;
   }
 }
 
-// Shared States
 .loading-placeholder,
 .error-message {
   font-size: $font-size-body;
@@ -592,7 +588,6 @@ padding:1rem;
   color: $color-error;
 }
 
-// API Testing Section
 .api-testing {
   &-section {
     margin-top: $spacing-lg;
@@ -619,6 +614,65 @@ padding:1rem;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: $font-size-label;
     line-height: 1.4;
+  }
+}
+
+.instantHelp{
+  margin-bottom: 1rem;
+  width: 100%;
+  display: block;
+  cursor: pointer;
+}
+
+.homepageRockys {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: $spacing-lg 0;
+
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+}
+
+.Ai-upload-content {
+  background-color: $secondary-500;
+  border-radius: 20px;
+  padding: 1rem;
+
+  button {
+    background-color: #365CCC;
+  }
+
+  .translate-card-contents {
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-row: auto auto;
+    padding: 0.5rem;
+
+    img {
+      grid-column: 1;
+      grid-row: span 2;
+      align-self: center;
+      padding-right: 0.5rem;
+    }
+
+    h3 {
+    font-size: $font-size-body;
+    font-family: $font-family-primary;
+    color: $quaternary-700;
+    font-weight: $font-weight-bold;
+    padding: 0 0.5rem;
+    }
+    p {
+      font-size: $font-size-body;
+    font-family: $font-family-primary;
+    color: $quaternary-700;
+    font-weight: $font-weight-regular;
+    padding: 0 0.5rem;
+    }
   }
 }
 }

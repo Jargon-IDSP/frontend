@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Drawer,
   DrawerContent,
@@ -44,6 +44,11 @@ export default function EditSocialMediaDrawer({
   const queryClient = useQueryClient();
   const [newUrl, setNewUrl] = useState(currentUrl);
   const [error, setError] = useState("");
+
+  // Sync newUrl state with currentUrl prop when drawer opens or platform changes
+  useEffect(() => {
+    setNewUrl(currentUrl);
+  }, [currentUrl, open]);
 
   const updateSocialMediaMutation = useMutation({
     mutationFn: async (url: string) => {

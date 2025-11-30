@@ -1,34 +1,43 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import bookIcon from '../assets/icons/bookIcon.svg';
-import languageIcon from '../assets/icons/languageIcon.svg';
+import homePageFriends from '../assets/homePageFriends.svg';
+import homePageLeaderBoard from '../assets/homePageLeaderBoard.svg';
+// import languageIcon from '../assets/icons/languageIcon.svg';
+import instantHelpIcon from '../assets/instantHelp.svg';
 
 const UploadFileCard: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleUploadClick = () => {
-    navigate('/documents');
+  const handleFriendsClick = () => {
+    navigate('/community/friends');
+  };
+
+   const handleLeaderboardsClick = () => {
+    navigate('/leaderboard/full');
   };
 
   return (
     <div className="upload-file-card">
-      <h2 className="upload-title">AI Translate & Lesson</h2>
-      <div className="upload-content upload-options">
-        <div className="upload-option-card">
-          <div className="upload-option-icon">
-            <img src={bookIcon} alt="Generate" />
+      <h2 className="upload-title">Instant Help</h2>
+
+      <img className="instantHelp" src={instantHelpIcon} alt="Custom Lessons" onClick={() => navigate("/learning/custom/categories")}/>
+      <h2>Community</h2>
+      <div className="shortcuts-container">
+        <div className="shortcut-card">
+          <div className="shortcut-icon">
+            <img src={homePageLeaderBoard} alt="Leaderboards" />
           </div>
-          <button className="btn upload-option-button" onClick={handleUploadClick}>
-            Generate
+          <button className="btn shortcut-button" onClick={handleLeaderboardsClick}>
+            Leaderboards
           </button>
         </div>
 
-        <div className="upload-option-card">
-          <div className="upload-option-icon">
-            <img src={languageIcon} alt="Translate" />
+        <div className="shortcut-card">
+          <div className="shortcut-icon">
+            <img src={homePageFriends} alt="Friends" />
           </div>
-          <button className="btn upload-option-button" onClick={handleUploadClick}>
-            Translate
+          <button className="btn shortcut-button" onClick={handleFriendsClick}>
+            Friends
           </button>
         </div>
       </div>
