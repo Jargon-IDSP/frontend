@@ -585,6 +585,7 @@ body {
   max-height: 140px !important;
   padding: 0 !important;
   margin: 0 !important;
+<<<<<<< HEAD
 }
 .home-page .camera-file-card {
   margin-bottom: 1.5rem;
@@ -659,6 +660,8 @@ body {
 .home-page .camera-option-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
+=======
+>>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
 }
 .home-page .word-of-the-day {
   margin-bottom: 1.5rem;
@@ -6317,7 +6320,10 @@ button.back-button {
   height: 44px;
   min-height: 44px;
   max-height: 44px;
+<<<<<<< HEAD
   margin: 1rem auto;
+=======
+>>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
 }
 
 .back-to-choose-button-preview {
