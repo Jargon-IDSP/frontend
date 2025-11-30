@@ -2,15 +2,15 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../hooks/useProfile';
-// import TopLeaderboard from '../components/TopLeaderboard';
 import UploadFileCard from '../components/UploadFileCard';
+import CommunityCard from '../components/CommunityCard';
 import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
-import AiUploadCard from '../components/AiUploadCard';
+// import AiUploadCard from '../components/AiUploadCard';
 import WordOfTheDay from '../components/WordOfTheDay';
 import NotificationBell from '../components/NotificationBell';
 import LoadingBar from '../components/LoadingBar';
-import homePageRockys from '../assets/homePageRockys.svg';
+// import homePageRockys from '../assets/homePageRockys.svg';
 // import rockyWhiteLogo from '/rockyWhite.svg';
 import todayTermCard from '../assets/todayTermCard.svg';
 
@@ -153,11 +153,8 @@ export default function LoggedInHome() {
               <WordOfTheDay backgroundImage={todayTermCard} />
               <DailyCheckIn />
               <StartLearningCard />
+              <CommunityCard />
               <UploadFileCard />
-              <AiUploadCard />
-              <div className='homepageRockys'>
-              <img src={homePageRockys} alt="Home Page Rockys" />
-            </div>
             </div>
           </>
         )}

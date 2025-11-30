@@ -228,6 +228,7 @@ padding:1rem;
 
   .leaderboard-title {
     @include card-title;
+    margin-left: 0;
     color: $color-quaternary-dark;
   }
 
@@ -248,15 +249,37 @@ padding:1rem;
 
   // New Leaderboard Design
   .leaderboard-content-new {
-
     @include card-content;
     display: flex;
-    gap: $spacing-md;
-    align-items: flex-start;
+    flex-direction: column;
+    gap: $spacing-sm;
     min-height: 200px;
-    background-color: $color-second-neutral-light;
-    border: 10px solid $color-second-neutral-dark;
+    background-color: $secondary-500;
+    border: none;
+    padding: $spacing-sm;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .leaderboard-content-area {
+    display: flex;
+    flex-direction: row;
+    gap: $spacing-md;
     align-items: center;
+    padding: $spacing-sm;
+    background-color: $secondary-50;
+    width: 100%;
+    flex: 1;
+    border-radius: $spacing-sm;
+  }
+
+  .message-buttons-section {
+    display: flex;
+    flex-direction: column;
+    gap: $spacing-md;
+    padding: 0;
+    text-align: left;
+    flex: 1;
   }
 
   .left-section {
@@ -268,6 +291,7 @@ padding:1rem;
   .rocky-character-section {
     display: flex;
     align-items: center;
+
     
     .rocky-character-image {
       width: 100px;
@@ -275,35 +299,28 @@ padding:1rem;
     }
   }
 
-  .podium-section {
-    .first-place-podium {
-      background-color: $color-primary;
-      border-radius: $spacing-sm;
-      padding: $spacing-md;
-      text-align: center;
-      width: 84px;
-      height: 96px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-      padding-top: 6rem;
+  // .podium-section {
+  //   .first-place-podium {
+  //     background-color: $color-primary;
+  //     border-radius: $spacing-sm;
+  //     padding: $spacing-md;
+  //     text-align: center;
+  //     width: 84px;
+  //     height: 96px;
+  //     display: flex;
+  //     align-items: center;
+  //     justify-content: center;
+  //     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  //     padding-top: 6rem;
       
-      .podium-label {
-        font-weight: $font-weight-bold;
-        font-size: $font-size-body;
-        color: white;
-      }
-    }
-  }
+  //     .podium-label {
+  //       font-weight: $font-weight-bold;
+  //       font-size: $font-size-body;
+  //       color: white;
+  //     }
+  //   }
+  // }
 
-  .message-buttons-section {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: $spacing-md;
-    padding: $spacing-md;
-  }
 
   .motivational-message {
     .message-text {
@@ -330,12 +347,17 @@ padding:1rem;
     gap: $spacing-sm;
   }
 
+<<<<<<< HEAD
   .btn-leaderboard,
   .btn-view-friends {
     display: inline-flex;
+=======
+  .btn-leaderboard {
+    display: flex;
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
     align-items: center;
     justify-content: center;
-    background-color: $color-quaternary-dark;
+    background-color: $quinary-500;
     color: white;
     border: none;
     cursor: pointer;
@@ -343,7 +365,8 @@ padding:1rem;
     padding: $spacing-sm $spacing-md;
     border-radius: $spacing-sm;
     font-size: $font-size-body;
-    font-weight: $font-weight-regular;
+    font-weight: $font-weight-bold;
+    width: 100%;
     
     &:hover {
       opacity: 0.9;
@@ -353,62 +376,62 @@ padding:1rem;
 }
 
 // Podium
-.podium {
-  &-container {
-    display: flex;
-    align-items: flex-end;
-    justify-content: center;
-    gap: $spacing-md;
-    margin-bottom: $spacing-lg;
-    min-height: 200px;
-  }
+// .podium {
+//   &-container {
+//     display: flex;
+//     align-items: flex-end;
+//     justify-content: center;
+//     gap: $spacing-md;
+//     margin-bottom: $spacing-lg;
+//     min-height: 200px;
+//   }
 
-  &-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
+//   &-item {
+//     display: flex;
+//     flex-direction: column;
+//     align-items: center;
+//     cursor: pointer;
+//     transition: all 0.3s ease;
     
-    &:hover {
-      transform: translateY(-5px);
-    }
+//     &:hover {
+//       transform: translateY(-5px);
+//     }
     
-    &.rank-1 { order: 2; }
-    &.rank-2 { order: 1; }
-    &.rank-3 { order: 3; }
-  }
+//     &.rank-1 { order: 2; }
+//     &.rank-2 { order: 1; }
+//     &.rank-3 { order: 3; }
+//   }
 
-  &-block {
-    background-color: $color-primary;
-    border-radius: $spacing-sm;
-    padding: $spacing-md;
-    text-align: center;
-    color: white;
-    position: relative;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    align-items: flex-end;
+//   &-block {
+//     background-color: $color-primary;
+//     border-radius: $spacing-sm;
+//     padding: $spacing-md;
+//     text-align: center;
+//     color: white;
+//     position: relative;
+//     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+//     display: flex;
+//     align-items: flex-end;
     
-    .rank-1 & {
-      height: 100px;
-      width: 80px;
-    }
+//     .rank-1 & {
+//       height: 100px;
+//       width: 80px;
+//     }
     
-    .rank-2 &,
-    .rank-3 & {
-      height: 60px;
-      width: 70px;
-    }
-  }
-}
+//     .rank-2 &,
+//     .rank-3 & {
+//       height: 60px;
+//       width: 70px;
+//     }
+//   }
+// }
 
-.rank-label {
-  font-weight: $font-weight-bold;
-  font-size: $font-size-body;
-  width: 100%;
-  text-align: center;
-}
+// .rank-label {
+//   font-weight: $font-weight-bold;
+//   font-size: $font-size-body;
+//   width: 100%;
+//   text-align: center;
+// }
 
 .rocky-avatar {
   position: relative;
@@ -441,16 +464,25 @@ padding:1rem;
   line-height: 1.2;
 }
 
+<<<<<<< HEAD
 .upload-file-card {
+=======
+// Upload File Card
+.community-file-card {
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
 
   @include card-base;
 
-  .upload-title {
+  .community-title {
     @include card-title;
     color: $color-quaternary-dark;
   }
 
+<<<<<<< HEAD
   .shortcuts-container {
+=======
+  .community-content {
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
     position: relative;
     min-height: 150px;
   }
@@ -464,6 +496,7 @@ padding:1rem;
   }
 }
 
+<<<<<<< HEAD
 .shortcuts-container {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -471,30 +504,85 @@ padding:1rem;
 }
 
 .shortcut-card {
+=======
+// Upload options grid (Generate / Translate)
+.community-options {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 200px;
+  gap: $spacing-md;
+  align-items: stretch;
+}
+
+.community-option-card {
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
   background-color: $secondary-500;
   border-radius: $spacing-sm;
   padding: $spacing-sm;
   display: flex;
   flex-direction: column;
+<<<<<<< HEAD
   align-items: center;
   width: 100%;
   margin: auto;
+=======
+  align-items: stretch;
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
   justify-content: space-between;
+  height: 200px;
+  box-sizing: border-box;
+  overflow: hidden;
 }
 
+<<<<<<< HEAD
 .shortcut-icon {
   background-color: $color-second-neutral-light;
   border-radius: $spacing-sm;
   width: 100%;
+=======
+.community-option-icon {
+  background-color: $secondary-50;
+  border-radius: $spacing-sm;
+  padding: $spacing-lg;
+  width: calc(100% + #{$spacing-md});
+  margin: -$spacing-sm;
+  height: 130px;
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: $spacing-sm;
+  flex-shrink: 0;
+  flex-grow: 0;
+  box-sizing: border-box;
 
   img {
+<<<<<<< HEAD
     width: 100%;
     height: 150px;
     padding: 0.5rem 0.2rem 0 0.2rem;
+=======
+    padding-top: $spacing-sm;
+    width: 130px;
+    height: 130px;
+  }
+
+  img.leaderboard-homepage-graphic {
+    padding-top: $spacing-sm;
+    width: 130px !important;
+    height: 130px !important;
+    max-width: 130px !important;
+    max-height: 130px !important;
+  }
+  
+  img.friends-homepage-graphic,
+  .friends-homepage-graphic {
+    width: 140px !important;
+    height: 140px !important;
+    max-width: 140px !important;
+    max-height: 140px !important;
+    padding: 0 !important;
+    margin: 0 !important;
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
   }
 }
 
@@ -540,14 +628,27 @@ padding:1rem;
 
 .start-learning-card {
 
-  @include card-base;
+  background-color: none;
+
+   @include card-base;
 
   .learning-title {
     @include card-title;
     color: $color-quaternary-dark;
   }
 
+<<<<<<< HEAD
 
+=======
+  .learning-content {
+    // @include card-content;
+    // background-color: $color-second-neutral-dark;
+    // border: 10px solid $color-second-neutral-dark;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+  }
+>>>>>>> a932df742502f201e2b918be137de5b0611febd4
   
   .learning-description {
     font-size: $font-size-body;

@@ -105,12 +105,14 @@
   border-radius: 18px;
 }
 
-.shortcut-button {
+.community-options-button {
   background-color: $quinary-500;
   color: $color-second-neutral-light;
-  border-color: $quinary-500;
-  width: 100%;
-  font-weight: $font-weight-bold;
+  border-color: $color-quaternary-dark;
+  width: calc(100% + #{$spacing-md});
+  height: 44px;
+  min-height: 44px;
+  max-height: 44px;
 }
 
 .back-to-choose-button-preview {
