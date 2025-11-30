@@ -27,13 +27,13 @@ body {
 
 #root {
   margin: 0 auto;
-  background-color: #fffdf4;
+  background-color: #fffefc;
   min-height: 100vh;
   position: relative;
 }
 #root main {
   min-height: 100vh;
-  padding-bottom: 70px;
+  padding-bottom: 90px;
 }
 
 .text-center {
@@ -63,7 +63,7 @@ body {
   width: 100vw;
   max-width: min(480px, 100vw);
   margin: 0 auto;
-  min-height: calc(100vh - 70px);
+  min-height: calc(100vh - 90px);
   box-sizing: border-box;
 }
 
@@ -2149,8 +2149,8 @@ button.back-button {
   max-width: min(480px, 100vw);
   margin: 0 auto;
   padding: 0 1rem;
-  padding-bottom: calc(70px + 1rem);
-  min-height: calc(100vh - 70px);
+  padding-bottom: calc(90px + 1rem);
+  min-height: calc(100vh - 90px);
   box-sizing: border-box;
   padding: 2.5rem;
   padding-bottom: 0;
@@ -4053,7 +4053,7 @@ button.back-button {
 
 .view-friends-add-button-container {
   position: fixed;
-  bottom: 80px;
+  bottom: 100px;
   left: 50%;
   transform: translateX(-50%);
   max-width: 1200px;
@@ -4063,7 +4063,7 @@ button.back-button {
 }
 @media (max-width: 768px) {
   .view-friends-add-button-container {
-    bottom: 80px;
+    bottom: 100px;
     padding: 0 1rem;
   }
 }
@@ -5634,31 +5634,28 @@ button.back-button {
 }
 
 .learningOverview {
-  padding: 2rem 1rem 1rem 1rem;
+  padding: 2rem 1rem 0 1rem;
 }
 .learningOverview .lessonFolders {
   display: grid;
-  grid-template-columns: 50% 50%;
-  align-items: center;
   margin: auto;
-  grid-template-rows: 5fr 5fr;
+  grid-template-rows: 4fr 4fr;
+  gap: 1rem;
+  width: 100%;
 }
 .learningOverview .lessonFolders .prebuilt {
   grid-row: 1;
   grid-column: span 2;
   width: 100%;
-  margin-bottom: 1rem;
 }
 .learningOverview .lessonFolders .generated {
   grid-row: 2;
   grid-column: 1;
-  padding-right: 0.5rem;
   width: 100%;
 }
 .learningOverview .lessonFolders .friends {
   grid-row: 2;
   grid-column: 2;
-  padding-left: 0.5rem;
   width: 100%;
 }
 .learningOverview .learningOverviewHeader {
@@ -5666,7 +5663,7 @@ button.back-button {
   grid-template-columns: 2fr 1fr;
   align-items: center;
   gap: 2rem;
-  margin-bottom: 1rem;
+  margin: 0 0.5rem 1rem 0.5rem;
 }
 .learningOverview .learningOverviewHeader .headerContent h1 {
   font-size: 28px;
@@ -5690,7 +5687,6 @@ button.back-button {
 }
 .learningOverview .learningOverviewHeader img {
   grid-column: 2;
-  transform: scaleX(-1);
   max-width: 100%;
   height: auto;
 }
@@ -5996,7 +5992,6 @@ button.back-button {
 .notifications-page {
   width: 100%;
   max-width: 480px;
-  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -6010,7 +6005,6 @@ button.back-button {
   width: 100%;
   max-width: 480px;
   min-width: 100%;
-  height: 775px;
   z-index: 1;
   padding: 0 0.5rem 0.5rem 0;
 }
@@ -6068,6 +6062,36 @@ button.back-button {
   color: #3d190d;
   font-weight: 700;
   text-decoration: underline;
+}
+.notifications-page__support-btn {
+  background: none;
+  border: none;
+  color: #3d190d;
+  text-decoration: underline;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 700;
+  padding: 0;
+}
+.notifications-page__support-btn:hover {
+  color: #4f2110;
+}
+
+.notifications-list__view-more {
+  width: 100%;
+  padding: 0.75rem;
+  margin-top: 1rem;
+  background-color: #6f2e17;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  font-size: 16px;
+}
+.notifications-list__view-more:hover {
+  background-color: #652a15;
 }
 
 .bossPage {
@@ -6320,11 +6344,11 @@ button.back-button {
 }
 
 .navCardWrapper {
-  display: flex;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   border-radius: 15px;
-  flex-direction: column;
   transition: all 0.2s;
-  margin-bottom: 2rem;
 }
 .navCardWrapper:hover .navCardContent {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -6338,6 +6362,9 @@ button.back-button {
 }
 
 .navCardContent {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   background-color: white;
   border-radius: 8px;
   border: 1px solid #e5e7eb;
@@ -6385,26 +6412,101 @@ button.back-button {
 .navCardWrapper.industry .tabColor {
   background-color: #ffd15b;
   color: #652a15;
+  width: 30%;
+  max-width: 150px;
+  height: 40px;
+  border-top-left-radius: 20px;
+  border-top-right-radius: 20px;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -17px;
+  box-sizing: border-box;
 }
 .navCardWrapper.industry .folderColor {
   background-color: #ffc83b;
   color: #652a15;
+  border: 1px #ffc83b solid;
+  border-radius: 20px;
+  position: relative;
+  height: clamp(240px, 50vw, 320px);
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(1rem, 2vw, 1.5rem);
+  box-sizing: border-box;
+}
+.navCardWrapper.industry .folderBadges {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 0.25rem;
+  flex: 1;
+  width: 100%;
+  background-color: white;
+  border-radius: 20px;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+.navCardWrapper.industry .folderBadges .badgeBox {
+  width: clamp(90px, 22vw, 125px);
+  height: clamp(90px, 22vw, 125px);
+}
+.navCardWrapper.industry .folderBadges .badgeBox:nth-child(1) {
+  transform: rotate(-15deg) translateY(-10px);
+}
+.navCardWrapper.industry .folderBadges .badgeBox:nth-child(2) {
+  transform: rotate(8deg) translateY(20px);
+}
+.navCardWrapper.industry .folderBadges .badgeBox:nth-child(3) {
+  transform: rotate(-12deg) translateY(-10px);
+}
+.navCardWrapper.industry .folderBadges .badgeBox img {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.navCardWrapper.industry .folderButton {
+  display: grid;
+  grid-template-columns: 90% 10%;
+  border-radius: 12px;
+  font-weight: 700;
+  color: #652a15;
+  width: 100%;
+  font-size: 16px;
+  align-items: center;
+  box-sizing: border-box;
+}
+.navCardWrapper.industry .folderButton .arrowIcon {
+  width: clamp(30px, 5vw, 40px);
+  height: clamp(30px, 5vw, 40px);
 }
 .navCardWrapper.generated .tabColor {
   background-color: #fe8861;
   color: #ffffff;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
 }
 .navCardWrapper.generated .folderColor {
   background-color: #fe4d13;
   color: #ffffff;
+  position: relative;
+  z-index: 2;
 }
 .navCardWrapper.friends .tabColor {
   background-color: #5a6fd5;
   color: #ffffff;
+  position: relative;
+  z-index: 1;
+  margin-bottom: -1px;
 }
 .navCardWrapper.friends .folderColor {
   background-color: #0828c0;
   color: #ffffff;
+  position: relative;
+  z-index: 2;
 }
 
 .tabColor,
@@ -8051,6 +8153,7 @@ button.back-button {
   gap: 0.9rem;
 }
 .notifications-list__item {
+  height: 80px;
   display: flex;
   align-items: center;
   gap: 0.85rem;
@@ -8101,17 +8204,16 @@ button.back-button {
   flex: 1;
   min-width: 0;
 }
-.notifications-list__headline {
+.notifications-list__message {
   margin: 0;
   color: #4f2110;
   font-size: 0.95rem;
   line-height: 1.25;
-}
-.notifications-list__name {
-  font-weight: 800;
-}
-.notifications-list__message {
   font-weight: 600;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
 }
 .notifications-list__item-time {
   display: inline-block;
@@ -12800,7 +12902,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 50%;
   width: 80%;
 }
-.avatar-customization__canvas[data-headwear=round-hat] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape=shape-05][data-headwear=round-hat] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
@@ -12818,7 +12920,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 50%;
   width: 80%;
 }
-.avatar-customization__canvas[data-headwear=round-hat] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape=shape-05-h1][data-headwear=round-hat] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
@@ -12871,7 +12973,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 50%;
   width: 80%;
 }
-.avatar-customization__canvas[data-headwear=round-hat-2] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape^=shape-05][data-headwear=round-hat-2] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape^=shape-05][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
@@ -12934,7 +13036,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 48%;
   width: 45%;
 }
-.avatar-customization__canvas[data-headwear=round-hat-3] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape^=shape-05][data-headwear=round-hat-3] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape^=shape-05][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-3] {
@@ -12957,7 +13059,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 53%;
   width: 50%;
 }
-.avatar-customization__canvas[data-headwear=round-hat-3] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape=shape-05-h1][data-headwear=round-hat-3] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
@@ -12975,7 +13077,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 55%;
   width: 50%;
 }
-.avatar-customization__canvas[data-headwear=round-hat-3] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape=shape-05-h2][data-headwear=round-hat-3] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h2][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
@@ -12993,7 +13095,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 52%;
   width: 45%;
 }
-.avatar-customization__canvas[data-headwear=round-hat-3] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape=shape-05-h3][data-headwear=round-hat-3] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h3][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
@@ -13011,7 +13113,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 52%;
   width: 50%;
 }
-.avatar-customization__canvas[data-headwear=round-hat-3] .avatar-layer--hair {
+.avatar-customization__canvas[data-shape=shape-05-h4][data-headwear=round-hat-3] .avatar-layer--hair {
   display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h4][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {

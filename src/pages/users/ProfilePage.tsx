@@ -9,6 +9,7 @@ import { useCustomFlashcardStats } from "../../hooks/useCustomFlashcardStats";
 import PrivacyDrawer from "../drawers/PrivacyDrawer";
 import NotificationBell from "../../components/NotificationBell";
 import ChatModal from "../../components/learning/ChatModal";
+import LoadingBar from "../../components/LoadingBar";
 import rockyWhiteLogo from '../../../public/rockyWhite.svg';
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import MonthlyActivity from "../../components/MonthlyActivity";
@@ -16,7 +17,6 @@ import SelfLeaderboard from "../../components/SelfLeaderboard";
 import { AvatarDisplay } from "../../components/avatar";
 import { BACKEND_URL } from "../../lib/api";
 import type { ChatMessage } from "../../types/components/quiz";
-// import editIcon from '../../assets/icons/editIcon.svg'; // Commented out - may be used in commented profile-card
 import settingsIcon from '../../assets/icons/settingsIcon.svg';
 import '../../styles/pages/_profile.scss';
 import '../../styles/pages/_friendProfile.scss';
@@ -43,12 +43,14 @@ export default function ProfilePage() {
   const [showChatModal, setShowChatModal] = useState(false);
   const [chatHistory, setChatHistory] = useState<ChatMessage[]>([]);
   const [chatPrompt, setChatPrompt] = useState("");
-  const { data: userBadges } = useUserBadges();
+  const { data: userBadges, isLoading: badgesLoading } = useUserBadges();
   const {
     data: customWordCount = 0,
     isLoading: customWordCountLoading,
     isError: customWordCountError,
   } = useCustomFlashcardStats();
+
+  const isPageLoading = isLoading || badgesLoading || customWordCountLoading;
   const accountCreatedAt = data?.createdAt ? new Date(data.createdAt) : null;
   const accountAgeDays = accountCreatedAt
     ? Math.max(
@@ -197,15 +199,13 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
           </div>
         </div>
 
-        {isLoading && (
-          <div style={{ padding: "2rem", textAlign: "center", color: "#666" }}>
-            Loading profile...
-          </div>
+        {isPageLoading && (
+          <LoadingBar isLoading={true} text="Loading profile" />
         )}
 
         {error && <div className="error-message">Error: {error}</div>}
 
-        {data && (
+        {!isPageLoading && data && (
           <div className="profile-content">
             {/* Profile Avatar Section */}
             <div className="profile-avatar-section">

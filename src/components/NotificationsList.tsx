@@ -98,6 +98,7 @@ export function NotificationsList() {
         id: string;
         lessonRequestId: string;
     } | null>(null);
+    const [visibleCount, setVisibleCount] = useState(4);
 
     const { data: lessonRequest } = useQuery({
         queryKey: ["lessonRequest", selectedNotification?.lessonRequestId],
@@ -290,6 +291,8 @@ export function NotificationsList() {
     }
 
     const unreadCount = notifications.filter((n) => !n.isRead).length;
+    const displayedNotifications = notifications.slice(0, visibleCount);
+    const hasMore = notifications.length > visibleCount;
 
     return (
         <div className='notifications-list'>
@@ -321,7 +324,7 @@ export function NotificationsList() {
             )}
 
             <div className='notifications-list__items'>
-                {notifications.map((notification) => {
+                {displayedNotifications.map((notification) => {
                     const displayTitle = notification.title || "Notification";
                     const displayMessage =
                         notification.message ||
@@ -367,13 +370,8 @@ export function NotificationsList() {
                                 )}
                             </div>
                             <div className='notifications-list__item-content'>
-                                <p className='notifications-list__headline'>
-                                    <span className='notifications-list__name'>
-                                        {actorName}
-                                    </span>{" "}
-                                    <span className='notifications-list__message'>
-                                        {displayMessage}
-                                    </span>
+                                <p className='notifications-list__message'>
+                                    {displayMessage.length > 30 ? `${displayMessage.slice(0, 30)}...` : displayMessage}
                                 </p>
                                 <span className='notifications-list__item-time'>
                                     {formatDistanceToNow(
@@ -398,6 +396,16 @@ export function NotificationsList() {
                     );
                 })}
             </div>
+
+            {hasMore && (
+                <button
+                    className="notifications-list__view-more"
+                    onClick={() => setVisibleCount(prev => Math.min(prev + 4, notifications.length))}
+                    type="button"
+                >
+                    View More ({notifications.length - visibleCount} remaining)
+                </button>
+            )}
 
             {selectedNotification &&
                 lessonRequest &&

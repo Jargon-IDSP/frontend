@@ -2,7 +2,6 @@
 
 .account-page {
   min-height: 100vh;
-  padding-bottom: 120px;
 }
 
 .account-header {
@@ -10,9 +9,6 @@
   align-items: center;
   justify-content: space-between;
   padding: $spacing-md $spacing-lg;
-  position: sticky;
-  top: 0;
-  z-index: 10;
 }
 
 .account-back-button {
@@ -254,7 +250,7 @@
 
 // Delete Account Section
 .account-delete-section {
-  padding: $spacing-xl $spacing-lg;
+  padding: $spacing-xl $spacing-lg $spacing-xs $spacing-lg;
   margin-top: $spacing-lg;
 }
 

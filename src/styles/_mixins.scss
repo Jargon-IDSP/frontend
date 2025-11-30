@@ -6,8 +6,8 @@
   max-width: min(480px, 100vw);
   margin: 0 auto;
   padding: 0 $spacing-md; 
-  padding-bottom: calc(70px + #{$spacing-md}); 
-  min-height: calc(100vh - 70px); 
+  padding-bottom: calc(90px + #{$spacing-md}); 
+  min-height: calc(100vh - 90px); 
   box-sizing: border-box;
 }
 
