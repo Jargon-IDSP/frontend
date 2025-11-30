@@ -336,8 +336,8 @@ body {
   flex-direction: column;
   align-items: center;
   gap: 0.25rem;
-  padding: 0.25rem;
-  background-color: #FFEAB3;
+  padding: 0.5rem;
+  background-color: #ffdf8e;
   border-radius: 1.5rem;
   min-width: 40px;
   transition: transform 0.2s ease;
@@ -347,21 +347,24 @@ body {
 }
 .home-page .tick-box-container {
   display: flex;
-  gap: 0.5rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: clamp(0.25rem, 2vw, 2.5rem);
   overflow-x: auto;
-  padding: 0.25rem;
+  padding: clamp(0.09rem, 0.5vw, 0.5rem);
   margin-bottom: 1rem;
+  width: 100%;
 }
 .home-page .tick-box-label {
   font-size: 13px;
   font-weight: 500;
-  color: #393939;
+  color: #652a15;
 }
 .home-page .tick-box-circle {
-  width: 30px;
-  height: 30px;
+  width: clamp(35px, 4vw, 50px);
+  height: clamp(35px, 4vw, 50px);
   border-radius: 50%;
-  border: 2px solid #fe4d13;
+  border: clamp(2px, 0.3vw, 3px) solid #fe4d13;
   background-color: #fffdf4;
   display: flex;
   align-items: center;
@@ -373,7 +376,7 @@ body {
 }
 .home-page .tick-box-checkmark {
   color: white;
-  font-size: 24px;
+  font-size: clamp(24px, 3vw, 32px);
   font-weight: 700;
 }
 .home-page .top-leaderboard {
@@ -477,7 +480,7 @@ body {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   cursor: pointer;
@@ -650,7 +653,7 @@ body {
   padding-right: 0.5rem;
 }
 .home-page .camera-option-button {
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   border-radius: 0.5rem;
@@ -1638,7 +1641,7 @@ button.back-button {
 
 .upload-section {
   background-color: #fffdf4;
-  border: 2px dashed #0828c0;
+  border: 2px dashed #365ccc;
   border-radius: 0.5rem;
   padding: 1.5rem;
   padding-top: 2rem;
@@ -1726,7 +1729,7 @@ button.back-button {
 
 .preview-content {
   background-color: #fffefc;
-  border: 1px dashed #0828c0;
+  border: 1px dashed #365ccc;
   border-radius: 0.5rem;
   padding: 1.5rem;
   text-align: center;
@@ -3275,7 +3278,7 @@ button.back-button {
   padding: 0.65rem 1.25rem;
   font-size: 16px;
   font-weight: 600;
-  color: #e6eaf9;
+  color: #ebeffa;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -3284,14 +3287,14 @@ button.back-button {
   background: transparent;
 }
 .leaderboard-tab:hover {
-  color: rgba(8, 40, 192, 0.7);
+  color: rgba(54, 92, 204, 0.7);
 }
 .leaderboard-tab:focus-visible {
-  outline: 2px solid rgba(8, 40, 192, 0.45);
+  outline: 2px solid rgba(54, 92, 204, 0.45);
   outline-offset: 2px;
 }
 .leaderboard-tab--active {
-  color: #0724af;
+  color: #3154ba;
   background-color: white;
   font-weight: 700;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
@@ -3380,7 +3383,7 @@ button.back-button {
   font-size: 24px;
   font-weight: 700;
   margin: 0;
-  color: #0828c0;
+  color: #365ccc;
 }
 .leaderboard-coming-soon__description {
   font-size: 16px;
@@ -3437,7 +3440,7 @@ button.back-button {
   width: 80px;
 }
 .podium-item.rank-2 .podium-block {
-  background: #8d9ce2;
+  background: #a3b4e8;
   height: 80px;
   width: 80px;
 }
@@ -3539,7 +3542,7 @@ button.back-button {
   padding-left: 2.5rem;
   font-size: 16px;
   font-weight: 700;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   border-radius: 8px;
@@ -3782,7 +3785,7 @@ button.back-button {
 .community-page .leaderboard-preview-empty {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 .community-page .leaderboard-preview-empty-state {
   display: flex;
@@ -3814,7 +3817,7 @@ button.back-button {
   padding: 0.75rem 2.5rem;
   font-size: 16px;
   font-weight: 700;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   border-radius: 8px;
@@ -3824,7 +3827,7 @@ button.back-button {
 .community-page .leaderboard-preview-loading {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 .community-page .leaderboard-preview-view-more {
   text-align: center;
@@ -3856,7 +3859,7 @@ button.back-button {
 .community-page .friends-preview-empty {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 .community-page .friends-preview-empty-state {
   display: flex;
@@ -3901,7 +3904,7 @@ button.back-button {
   padding: 0.75rem 2.5rem;
   font-size: 16px;
   font-weight: 700;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   border-radius: 8px;
@@ -3914,7 +3917,7 @@ button.back-button {
 .community-page .friends-preview-loading {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 .community-page .friends-item {
   display: flex;
@@ -3994,7 +3997,7 @@ button.back-button {
   transition: all 0.3s ease;
 }
 .community-page .friends-preview-action-button--add {
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
 }
 .community-page .friends-preview-action-button--add:hover {
@@ -4002,8 +4005,8 @@ button.back-button {
 }
 .community-page .friends-preview-action-button--view {
   background-color: white;
-  color: #0828c0;
-  border: 2px solid #0828c0;
+  color: #365ccc;
+  border: 2px solid #365ccc;
 }
 .community-page .friends-preview-action-button--view:hover {
   opacity: 0.9;
@@ -4034,7 +4037,7 @@ button.back-button {
   padding: 0.75rem 1.5rem;
   font-size: 16px;
   font-weight: 600;
-  color: #B2BCEB;
+  color: #c1ccef;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
@@ -4042,7 +4045,7 @@ button.back-button {
   transition: all 0.3s ease;
 }
 .view-friends-tab--active {
-  color: #0828c0;
+  color: #365ccc;
   background-color: #FFFEFC;
   font-weight: 700;
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
@@ -4051,13 +4054,13 @@ button.back-button {
 .view-friends-empty {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 
 .view-friends-loading {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 
 .leaderboard-back-button {
@@ -4152,7 +4155,7 @@ button.back-button {
   padding: 1rem;
   font-size: 16px;
   font-weight: 600;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   border-radius: 8px;
@@ -4426,7 +4429,7 @@ button.back-button {
 
 .friends-remove-button {
   padding: 0.5rem 1rem;
-  background-color: #0724af;
+  background-color: #3154ba;
   border: none;
   cursor: pointer;
   flex-shrink: 0;
@@ -4438,7 +4441,7 @@ button.back-button {
 .friends-unfollow-button {
   height: 2rem;
   padding: 0;
-  background-color: #0724af;
+  background-color: #3154ba;
   color: white;
   border: none;
   border-radius: 25%;
@@ -4487,10 +4490,10 @@ button.back-button {
   width: 100%;
 }
 .friends-search-input-new::-moz-placeholder {
-  color: #8d9ce2;
+  color: #a3b4e8;
 }
 .friends-search-input-new::placeholder {
-  color: #8d9ce2;
+  color: #a3b4e8;
 }
 
 .friends-search-camera-button {
@@ -4507,7 +4510,7 @@ button.back-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #8d9ce2;
+  color: #a3b4e8;
   transition: color 0.15s ease;
   z-index: 1;
 }
@@ -4585,7 +4588,7 @@ button.back-button {
   padding: 1rem 2.5rem;
   font-size: 16px;
   font-weight: 600;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   border: none;
   border-radius: 8px;
@@ -5019,7 +5022,7 @@ button.back-button {
 }
 .edit-lesson-input:focus {
   outline: none;
-  border-color: #0828c0;
+  border-color: #365ccc;
 }
 .edit-lesson-input:disabled {
   opacity: 0.6;
@@ -5062,7 +5065,7 @@ button.back-button {
 .edit-lesson-loading {
   text-align: center;
   padding: 2.5rem;
-  color: #e6eaf9;
+  color: #ebeffa;
 }
 
 .container--friend-profile {
@@ -5148,7 +5151,7 @@ button.back-button {
 
 .friend-profile-friendship-button {
   position: absolute;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   padding: 0.3rem;
   top: 5%;
@@ -5413,7 +5416,7 @@ button.back-button {
   align-items: center;
   justify-content: center;
   padding: 0.25rem;
-  background: #B2BCEB;
+  background: #c1ccef;
   border-radius: 8px;
   text-align: center;
 }
@@ -5792,7 +5795,7 @@ button.back-button {
 .categoriesPage .categoriesCard {
   background-color: #fffefc;
   padding: 1rem 0;
-  border: 1px solid #0828c0;
+  border: 1px solid #365ccc;
   box-shadow: 8px 8px 0 #3d190d;
   border-radius: 20px;
 }
@@ -6090,7 +6093,7 @@ button.back-button {
   background: #fffdf4;
   border-radius: 30px;
   padding: 1.75rem 1rem 1.5rem;
-  border: 1px solid #0828c0;
+  border: 1px solid #365ccc;
   box-shadow: 16px 16px 0 #3d190d;
   min-height: 725px;
   display: flex;
@@ -6324,7 +6327,7 @@ button.back-button {
 .community-options-button {
   font-size: 16px;
   font-weight: 700;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: #fffdf4;
   border: none;
   width: calc(100% + 1rem);
@@ -6580,14 +6583,14 @@ button.back-button {
   z-index: 2;
 }
 .navCardWrapper.friends .tabColor {
-  background-color: #5a6fd5;
+  background-color: #7892dd;
   color: #ffffff;
   position: relative;
   z-index: 1;
   margin-bottom: -1px;
 }
 .navCardWrapper.friends .folderColor {
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: #ffffff;
   position: relative;
   z-index: 2;
@@ -7674,7 +7677,7 @@ button.back-button {
   text-overflow: ellipsis;
 }
 .study-type-blue {
-  background-color: #B2BCEB;
+  background-color: #c1ccef;
   color: white;
 }
 .study-type-red {
@@ -9694,7 +9697,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   white-space: nowrap;
 }
 .avatar-customization__input {
-  border: 2px solid rgba(141, 156, 226, 0.4);
+  border: 2px solid rgba(163, 180, 232, 0.4);
   border-radius: 8px;
   padding: 0.65rem 0.85rem;
   font-size: 1rem;
@@ -9816,7 +9819,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   padding: 0.9rem;
   border: none;
   border-radius: 8px;
-  background-color: #0828c0;
+  background-color: #365ccc;
   color: white;
   font-weight: 700;
   font-size: 1rem;
@@ -9825,7 +9828,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   transition: background-color 0.15s ease, transform 0.15s ease;
 }
 .avatar-customization__next:hover {
-  background-color: rgb(6.776, 33.88, 162.624);
+  background-color: rgb(46.0214285714, 80.3119047619, 181.3785714286);
   transform: translateY(-1px);
 }
 .avatar-customization__reset {
