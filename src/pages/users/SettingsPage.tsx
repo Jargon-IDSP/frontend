@@ -140,7 +140,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
   const themeLabel = isDarkTheme ? "Dark" : "Light";
 
   return (
-    <div className={`container${isDarkTheme ? " settings-container--dark" : ""}`}>
+    <div className="container">
       <div className={`settings-page${isDarkTheme ? " settings-page--dark" : ""}`}>
         {/* Header */}
         <div className="settings-header">

@@ -1,10 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-// import { NavigationCard } from "../../components/learning/ui/Card";
+import { NavigationCard } from "../../components/learning/ui/Card";
 import rockyWink from "../../../public/learningFolders/rockyWink.svg";
 import friends from "../../../public/learningFolders/friends.svg";
 import generated from "../../../public/learningFolders/generated.svg";
-import prebuilt from "../../../public/learningFolders/prebuilt.svg";
+// import prebuilt from "../../../public/learningFolders/prebuilt.svg";
 import { useProfile } from "../../hooks/useProfile";
 import { getIndustryName } from "../../hooks/useUserPreferences";
 import DocumentDrawer from "../drawers/DocumentDrawer";
@@ -36,17 +36,20 @@ export default function LearnJargon() {
 
         <DocumentDrawer open={isDrawerOpen} onOpenChange={setIsDrawerOpen} />
 
-         {/* <NavigationCard
+
+        <div className="lessonFolders">
+        <div className="prebuilt">
+          <NavigationCard
           title=""
           description=""
           cardType="industry"
-          buttonText={` ${industryName} Courses`}
+          industryName={industryName}
+          buttonText={`${industryName} Course`}
           onClick={() => navigate("/learning/existing/levels")}
-        /> */}
+        />
+        </div>
 
-        <div className="lessonFolders">
-
-        <img className="prebuilt" src={prebuilt} alt="Prebuilt Lessons" onClick={() => navigate("/learning/existing/levels")}/>
+        {/* <img className="prebuilt" src={prebuilt} alt="Prebuilt Lessons" onClick={() => navigate("/learning/existing/levels")}/> */}
 
         <img className="generated" src={generated} alt="Custom Lessons" onClick={() => navigate("/learning/custom/categories")}/>
 

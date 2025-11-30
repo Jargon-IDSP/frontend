@@ -33,7 +33,6 @@
     @include card-content;
     text-align: left;
     padding: $spacing-md;
-    // Override card background/border for quiz prompt section
     background-color: transparent;
     border: none;
     font-size: $font-size-body;
@@ -44,7 +43,7 @@
 .back-previous-question-button,
 .next-question-button {
     position: fixed;
-    bottom: calc(70px + #{$spacing-xl} + #{$spacing-sm}); // a bit higher than the Ask Rocky button
+    bottom: calc(90px + #{$spacing-xl} + #{$spacing-sm}); 
     z-index: $z-index-dropdown;
     background-color: transparent;
     border: none;
@@ -134,7 +133,7 @@
     position: fixed;
     left: 50%;
     transform: translateX(-50%);
-    bottom: calc(70px + #{$spacing-md});
+    bottom: calc(90px + #{$spacing-md});
     z-index: $z-index-dropdown;
     display: flex;
     width: 60%;

@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import LoadingBar from "../../../components/LoadingBar";
 
 interface QuizLoaderProps {
   isLoading: boolean;
@@ -10,8 +11,8 @@ interface QuizLoaderProps {
 export function QuizLoader({ isLoading, error, onBack, children }: QuizLoaderProps) {
   if (isLoading) {
     return (
-      <div style={{ padding: "2rem", textAlign: "center" }}>
-        <p>Loading quiz...</p>
+      <div className="container">
+        <LoadingBar isLoading={true} text="Loading quiz" />
       </div>
     );
   }

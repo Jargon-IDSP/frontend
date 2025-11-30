@@ -1,10 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useProfile } from "../../hooks/useProfile";
 import { BACKEND_URL } from "../../lib/api";
 import { AvatarDisplay } from "../../components/avatar";
+import LoadingBar from "../../components/LoadingBar";
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import rockyWhiteLogo from '../../../public/rockyWhite.svg';
 import downArrowBrown from '../../assets/icons/downArrowBrown.svg';
@@ -28,6 +29,24 @@ const industryIdToName: { [key: number]: string } = {
   5: 'Welder',
 };
 
+const languageOptions = [
+  { id: 'en', label: 'English', value: 'english' },
+  { id: 'zh', label: 'Chinese (中文)', value: 'chinese' },
+  { id: 'fr', label: 'French (Français)', value: 'french' },
+  { id: 'ko', label: 'Korean (한국어)', value: 'korean' },
+  { id: 'pa', label: 'Punjabi (ਪੰਜਾਬੀ)', value: 'punjabi' },
+  { id: 'es', label: 'Spanish (Español)', value: 'spanish' },
+];
+
+const languageValueToLabel: { [key: string]: string } = {
+  'english': 'English',
+  'chinese': 'Chinese (中文)',
+  'french': 'French (Français)',
+  'korean': 'Korean (한국어)',
+  'punjabi': 'Punjabi (ਪੰਜਾਬੀ)',
+  'spanish': 'Spanish (Español)',
+};
+
 export default function AccountPage() {
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -37,21 +56,57 @@ export default function AccountPage() {
   const [username, setUsername] = useState('');
   const [selectedIndustryId, setSelectedIndustryId] = useState<number | null>(null);
   const [showIndustryDropdown, setShowIndustryDropdown] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState<string | null>(null);
+  const [showLanguageDropdown, setShowLanguageDropdown] = useState(false);
   const [email, setEmail] = useState('');
   const [password] = useState('••••••••••••');
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+  const [isSaving, setIsSaving] = useState(false);
 
-  // Initialize form with profile data
+  const industryDropdownRef = useRef<HTMLDivElement>(null);
+  const languageDropdownRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (profile) {
       setUsername(profile.firstName || profile.username || '');
       setSelectedIndustryId(profile.industryId || null);
+      setSelectedLanguage(profile.language || null);
       setEmail(profile.email || '');
     }
   }, [profile]);
 
-  // Mutation to update industry
-  const updateIndustryMutation = useMutation({
-    mutationFn: async (industryName: string) => {
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (industryDropdownRef.current && !industryDropdownRef.current.contains(event.target as Node)) {
+        setShowIndustryDropdown(false);
+      }
+    };
+
+    if (showIndustryDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [showIndustryDropdown]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (languageDropdownRef.current && !languageDropdownRef.current.contains(event.target as Node)) {
+        setShowLanguageDropdown(false);
+      }
+    };
+
+    if (showLanguageDropdown) {
+      document.addEventListener("mousedown", handleClickOutside);
+      return () => {
+        document.removeEventListener("mousedown", handleClickOutside);
+      };
+    }
+  }, [showLanguageDropdown]);
+
+  const saveChangesMutation = useMutation({
+    mutationFn: async (updates: { industry?: string; language?: string }) => {
       const token = await getToken();
       const res = await fetch(`${BACKEND_URL}/profile/onboarding`, {
         method: 'POST',
@@ -59,41 +114,50 @@ export default function AccountPage() {
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ industry: industryName }),
+        body: JSON.stringify(updates),
       });
 
       if (!res.ok) {
         const errorData = await res.json();
-        throw new Error(errorData.error || 'Failed to update industry');
+        throw new Error(errorData.error || 'Failed to update profile');
       }
 
       return res.json();
     },
     onSuccess: async () => {
-      // Invalidate and refetch profile data
       await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      await queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
+      setHasUnsavedChanges(false);
+      setIsSaving(false);
+      navigate('/profile');
     },
     onError: (error) => {
-      console.error('Failed to update industry:', error);
-      alert('Failed to update industry. Please try again.');
-      // Revert to the original industry on error
-      if (profile?.industryId) {
+      console.error('Failed to update profile:', error);
+      alert('Failed to update profile. Please try again.');
+      setIsSaving(false);
+
+      if (profile?.industryId !== undefined) {
         setSelectedIndustryId(profile.industryId);
+      }
+      if (profile?.language) {
+        setSelectedLanguage(profile.language);
       }
     },
   });
 
-  const handleIndustrySelect = (industryId: number, industryLabel: string) => {
+  const handleIndustrySelect = (industryId: number) => {
     setSelectedIndustryId(industryId);
     setShowIndustryDropdown(false);
 
-    // Convert label to lowercase value for backend
-    const industryValue = industryLabel.toLowerCase();
-    updateIndustryMutation.mutate(industryValue);
+    if (profile?.industryId !== industryId) {
+      setHasUnsavedChanges(true);
+    } else {
+      const languageChanged = profile?.language !== selectedLanguage;
+      setHasUnsavedChanges(languageChanged);
+    }
   };
 
   const handleDeleteAccount = () => {
-    // TODO: Implement account deletion
     const confirmed = confirm('Are you sure you want to delete your account? This action cannot be undone.');
     if (confirmed) {
       console.log('Delete account requested');
@@ -101,12 +165,34 @@ export default function AccountPage() {
     }
   };
 
+  const handleSave = async () => {
+    if (!hasUnsavedChanges || isSaving) return;
+
+    setIsSaving(true);
+
+    const updates: { industry?: string; language?: string } = {};
+
+    if (profile?.industryId !== selectedIndustryId && selectedIndustryId !== null) {
+      const industryName = industryIdToName[selectedIndustryId].toLowerCase();
+      updates.industry = industryName;
+    }
+
+    if (profile?.language !== selectedLanguage && selectedLanguage !== null) {
+      updates.language = selectedLanguage;
+    }
+
+    if (Object.keys(updates).length > 0) {
+      saveChangesMutation.mutate(updates);
+    } else {
+      setIsSaving(false);
+      setHasUnsavedChanges(false);
+    }
+  };
+
   if (isLoading) {
     return (
       <div className="container">
-        <div className="account-page">
-          <div className="account-loading">Loading account information...</div>
-        </div>
+        <LoadingBar isLoading={true} text="Loading account" />
       </div>
     );
   }
@@ -166,7 +252,7 @@ export default function AccountPage() {
           {/* Trade/Industry */}
           <div className="account-form-group">
             <label className="account-form-label">Trade</label>
-            <div className="account-dropdown-container">
+            <div className="account-dropdown-container" ref={industryDropdownRef}>
               <button
                 className="account-dropdown-trigger"
                 onClick={() => setShowIndustryDropdown(!showIndustryDropdown)}
@@ -187,7 +273,7 @@ export default function AccountPage() {
                     <button
                       key={industry.id}
                       className={`account-dropdown-item ${selectedIndustryId === industry.id ? 'account-dropdown-item--selected' : ''}`}
-                      onClick={() => handleIndustrySelect(industry.id, industry.label)}
+                      onClick={() => handleIndustrySelect(industry.id)}
                     >
                       {industry.label}
                     </button>
@@ -197,16 +283,48 @@ export default function AccountPage() {
             </div>
           </div>
 
-          {/* Languages Button */}
+          {/* Languages Dropdown */}
           <div className="account-form-group">
             <label className="account-form-label">Languages</label>
-            <button
-              className="account-language-button"
-              onClick={() => navigate("/onboarding/language")}
-            >
-              <span>Manage Languages</span>
-              <img src={downArrowBrown} alt="Arrow" className="account-language-arrow" />
-            </button>
+            <div className="account-dropdown-container" ref={languageDropdownRef}>
+              <button
+                className="account-dropdown-trigger"
+                onClick={() => setShowLanguageDropdown(!showLanguageDropdown)}
+              >
+                <span className={selectedLanguage !== null ? "account-dropdown-selected" : "account-dropdown-placeholder"}>
+                  {selectedLanguage !== null ? languageValueToLabel[selectedLanguage] : 'Select your language'}
+                </span>
+                <img
+                  src={downArrowBrown}
+                  alt="Dropdown"
+                  className={`account-dropdown-arrow ${showLanguageDropdown ? 'account-dropdown-arrow--open' : ''}`}
+                />
+              </button>
+
+              {showLanguageDropdown && (
+                <div className="account-dropdown-menu">
+                  {languageOptions.map((language) => (
+                    <button
+                      key={language.id}
+                      className={`account-dropdown-item ${selectedLanguage === language.value ? 'account-dropdown-item--selected' : ''}`}
+                      onClick={() => {
+                        setSelectedLanguage(language.value);
+                        setShowLanguageDropdown(false);
+
+                        if (profile?.language !== language.value) {
+                          setHasUnsavedChanges(true);
+                        } else {
+                          const industryChanged = profile?.industryId !== selectedIndustryId;
+                          setHasUnsavedChanges(industryChanged);
+                        }
+                      }}
+                    >
+                      {language.label}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
 
           {/* Email */}
@@ -248,8 +366,12 @@ export default function AccountPage() {
         </div>
 
         {/* Save Button */}
-        <button className="account-save-button" disabled>
-          Save
+        <button
+          className="account-save-button"
+          onClick={handleSave}
+          disabled={!hasUnsavedChanges || isSaving}
+        >
+          {isSaving ? 'Saving...' : 'Save'}
         </button>
       </div>
     </div>

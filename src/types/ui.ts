@@ -14,4 +14,5 @@ export interface NavigationCardProps {
   onClick: () => void;
   disabled?: boolean;
   buttonText?: string;
+  industryName?: string;
 }

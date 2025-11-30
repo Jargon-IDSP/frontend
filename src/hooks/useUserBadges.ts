@@ -39,6 +39,6 @@ export function useUserBadges() {
       const data = await response.json();
       return data.badges || [];
     },
-    staleTime: 1 * 60 * 1000, // 1 minute - short stale time so new badges show up quickly
+    staleTime: 10 * 60 * 1000,
   });
 }

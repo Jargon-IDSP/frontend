@@ -18,7 +18,7 @@ export default function QuizCompletion({
   isBossQuiz = false,
   passed = true,
 }: QuizCompletionProps) {
-  const { data: userBadges } = useUserBadges();
+  const { data: userBadges, isLoading: badgesLoading } = useUserBadges();
 
   const failedBossQuiz = isBossQuiz && !passed;
 
@@ -190,14 +190,20 @@ export default function QuizCompletion({
           <h2>{headingMessage}!</h2>
           <h2> {completionMessage}</h2>
 
-          {isBossQuiz && !failedBossQuiz && badgeIconUrl ? (
-            <>
-              <img className="badgeIcon" src={badgeIconUrl} alt="Badge" />
-              <p>You got a new badge to your collection!</p>
-              <p className="smallNote">
-                You can view all your achievements on your profile page.
-              </p>
-            </>
+          {isBossQuiz && !failedBossQuiz ? (
+            badgesLoading ? (
+              <img className="rockyIcon" src="/rockyYellow.svg" alt="Rocky" />
+            ) : badgeIconUrl ? (
+              <>
+                <img className="badgeIcon" src={badgeIconUrl} alt="Badge" />
+                <p>You got a new badge to your collection!</p>
+                <p className="smallNote">
+                  You can view all your achievements on your profile page.
+                </p>
+              </>
+            ) : (
+              <img className="rockyIcon" src="/rockyYellow.svg" alt="Rocky" />
+            )
           ) : (
             <img className="rockyIcon" src="/rockyYellow.svg" alt="Rocky" />
           )}
