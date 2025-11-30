@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "../styles/components/_loadingBar.scss";
+import loadingAnimation from "../assets/loadingAnimation.svg";
 
 interface LoadingBarProps {
   isLoading: boolean;
@@ -20,8 +21,8 @@ export default function LoadingBar({
     if (isLoading) {
       setLoadingProgress(0);
       const interval = setInterval(() => {
-        setLoadingProgress((prev) => (prev >= 90 ? prev : prev + 15));
-      }, 150);
+         setLoadingProgress((prev) => (prev >= 90 ? prev : prev + 15));
+     }, 150);
       return () => clearInterval(interval);
     } else if (hasData || hasError) {
       setLoadingProgress(100);
@@ -34,6 +35,13 @@ export default function LoadingBar({
 
   return (
     <div className="loading-bar">
+      <div className="loading-bar__animation">
+        <img 
+          src={loadingAnimation} 
+          alt="Loading animation" 
+          className="loading-bar__svg"
+        />
+      </div>
       <div className="loading-bar__track">
         <div
           className="loading-bar__fill"
