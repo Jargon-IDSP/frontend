@@ -585,6 +585,83 @@ body {
   max-height: 140px !important;
   padding: 0 !important;
   margin: 0 !important;
+<<<<<<< HEAD
+}
+.home-page .camera-file-card {
+  margin-bottom: 1.5rem;
+}
+.home-page .camera-file-card .camera-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: #393939;
+  margin-bottom: 0.25rem;
+  text-align: left;
+  color: #652a15;
+  margin-bottom: 1rem;
+}
+.home-page .camera-file-card .camera-content {
+  background-color: #ffba0a;
+  border-radius: 1rem;
+  padding: 0.5rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 160px auto;
+  gap: 0.2rem;
+  align-items: stretch;
+}
+.home-page .camera-option-icon {
+  background-color: #fff8e7;
+  border-radius: 1rem;
+  width: 150px;
+  align-self: center;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+.home-page .camera-option-icon img {
+  width: 130px;
+  height: 130px;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.home-page .camera-option-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 0.5rem 0;
+}
+.home-page .camera-option-content h3 {
+  font-weight: 700;
+  color: #652a15;
+  margin: 0 0 0.25rem 0;
+}
+.home-page .camera-option-content p {
+  font-size: 13px;
+  color: #652a15;
+  margin: 0 0 1rem 0;
+  line-height: 1.4;
+  padding-right: 0.5rem;
+}
+.home-page .camera-option-button {
+  background-color: #0828c0;
+  color: white;
+  border: none;
+  border-radius: 0.5rem;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: center;
+  min-width: 150px;
+  border: 1px solid #652a15;
+}
+.home-page .camera-option-button:hover {
+  opacity: 0.9;
+  transform: translateY(-2px);
+=======
+>>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
 }
 .home-page .word-of-the-day {
   margin-bottom: 1.5rem;
@@ -3410,6 +3487,9 @@ button.back-button {
 .podium-flag-icon {
   width: 32px;
   height: 22px;
+  min-width: 32px;
+  min-height: 22px;
+  flex-shrink: 0;
   border-radius: 6px;
   -o-object-fit: cover;
      object-fit: cover;
@@ -3417,7 +3497,7 @@ button.back-button {
 
 .user-name {
   font-weight: 700;
-  font-size: 16px;
+  font-size: clamp(12px, 1rem, 16px);
   color: #4f2110;
   text-align: center;
   margin-bottom: 0.25rem;
@@ -3516,13 +3596,20 @@ button.back-button {
   flex-direction: column;
   gap: 0.25rem;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .leaderboard-item-name {
-  font-size: 16px;
+  font-size: clamp(11px, 1rem, 16px);
   font-weight: 600;
   color: #6f2e17;
   margin-right: 0.3rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
+  max-width: 100%;
 }
 
 .leaderboard-item-rank {
@@ -3546,6 +3633,9 @@ button.back-button {
   display: flex;
   align-items: center;
   gap: 0.25rem;
+  flex-shrink: 0;
+  min-width: -moz-fit-content;
+  min-width: fit-content;
 }
 
 .leaderboard-item-points {
@@ -3558,6 +3648,9 @@ button.back-button {
 .leaderboard-item-flag {
   width: 28px;
   height: 18px;
+  min-width: 28px;
+  min-height: 18px;
+  flex-shrink: 0;
   border-radius: 2px;
   -o-object-fit: cover;
      object-fit: cover;
@@ -6223,10 +6316,14 @@ button.back-button {
   background-color: #0828c0;
   color: #fffdf4;
   border-color: #652a15;
-  width: calc(100% + 1rem);
+  width: 100%;
   height: 44px;
   min-height: 44px;
   max-height: 44px;
+<<<<<<< HEAD
+  margin: 1rem auto;
+=======
+>>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
 }
 
 .back-to-choose-button-preview {

@@ -585,13 +585,16 @@
 .podium-flag-icon {
   width: 32px;
   height: 22px;
+  min-width: 32px;
+  min-height: 22px;
+  flex-shrink: 0;
   border-radius: 6px;
   object-fit: cover;
 }
 
 .user-name {
   font-weight: $font-weight-bold;
-  font-size: $font-size-body;
+  font-size: clamp(12px, 1rem, $font-size-body);
   color: $color-quaternary-700;
   text-align: center;
   margin-bottom: $spacing-xs;
@@ -695,13 +698,19 @@
   flex-direction: column;
   gap: $spacing-xs;
   flex: 1;
+  min-width: 0;
+  overflow: hidden;
 }
 
 .leaderboard-item-name {
-  font-size: $font-size-body;
+  font-size: clamp(11px, 1rem, $font-size-body);
   font-weight: $font-weight-medium;
   color: $color-quaternary;
   margin-right: 0.3rem;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+  max-width: 100%;
 }
 
 .leaderboard-item-rank {
@@ -727,6 +736,8 @@
   display: flex;
   align-items: center;
   gap: $spacing-xs;
+  flex-shrink: 0;
+  min-width: fit-content;
 }
 
 .leaderboard-item-points {
@@ -739,6 +750,9 @@
 .leaderboard-item-flag {
   width: 28px;
   height: 18px;
+  min-width: 28px;
+  min-height: 18px;
+  flex-shrink: 0;
   border-radius: 2px;
   object-fit: cover;
   box-shadow: 0 0 0 1px rgba(#000, 0.05);

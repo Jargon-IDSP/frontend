@@ -109,14 +109,18 @@
   background-color: $quinary-500;
   color: $color-second-neutral-light;
   border-color: $color-quaternary-dark;
-  width: calc(100% + #{$spacing-md});
+  width: 100%;
   height: 44px;
   min-height: 44px;
   max-height: 44px;
+<<<<<<< HEAD
+  margin: 1rem auto;
+=======
   display: flex;
   align-items: center;
   justify-content: center;
   margin: 0 calc(-#{$spacing-sm});
+>>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
 }
 
 .back-to-choose-button-preview {

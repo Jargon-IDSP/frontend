@@ -13,7 +13,6 @@ const StartLearningCard: React.FC = () => {
   return (
     <div className="start-learning-card">
       <h2 className="learning-title">Start Learning</h2>
-
       <div className="learning-content">
         <img className="prebuilt" src={continueLearningImg} alt="Continue Learning Prebuilt" onClick={() => navigate("/learning/existing/levels")}/>
 
