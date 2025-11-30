@@ -106,13 +106,13 @@
 }
 
 .community-options-button {
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
   background-color: $quinary-500;
   color: $color-second-neutral-light;
-  border-color: $color-quaternary-dark;
-  width: 100%;
-  height: 44px;
-  min-height: 44px;
-  max-height: 44px;
+  border: none;
+  width: calc(100% + #{$spacing-md});
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;

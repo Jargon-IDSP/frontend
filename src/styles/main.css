@@ -462,7 +462,7 @@ body {
 }
 .home-page .top-leaderboard .motivational-message .message-text-2 {
   text-align: left;
-  font-size: 16px;
+  font-size: 13px;
   color: #652a15;
   font-weight: 500;
   margin: 0 0 0.25rem 0;
@@ -585,7 +585,6 @@ body {
   max-height: 140px !important;
   padding: 0 !important;
   margin: 0 !important;
-<<<<<<< HEAD
 }
 .home-page .camera-file-card {
   margin-bottom: 1.5rem;
@@ -601,18 +600,20 @@ body {
 }
 .home-page .camera-file-card .camera-content {
   background-color: #ffba0a;
-  border-radius: 1rem;
+  border-radius: 0.5rem;
   padding: 0.5rem;
   width: 100%;
   display: grid;
-  grid-template-columns: 160px auto;
-  gap: 0.2rem;
+  grid-template-columns: 110px auto;
+  gap: 0.5rem;
   align-items: stretch;
+  min-height: 150px;
 }
 .home-page .camera-option-icon {
   background-color: #fff8e7;
-  border-radius: 1rem;
-  width: 150px;
+  border-radius: 0.5rem;
+  padding: 0.25rem;
+  min-width: 140px;
   align-self: center;
   height: 150px;
   display: flex;
@@ -621,8 +622,8 @@ body {
   flex-shrink: 0;
 }
 .home-page .camera-option-icon img {
-  width: 130px;
-  height: 130px;
+  width: 100px;
+  height: 100px;
   -o-object-fit: contain;
      object-fit: contain;
 }
@@ -630,17 +631,21 @@ body {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 0.5rem 0;
+  align-items: flex-start;
+  padding: 0.25rem 0.5rem;
+  padding-left: 2.5rem;
+  margin-left: 0;
 }
 .home-page .camera-option-content h3 {
   font-weight: 700;
+  font-size: 16px;
   color: #652a15;
   margin: 0 0 0.25rem 0;
 }
 .home-page .camera-option-content p {
   font-size: 13px;
   color: #652a15;
-  margin: 0 0 1rem 0;
+  margin: 0 0 0.25rem 0;
   line-height: 1.4;
   padding-right: 0.5rem;
 }
@@ -649,19 +654,17 @@ body {
   color: white;
   border: none;
   border-radius: 0.5rem;
-  font-size: 16px;
+  font-size: 13px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  align-self: center;
-  min-width: 150px;
+  min-width: 120px;
+  padding: 0.25rem 0.5rem;
   border: 1px solid #652a15;
 }
 .home-page .camera-option-button:hover {
   opacity: 0.9;
   transform: translateY(-2px);
-=======
->>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
 }
 .home-page .word-of-the-day {
   margin-bottom: 1.5rem;
@@ -6315,15 +6318,15 @@ button.back-button {
 .community-options-button {
   background-color: #0828c0;
   color: #fffdf4;
-  border-color: #652a15;
-  width: 100%;
+  border: none;
+  width: calc(100% + 1rem);
   height: 44px;
   min-height: 44px;
   max-height: 44px;
-<<<<<<< HEAD
-  margin: 1rem auto;
-=======
->>>>>>> 0e3c8b292766d44732f655ee48cd977d5b1b9ece
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 calc(-0.5rem);
 }
 
 .back-to-choose-button-preview {
