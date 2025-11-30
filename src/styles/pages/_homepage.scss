@@ -1,3 +1,4 @@
+
 @use '../variables' as *;
 @use '../mixins' as *;
 
@@ -347,14 +348,8 @@ padding:1rem;
     gap: $spacing-sm;
   }
 
-<<<<<<< HEAD
-  .btn-leaderboard,
-  .btn-view-friends {
-    display: inline-flex;
-=======
   .btn-leaderboard {
     display: flex;
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
     align-items: center;
     justify-content: center;
     background-color: $quinary-500;
@@ -464,12 +459,8 @@ padding:1rem;
   line-height: 1.2;
 }
 
-<<<<<<< HEAD
-.upload-file-card {
-=======
 // Upload File Card
 .community-file-card {
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
 
   @include card-base;
 
@@ -478,33 +469,12 @@ padding:1rem;
     color: $color-quaternary-dark;
   }
 
-<<<<<<< HEAD
-  .shortcuts-container {
-=======
   .community-content {
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
     position: relative;
     min-height: 150px;
   }
-
-  h2 {
-    font-size: $font-size-h3;
-    font-family: $font-family-primary;
-    color: $quaternary-700;
-    font-weight: $font-weight-bold;
-    margin-top: 1rem;
-  }
 }
 
-<<<<<<< HEAD
-.shortcuts-container {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: $spacing-md;
-}
-
-.shortcut-card {
-=======
 // Upload options grid (Generate / Translate)
 .community-options {
   display: grid;
@@ -515,31 +485,19 @@ padding:1rem;
 }
 
 .community-option-card {
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
   background-color: $secondary-500;
   border-radius: $spacing-sm;
-  padding: $spacing-sm;
+  padding: $spacing-md;
+  padding-bottom: $spacing-sm;
   display: flex;
   flex-direction: column;
-<<<<<<< HEAD
-  align-items: center;
-  width: 100%;
-  margin: auto;
-=======
   align-items: stretch;
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
   justify-content: space-between;
   height: 200px;
   box-sizing: border-box;
   overflow: hidden;
 }
 
-<<<<<<< HEAD
-.shortcut-icon {
-  background-color: $color-second-neutral-light;
-  border-radius: $spacing-sm;
-  width: 100%;
-=======
 .community-option-icon {
   background-color: $secondary-50;
   border-radius: $spacing-sm;
@@ -547,7 +505,6 @@ padding:1rem;
   width: calc(100% + #{$spacing-md});
   margin: -$spacing-sm;
   height: 130px;
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
   display: flex;
   align-items: center;
   justify-content: center;
@@ -556,11 +513,6 @@ padding:1rem;
   box-sizing: border-box;
 
   img {
-<<<<<<< HEAD
-    width: 100%;
-    height: 150px;
-    padding: 0.5rem 0.2rem 0 0.2rem;
-=======
     padding-top: $spacing-sm;
     width: 130px;
     height: 130px;
@@ -582,10 +534,10 @@ padding:1rem;
     max-height: 140px !important;
     padding: 0 !important;
     margin: 0 !important;
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
   }
 }
 
+// Word of the Day - component handles its own styling
 .word-of-the-day {
   @include card-base;
 
@@ -596,6 +548,7 @@ padding:1rem;
   }
 }
 
+// Flashcard Loading States
 .flashcard-loading {
   margin-bottom: 1rem;
   width: 100%;
@@ -626,6 +579,7 @@ padding:1rem;
   }
 }
 
+// Start Learning Card
 .start-learning-card {
 
   background-color: none;
@@ -637,9 +591,6 @@ padding:1rem;
     color: $color-quaternary-dark;
   }
 
-<<<<<<< HEAD
-
-=======
   .learning-content {
     // @include card-content;
     // background-color: $color-second-neutral-dark;
@@ -648,7 +599,6 @@ padding:1rem;
     display: flex;
     flex-direction: column;
   }
->>>>>>> a932df742502f201e2b918be137de5b0611febd4
   
   .learning-description {
     font-size: $font-size-body;
@@ -656,11 +606,11 @@ padding:1rem;
     margin-bottom: $spacing-lg;
   }
   
-  .upload-document-button {
+  .learning-button {
     width: 100%;
     margin: 0;
-    background-color: #365CCC;
-    border: 1px solid #365CCC;
+    background-color: $color-quaternary-dark;
+    border: 1px solid $color-quaternary-dark;
     border-radius: $spacing-sm;
     margin-top: $spacing-sm;
     padding: $spacing-md;
@@ -669,7 +619,7 @@ padding:1rem;
     color: white;
   }
 
-  .translate-icon {
+  .learning-image {
     width: 100%;
     height: auto;
     object-fit: cover;
@@ -677,6 +627,7 @@ padding:1rem;
   }
 }
 
+// Shared States
 .loading-placeholder,
 .error-message {
   font-size: $font-size-body;
@@ -689,6 +640,7 @@ padding:1rem;
   color: $color-error;
 }
 
+// API Testing Section
 .api-testing {
   &-section {
     margin-top: $spacing-lg;
@@ -715,65 +667,6 @@ padding:1rem;
     font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
     font-size: $font-size-label;
     line-height: 1.4;
-  }
-}
-
-.instantHelp{
-  margin-bottom: 1rem;
-  width: 100%;
-  display: block;
-  cursor: pointer;
-}
-
-.homepageRockys {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  margin: $spacing-lg 0;
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-}
-
-.Ai-upload-content {
-  background-color: $secondary-500;
-  border-radius: 20px;
-  padding: 1rem;
-
-  button {
-    background-color: #365CCC;
-  }
-
-  .translate-card-contents {
-    display: grid;
-    grid-template-columns: 40% 60%;
-    grid-row: auto auto;
-    padding: 0.5rem;
-
-    img {
-      grid-column: 1;
-      grid-row: span 2;
-      align-self: center;
-      padding-right: 0.5rem;
-    }
-
-    h3 {
-    font-size: $font-size-body;
-    font-family: $font-family-primary;
-    color: $quaternary-700;
-    font-weight: $font-weight-bold;
-    padding: 0 0.5rem;
-    }
-    p {
-      font-size: $font-size-body;
-    font-family: $font-family-primary;
-    color: $quaternary-700;
-    font-weight: $font-weight-regular;
-    padding: 0 0.5rem;
-    }
   }
 }
 }
