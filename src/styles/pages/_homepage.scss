@@ -334,7 +334,7 @@ padding:1rem;
     }
     .message-text-2 {
       text-align: left;
-      font-size: $font-size-body;
+      font-size: $font-size-label;
       color: $color-quaternary-dark;
       font-weight: $font-weight-regular;
       margin: 0 0 $spacing-xs 0;
@@ -504,7 +504,7 @@ padding:1rem;
   padding: $spacing-lg;
   width: calc(100% + #{$spacing-md});
   margin: -$spacing-sm;
-  height: 130px;
+  height: 136px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -520,10 +520,10 @@ padding:1rem;
 
   img.leaderboard-homepage-graphic {
     padding-top: $spacing-sm;
-    width: 130px !important;
-    height: 130px !important;
-    max-width: 130px !important;
-    max-height: 130px !important;
+    width: 136px !important;
+    height: 136px !important;
+    max-width: 136px !important;
+    max-height: 136px !important;
   }
   
   img.friends-homepage-graphic,
@@ -548,30 +548,32 @@ padding:1rem;
 
   .camera-content {
     background-color: $secondary-500;
-    border-radius: $spacing-md;
+    border-radius: $spacing-sm;
     padding: 0.5rem;
     width: 100%;
     display: grid;
-    grid-template-columns: 160px auto;
-    gap: 0.2rem;
+    grid-template-columns: 110px auto;
+    gap: $spacing-sm;
     align-items: stretch;
+    min-height: 150px;
   }
 }
 
 .camera-option-icon {
   background-color: $secondary-50;
-  border-radius: $spacing-md;
-  width: 150px;
+  border-radius: $spacing-sm;
+  padding: $spacing-xs;
+  min-width: 140px;
   align-self: center;
-  height: 150px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
 
   img {
-    width: 130px;
-    height: 130px;
+    width: 100px;
+    height: 100px;
     object-fit: contain;
   }
 }
@@ -580,10 +582,15 @@ padding:1rem;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: $spacing-sm 0;
+  align-items: flex-start;
+  padding: $spacing-xs $spacing-sm;
+  padding-left: $spacing-xl;
+  margin-left: 0;
+  
 
   h3 {
     font-weight: $font-weight-bold;
+    font-size: $font-size-body;
     color: $color-quaternary-dark;
     margin: 0 0 $spacing-xs 0;
   }
@@ -591,7 +598,7 @@ padding:1rem;
   p {
     font-size: $font-size-label;
     color: $color-quaternary-dark;
-    margin: 0 0 $spacing-md 0;
+    margin: 0 0 $spacing-xs 0;
     line-height: 1.4;
     padding-right: 0.5rem;
   }
@@ -606,10 +613,9 @@ padding:1rem;
   font-weight: $font-weight-bold;
   cursor: pointer;
   transition: all 0.3s ease;
-  align-self: center;
-  min-width: 150px;
-  border: 1px solid $color-quaternary-dark;
-
+  height: 40px;
+  min-width: 130px;
+  padding: $spacing-sm $spacing-md;
   &:hover {
     opacity: 0.9;
     transform: translateY(-2px);
