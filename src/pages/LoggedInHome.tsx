@@ -13,6 +13,7 @@ import LoadingBar from '../components/LoadingBar';
 // import homePageRockys from '../assets/homePageRockys.svg';
 // import rockyWhiteLogo from '/rockyWhite.svg';
 import todayTermCard from '../assets/todayTermCard.svg';
+import InstantHelpCard from '../components/InstantHelpCard';
 
 export default function LoggedInHome() {
   const { user } = useUser();
@@ -153,6 +154,7 @@ export default function LoggedInHome() {
               <WordOfTheDay backgroundImage={todayTermCard} />
               <DailyCheckIn />
               <StartLearningCard />
+              <InstantHelpCard />
               <CommunityCard />
               <UploadFileCard />
             </div>

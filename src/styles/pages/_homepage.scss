@@ -460,7 +460,7 @@ padding:1rem;
 }
 
 // Upload File Card
-.community-file-card {
+.community-file-card{
 
   @include card-base;
 
@@ -534,6 +534,85 @@ padding:1rem;
     max-height: 140px !important;
     padding: 0 !important;
     margin: 0 !important;
+  }
+}
+
+.camera-file-card {
+  @include card-base;
+
+  .camera-title {
+    @include card-title;
+    color: $color-quaternary-dark;
+    margin-bottom: $spacing-md;
+  }
+
+  .camera-content {
+    background-color: $secondary-500;
+    border-radius: $spacing-md;
+    padding: 0.5rem;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 160px auto;
+    gap: 0.2rem;
+    align-items: stretch;
+  }
+}
+
+.camera-option-icon {
+  background-color: $secondary-50;
+  border-radius: $spacing-md;
+  width: 150px;
+  align-self: center;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  img {
+    width: 130px;
+    height: 130px;
+    object-fit: contain;
+  }
+}
+
+.camera-option-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: $spacing-sm 0;
+
+  h3 {
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    margin: 0 0 $spacing-xs 0;
+  }
+
+  p {
+    font-size: $font-size-label;
+    color: $color-quaternary-dark;
+    margin: 0 0 $spacing-md 0;
+    line-height: 1.4;
+    padding-right: 0.5rem;
+  }
+}
+
+.camera-option-button {
+  background-color: $quinary-500;
+  color: white;
+  border: none;
+  border-radius: $spacing-sm;
+  font-size: $font-size-body;
+  font-weight: $font-weight-bold;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  align-self: center;
+  min-width: 150px;
+  border: 1px solid $color-quaternary-dark;
+
+  &:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
   }
 }
 
