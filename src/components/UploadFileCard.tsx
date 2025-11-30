@@ -1,39 +1,52 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import bookIcon from '../assets/icons/bookIcon.svg';
-import languageIcon from '../assets/icons/languageIcon.svg';
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import translationHomepageIcon from "../assets/icons/translationHomepageIcon.svg";
 
-const UploadFileCard: React.FC = () => {
+const TopLeaderboard: React.FC = () => {
   const navigate = useNavigate();
 
-  const handleUploadClick = () => {
-    navigate('/documents');
-  };
-
   return (
-    <div className="upload-file-card">
-      <h2 className="upload-title">AI Translate & Lesson</h2>
-      <div className="upload-content upload-options">
-        <div className="upload-option-card">
-          <div className="upload-option-icon">
-            <img src={bookIcon} alt="Generate" />
+    <div className="top-leaderboard">
+      <h2 className="leaderboard-title">AI Translate and Lesson</h2>
+      <div className="leaderboard-content-new">
+        <div className="leaderboard-content-area">
+          <div className="left-section">
+            <div className="rocky-character-section">
+              <img
+                src={translationHomepageIcon}
+                alt="Translation Icon"
+                className="rocky-character-image"
+              />
+            </div>
+            
+            {/* <div className="podium-section">
+              <div className="first-place-podium">
+                <div className="podium-label">1st</div>
+              </div>
+            </div> */}
           </div>
-          <button className="btn upload-option-button" onClick={handleUploadClick}>
-            Generate
-          </button>
-        </div>
-
-        <div className="upload-option-card">
-          <div className="upload-option-icon">
-            <img src={languageIcon} alt="Translate" />
+          
+          <div className="message-buttons-section">
+            <div className="motivational-message">
+              <p className="message-text">
+                Generate your document to a lesson!
+              </p>
+              <p className="message-text-2">
+                Upload any document and personalize your learning experience.
+              </p>
+            </div>
           </div>
-          <button className="btn upload-option-button" onClick={handleUploadClick}>
-            Translate
-          </button>
         </div>
+        
+        <button
+          className="btn btn-leaderboard"
+          onClick={() => navigate("/documents")}
+        >
+          Upload Document
+        </button>
       </div>
     </div>
   );
 };
 
-export default UploadFileCard;
+export default TopLeaderboard;

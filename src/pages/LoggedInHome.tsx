@@ -2,8 +2,8 @@ import { useAuth, useUser } from '@clerk/clerk-react';
 import { useEffect, useState, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useProfile } from '../hooks/useProfile';
-import TopLeaderboard from '../components/TopLeaderboard';
 import UploadFileCard from '../components/UploadFileCard';
+import CommunityCard from '../components/CommunityCard';
 import StartLearningCard from '../components/StartLearningCard';
 import DailyCheckIn from '../components/DailyCheckIn';
 import WordOfTheDay from '../components/WordOfTheDay';
@@ -168,8 +168,8 @@ export default function LoggedInHome() {
               <WordOfTheDay backgroundImage={todayTermCard} />
               <DailyCheckIn />
               <StartLearningCard />
+              <CommunityCard />
               <UploadFileCard />
-              <TopLeaderboard />
             </div>
           </>
         )}
