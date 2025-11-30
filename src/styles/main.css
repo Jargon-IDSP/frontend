@@ -783,8 +783,10 @@ body {
   line-height: 1.4;
 }
 .home-page .rocky-friends {
-  display: flex;
-  justify-content: center;
+  display: block;
+  margin: 0 auto;
+  width: 70%;
+  max-width: 100%;
 }
 
 .avatar-edit-page, .avatar-view-page, .avatar-onboarding-page {
