@@ -557,7 +557,7 @@ body {
   padding: 1.5rem;
   width: calc(100% + 1rem);
   margin: -0.5rem;
-  height: 130px;
+  height: 136px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -572,10 +572,10 @@ body {
 }
 .home-page .community-option-icon img.leaderboard-homepage-graphic {
   padding-top: 0.5rem;
-  width: 130px !important;
-  height: 130px !important;
-  max-width: 130px !important;
-  max-height: 130px !important;
+  width: 136px !important;
+  height: 136px !important;
+  max-width: 136px !important;
+  max-height: 136px !important;
 }
 .home-page .community-option-icon img.friends-homepage-graphic,
 .home-page .community-option-icon .friends-homepage-graphic {
@@ -615,7 +615,7 @@ body {
   padding: 0.25rem;
   min-width: 140px;
   align-self: center;
-  height: 150px;
+  height: 160px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -654,13 +654,13 @@ body {
   color: white;
   border: none;
   border-radius: 0.5rem;
-  font-size: 13px;
+  font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
-  min-width: 120px;
-  padding: 0.25rem 0.5rem;
-  border: 1px solid #652a15;
+  height: 40px;
+  min-width: 130px;
+  padding: 0.5rem 1rem;
 }
 .home-page .camera-option-button:hover {
   opacity: 0.9;
@@ -781,6 +781,10 @@ body {
   font-family: "Monaco", "Menlo", "Ubuntu Mono", monospace;
   font-size: 13px;
   line-height: 1.4;
+}
+.home-page .rocky-friends {
+  display: flex;
+  justify-content: center;
 }
 
 .avatar-edit-page, .avatar-view-page, .avatar-onboarding-page {
@@ -6316,13 +6320,13 @@ button.back-button {
 }
 
 .community-options-button {
+  font-size: 16px;
+  font-weight: 700;
   background-color: #0828c0;
   color: #fffdf4;
   border: none;
   width: calc(100% + 1rem);
-  height: 44px;
-  min-height: 44px;
-  max-height: 44px;
+  height: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
