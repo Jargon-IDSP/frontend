@@ -64,15 +64,35 @@
     }
   }
 
+  &__title-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 0.2rem;
+  }
+
   &__title {
     text-align: left;
     color: $quaternary-500;
-    margin: 0;
+    margin: 0 !important;
+    margin-bottom: 0 !important;
     width: 100%;
     font-weight: $font-weight-medium;
-    margin-top: 0.2rem;
+    line-height: 1.2;
     font-family: $font-family-primary;
     font-size: $font-size-h1; // 20px instead of inheriting h1 (28px)
+  }
+
+  &__title-wrapper &__subtitle {
+    text-align: left;
+    color: $quaternary-200;
+    margin: 0 !important;
+    margin-top: 0.05rem !important;
+    font-size: $font-size-body;
+    font-weight: $font-weight-regular;
+    opacity: 0.7;
+    line-height: 1.2;
+    font-family: $font-family-primary;
   }
 
   &__progress-wrapper {

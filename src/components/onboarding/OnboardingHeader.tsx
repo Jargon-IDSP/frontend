@@ -5,6 +5,7 @@ interface OnboardingHeaderProps {
   onBack: () => void;
   progressPercentage?: number;
   showProgress?: boolean;
+  subtitle?: string;
 }
 
 export default function OnboardingHeader({
@@ -12,6 +13,7 @@ export default function OnboardingHeader({
   onBack,
   progressPercentage = 0,
   showProgress = false,
+  subtitle,
 }: OnboardingHeaderProps) {
   return (
     <div className="avatar-customization__header">
@@ -42,7 +44,12 @@ export default function OnboardingHeader({
           </div>
         ) : null}
       </div>
-      <h1 className="avatar-customization__title">{title}</h1>
+      <div className="avatar-customization__title-wrapper">
+        <h1 className="avatar-customization__title">{title}</h1>
+        {subtitle && (
+          <p className="avatar-customization__subtitle">{subtitle}</p>
+        )}
+      </div>
     </div>
   );
 }
