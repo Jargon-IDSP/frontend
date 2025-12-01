@@ -57,7 +57,7 @@ export default function SplashPage() {
         <p className="splash-page__tagline">Speak your trade fluently.</p>
       </header>
 
-        <main className="splash-page__content">
+        <div className="splash-page__content">
           <div className="splash-page__illustration">
             <HappyRocky />
           </div>
@@ -68,7 +68,7 @@ export default function SplashPage() {
           <SignInButton mode="modal">
             <button className="splash-page__button">Sign In</button>
           </SignInButton>
-        </main>
+        </div>
       </div>
       </div>
     </>
