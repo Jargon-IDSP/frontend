@@ -7,11 +7,12 @@
   justify-content: center;
   gap: $spacing-lg;
   width: 100%;
+  max-width: 480px;
   min-height: 100vh;
   position: fixed;
   top: 0;
-  left: 0;
-  right: 0;
+  left: 50%;
+  transform: translateX(-50%);
   bottom: 0;
   z-index: 1000;
   background-color: rgba(255, 253, 244, 0.90);

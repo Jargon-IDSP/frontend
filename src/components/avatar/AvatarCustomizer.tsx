@@ -9,14 +9,20 @@ import { useAvatar } from '../../hooks/useAvatar';
 import { useUser } from '@clerk/clerk-react';
 import LoadingBar from '../LoadingBar';
 
-// Body color classes that need dynamic coloring
 const BODY_COLOR_CLASSES = [
   'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
   'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
 ];
 
-// Fetch and color symbol content for body/expression previews
+const symbolCache = new Map<string, string>();
+
 async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<string | null> {
+  const cacheKey = `${symbolId}-${bodyColor}`;
+  
+  if (symbolCache.has(cacheKey)) {
+    return symbolCache.get(cacheKey)!;
+  }
+
   try {
     const response = await fetch('/avatar-sprites.svg');
     const svgText = await response.text();
@@ -27,12 +33,12 @@ async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<
 
     let content = symbol.innerHTML;
 
-    // Apply body color to all body color classes
     BODY_COLOR_CLASSES.forEach(className => {
       const regex = new RegExp(`class="${className}"`, 'g');
       content = content.replace(regex, `class="${className}" fill="${bodyColor}"`);
     });
 
+    symbolCache.set(cacheKey, content);
     return content;
   } catch (error) {
     console.error('Failed to fetch symbol:', error);
@@ -40,7 +46,6 @@ async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<
   }
 }
 
-// Component for body/expression preview with embedded SVG
 function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   spriteId: string;
   bodyColor: string;
@@ -50,12 +55,22 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   const [content, setContent] = useState<string>('');
 
   useEffect(() => {
+    let mounted = true;
+    
     fetchColoredSymbol(spriteId, bodyColor).then(result => {
-      if (result) setContent(result);
+      if (result && mounted) {
+        setContent(result);
+      }
     });
+
+    return () => {
+      mounted = false;
+    };
   }, [spriteId, bodyColor]);
 
-  if (!content) return null;
+  if (!content) {
+    return <div className={className} />;
+  }
 
   return (
     <svg
@@ -66,7 +81,6 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   );
 }
 
-// This is how the tabs are defined in the frontend
 const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
   { id: 'expression', label: 'Expression' },
@@ -87,11 +101,19 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [avatarReady, setAvatarReady] = useState(false);
 
   useEffect(() => {
     if (avatar) {
+      setAvatarReady(false); 
       setConfig(avatar);
       setSelectedBody(avatar.body || 'body-1');
+      
+      const timer = setTimeout(() => {
+        setAvatarReady(true);
+      }, 150);
+
+      return () => clearTimeout(timer);
     }
   }, [avatar]);
 
@@ -103,22 +125,35 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   };
 
   useEffect(() => {
-    if (config.headwear && config.hair && config.hair !== 'hair-1' && config.hair !== 'hair-7') {
+    const noHairHeadwear = config.headwear &&
+      (config.headwear === 'round-hat' ||
+       config.headwear === 'round-hat-2' ||
+       config.headwear === 'round-hat-3');
+    const noHairEyewear = config.eyewear &&
+      (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
+
+    const restrictiveHeadwear = config.headwear &&
+      (config.headwear === 'hard-hat' || config.headwear === 'cap');
+
+    if ((noHairHeadwear || noHairEyewear) && config.hair) {
+      updateConfig('hair', undefined);
+    }
+
+    if (restrictiveHeadwear && config.hair &&
+        config.hair !== 'hair-1' && config.hair !== 'hair-7') {
       updateConfig('hair', 'hair-1');
     }
-  }, [config.headwear, config.hair]);
+  }, [config.headwear, config.eyewear, config.hair]);
 
-  // Remove beards when h1 expression is selected
   useEffect(() => {
     if (config.expression && config.expression.includes('-h1') && config.facial) {
       updateConfig('facial', undefined);
     }
   }, [config.expression, config.facial]);
 
-  // Remove h1 expression when beard is selected
   useEffect(() => {
     if (config.facial && config.expression && config.expression.includes('-h1')) {
-      const baseBody = config.expression.split('-').slice(0, 2).join('-'); // e.g., "body-1-h1" -> "body-1"
+      const baseBody = config.expression.split('-').slice(0, 2).join('-');
       updateConfig('expression', baseBody);
     }
   }, [config.facial]);
@@ -142,9 +177,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           onSaveCallback(config);
         }
 
-        // Redirect to profile after save (only in profile context)
         if (context === 'profile') {
-          // Small delay to show "Saved!" feedback
           setTimeout(() => {
             navigate('/profile');
           }, 800);
@@ -158,7 +191,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       body: prev.body,
       expression: prev.expression,
       bodyColor: prev.bodyColor,
-      // Remove all accessories
       hair: undefined,
       headwear: undefined,
       eyewear: undefined,
@@ -173,10 +205,8 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     switch (activeTab) {
       case 'body':
         return [
-          // Shape section
           { id: '__subtitle__', label: 'Shape', isSubtitle: true },
           ...avatarOptions.bodies.map(id => ({ id, label: id })),
-          // Color section
           { id: '__subtitle__color__', label: 'Color', isSubtitle: true },
           ...avatarOptions.bodyColors.map(color => ({ id: color, label: color }))
         ];
@@ -190,47 +220,52 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           ...filteredExpressions.map(id => ({ id, label: id.split('-').pop() || id }))
         ];
       case 'hair':
-        const hairOptions = config.headwear
-          ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
-          : avatarOptions.hair;
+        const noHairHeadwear = config.headwear &&
+          (config.headwear === 'round-hat' ||
+           config.headwear === 'round-hat-2' ||
+           config.headwear === 'round-hat-3');
+        const noHairEyewear = config.eyewear &&
+          (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
+
+        if (noHairHeadwear || noHairEyewear) {
+          var hairOptions: string[] = [];
+        } else {
+          const restrictiveHeadwear = config.headwear &&
+            (config.headwear === 'hard-hat' || config.headwear === 'cap');
+          var hairOptions = restrictiveHeadwear
+            ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
+            : avatarOptions.hair;
+        }
         const facialOptions = (config.expression && config.expression.includes('-h1'))
           ? avatarOptions.facial.filter(id => !id.startsWith('beard-'))
           : avatarOptions.facial;
 
         return [
-          // Hair section
           { id: '__subtitle__hair__', label: 'Hair', isSubtitle: true },
           { id: 'none-hair', label: 'None' },
           ...hairOptions.map(id => ({ id, label: id })),
-          // Facial Hair section
           { id: '__subtitle__facial__', label: 'Facial Hair', isSubtitle: true },
           { id: 'none-facial', label: 'None', category: 'facial' as const },
           ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const }))
         ];
       case 'accessories':
-        // Filter out masks from eyewear since they're now in headwear
         const eyewearOptions = avatarOptions.eyewear.filter(id => id !== 'orange-mask' && id !== 'orange-mask-2');
         
         return [
-          // Eyewear section
           { id: '__subtitle__eyewear__', label: 'Eyewear', isSubtitle: true },
           { id: 'none-eyewear', label: 'None', category: 'eyewear' as const },
           ...eyewearOptions.map(id => ({ id, label: id, category: 'eyewear' as const })),
-          // Headwear section
           { id: '__subtitle__headwear__', label: 'Headwear', isSubtitle: true },
           { id: 'none-headwear', label: 'None', category: 'headwear' as const },
           ...avatarOptions.headwear.map(id => ({ id, label: id, category: 'headwear' as const })),
-          // Clothing section
           { id: '__subtitle__clothing__', label: 'Clothing', isSubtitle: true },
           { id: 'none-clothing', label: 'None', category: 'clothing' as const },
           ...avatarOptions.clothing
             .filter(id => id !== 'yellow-vest' && id !== 'orange-vest')
             .map(id => ({ id, label: id, category: 'clothing' as const })),
-          // Shoes section
           { id: '__subtitle__shoes__', label: 'Shoes', isSubtitle: true },
           { id: 'none-shoes', label: 'None', category: 'shoes' as const },
           ...avatarOptions.shoes.map(id => ({ id, label: id, category: 'shoes' as const })),
-          // Accessories section
           { id: '__subtitle__accessories__', label: 'Make up', isSubtitle: true },
           { id: 'none-accessories', label: 'None', category: 'accessories' as const },
           ...avatarOptions.accessories.map(id => ({ id, label: id, category: 'accessories' as const }))
@@ -241,12 +276,10 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   }, [activeTab, selectedBody, config.headwear, config.facial, config.expression]);
 
   const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
-    // Ignore subtitle clicks
     if (optionId.startsWith('__subtitle__')) {
       return;
     }
 
-    // Handle "none" options with category-specific IDs
     if (optionId.startsWith('none-')) {
       const noneCategory = optionId.split('-')[1] as 'hair' | 'facial' | 'eyewear' | 'headwear' | 'clothing' | 'shoes' | 'accessories';
       if (activeTab === 'hair') {
@@ -259,7 +292,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         if (noneCategory === 'eyewear') {
           updateConfig('eyewear', undefined);
         } else if (noneCategory === 'headwear') {
-          // Clear both headwear and eyewear if it's a mask
           if (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2') {
             updateConfig('eyewear', undefined);
           }
@@ -276,7 +308,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
 
     if (activeTab === 'body') {
-      // Check if it's a color (hex color) or body shape
       if (optionId.startsWith('#')) {
         updateConfig('bodyColor', optionId);
       } else {
@@ -295,13 +326,10 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         updateConfig('eyewear', optionId);
       } else if (category === 'headwear') {
         if (optionId === 'orange-mask' || optionId === 'orange-mask-2') {
-          // Masks are stored as eyewear, not headwear
           updateConfig('eyewear', optionId);
           updateConfig('headwear', undefined);
         } else {
-          // Regular headwear
           updateConfig('headwear', optionId);
-          // Clear eyewear if it's a mask
           if (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2') {
             updateConfig('eyewear', undefined);
           }
@@ -386,7 +414,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       return <span className="avatar-option__label">None</span>;
     }
 
-    // Colors don't need preview
     if (optionId.startsWith('#')) {
       return null;
     }
@@ -396,7 +423,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     let bodyColor: string | undefined;
 
     if (activeTab === 'body') {
-      // Body shapes
       if (!optionId.startsWith('#')) {
         className = "avatar-option__preview avatar-option__preview--body";
         viewBox = getBodyViewBox(optionId);
@@ -424,7 +450,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       }
     }
 
-    // Use BodyPreview for body/expression to avoid Safari shadow DOM issues
     if (bodyColor) {
       return (
         <BodyPreview
@@ -447,10 +472,10 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
 
   return (
     <div className="avatar-customization">
-      <LoadingBar isLoading={isLoading} hasData={!!avatar} text="Loading avatar" />
+      <LoadingBar isLoading={isLoading || !avatarReady} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        {!isLoading && <AvatarDisplay config={config} size={210} />}
+        {!isLoading && avatarReady && <AvatarDisplay config={config} size={210} />}
       </div>
 
       <div className="avatar-customization__input-container">
@@ -484,7 +509,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
 
       <div className="avatar-customization__options-grid">
         {currentOptions.map((option) => {
-          // Handle subtitles
           if ('isSubtitle' in option && option.isSubtitle) {
             return (
               <div

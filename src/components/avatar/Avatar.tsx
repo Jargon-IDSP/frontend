@@ -19,42 +19,58 @@ async function fetchSymbolContent(symbolId: string): Promise<string | null> {
   }
 }
 
-export function Avatar({ config, size = 100, className = '', renderMode = 'svg' }: AvatarProps) {
+export function Avatar({ config, size = 100, className = '', renderMode = 'svg', onLoadingChange }: AvatarProps) {
   const bodyId = config.expression || config.body || 'body-1';
   const bodyColor = config.bodyColor || '#ffba0a';
 
   if (renderMode === 'layered') {
     const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
     const bodySvgRef = useRef<SVGSVGElement>(null);
+    const [rawBodyContent, setRawBodyContent] = useState<string>('');
     const [bodyContent, setBodyContent] = useState<string>('');
 
     useEffect(() => {
-      fetchSymbolContent(bodyId).then(content => {
-        if (content) {
-          // Apply body color to all body color classes for Safari iOS compatibility
-          // Using inline fill attribute instead of CSS to bypass shadow DOM issues
-          const BODY_COLOR_CLASSES = [
-            'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
-            'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
-          ];
+      let mounted = true;
+      onLoadingChange?.(true);
 
-          let coloredContent = content;
-          BODY_COLOR_CLASSES.forEach(className => {
-            const regex = new RegExp(`class="${className}"`, 'g');
-            coloredContent = coloredContent.replace(
-              regex,
-              `class="${className}" fill="${bodyColor}"`
-            );
-          });
+      fetchSymbolContent(bodyId)
+        .then(content => {
+          if (content && mounted) {
+            setRawBodyContent(content);
+          }
+          if (mounted) onLoadingChange?.(false);
+        })
+        .catch(() => {
+          if (mounted) onLoadingChange?.(false);
+        });
 
-          setBodyContent(coloredContent);
-        }
+      return () => { mounted = false; };
+    }, [bodyId, onLoadingChange]);
+
+    useEffect(() => {
+      if (!rawBodyContent) return;
+
+      const BODY_COLOR_CLASSES = [
+        'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
+        'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
+      ];
+
+      let coloredContent = rawBodyContent;
+      BODY_COLOR_CLASSES.forEach(className => {
+        const regex = new RegExp(`class="${className}"`, 'g');
+        coloredContent = coloredContent.replace(
+          regex,
+          `class="${className}" fill="${bodyColor}"`
+        );
       });
-    }, [bodyId, bodyColor]);
 
-    // Don't render until body content is loaded to prevent sprite sheet flash
+      setBodyContent(coloredContent);
+    }, [bodyColor, rawBodyContent]);
+
     if (!bodyContent) {
-      return null;
+      return (
+        <div className="avatar-fallback" style={{ width: size, height: size, backgroundColor: bodyColor, borderRadius: '50%' }} />
+      );
     }
 
     return (

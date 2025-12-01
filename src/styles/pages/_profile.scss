@@ -384,7 +384,7 @@
     width: 200px;
     height: 200px;
     display: flex;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
     overflow: hidden;
     flex-shrink: 0;
@@ -600,81 +600,6 @@
   gap: $spacing-lg;
 }
 
-  // Profile Card - Commented out for possible future use
-  // &-card {
-  //   display: flex;
-  //   align-items: center;
-  //   gap: $spacing-md;
-  //   padding: $spacing-lg;
-  //   background: white;
-  //   border: 1px solid $color-quaternary;
-  //   border-radius: $border-radius-lg;
-  //   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-  //   position: relative;
-  // }
-
-  // &-card-avatar {
-  //   flex-shrink: 0;
-  //   width: 80px;
-  //   height: 80px;
-  //   border-radius: $border-radius-full;
-  //   background-color: $color-secondary;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   overflow: hidden;
-
-  //   .profile-avatar-image {
-  //     width: 70%;
-  //     height: 70%;
-  //     object-fit: contain;
-  //   }
-  // }
-
-  // &-card-info {
-  //   flex: 1;
-  //   min-width: 0;
-  // }
-
-  // &-card-name {
-  //   font-size: $font-size-h2;
-  //   font-weight: $font-weight-bold;
-  //   color: $color-quaternary-dark;
-  //   margin: 0 0 $spacing-xs 0;
-  // }
-
-  // &-card-industry {
-  //   font-size: $font-size-body;
-  //   color: $color-neutral;
-  //   margin: 0;
-  // }
-
-  // &-card-edit {
-  //   flex-shrink: 0;
-  //   background: none;
-  //   border: none;
-  //   cursor: pointer;
-  //   padding: $spacing-sm;
-  //   display: flex;
-  //   align-items: center;
-  //   justify-content: center;
-  //   border-radius: $border-radius-md;
-  //   transition: background-color $transition-fast;
-
-  //   &:hover {
-  //     background-color: $color-quaternary-light;
-  //   }
-
-  //   &:focus {
-  //     outline: 2px solid $color-quaternary-dark;
-  //     outline-offset: 2px;
-  //   }
-
-  //   img {
-  //     width: 30px;
-  //     height: 30px;
-  //   }
-  // }
 
 .profile-data {
   background-color: $color-second-neutral;
