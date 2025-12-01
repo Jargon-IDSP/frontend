@@ -180,12 +180,15 @@ padding:1rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: $spacing-xs;
+  gap: $spacing-sm;
   padding: 0.5rem;
   background-color: $secondary-200;
   border-radius: $spacing-lg;
   min-width: 40px;
+  flex: 1 1 0;
+  max-width: 50px;
   transition: transform 0.2s ease;
+  box-sizing: border-box;
 
   &:hover {
     transform: translateY(-2px);
@@ -194,12 +197,14 @@ padding:1rem;
   &-container {
     display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: clamp($spacing-xs, 2vw, $spacing-xl);
-    overflow-x: auto;
+    justify-content: space-around;
+    gap: clamp($spacing-xs, 1vw, $spacing-md);
+    overflow: visible;
     padding: clamp(0.09rem, 0.5vw, $spacing-sm);
     margin-bottom: $spacing-md;
     width: 100%;
+    flex-wrap: nowrap;
+    box-sizing: border-box;
   }
 
   &-label {
@@ -209,8 +214,8 @@ padding:1rem;
   }
 
   &-circle {
-    width: clamp(35px, 4vw, 50px);
-    height: clamp(35px, 4vw, 50px);
+    width: clamp(35px, 4vw, 38px);
+    height: clamp(35px, 4vw, 38px);
     border-radius: 50%;
     border: clamp(2px, 0.3vw, 3px) solid $color-primary;
     background-color: $color-second-neutral-light;

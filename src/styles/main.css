@@ -365,8 +365,8 @@ body {
   color: #652a15;
 }
 .home-page .tick-box-circle {
-  width: clamp(35px, 4vw, 50px);
-  height: clamp(35px, 4vw, 50px);
+  width: clamp(35px, 4vw, 38px);
+  height: clamp(35px, 4vw, 38px);
   border-radius: 50%;
   border: clamp(2px, 0.3vw, 3px) solid #fe4d13;
   background-color: #fffdf4;
