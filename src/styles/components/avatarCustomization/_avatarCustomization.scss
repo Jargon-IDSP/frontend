@@ -250,9 +250,9 @@
       transform: translateX(-50%);
       width: auto;
       height: auto;
-      min-height: 5px;
+      min-height: 40px;
       max-height: 50px;
-      z-index: 1; // Behind beards and facial features (z-index: 2)
+      z-index: 1;
       transition: all 0.3s ease-in-out;
     }
   }

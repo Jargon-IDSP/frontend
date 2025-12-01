@@ -42,14 +42,16 @@ export interface AvatarDisplayProps {
   config: AvatarConfig;
   size?: number;
   className?: string;
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 
 
 export interface AvatarProps {
   config: AvatarConfig;
-  size?: number;          
-  className?: string;      
-  renderMode?: 'svg' | 'layered'; 
+  size?: number;
+  className?: string;
+  renderMode?: 'svg' | 'layered';
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 
 

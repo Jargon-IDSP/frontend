@@ -87,11 +87,13 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
+  const [isLoadingSymbols, setIsLoadingSymbols] = useState(false);
 
   useEffect(() => {
     if (avatar) {
       setConfig(avatar);
       setSelectedBody(avatar.body || 'body-1');
+      setIsLoadingSymbols(true);
     }
   }, [avatar]);
 
@@ -103,10 +105,29 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   };
 
   useEffect(() => {
-    if (config.headwear && config.hair && config.hair !== 'hair-1' && config.hair !== 'hair-7') {
+    // Items that require NO hair at all
+    const noHairHeadwear = config.headwear &&
+      (config.headwear === 'round-hat' ||
+       config.headwear === 'round-hat-2' ||
+       config.headwear === 'round-hat-3');
+    const noHairEyewear = config.eyewear &&
+      (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
+
+    // Items that allow hair-1 or hair-7 only
+    const restrictiveHeadwear = config.headwear &&
+      (config.headwear === 'hard-hat' || config.headwear === 'cap');
+
+    // Remove hair completely for round hats and burqas
+    if ((noHairHeadwear || noHairEyewear) && config.hair) {
+      updateConfig('hair', undefined);
+    }
+
+    // Restrict to hair-1 or hair-7 for cap/hard-hat
+    if (restrictiveHeadwear && config.hair &&
+        config.hair !== 'hair-1' && config.hair !== 'hair-7') {
       updateConfig('hair', 'hair-1');
     }
-  }, [config.headwear, config.hair]);
+  }, [config.headwear, config.eyewear, config.hair]);
 
   // Remove beards when h1 expression is selected
   useEffect(() => {
@@ -190,9 +211,25 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           ...filteredExpressions.map(id => ({ id, label: id.split('-').pop() || id }))
         ];
       case 'hair':
-        const hairOptions = config.headwear
-          ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
-          : avatarOptions.hair;
+        // No hair allowed for round hats and orange masks
+        const noHairHeadwear = config.headwear &&
+          (config.headwear === 'round-hat' ||
+           config.headwear === 'round-hat-2' ||
+           config.headwear === 'round-hat-3');
+        const noHairEyewear = config.eyewear &&
+          (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
+
+        if (noHairHeadwear || noHairEyewear) {
+          // Return empty array for no hair options (but still show the "None" option below)
+          var hairOptions: string[] = [];
+        } else {
+          // Hair-1 and hair-7 only for cap/hard-hat
+          const restrictiveHeadwear = config.headwear &&
+            (config.headwear === 'hard-hat' || config.headwear === 'cap');
+          var hairOptions = restrictiveHeadwear
+            ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
+            : avatarOptions.hair;
+        }
         const facialOptions = (config.expression && config.expression.includes('-h1'))
           ? avatarOptions.facial.filter(id => !id.startsWith('beard-'))
           : avatarOptions.facial;
@@ -445,12 +482,14 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     );
   };
 
+  const isFullyLoading = isLoading || isLoadingSymbols;
+
   return (
     <div className="avatar-customization">
-      <LoadingBar isLoading={isLoading} hasData={!!avatar} text="Loading avatar" />
+      <LoadingBar isLoading={isFullyLoading} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        {!isLoading && <AvatarDisplay config={config} size={210} />}
+        {!isFullyLoading && <AvatarDisplay config={config} size={210} onLoadingChange={setIsLoadingSymbols} />}
       </div>
 
       <div className="avatar-customization__input-container">

@@ -2,7 +2,7 @@ import { Avatar } from './Avatar';
 import { toDataAttributeId } from './bodyViewBoxes';
 import type { AvatarDisplayProps } from '../../types/avatar';
 
-export function AvatarDisplay({ config, size = 100, className = '' }: AvatarDisplayProps) {
+export function AvatarDisplay({ config, size = 100, className = '', onLoadingChange }: AvatarDisplayProps) {
   const bodyId = config.expression || config.body || 'body-1';
   const shapeDataId = toDataAttributeId(bodyId, 'body');
   const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
@@ -43,7 +43,7 @@ export function AvatarDisplay({ config, size = 100, className = '' }: AvatarDisp
           transformOrigin: 'top left',
         }}
       >
-        <Avatar config={config} renderMode="layered" />
+        <Avatar config={config} renderMode="layered" onLoadingChange={onLoadingChange} />
       </div>
     </div>
   );

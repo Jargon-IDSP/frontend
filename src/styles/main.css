@@ -1160,7 +1160,7 @@ body {
   width: 200px;
   height: 200px;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   overflow: hidden;
   flex-shrink: 0;
@@ -2934,7 +2934,15 @@ button.back-button {
   background-color: #fffdf4;
   border: 1px solid #652a15;
   border-radius: 50%;
+  height: 100px;
+  width: 100px;
   padding: 1rem 1rem 0.2rem 1rem;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+.leaderboard-page .rocky-avatar > div {
+  transform: translateX(0.15rem) translateY(0.1rem);
 }
 .leaderboard-page .rocky-avatar .rocky-logo.rank-1 {
   width: 80px;
@@ -4106,16 +4114,16 @@ button.back-button {
 .view-friends-avatar-button {
   border: none;
   cursor: pointer;
-  padding: 0.25rem;
+  padding: 0.25rem 0.5rem 0.25rem 0.7rem;
   display: flex;
-  align-items: center;
+  align-items: flex-end;
   justify-content: center;
   transition: opacity 0.15s ease;
   background: #E7E6DF;
   border: 1px solid black;
   border-radius: 50%;
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
 }
 .view-friends-avatar-button:hover {
   opacity: 0.7;
@@ -5226,11 +5234,11 @@ button.back-button {
   align-items: center;
   justify-content: center;
 }
-.friend-profile-avatar img {
-  width: 70%;
-  height: 70%;
-  -o-object-fit: contain;
-     object-fit: contain;
+.friend-profile-avatar .avatar-customization__canvas {
+  transform-origin: center !important;
+}
+.friend-profile-avatar > div {
+  transform: translateX(-2.3rem) translateY(-1rem);
 }
 
 .friend-profile-name {
@@ -9652,7 +9660,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   transform: translateX(-50%);
   width: auto;
   height: auto;
-  min-height: 5px;
+  min-height: 40px;
   max-height: 50px;
   z-index: 1;
   transition: all 0.3s ease-in-out;
@@ -13023,9 +13031,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 50%;
   width: 80%;
 }
-.avatar-customization__canvas[data-shape=shape-05][data-headwear=round-hat] .avatar-layer--hair {
-  display: none;
-}
 .avatar-customization__canvas[data-shape=shape-05][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
   top: -5%;
   left: 50%;
@@ -13040,9 +13045,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: -25%;
   left: 50%;
   width: 80%;
-}
-.avatar-customization__canvas[data-shape=shape-05-h1][data-headwear=round-hat] .avatar-layer--hair {
-  display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat] {
   top: -25%;
@@ -13093,9 +13095,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: -15%;
   left: 50%;
   width: 80%;
-}
-.avatar-customization__canvas[data-shape^=shape-05][data-headwear=round-hat-2] .avatar-layer--hair {
-  display: none;
 }
 .avatar-customization__canvas[data-shape^=shape-05][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-2] {
   top: -15%;
@@ -13157,9 +13156,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 48%;
   width: 45%;
 }
-.avatar-customization__canvas[data-shape^=shape-05][data-headwear=round-hat-3] .avatar-layer--hair {
-  display: none;
-}
 .avatar-customization__canvas[data-shape^=shape-05][data-hair=hair-01] .avatar-layer--headwear[data-headwear=round-hat-3] {
   top: -6%;
   left: 48%;
@@ -13180,9 +13176,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 53%;
   width: 50%;
 }
-.avatar-customization__canvas[data-shape=shape-05-h1][data-headwear=round-hat-3] .avatar-layer--hair {
-  display: none;
-}
 .avatar-customization__canvas[data-shape=shape-05-h1][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
   top: -23%;
   left: 53%;
@@ -13197,9 +13190,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: -20%;
   left: 55%;
   width: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-05-h2][data-headwear=round-hat-3] .avatar-layer--hair {
-  display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h2][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
   top: -20%;
@@ -13216,9 +13206,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   left: 52%;
   width: 45%;
 }
-.avatar-customization__canvas[data-shape=shape-05-h3][data-headwear=round-hat-3] .avatar-layer--hair {
-  display: none;
-}
 .avatar-customization__canvas[data-shape=shape-05-h3][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
   top: -8%;
   left: 52%;
@@ -13233,9 +13220,6 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: -8%;
   left: 52%;
   width: 50%;
-}
-.avatar-customization__canvas[data-shape=shape-05-h4][data-headwear=round-hat-3] .avatar-layer--hair {
-  display: none;
 }
 .avatar-customization__canvas[data-shape=shape-05-h4][data-hair=hair-07] .avatar-layer--headwear[data-headwear=round-hat-3] {
   top: -8%;

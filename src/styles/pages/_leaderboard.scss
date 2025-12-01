@@ -29,14 +29,24 @@
     background-color: $color-second-neutral-light;
     border: 1px solid $color-quaternary-dark;
     border-radius: 50%;
+    height: 100px;
+    width: 100px;
     padding: 1rem 1rem 0.2rem 1rem;
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+
+
+    > div {
+      transform: translateX(0.15rem) translateY(0.1rem);
+    }
 
     .rocky-logo {
       @include rocky-logo-size(1, 80px);
       @include rocky-logo-size(2, 45px);
       @include rocky-logo-size(3, 45px);
     }
-  }
+}
 
   
 .self-leaderboard-medals {
