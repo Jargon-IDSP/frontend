@@ -1,13 +1,19 @@
 import { useAuth } from "@clerk/clerk-react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserPreferences } from "../hooks/useUserPreferences";
 import { useRandomWord } from "../hooks/useRandomWord";
 import type { WordOfTheDayProps } from "../types/wordOfTheDay";
 import todayTermCard from "../assets/todayTermCard.svg";
 import "../styles/components/_wordOfTheDay.scss";
-import LoadingBar from "./LoadingBar";
 
-export default function WordOfTheDay({ documentId, backgroundImage, backgroundColor, showButton = false }: WordOfTheDayProps = {}) {
+export default function WordOfTheDay({ 
+  documentId, 
+  backgroundImage, 
+  backgroundColor, 
+  showButton = false,
+  onReady
+}: WordOfTheDayProps & { onReady?: () => void } = {}) {
   const cardBackground = backgroundImage || todayTermCard;
   const useColorBg = !!backgroundColor;
   const { isSignedIn, isLoaded } = useAuth();
@@ -25,7 +31,11 @@ export default function WordOfTheDay({ documentId, backgroundImage, backgroundCo
     isLoaded && isSignedIn && !preferencesLoading && !!userLanguage
   );
 
-  const shouldShowLoading = isLoaded && isSignedIn && !preferencesLoading && !!userLanguage && isLoading;
+  useEffect(() => {
+    if (onReady && isLoaded && !preferencesLoading && !isLoading && wordData) {
+      onReady();
+    }
+  }, [onReady, isLoaded, preferencesLoading, isLoading, wordData]);
 
   const handleCardClick = () => {
     if (documentId) {
@@ -39,26 +49,8 @@ export default function WordOfTheDay({ documentId, backgroundImage, backgroundCo
     refetch();
   };
 
-  if (!isLoaded || preferencesLoading) {
-    return (
-      <div className="word-of-the-day-card word-of-the-day-card--loading">
-        {useColorBg ? (
-          <div
-            className="word-of-the-day-card__background"
-            style={{ backgroundColor }}
-          />
-        ) : (
-          <img
-            src={cardBackground}
-            alt="Random Trade Term"
-            className="today-term-card-image"
-          />
-        )}
-        <div className="word-card-content">
-          <LoadingBar isLoading={true} text="Initializing" />
-        </div>
-      </div>
-    );
+  if (!isLoaded || preferencesLoading || isLoading || !wordData) {
+    return null;
   }
 
   if (!isSignedIn) {
@@ -80,28 +72,6 @@ export default function WordOfTheDay({ documentId, backgroundImage, backgroundCo
           <div className="error-message">
             Please sign in to view trade terms
           </div>
-        </div>
-      </div>
-    );
-  }
-
-  if (shouldShowLoading) {
-    return (
-      <div className="word-of-the-day-card">
-        {useColorBg ? (
-          <div
-            className="word-of-the-day-card__background"
-            style={{ backgroundColor }}
-          />
-        ) : (
-          <img
-            src={cardBackground}
-            alt="Random Trade Term"
-            className="today-term-card-image"
-          />
-        )}
-        <div className="word-card-content">
-          <LoadingBar isLoading={true} hasData={!!wordData} hasError={!!error} />
         </div>
       </div>
     );
@@ -141,42 +111,6 @@ export default function WordOfTheDay({ documentId, backgroundImage, backgroundCo
             }}
           >
             Try Again
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  if (!wordData) {
-    return (
-      <div className="word-of-the-day-card">
-        {useColorBg ? (
-          <div
-            className="word-of-the-day-card__background"
-            style={{ backgroundColor }}
-          />
-        ) : (
-          <img
-            src={cardBackground}
-            alt="Random Trade Term"
-            className="today-term-card-image"
-          />
-        )}
-        <div className="word-card-content">
-          <div className="error-message">No term available</div>
-          <button
-            onClick={() => refetch()}
-            style={{
-              marginTop: "1rem",
-              padding: "0.5rem 1rem",
-              backgroundColor: "#3b82f6",
-              color: "white",
-              border: "none",
-              borderRadius: "6px",
-              cursor: "pointer",
-            }}
-          >
-            Load Term
           </button>
         </div>
       </div>

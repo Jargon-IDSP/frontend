@@ -19,49 +19,38 @@ export default function LoggedInHome() {
   const { user } = useUser();
   const { signOut } = useAuth();
   const navigate = useNavigate();
-  const { data: profile, isLoading } = useProfile();
-  const [isCheckingRedirect, setIsCheckingRedirect] = useState(true);
+  const { data: profile, isLoading: isProfileLoading } = useProfile();
+  const [hasCheckedRedirect, setHasCheckedRedirect] = useState(false);
+  const [isWordReady, setIsWordReady] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Check if user needs to see introduction or complete onboarding on first login
   useEffect(() => {
-    if (!isLoading && user && profile) {
+    if (!isProfileLoading && user && profile) {
       const justCompleted = sessionStorage.getItem('onboardingJustCompleted') === 'true';
 
-      // Clear the just completed flag after checking
       if (justCompleted) {
         sessionStorage.removeItem('onboardingJustCompleted');
       }
 
-      // Only check skip flag during the current session (sessionStorage, not localStorage)
-      // This way, skip only persists within a single session, not across logins
       const hasSkippedThisSession = sessionStorage.getItem('onboardingSkippedThisSession') === 'true';
-
-      // Check if user has viewed the introduction page (from database)
       const introductionViewed = profile?.introductionViewed ?? false;
 
-      // If introduction hasn't been viewed, redirect to introduction page first
       if (!introductionViewed && !hasSkippedThisSession && !justCompleted) {
         navigate('/onboarding/introduction', { replace: true });
         return;
       }
 
-      // If introduction has been viewed but onboarding not completed, redirect to onboarding
       if (!profile.onboardingCompleted && !hasSkippedThisSession && !justCompleted && introductionViewed) {
         navigate('/onboarding/language', { replace: true });
         return;
       }
-
-      // If we get here, user doesn't need redirect, show the home page
-      setIsCheckingRedirect(false);
-    } else if (isLoading || !user) {
-      // Still loading or no user, keep checking
-      setIsCheckingRedirect(true);
+      
+      setHasCheckedRedirect(true);
     }
-  }, [user, profile, isLoading, navigate]);
+  }, [user, profile, isProfileLoading, navigate]);
 
-  // Close dropdown when clicking outside
+
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
@@ -75,9 +64,6 @@ export default function LoggedInHome() {
     };
   }, []);
 
-  // const handleSettingsClick = () => {
-  //   setIsDropdownOpen(!isDropdownOpen);
-  // };
 
   const handleProfileClick = () => {
     setIsDropdownOpen(false);
@@ -100,84 +86,87 @@ export default function LoggedInHome() {
       await signOut({ redirectUrl: "/" });
     } catch (error) {
       console.error("Logout error:", error);
-      // Force navigation even if signOut fails
       window.location.href = "/";
     }
   };
 
-  // Maintain consistent container structure in both loading and loaded states
-  return (
-    <div className='container'>
-      <div className="home-page">
-        {(isLoading || isCheckingRedirect || !user || !profile) ? (
-          <div className="loading-container">
-            <LoadingBar isLoading={true} />
+  const isPageLoading = isProfileLoading || !user || !profile || !hasCheckedRedirect || !isWordReady;
+
+return (
+  <div className='container'>
+    <div className="home-page">
+      {isPageLoading && (
+        <div className="loading-container">
+          <LoadingBar isLoading={true} />
+        </div>
+      )}
+      
+      <div style={{ display: isPageLoading ? 'none' : 'block' }}>
+        <>
+          <div className="top-header">
+            <div className="welcome-text-section">
+              <h1 className="welcome-text">Welcome back,</h1>
+              <h1 className="welcome-title">
+                {user?.firstName || user?.username || 'User'}
+              </h1>
+            </div>
+            <NotificationBell />
+            <div className="home-settings-container" ref={dropdownRef}>
+              {isDropdownOpen && (
+                <div className="home-settings-dropdown">
+                  <button
+                    className="home-settings-item"
+                    onClick={handleProfileClick}
+                  >
+                    Profile
+                  </button>
+                  <button
+                    className="home-settings-item"
+                    onClick={() => {
+                      setIsDropdownOpen(false);
+                      navigate("/avatar");
+                    }}
+                  >
+                    Avatar
+                  </button>
+                  <button
+                    className="home-settings-item"
+                    onClick={handleLanguagesClick}
+                  >
+                    Languages
+                  </button>
+                  <button
+                    className="home-settings-item"
+                    onClick={handleIndustryClick}
+                  >
+                    Industry
+                  </button>
+                  <button
+                    className="home-settings-item"
+                    onClick={handleLogoutClick}
+                  >
+                    Logout
+                  </button>
+                </div>
+              )}
+            </div>
           </div>
-        ) : (
-          <>
-            <div className="top-header">
-              <div className="welcome-text-section">
-                <h1 className="welcome-text">Welcome back,</h1>
-                <h1 className="welcome-title">
-                  {user?.firstName || user?.username || 'User'}
-                </h1>
-              </div>
-              <NotificationBell />
-              <div className="home-settings-container" ref={dropdownRef}>
 
-                {isDropdownOpen && (
-                  <div className="home-settings-dropdown">
-                    <button
-                      className="home-settings-item"
-                      onClick={handleProfileClick}
-                    >
-                      Profile
-                    </button>
-                    <button
-                      className="home-settings-item"
-                      onClick={() => {
-                        setIsDropdownOpen(false);
-                        navigate("/avatar");
-                      }}
-                    >
-                      Avatar
-                    </button>
-                    <button
-                      className="home-settings-item"
-                      onClick={handleLanguagesClick}
-                    >
-                      Languages
-                    </button>
-                    <button
-                      className="home-settings-item"
-                      onClick={handleIndustryClick}
-                    >
-                      Industry
-                    </button>
-                    <button
-                      className="home-settings-item"
-                      onClick={handleLogoutClick}
-                    >
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-
-            <div className="welcome-section">
-              {/* <JargonLogo /> */}
-              <WordOfTheDay backgroundImage={todayTermCard} />
-              <DailyCheckIn />
-              <StartLearningCard />
-              <InstantHelpCard />
-              <CommunityCard />
-              <UploadFileCard />
-              <img src={RockyFriends} alt="Rocky friends graphic" className='rocky-friends'/>
-            </div>
-          </>
-        )}
+          <div className="welcome-section">
+            <WordOfTheDay 
+              backgroundImage={todayTermCard}
+              onReady={() => setIsWordReady(true)}
+            />
+            <DailyCheckIn />
+            <StartLearningCard />
+            <InstantHelpCard />
+            <CommunityCard />
+            <UploadFileCard />
+            <img src={RockyFriends} alt="Rocky friends graphic" className='rocky-friends'/>
+          </div>
+        </>
       </div>
     </div>
-  );
+  </div>
+);
 }
