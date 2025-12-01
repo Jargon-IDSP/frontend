@@ -63,7 +63,7 @@
         transition: transform $transition-fast, box-shadow $transition-fast;
 
         &.unread {
-            border: 2px solid $secondary-600;
+            border: 2px solid $primary-500;
         }
     }
 
