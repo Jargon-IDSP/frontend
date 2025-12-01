@@ -12,6 +12,11 @@ import fileIconB from "../../assets/icons/fileIconB.svg";
 import shareIcon from "../../assets/icons/shareIcon.svg";
 import editIcon from "../../assets/icons/editIcon.svg";
 
+const truncateFilename = (filename: string, maxLength: number = 20): string => {
+  if (filename.length <= maxLength) return filename;
+  return filename.slice(0, maxLength) + '...';
+};
+
 export function DocumentsList({ refresh }: DocumentsListProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
@@ -215,7 +220,7 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
                     />
                     <div className="documents-list-item-content">
                       <h3 className="documents-list-item-filename">
-                        {doc.filename}
+                        {truncateFilename(doc.filename)}
                       </h3>
                       <div className="documents-list-item-meta">
                         <span>
