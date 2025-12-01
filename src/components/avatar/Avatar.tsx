@@ -62,8 +62,8 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
         .then(content => {
           if (content && mounted) {
             setRawBodyContent(content);
-            onLoadingChange?.(false);
           }
+          if (mounted) onLoadingChange?.(false);
         })
         .catch(() => {
           if (mounted) onLoadingChange?.(false);
@@ -176,7 +176,9 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 
     // Don't render until body content is loaded to prevent sprite sheet flash
     if (!bodyContent) {
-      return null;
+      return (
+        <div className="avatar-fallback" style={{ width: size, height: size, backgroundColor: bodyColor, borderRadius: '50%' }} />
+      );
     }
 
     return (
