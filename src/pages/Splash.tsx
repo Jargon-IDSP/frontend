@@ -50,6 +50,7 @@ export default function SplashPage() {
         </div>
       )}
 
+      <div className="container">
       <div className="splash-page">
       <header className="splash-page__header">
         <JargonLogo size="24rem" rounded={false} className="splash-logo" />
@@ -68,6 +69,7 @@ export default function SplashPage() {
             <button className="splash-page__button">Sign In</button>
           </SignInButton>
         </main>
+      </div>
       </div>
     </>
   );
