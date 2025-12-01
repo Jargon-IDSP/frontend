@@ -19,15 +19,40 @@ async function fetchSymbolContent(symbolId: string): Promise<string | null> {
   }
 }
 
+async function fetchSymbolWithViewBox(symbolId: string): Promise<{ content: string; viewBox: string } | null> {
+  try {
+    const response = await fetch('/avatar-sprites.svg');
+    const svgText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const symbol = doc.getElementById(symbolId);
+    if (!symbol) return null;
+    return {
+      content: symbol.innerHTML,
+      viewBox: symbol.getAttribute('viewBox') || '0 0 300 300'
+    };
+  } catch (error) {
+    console.error('Failed to fetch symbol:', error);
+    return null;
+  }
+}
+
 export function Avatar({ config, size = 100, className = '', renderMode = 'svg', onLoadingChange }: AvatarProps) {
   const bodyId = config.expression || config.body || 'body-1';
   const bodyColor = config.bodyColor || '#ffba0a';
+  const hairColor = config.hairColor || '#512e14';
 
   if (renderMode === 'layered') {
     const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
     const bodySvgRef = useRef<SVGSVGElement>(null);
     const [rawBodyContent, setRawBodyContent] = useState<string>('');
     const [bodyContent, setBodyContent] = useState<string>('');
+    const [rawHairData, setRawHairData] = useState<{ content: string; viewBox: string } | null>(null);
+    const [hairContent, setHairContent] = useState<string>('');
+    const [hairViewBox, setHairViewBox] = useState<string>('0 0 300 300');
+    const [rawFacialData, setRawFacialData] = useState<{ content: string; viewBox: string } | null>(null);
+    const [facialContent, setFacialContent] = useState<string>('');
+    const [facialViewBox, setFacialViewBox] = useState<string>('0 0 300 300');
 
     useEffect(() => {
       let mounted = true;
@@ -67,6 +92,89 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
       setBodyContent(coloredContent);
     }, [bodyColor, rawBodyContent]);
 
+    useEffect(() => {
+      if (!config.hair) {
+        setRawHairData(null);
+        return;
+      }
+
+      let mounted = true;
+      fetchSymbolWithViewBox(config.hair)
+        .then(data => {
+          if (data && mounted) {
+            setRawHairData(data);
+            setHairViewBox(data.viewBox);
+          }
+        })
+        .catch(() => {
+          if (mounted) setRawHairData(null);
+        });
+
+      return () => { mounted = false; };
+    }, [config.hair]);
+
+    useEffect(() => {
+      if (!rawHairData) {
+        setHairContent('');
+        return;
+      }
+
+      const HAIR_COLORS = ['#512e14', '#5b3319'];
+      let coloredContent = rawHairData.content;
+
+      HAIR_COLORS.forEach(originalColor => {
+        const regex = new RegExp(`fill="${originalColor}"`, 'g');
+        coloredContent = coloredContent.replace(regex, `fill="${hairColor}"`);
+      });
+
+      coloredContent = coloredContent.replace(/\s*stroke="(?!#000000|#000|black)[^"]*"/gi, '');
+      coloredContent = coloredContent.replace(/\s*stroke-width="[^"]*"/g, '');
+
+      setHairContent(coloredContent);
+    }, [hairColor, rawHairData]);
+
+    useEffect(() => {
+      if (!config.facial) {
+        setRawFacialData(null);
+        return;
+      }
+
+      let mounted = true;
+      fetchSymbolWithViewBox(config.facial)
+        .then(data => {
+          if (data && mounted) {
+            setRawFacialData(data);
+            setFacialViewBox(data.viewBox);
+          }
+        })
+        .catch(() => {
+          if (mounted) setRawFacialData(null);
+        });
+
+      return () => { mounted = false; };
+    }, [config.facial]);
+
+    useEffect(() => {
+      if (!rawFacialData) {
+        setFacialContent('');
+        return;
+      }
+
+      const FACIAL_HAIR_COLORS = ['#512e14', '#5b3319', '#602d0b'];
+      let coloredContent = rawFacialData.content;
+
+      FACIAL_HAIR_COLORS.forEach(originalColor => {
+        const regex = new RegExp(`fill="${originalColor}"`, 'g');
+        coloredContent = coloredContent.replace(regex, `fill="${hairColor}"`);
+      });
+
+      coloredContent = coloredContent.replace(/\s*stroke="(?!#000000|#000|black)[^"]*"/gi, '');
+      coloredContent = coloredContent.replace(/\s*stroke-width="[^"]*"/g, '');
+
+      setFacialContent(coloredContent);
+    }, [hairColor, rawFacialData]);
+
+    // Don't render until body content is loaded to prevent sprite sheet flash
     if (!bodyContent) {
       return (
         <div className="avatar-fallback" style={{ width: size, height: size, backgroundColor: bodyColor, borderRadius: '50%' }} />
@@ -92,19 +200,23 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           />
         )}
 
-        {config.hair && (
-          <AvatarSprite
-            spriteId={config.hair}
+        {config.hair && hairContent && (
+          <svg
             className="avatar-layer avatar-layer--hair"
-            dataAttributes={hairDataId ? { 'data-hair': hairDataId } : undefined}
+            viewBox={hairViewBox}
+            dangerouslySetInnerHTML={{ __html: hairContent }}
+            data-hair={hairDataId}
+            style={/stroke="#000000"|stroke="#000"|stroke="black"/i.test(hairContent) ? {} : { stroke: '#000000', strokeWidth: '1px' }}
           />
         )}
 
-        {config.facial && (
-          <AvatarSprite
-            spriteId={config.facial}
+        {config.facial && facialContent && (
+          <svg
             className="avatar-layer avatar-layer--feature"
-            dataAttributes={{ 'data-facial': toDataAttributeId(config.facial, 'facial') }}
+            viewBox={facialViewBox}
+            dangerouslySetInnerHTML={{ __html: facialContent }}
+            data-facial={toDataAttributeId(config.facial, 'facial')}
+            style={/stroke="#000000"|stroke="#000"|stroke="black"/i.test(facialContent) ? {} : { stroke: '#000000', strokeWidth: '1px' }}
           />
         )}
 
@@ -167,11 +279,11 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
       )}
 
       {config.hair && (
-        <AvatarSprite spriteId={config.hair} x={90} y={30} />
+        <AvatarSprite spriteId={config.hair} x={90} y={30} style={{ fill: hairColor }} />
       )}
 
       {config.facial && (
-        <AvatarSprite spriteId={config.facial} x={105} y={120} />
+        <AvatarSprite spriteId={config.facial} x={105} y={120} style={{ fill: hairColor }} />
       )}
 
       {config.eyewear && (
@@ -232,20 +344,26 @@ export const avatarOptions = {
   accessories: ['beauty-spot', 'blush', 'lashes-1'],
   bodyColors: [
     '#ffba0a',
-    '#ffdf8e', 
-    '#ffc8b6', 
-    '#f3cfb0', 
+    '#ffdf8e',
+    '#ffc8b6',
+    '#f3cfb0',
     '#bd9f94',
-    '#8c5845', 
-    '#652a15', 
-    '#cbc9b9', 
-    '#a29f89', 
-    '#8c887a', 
-    '#7e7c6b', 
-    '#c2c2c2', 
-    '#616161', 
-    '#b2bceb', 
-    '#3953cd',  
+    '#8c5845',
+    '#652a15',
+    '#cbc9b9',
+    '#a29f89',
+    '#8c887a',
+    '#7e7c6b',
+    '#c2c2c2',
+    '#616161',
+    '#b2bceb',
+    '#3953cd',
+  ],
+  hairColors: [
+    '#512e14',
+    '#000000',
+    '#FF6B35',
+    '#ffba0a'
   ]
 };
 
