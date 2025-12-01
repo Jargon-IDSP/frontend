@@ -171,6 +171,5 @@ export default function IndustryPreferences() {
         )}
       </div>
     </div>
-    </div>
   );
 }
