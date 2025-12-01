@@ -130,7 +130,7 @@ export default function LanguagePreferences() {
           onClick={handleSave}
           disabled={updateLanguageMutation.isPending}
         >
-          {updateLanguageMutation.isPending ? 'Saving...' : 'Save'}
+          {updateLanguageMutation.isPending ? 'Saving...' : 'Next'}
         </button>
       </div>
     </div>

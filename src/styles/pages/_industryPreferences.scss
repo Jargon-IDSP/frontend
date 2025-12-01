@@ -2,7 +2,6 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
-
 #root main:has(.industry-preferences) {
   padding-bottom: 0;
 }
@@ -12,7 +11,8 @@
   max-width: 480px;
   position: relative;
   min-height: 100vh;
-  padding-bottom: 100px;
+  // padding-bottom: 100px;
+  background-color: $second-neutral-50;
 
   &__header {
     display: flex;
@@ -32,15 +32,30 @@
     display: flex;
     flex-direction: column;
     justify-content: center;
-    padding: $spacing-md 0;
+    padding: 0;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+
+    .onboarding-form {
+      width: 100%;
+      padding: 0;
+      box-sizing: border-box;
+    }
 
     .onboarding-form__header {
       display: none; // Title is now in OnboardingHeader
     }
 
+    .onboarding-form__options {
+      width: 100%;
+      box-sizing: border-box;
+      margin-top: 20px;
+    }
+
     .onboarding-form__option {
-      min-width: 366px;
-      width: 366px;
+      width: 100%;
+      max-width: 366px;
       margin: 0 auto;
       border-radius: 18px;
       border: 1px solid $primary-100;
@@ -53,6 +68,7 @@
       transition: all $transition-normal;
       background-color: $second-neutral-50;
       justify-content: flex-start !important;
+      box-sizing: border-box;
 
       &:hover {
         transform: none !important;
@@ -71,10 +87,15 @@
       }
     }
 
+    .onboarding-form__actions {
+      width: 100%;
+      box-sizing: border-box;
+    }
+
     .onboarding-form__button {
       &--primary {
-        min-width: 366px;
-        width: 366px;
+        width: 100%;
+        max-width: 366px;
         margin: 60px auto 0 auto;
         padding: $spacing-md $spacing-xl;
         background-color: $quinary-500;
@@ -85,6 +106,7 @@
         color: white;
         cursor: pointer;
         transition: all $transition-normal;
+        box-sizing: border-box;
 
         &:hover:not(:disabled) {
           background-color: color.adjust($quinary-500, $lightness: 10%);
