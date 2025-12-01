@@ -1,0 +1,29 @@
+@use '../variables' as *;
+
+.splash-animation-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  width: 100vw;
+  max-width: min(480px, 100vw);
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-primary; // orange background while animation plays
+  transform: translateX(0);
+  transition: transform 0.6s ease-out;
+
+  &__image {
+    width: 100%;
+    max-width: 480px;
+    height: auto;
+    object-fit: contain;
+  }
+
+  &--exit {
+    transform: translateX(-100%);
+  }
+}
+
+

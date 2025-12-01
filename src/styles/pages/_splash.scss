@@ -14,9 +14,6 @@
   background-color: $secondary-50;
   text-align: center;
   padding: $spacing-sm $spacing-md;
-  // Visually cover the global main padding-bottom (90px)
-  margin-bottom: -90px;
-  padding-bottom: calc($spacing-sm + 90px);
 
   &__header {
     .splash-logo {
