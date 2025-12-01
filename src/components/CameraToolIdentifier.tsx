@@ -1,4 +1,5 @@
-import { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 import * as tf from '@tensorflow/tfjs';
 import { useAuth } from '@clerk/clerk-react';
 import { BACKEND_URL } from '../lib/api';
@@ -40,20 +41,23 @@ const normalizeLanguageCode = (code: string): Language => {
 };
 
 // Helper function to get available languages, using API response or fallback
+// Only show the 5 requested languages: Chinese, French, Korean, Punjabi, Spanish
+const REQUESTED_LANGUAGES: Language[] = ['chinese', 'french', 'korean', 'punjabi', 'spanish'];
+
 const getAvailableLanguages = (apiLanguages?: Array<{ code: string; name: string }>): Array<{ code: string; name: string }> => {
   if (apiLanguages && apiLanguages.length > 0) {
-    // Map API languages to our format, filtering out English
+    // Map API languages to our format, filtering to only requested languages
     return apiLanguages
       .map(lang => ({
         code: normalizeLanguageCode(lang.code),
         name: lang.name || SupportedLanguages.find(l => l.code === normalizeLanguageCode(lang.code))?.name || lang.code
       }))
-      .filter(lang => lang.code !== 'english'); // Exclude English from the list
+      .filter(lang => REQUESTED_LANGUAGES.includes(lang.code as Language));
   }
   
-  // Fallback: use all supported languages except English
+  // Fallback: use only the 5 requested languages
   return SupportedLanguages
-    .filter(lang => lang.code !== 'english')
+    .filter(lang => REQUESTED_LANGUAGES.includes(lang.code))
     .map(lang => ({ code: lang.code, name: lang.name }));
 };
 
@@ -65,10 +69,12 @@ let MODEL_CLASSES: string[] = [];
 
 interface CameraToolIdentifierProps {
   onClose?: () => void;
+  autoStart?: boolean; // If true, automatically start camera when model loads
 }
 
-const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose }) => {
+const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, autoStart = false }) => {
   const { getToken } = useAuth();
+  const navigate = useNavigate();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
@@ -191,7 +197,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose }) 
     };
   }, [stream, capturedImage]);
 
-  const startCamera = async () => {
+  const startCamera = useCallback(async () => {
     try {
       setError(null);
       setResult(null);
@@ -212,7 +218,14 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose }) 
       console.error('Error accessing camera:', err);
       setVideoReady(false);
     }
-  };
+  }, []);
+
+  // Auto-start camera when model is loaded and autoStart is true
+  useEffect(() => {
+    if (autoStart && model && !modelLoading && !stream && !capturedImage) {
+      startCamera();
+    }
+  }, [model, modelLoading, autoStart, stream, capturedImage, startCamera]);
 
   const stopCamera = () => {
     if (stream) {
@@ -225,6 +238,8 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose }) 
     if (onClose) {
       onClose();
     }
+    // Navigate back to home page
+    navigate('/');
   };
 
   const captureImage = () => {
@@ -483,7 +498,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose }) 
         </div>
       )}
 
-      {!modelLoading && !stream && !capturedImage && (
+      {!modelLoading && !stream && !capturedImage && !autoStart && (
         <div className="camera-section">
           <button 
             className="btn btn-primary" 
@@ -588,15 +603,15 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose }) 
                       </button>
                     ))
                   ) : (
-                    // Fallback: show all supported languages except English
+                    // Fallback: show only the 5 requested languages
                     SupportedLanguages
-                      .filter(lang => lang.code !== 'english')
+                      .filter(lang => REQUESTED_LANGUAGES.includes(lang.code))
                       .map((lang) => (
                         <button
                           key={lang.code}
                           className={`btn btn-lang ${selectedLanguage === lang.code ? 'active' : ''}`}
                           onClick={() => translateToLanguage(lang.code)}
-                          disabled={isAnalyzing}
+                          disabled={isAnalyzing || isTranslating}
                         >
                           {lang.name}
                         </button>

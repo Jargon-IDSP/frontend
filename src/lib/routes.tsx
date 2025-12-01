@@ -37,6 +37,7 @@ import LanguagePreferences from "../pages/onboarding/LanguagePreferences";
 import IndustryPreferences from "../pages/onboarding/IndustryPreferences";
 import LearnJargon from "../pages/learning/LearnJargon";
 import BossPage from "../pages/learning/BossPage";
+import InstantHelpPage from "../pages/InstantHelpPage";
 
 const protect = (element: ReactElement) => (
   <ProtectedRoute>{element}</ProtectedRoute>
@@ -106,6 +107,10 @@ export const routes: RouteObject[] = [
   {
     path: "/notifications",
     element: protect(<NotificationsPage />),
+  },
+  {
+    path: "/instant-help",
+    element: protect(<InstantHelpPage />),
   },
 
   // Documents
