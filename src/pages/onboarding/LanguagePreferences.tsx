@@ -102,7 +102,7 @@ export default function LanguagePreferences() {
         {/* Header */}
         <OnboardingHeader
           title="Choose your own language"
-          onBack={() => navigate(-1)}
+          onBack={() => navigate('/onboarding/introduction')}
           progressPercentage={25}
           showProgress={true}
         />

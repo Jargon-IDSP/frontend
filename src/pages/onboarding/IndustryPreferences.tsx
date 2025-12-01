@@ -140,7 +140,7 @@ export default function IndustryPreferences() {
         <OnboardingHeader
         title="What trade are you in?"
         subtitle="Choose a trade to start learning with!"
-        onBack={() => navigate(-1)}
+        onBack={() => navigate('/onboarding/language')}
         progressPercentage={50}
         showProgress={true}
       />
