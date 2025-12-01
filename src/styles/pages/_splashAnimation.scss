@@ -1,0 +1,56 @@
+@use '../variables' as *;
+
+.splash-animation-screen {
+  position: fixed;
+  inset: 0;
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; // don't interfere with layout sizing
+
+  // Frame matches app width and clips the sliding panel
+  &__frame {
+    pointer-events: auto;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: min(480px, 100vw); // match app/page width
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: $color-primary; // orange fills the entire page area
+    box-shadow: 0 0 0 2px $color-primary; // cover any 1px gaps from sub-pixel rounding
+  }
+
+  &__panel {
+    // Slide the GIF horizontally; width matches the frame/page
+    width: 100%;
+    margin-left: 0;
+    height: 100%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: translateX(0);
+    transition: transform 0.6s ease-out;
+
+    &__image {
+      width: 100%;
+      max-width: 480px;
+      height: auto;
+      object-fit: contain;
+    }
+  }
+
+  &--exit .splash-animation-screen__panel {
+    // Slide a bit further than 100% so no sliver is visible
+    transform: translateX(-110%);
+  }
+}
+
+

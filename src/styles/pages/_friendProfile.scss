@@ -166,10 +166,12 @@
   align-items: center;
   justify-content: center;
 
-  img {
-    width: 70%;
-    height: 70%;
-    object-fit: contain;
+  .avatar-customization__canvas {
+    transform-origin: center !important;
+  }
+
+  > div {
+    transform: translateX(-2.3rem) translateY(-1rem);
   }
 }
 
