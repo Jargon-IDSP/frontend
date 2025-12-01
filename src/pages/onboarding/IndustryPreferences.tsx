@@ -6,7 +6,7 @@ import { OnboardingForm } from '../../components/onboarding/OnboardingForm';
 import type { OnboardingOption } from '../../types/onboardingForm';
 import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
-import rockyWhiteLogo from '/rockyWhite.svg';
+// import rockyWhiteLogo from '/rockyWhite.svg';
 import '../../styles/pages/_industryPreferences.scss';
 
 const industryOptions: OnboardingOption[] = [
@@ -126,10 +126,11 @@ export default function IndustryPreferences() {
   };
 
   return (
-    <div className="container industry-preferences">
-      <div className="industry-preferences__header">
+    <div className="container">
+      <div className="industry-preferences">
+      {/* <div className="industry-preferences__header">
         <img src={rockyWhiteLogo} alt="Rocky Logo" className="industry-preferences__logo" />
-      </div>
+      </div> */}
 
       <div className="industry-preferences__content">
         <OnboardingForm
@@ -140,7 +141,7 @@ export default function IndustryPreferences() {
           onSelect={setSelectedIndustry}
           onNext={handleFinish}
           onSkip={handleSkip}
-          isLastStep={!isUpdating}
+          isLastStep={false}
           showSkip={!isUpdating}
           nextButtonText={isUpdating ? 'Done' : undefined}
         />
@@ -157,6 +158,7 @@ export default function IndustryPreferences() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

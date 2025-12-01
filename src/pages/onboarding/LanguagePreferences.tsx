@@ -2,12 +2,14 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
+import { OnboardingForm } from '../../components/onboarding/OnboardingForm';
+import type { OnboardingOption } from '../../types/onboardingForm';
 import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
 import goBackIcon from '../../assets/icons/goBackIcon.svg';
 import '../../styles/pages/_languagePreferences.scss';
 
-const languageOptions = [
+const languageOptions: OnboardingOption[] = [
   { id: 'en', label: 'English', value: 'english' },
   { id: 'zh', label: 'Chinese (中文)', value: 'chinese' },
   { id: 'fr', label: 'French (Français)', value: 'french' },
@@ -25,7 +27,6 @@ export default function LanguagePreferences() {
 
   const isUpdating = profile?.onboardingCompleted;
 
-  // Scroll to top when component mounts
   useEffect(() => {
     window.scrollTo(0, 0);
   }, []);
@@ -36,7 +37,6 @@ export default function LanguagePreferences() {
     }
   }, [profile, isLoading, isUpdating, navigate]);
 
-  // Set initial value if user already has a language
   useEffect(() => {
     if (profile?.language) {
       setSelectedLanguage(profile.language);
@@ -65,11 +65,9 @@ export default function LanguagePreferences() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['profile'] });
 
-      // If updating from settings, go back to settings
       if (isUpdating) {
         navigate('/settings');
       } else {
-        // If in onboarding flow, continue to industry
         navigate('/onboarding/industry');
       }
     },
@@ -81,15 +79,17 @@ export default function LanguagePreferences() {
 
   const handleSave = () => {
     if (isUpdating) {
-      // If updating from settings, save directly to backend
       updateLanguageMutation.mutate(selectedLanguage);
     } else {
-      // If in onboarding flow, store in sessionStorage and continue
       const onboardingData = JSON.parse(sessionStorage.getItem('onboardingData') || '{}');
       onboardingData.language = selectedLanguage;
       sessionStorage.setItem('onboardingData', JSON.stringify(onboardingData));
       navigate('/onboarding/industry');
     }
+  };
+
+  const handleSkip = () => {
+    navigate('/onboarding/industry');
   };
 
   if (isLoading) {
@@ -113,49 +113,66 @@ export default function LanguagePreferences() {
     );
   }
 
+  if (isUpdating) {
+    return (
+      <div className="container">
+        <div className="language-preferences">
+          <div className="language-preferences__header">
+            <button
+              className="language-preferences__back-button"
+              onClick={() => navigate(-1)}
+              aria-label="Go Back"
+            >
+              <img src={goBackIcon} alt="Go Back" />
+            </button>
+            <h1 className="language-preferences__title">Settings</h1>
+            <div className="language-preferences__header-spacer" />
+          </div>
+
+          <div className="language-preferences__section">
+            <h2 className="language-preferences__section-title">System Languages</h2>
+
+            <div className="language-preferences__options">
+              {languageOptions.map((option) => (
+                <button
+                  key={option.id}
+                  className={`language-preferences__option ${
+                    selectedLanguage === option.value ? 'language-preferences__option--selected' : ''
+                  }`}
+                  onClick={() => setSelectedLanguage(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <button
+            className="language-preferences__save-button"
+            onClick={handleSave}
+            disabled={updateLanguageMutation.isPending}
+          >
+            {updateLanguageMutation.isPending ? 'Saving...' : 'Save'}
+          </button>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="container">
       <div className="language-preferences">
-        {/* Header */}
-        <div className="language-preferences__header">
-          <button
-            className="language-preferences__back-button"
-            onClick={() => navigate(-1)}
-            aria-label="Go Back"
-          >
-            <img src={goBackIcon} alt="Go Back" />
-          </button>
-          <h1 className="language-preferences__title">Settings</h1>
-          <div className="language-preferences__header-spacer" />
-        </div>
-
-        {/* Language Section */}
-        <div className="language-preferences__section">
-          <h2 className="language-preferences__section-title">System Languages</h2>
-
-          <div className="language-preferences__options">
-            {languageOptions.map((option) => (
-              <button
-                key={option.id}
-                className={`language-preferences__option ${
-                  selectedLanguage === option.value ? 'language-preferences__option--selected' : ''
-                }`}
-                onClick={() => setSelectedLanguage(option.value)}
-              >
-                {option.label}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Save Button */}
-        <button
-          className="language-preferences__save-button"
-          onClick={handleSave}
-          disabled={updateLanguageMutation.isPending}
-        >
-          {updateLanguageMutation.isPending ? 'Saving...' : 'Save'}
-        </button>
+        <OnboardingForm
+          title="Select your system language"
+          subtitle="This helps us personalize your learning experience"
+          options={languageOptions}
+          selectedValue={selectedLanguage}
+          onSelect={setSelectedLanguage}
+          onNext={handleSave}
+          onSkip={handleSkip}
+          isLastStep={false}
+          showSkip={true}
+        />
       </div>
     </div>
   );
