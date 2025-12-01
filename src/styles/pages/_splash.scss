@@ -2,18 +2,82 @@
 @use '../mixins' as *;
 
 .splash-page {
-  height: 100vh;
+  // Full-screen mobile splash, without navbar padding
+  width: 100vw;
+  max-width: min(480px, 100vw);
+  margin: 0 auto;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  background-color: $color-second-neutral-light;
- 
-      img {
-        margin: 3rem auto;
-      }
+  justify-content: space-between;
+  background-color: $secondary-50;
+  text-align: center;
+  padding: $spacing-sm $spacing-md;
 
-      button {
-        margin: 3rem 5rem;
-        background-color: $color-primary;
-        color: white;
-      }
+  &__header {
+    .splash-logo {
+      width: 30rem;
+      max-width: 420px;
+      margin: 0 auto;
+      display: block;
+    }
+  }
+
+  &__tagline {
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    color: $quaternary-500;
+    // Pull tagline closer to the logo
+    margin: -$spacing-lg 0 0 0;
+    position: relative;
+    z-index: 1;
+  }
+
+  &__content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+  }
+
+  &__illustration {
+    margin: $spacing-md 0 $spacing-sm 0;
+
+    .rocky-avatar {
+      width: 260px;
+      max-width: 260px;
+      height: auto;
+      margin: 10px auto;
+      background: none;
+      border-radius: 0;
+      padding: 0;
+      display: block;
+    }
+  }
+
+  &__body {
+    font-size: $font-size-body;
+    color: $quaternary-500;
+    font-weight: $font-weight-regular;
+    line-height: $line-height-normal;
+    margin: 0 0 $spacing-sm 0;
+    padding: 0 $spacing-sm;
+  }
+
+  &__button {
+    width: 90%;
+    max-width: 380px;
+    padding: 15px 0;
+    border-radius: 14px;
+    background-color: $quinary-500;
+    color: white;
+    border: none;
+    font-size: $font-size-h3;
+    font-weight: $font-weight-bold;
+    margin-top: 60px;
+    margin-bottom: 30px;
+  }
 }
