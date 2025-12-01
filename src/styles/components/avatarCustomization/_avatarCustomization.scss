@@ -66,10 +66,13 @@
 
   &__title {
     text-align: left;
+    color: $quaternary-500;
     margin: 0;
     width: 100%;
-    font-weight: 300;
+    font-weight: $font-weight-medium;
     margin-top: 0.2rem;
+    font-family: $font-family-primary;
+    font-size: $font-size-h1; // 20px instead of inheriting h1 (28px)
   }
 
   &__progress-wrapper {

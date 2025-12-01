@@ -2,6 +2,9 @@
 @use '../variables' as *;
 
 .language-preferences {
+  padding: 1rem;
+  max-width: 480px;
+  position: relative;
   min-height: 100vh;
   padding-bottom: 100px;
 
@@ -33,7 +36,7 @@
   }
 
   &__title {
-    font-size: $font-size-h2;
+    font-size: $font-size-h3;
     font-weight: $font-weight-medium;
     color: $color-quaternary-dark;
     margin: 0;
@@ -45,30 +48,26 @@
 
   &__section {
     margin: $spacing-lg 0;
-    padding: 0 $spacing-lg;
-  }
-
-  &__section-title {
-    font-size: $font-size-body;
-    font-weight: $font-weight-medium;
-    color: $color-quaternary-dark;
-    margin-bottom: $spacing-lg;
-    letter-spacing: 0;
+    padding: 0;
   }
 
   &__options {
     display: flex;
     flex-direction: column;
     gap: $spacing-md;
+    margin-top: 50px;
   }
 
   &__option {
     padding: $spacing-md $spacing-lg;
     background-color: $second-neutral-50;
     border: 1px solid $primary-100;
-    border-radius: $border-radius-lg;
+    border-radius: 18px;
     font-size: $font-size-body;
     font-weight: $font-weight-regular;
+    width: 366px;
+    max-width: 366px;
+    margin: 0 auto;
     color: $primary-200;
     cursor: pointer;
     text-align: left;
@@ -80,7 +79,7 @@
 
     &--selected {
       background-color: $second-neutral-50;
-      border-color: $primary-100;
+      border-color: $primary-500;
       color: $primary-600;
       font-weight: $font-weight-regular;
     }
@@ -88,10 +87,10 @@
 
   &__save-button {
     display: block;
-    margin: $spacing-xl auto;
+    margin: 125px auto;
     padding: $spacing-md $spacing-xl;
-    min-width: 120px;
-    background-color: $color-quaternary-dark;
+    min-width: 366px;
+    background-color: $quinary-500;
     border: none;
     border-radius: $border-radius-lg;
     font-size: $font-size-body;

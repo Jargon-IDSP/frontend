@@ -4,7 +4,8 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
 import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
-import goBackIcon from '../../assets/icons/goBackIcon.svg';
+import OnboardingHeader from '../../components/onboarding/OnboardingHeader';
+import LoadingBar from '../../components/LoadingBar';
 import '../../styles/pages/_languagePreferences.scss';
 
 const languageOptions = [
@@ -94,22 +95,9 @@ export default function LanguagePreferences() {
 
   if (isLoading) {
     return (
-      <div className="container">
-        <div className="language-preferences">
-          <div className="language-preferences__header">
-            <button
-              className="language-preferences__back-button"
-              onClick={() => navigate(-1)}
-              aria-label="Go Back"
-            >
-              <img src={goBackIcon} alt="Go Back" />
-            </button>
-            <h1 className="language-preferences__title">Settings</h1>
-            <div className="language-preferences__header-spacer" />
-          </div>
-          <div className="language-preferences__loading">Loading...</div>
-        </div>
-      </div>
+      <>
+        <LoadingBar isLoading={true} hasData={false} text="Loading" />
+      </>
     );
   }
 
@@ -117,23 +105,16 @@ export default function LanguagePreferences() {
     <div className="container">
       <div className="language-preferences">
         {/* Header */}
-        <div className="language-preferences__header">
-          <button
-            className="language-preferences__back-button"
-            onClick={() => navigate(-1)}
-            aria-label="Go Back"
-          >
-            <img src={goBackIcon} alt="Go Back" />
-          </button>
-          <h1 className="language-preferences__title">Settings</h1>
-          <div className="language-preferences__header-spacer" />
-        </div>
+        <OnboardingHeader
+          title="Choose your own language"
+          onBack={() => navigate(-1)}
+          progressPercentage={25}
+          showProgress={true}
+        />
 
         {/* Language Section */}
         <div className="language-preferences__section">
-          <h2 className="language-preferences__section-title">System Languages</h2>
-
-          <div className="language-preferences__options">
+           <div className="language-preferences__options">
             {languageOptions.map((option) => (
               <button
                 key={option.id}
