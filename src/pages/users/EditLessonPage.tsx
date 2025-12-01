@@ -7,6 +7,7 @@ import { useProfile } from "../../hooks/useProfile";
 import { useCategories } from "../../hooks/useCategories";
 import { useDocumentCategory } from "../../hooks/useDocumentCategory";
 import { getUserDisplayName } from "../../utils/userHelpers";
+import LoadingBar from "../../components/LoadingBar";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import deleteIconBrown from "../../assets/icons/deleteIconBrown.svg";
 import lessonIconWrenchWhite from "../../assets/icons/lessonIconWrenchWhite.svg";
@@ -296,11 +297,12 @@ const EditLessonPage: React.FC = () => {
 
   if (isLoading || !profile) {
     return (
-      <div className="container container--edit-lesson">
-        <div className="edit-lesson-page">
-          <div className="edit-lesson-loading">Loading...</div>
-        </div>
-      </div>
+      <LoadingBar
+        isLoading={isLoading || !profile}
+        hasData={!!lessonData && !!profile}
+        hasError={false}
+        text="Loading lesson"
+      />
     );
   }
 

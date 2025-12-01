@@ -9,6 +9,7 @@ import { useLearning } from "../../hooks/useLearning";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
 import FlashcardsCarousel from "../../components/learning/FlashcardsCarousel";
 import EmptyState from "../../components/learning/EmptyState";
+import LoadingBar from "../../components/LoadingBar";
 import type { Term } from "../../types/learning";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 
@@ -22,7 +23,6 @@ export default function Terms() {
     sessionNumber?: string;
   }>();
   const [searchParams] = useSearchParams();
-  const [loadingProgress, setLoadingProgress] = useState(0);
   const [currentTermIndex, setCurrentTermIndex] = useState(0);
 
   const {
@@ -88,22 +88,6 @@ export default function Terms() {
   }
 
   useEffect(() => {
-    if (showLoading) {
-      setLoadingProgress(0);
-      const interval = setInterval(() => {
-        setLoadingProgress((prev) => {
-          if (prev >= 90) return prev; 
-          return prev + 10;
-        });
-      }, 200);
-
-      return () => clearInterval(interval);
-    } else if (data) {
-      setLoadingProgress(100);
-    }
-  }, [showLoading, data]);
-
-  useEffect(() => {
     setCurrentTermIndex(0);
   }, [terms.length]);
 
@@ -121,20 +105,12 @@ export default function Terms() {
 
   return (
     <div className="terms-page">
-
-      {showLoading && (
-        <div className="terms-page-progress">
-          <div className="terms-page-progress-bar-container">
-            <div
-              className="terms-page-progress-bar-fill"
-              style={{ width: `${loadingProgress}%` }}
-            />
-          </div>
-          <div className="terms-page-progress-text">
-            Loading terms... {loadingProgress}%
-          </div>
-        </div>
-      )}
+      <LoadingBar
+        isLoading={showLoading}
+        hasData={!!data}
+        hasError={!!error}
+        text="Loading terms"
+      />
 
       {error && (
         <div className="terms-page-error">

@@ -411,7 +411,6 @@ export default function FriendProfilePage() {
     }
   };
 
-  // Combine all loading states to prevent flickering
   const isLoadingData =
     isLoadingCurrentUser ||
     isLoading ||
@@ -427,31 +426,26 @@ export default function FriendProfilePage() {
   return (
     <div className="container container--friend-profile">
       <div className="friend-profile-page">
-      {/* Header - only show after key data is loaded to prevent flicker */}
       {!isLoadingData && (
         <ProfileHeader
           from={(location.state as { from?: string })?.from}
         />
       )}
 
-      {/* Loading State */}
       <LoadingBar
         isLoading={isLoadingData}
         hasData={!!friendProfile && !isLoadingData}
         text="Loading profile"
       />
 
-      {/* Error State */}
       {!isLoadingData && error && (
         <div className="friend-profile-error">
           Failed to load profile. Please try again.
         </div>
       )}
 
-      {/* Profile Content */}
       {!isLoadingData && friendProfile && (
         <>
-          {/* Profile Card */}
           <ProfileCard
             displayName={getUserDisplayName(friendProfile)}
             industryName={getIndustryName(friendProfile?.industryId)}
@@ -467,7 +461,6 @@ export default function FriendProfilePage() {
             isRemoveFriendPending={removeFriendMutation.isPending}
           />
 
-          {/* Pending Access Requests Banner */}
           {!isOwnProfile && (
             <PendingAccessRequestsBanner
               requesterName={getUserDisplayName(friendProfile)}
@@ -479,7 +472,6 @@ export default function FriendProfilePage() {
             />
           )}
 
-          {/* Lessons Section */}
           <FriendLessonsSection
             friendId={friendId!}
             friendProfile={friendProfile}
@@ -492,14 +484,12 @@ export default function FriendProfilePage() {
             onLessonClick={handleLessonClick}
           />
 
-          {/* Overview Section */}
           <ProfileOverview
             badgeCount={userBadges?.length || 0}
             medalCount={(userMedals?.medals.gold || 0) + (userMedals?.medals.silver || 0) + (userMedals?.medals.bronze || 0)}
             joinedDate={formatDate(friendProfile?.createdAt)}
           />
 
-          {/* Connect With Me Section */}
           <ConnectWithMe
             LinkedInUrl={friendProfile?.linkedinUrl}
             FacebookUrl={friendProfile?.facebookUrl}
