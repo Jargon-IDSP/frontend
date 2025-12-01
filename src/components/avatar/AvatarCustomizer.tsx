@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { avatarOptions } from './Avatar';
 import { AvatarDisplay } from './AvatarDisplay';
@@ -88,12 +88,36 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
   const [isLoadingSymbols, setIsLoadingSymbols] = useState(false);
+  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
+  const handleLoadingChange = useCallback((loading: boolean) => {
+    if (loadingTimeoutRef.current) {
+      clearTimeout(loadingTimeoutRef.current);
+      loadingTimeoutRef.current = null;
+    }
+
+    if (loading) {
+      loadingTimeoutRef.current = setTimeout(() => {
+        setIsLoadingSymbols(true);
+        loadingTimeoutRef.current = null;
+      }, 50);
+    } else {
+      setIsLoadingSymbols(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (loadingTimeoutRef.current) {
+        clearTimeout(loadingTimeoutRef.current);
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (avatar) {
       setConfig(avatar);
       setSelectedBody(avatar.body || 'body-1');
-      setIsLoadingSymbols(true);
     }
   }, [avatar]);
 
@@ -489,7 +513,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       <LoadingBar isLoading={isFullyLoading} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        {!isFullyLoading && <AvatarDisplay config={config} size={210} onLoadingChange={setIsLoadingSymbols} />}
+        {!isFullyLoading && <AvatarDisplay config={config} size={210} onLoadingChange={handleLoadingChange} />}
       </div>
 
       <div className="avatar-customization__input-container">

@@ -26,31 +26,46 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
   if (renderMode === 'layered') {
     const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
     const bodySvgRef = useRef<SVGSVGElement>(null);
+    const [rawBodyContent, setRawBodyContent] = useState<string>('');
     const [bodyContent, setBodyContent] = useState<string>('');
 
     useEffect(() => {
+      let mounted = true;
       onLoadingChange?.(true);
-      fetchSymbolContent(bodyId).then(content => {
-        if (content) {
-          const BODY_COLOR_CLASSES = [
-            'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
-            'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
-          ];
 
-          let coloredContent = content;
-          BODY_COLOR_CLASSES.forEach(className => {
-            const regex = new RegExp(`class="${className}"`, 'g');
-            coloredContent = coloredContent.replace(
-              regex,
-              `class="${className}" fill="${bodyColor}"`
-            );
-          });
+      fetchSymbolContent(bodyId)
+        .then(content => {
+          if (content && mounted) {
+            setRawBodyContent(content);
+            onLoadingChange?.(false);
+          }
+        })
+        .catch(() => {
+          if (mounted) onLoadingChange?.(false);
+        });
 
-          setBodyContent(coloredContent);
-          onLoadingChange?.(false);
-        }
+      return () => { mounted = false; };
+    }, [bodyId, onLoadingChange]);
+
+    useEffect(() => {
+      if (!rawBodyContent) return;
+
+      const BODY_COLOR_CLASSES = [
+        'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
+        'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
+      ];
+
+      let coloredContent = rawBodyContent;
+      BODY_COLOR_CLASSES.forEach(className => {
+        const regex = new RegExp(`class="${className}"`, 'g');
+        coloredContent = coloredContent.replace(
+          regex,
+          `class="${className}" fill="${bodyColor}"`
+        );
       });
-    }, [bodyId, bodyColor]);
+
+      setBodyContent(coloredContent);
+    }, [bodyColor, rawBodyContent]);
 
     // Don't render until body content is loaded to prevent sprite sheet flash
     if (!bodyContent) {
