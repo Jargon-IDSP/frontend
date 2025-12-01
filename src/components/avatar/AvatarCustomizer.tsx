@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { avatarOptions } from './Avatar';
 import { AvatarDisplay } from './AvatarDisplay';
@@ -14,7 +14,16 @@ const BODY_COLOR_CLASSES = [
   'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
 ];
 
+// Cache to avoid re-fetching the same symbols
+const symbolCache = new Map<string, string>();
+
 async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<string | null> {
+  const cacheKey = `${symbolId}-${bodyColor}`;
+  
+  if (symbolCache.has(cacheKey)) {
+    return symbolCache.get(cacheKey)!;
+  }
+
   try {
     const response = await fetch('/avatar-sprites.svg');
     const svgText = await response.text();
@@ -30,6 +39,7 @@ async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<
       content = content.replace(regex, `class="${className}" fill="${bodyColor}"`);
     });
 
+    symbolCache.set(cacheKey, content);
     return content;
   } catch (error) {
     console.error('Failed to fetch symbol:', error);
@@ -46,12 +56,22 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   const [content, setContent] = useState<string>('');
 
   useEffect(() => {
+    let mounted = true;
+    
     fetchColoredSymbol(spriteId, bodyColor).then(result => {
-      if (result) setContent(result);
+      if (result && mounted) {
+        setContent(result);
+      }
     });
+
+    return () => {
+      mounted = false;
+    };
   }, [spriteId, bodyColor]);
 
-  if (!content) return null;
+  if (!content) {
+    return <div className={className} />;
+  }
 
   return (
     <svg
@@ -82,32 +102,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [isLoadingSymbols, setIsLoadingSymbols] = useState(false);
-  const loadingTimeoutRef = useRef<NodeJS.Timeout | null>(null);
-
-  const handleLoadingChange = useCallback((loading: boolean) => {
-    if (loadingTimeoutRef.current) {
-      clearTimeout(loadingTimeoutRef.current);
-      loadingTimeoutRef.current = null;
-    }
-
-    if (loading) {
-      loadingTimeoutRef.current = setTimeout(() => {
-        setIsLoadingSymbols(true);
-        loadingTimeoutRef.current = null;
-      }, 50);
-    } else {
-      setIsLoadingSymbols(false);
-    }
-  }, []);
-
-  useEffect(() => {
-    return () => {
-      if (loadingTimeoutRef.current) {
-        clearTimeout(loadingTimeoutRef.current);
-      }
-    };
-  }, []);
 
   useEffect(() => {
     if (avatar) {
@@ -152,7 +146,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
 
   useEffect(() => {
     if (config.facial && config.expression && config.expression.includes('-h1')) {
-      const baseBody = config.expression.split('-').slice(0, 2).join('-'); // e.g., "body-1-h1" -> "body-1"
+      const baseBody = config.expression.split('-').slice(0, 2).join('-');
       updateConfig('expression', baseBody);
     }
   }, [config.facial]);
@@ -469,14 +463,14 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     );
   };
 
-  const isFullyLoading = isLoading || isLoadingSymbols;
+  const isFullyLoading = isLoading;
 
   return (
     <div className="avatar-customization">
       <LoadingBar isLoading={isFullyLoading} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        {!isFullyLoading && <AvatarDisplay config={config} size={210} onLoadingChange={handleLoadingChange} />}
+        {!isLoading && <AvatarDisplay config={config} size={210} />}
       </div>
 
       <div className="avatar-customization__input-container">
