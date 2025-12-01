@@ -66,6 +66,66 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   );
 }
 
+async function fetchColoredHair(symbolId: string, hairColor: string, isFacial: boolean = false): Promise<{ content: string; viewBox: string; hasBlackStroke: boolean } | null> {
+  try {
+    const response = await fetch('/avatar-sprites.svg');
+    const svgText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const symbol = doc.getElementById(symbolId);
+    if (!symbol) return null;
+
+    let content = symbol.innerHTML;
+    const viewBox = symbol.getAttribute('viewBox') || '0 0 300 300';
+    const hasBlackStroke = /stroke="#000000"|stroke="#000"|stroke="black"/i.test(content);
+
+    const HAIR_COLORS = isFacial
+      ? ['#512e14', '#5b3319', '#602d0b']
+      : ['#512e14', '#5b3319'];
+
+    HAIR_COLORS.forEach(originalColor => {
+      const regex = new RegExp(`fill="${originalColor}"`, 'g');
+      content = content.replace(regex, `fill="${hairColor}"`);
+    });
+
+    content = content.replace(/\s*stroke="(?!#000000|#000|black)[^"]*"/gi, '');
+    content = content.replace(/\s*stroke-width="[^"]*"/g, '');
+
+    return { content, viewBox, hasBlackStroke };
+  } catch (error) {
+    console.error('Failed to fetch hair symbol:', error);
+    return null;
+  }
+}
+
+function HairPreview({ spriteId, hairColor, className, isFacial = false }: {
+  spriteId: string;
+  hairColor: string;
+  className: string;
+  isFacial?: boolean;
+}) {
+  const [data, setData] = useState<{ content: string; viewBox: string; hasBlackStroke: boolean } | null>(null);
+
+  useEffect(() => {
+    fetchColoredHair(spriteId, hairColor, isFacial).then(result => {
+      if (result) setData(result);
+    });
+  }, [spriteId, hairColor, isFacial]);
+
+  if (!data) return null;
+
+  const strokeStyle = data.hasBlackStroke ? {} : { stroke: '#000000', strokeWidth: '1px' };
+
+  return (
+    <svg
+      className={className}
+      viewBox={data.viewBox}
+      dangerouslySetInnerHTML={{ __html: data.content }}
+      style={strokeStyle}
+    />
+  );
+}
+
 // This is how the tabs are defined in the frontend
 const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
@@ -83,6 +143,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   const [config, setConfig] = useState<AvatarConfig>({
     body: 'body-1',
     bodyColor: '#ffba0a',
+    hairColor: '#512e14',
     expression: 'body-1-h1',
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
@@ -266,7 +327,14 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           // Facial Hair section
           { id: '__subtitle__facial__', label: 'Facial Hair', isSubtitle: true },
           { id: 'none-facial', label: 'None', category: 'facial' as const },
-          ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const }))
+          ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const })),
+          // Hair Color section
+          { id: '__subtitle__haircolor__', label: 'Hair Color', isSubtitle: true },
+          ...avatarOptions.hairColors.map(color => ({
+            id: color,
+            label: color,
+            category: 'hairColor' as const
+          }))
         ];
       case 'accessories':
         // Filter out masks from eyewear since they're now in headwear
@@ -301,7 +369,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   }, [activeTab, selectedBody, config.headwear, config.facial, config.expression]);
 
-  const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
+  const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | 'hairColor') => {
     // Ignore subtitle clicks
     if (optionId.startsWith('__subtitle__')) {
       return;
@@ -348,6 +416,8 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     } else if (activeTab === 'hair') {
       if (category === 'facial') {
         updateConfig('facial', optionId);
+      } else if (category === 'hairColor' || optionId.startsWith('#')) {
+        updateConfig('hairColor', optionId);
       } else {
         updateConfig('hair', optionId);
       }
@@ -380,7 +450,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   };
 
-  const isSelected = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
+  const isSelected = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | 'hairColor') => {
     if (activeTab === 'body') {
       if (optionId.startsWith('#')) {
         return config.bodyColor === optionId;
@@ -430,6 +500,8 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
         }
       } else if (category === 'facial') {
         return config.facial === optionId;
+      } else if (category === 'hairColor' || optionId.startsWith('#')) {
+        return config.hairColor === optionId;
       } else {
         return config.hair === optionId;
       }
@@ -442,12 +514,11 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   };
 
-  const renderOptionPreview = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
+  const renderOptionPreview = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | 'hairColor') => {
     if (optionId === 'none' || optionId.startsWith('none-')) {
       return <span className="avatar-option__label">None</span>;
     }
 
-    // Colors don't need preview
     if (optionId.startsWith('#')) {
       return null;
     }
@@ -455,6 +526,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     let className = "avatar-option__preview";
     let viewBox = "0 0 300 300";
     let bodyColor: string | undefined;
+    let hairColor: string | undefined;
 
     if (activeTab === 'body') {
       // Body shapes
@@ -468,7 +540,13 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       viewBox = getBodyViewBox(optionId);
       bodyColor = config.bodyColor || '#ffba0a';
     } else if (activeTab === 'hair') {
-      className = "avatar-option__preview avatar-option__preview--hair";
+      if (category === 'facial') {
+        className = "avatar-option__preview avatar-option__preview--facial";
+        hairColor = config.hairColor || '#512e14';
+      } else {
+        className = "avatar-option__preview avatar-option__preview--hair";
+        hairColor = config.hairColor || '#512e14';
+      }
     } else if (activeTab === 'accessories') {
       if (category === 'eyewear') {
         className = "avatar-option__preview avatar-option__preview--eyewear";
@@ -493,6 +571,17 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           bodyColor={bodyColor}
           className={className}
           viewBox={viewBox}
+        />
+      );
+    }
+
+    if (hairColor) {
+      return (
+        <HairPreview
+          spriteId={optionId}
+          hairColor={hairColor}
+          className={className}
+          isFacial={category === 'facial'}
         />
       );
     }
@@ -559,7 +648,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
             );
           }
 
-          const category = ('category' in option ? option.category : undefined) as 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | undefined;
+          const category = ('category' in option ? option.category : undefined) as 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | 'hairColor' | undefined;
           const selected = isSelected(option.id, category);
           const isColor = option.id.startsWith('#');
 
