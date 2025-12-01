@@ -128,24 +128,15 @@ export default function LanguagePreferences() {
             ))}
           </div>
         </div>
-      </div>
-    );
-  }
 
-  return (
-    <div className="container">
-      <div className="language-preferences">
-        <OnboardingForm
-          title="Select your system language"
-          subtitle="This helps us personalize your learning experience"
-          options={languageOptions}
-          selectedValue={selectedLanguage}
-          onSelect={setSelectedLanguage}
-          onNext={handleSave}
-          onSkip={handleSkip}
-          isLastStep={false}
-          showSkip={true}
-        />
+        {/* Save Button */}
+        <button
+          className="language-preferences__save-button"
+          onClick={handleSave}
+          disabled={updateLanguageMutation.isPending}
+        >
+          {updateLanguageMutation.isPending ? 'Saving...' : 'Save'}
+        </button>
       </div>
     </div>
   );
