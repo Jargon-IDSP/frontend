@@ -61,7 +61,7 @@ export function useTTS() {
           URL.revokeObjectURL(audioUrl);
           resolve(undefined);
         };
-        audio.onerror = (e) => {
+        audio.onerror = () => {
           URL.revokeObjectURL(audioUrl);
           reject(new Error("Failed to play audio"));
         };
