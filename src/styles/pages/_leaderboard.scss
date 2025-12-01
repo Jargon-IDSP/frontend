@@ -29,7 +29,7 @@
     background-color: $color-second-neutral-light;
     border: 1px solid $color-quaternary-dark;
     border-radius: 50%;
-    padding: $spacing-sm;
+    padding: 1rem 1rem 0.2rem 1rem;
 
     .rocky-logo {
       @include rocky-logo-size(1, 80px);
