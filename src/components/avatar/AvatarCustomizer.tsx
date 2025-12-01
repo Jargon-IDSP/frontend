@@ -14,6 +14,7 @@ const BODY_COLOR_CLASSES = [
   'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
 ];
 
+// Cache to avoid re-fetching the same symbols
 const symbolCache = new Map<string, string>();
 
 async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<string | null> {
