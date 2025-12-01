@@ -1,12 +1,18 @@
 @use 'sass:color';
 @use '../variables' as *;
 
+#root main:has(.language-preferences) {
+  padding-bottom: 0;
+}
+
 .language-preferences {
   padding: 1rem;
   max-width: 480px;
   position: relative;
   min-height: 100vh;
-  padding-bottom: 100px;
+  // padding-bottom: 100px;
+    background-color: $second-neutral-50;
+
 
   &__header {
     display: flex;

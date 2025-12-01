@@ -1,0 +1,353 @@
+@use '../variables' as *;
+
+.camera-tool-identifier {
+  text-align: center;
+  width: 100%;
+
+  .camera-tool-header {
+    margin-bottom: 1.5rem;
+
+    h2 {
+      margin: 0 0 0.5rem 0;
+      font-size: 2rem;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      margin: 0 0 1rem 0;
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+  }
+
+  .loading-subtitle {
+    margin-top: 0.5rem;
+    font-size: 0.9rem;
+    opacity: 0.8;
+  }
+
+  .camera-section,
+  .result-section {
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  .video-container {
+    position: relative;
+    width: 100%;
+    min-height: 300px;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .video-loading {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: white;
+    font-size: 1.2rem;
+    z-index: 1;
+  }
+
+  .video-preview {
+    width: 100%;
+    height: auto;
+    min-height: 300px;
+    display: block;
+    max-height: 60vh;
+    object-fit: cover;
+    background: #000;
+  }
+
+  .image-preview {
+    width: 100%;
+    background: #000;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    margin-bottom: 1.5rem;
+  }
+
+  .image-preview img {
+    width: 100%;
+    height: auto;
+    display: block;
+    max-height: 50vh;
+    object-fit: contain;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin: 1.5rem 0;
+  }
+
+  .btn {
+    padding: 0.875rem 1.75rem;
+    font-size: 1rem;
+    font-weight: 600;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    min-width: 140px;
+  }
+
+  .btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .btn-primary {
+    background: #4CAF50;
+    color: white;
+  }
+
+  .btn-primary:hover:not(:disabled) {
+    background: #45a049;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-capture {
+    background: #ff6b6b;
+    color: white;
+  }
+
+  .btn-capture:hover {
+    background: #ee5a5a;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  .btn-secondary {
+    background-color: $color-second-neutral-50;
+    color: $color-quaternary-dark;
+    border: 1px solid $primary-100;
+    border-radius: $border-radius-lg;
+    font-family: $font-family-primary;
+    font-weight: $font-weight-medium;
+  }
+
+  .tool-result .btn-secondary {
+    margin-top: $spacing-lg;
+  }
+
+  .btn-secondary:hover {
+    background-color: $color-second-neutral-light;
+    border-color: $color-primary;
+    color: $color-primary-600;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .loading {
+    padding: 2rem;
+    font-size: 1.2rem;
+    animation: pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.6;
+    }
+  }
+
+  .tool-result {
+    background-color: $color-second-neutral-50;
+    border: 1px solid $primary-100;
+    border-radius: $border-radius-lg;
+    padding: $spacing-xl;
+    margin-top: $spacing-lg;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  }
+
+  .tool-result h2 {
+    margin: 0 0 $spacing-md 0;
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    color: $color-quaternary-dark;
+    font-family: $font-family-primary;
+  }
+
+  .tool-result h3 {
+    margin: $spacing-lg 0 $spacing-md 0;
+    font-size: $font-size-h3;
+    font-weight: $font-weight-medium;
+    color: $color-quaternary-dark;
+    font-family: $font-family-primary;
+  }
+
+  .confidence-badge {
+    display: inline-block;
+    background-color: $color-second-neutral-light;
+    padding: $spacing-sm $spacing-md;
+    border-radius: $border-radius-xl;
+    font-size: $font-size-label;
+    font-weight: $font-weight-medium;
+    margin-bottom: $spacing-md;
+    border: 1px solid $primary-200;
+    color: $color-primary-600;
+    font-family: $font-family-primary;
+  }
+
+  .tool-name {
+    background-color: $color-second-neutral-light;
+    padding: $spacing-lg;
+    border-radius: $border-radius-lg;
+    margin: $spacing-md 0;
+    border: 1px solid $primary-100;
+  }
+
+  .english-name {
+    font-size: $font-size-h2;
+    font-weight: $font-weight-bold;
+    margin: $spacing-sm 0;
+    color: $color-quaternary-dark;
+    font-family: $font-family-primary;
+  }
+
+  .tool-name-speak-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: 4px;
+    color: $color-primary;
+    transition: all 0.2s ease;
+    margin: $spacing-md auto 0;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba($color-primary, 0.1);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    svg {
+      &.speaking {
+        color: $color-primary;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+    }
+  }
+
+  .translated-name {
+    font-size: $font-size-h3;
+    margin: $spacing-sm 0;
+    color: $color-primary-600;
+    font-weight: $font-weight-medium;
+    font-family: $font-family-primary;
+  }
+
+  .language-selector {
+    margin-top: 2rem;
+  }
+
+  .language-buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-top: 1rem;
+  }
+
+  .btn-lang {
+    padding: 0.75rem 1.25rem;
+    font-size: $font-size-body;
+    font-weight: $font-weight-medium;
+    background-color: $color-second-neutral-50;
+    color: $color-quaternary-dark;
+    border: 1px solid $primary-100;
+    border-radius: $border-radius-lg;
+    min-width: auto;
+    cursor: pointer;
+    transition: all $transition-normal;
+    font-family: $font-family-primary;
+  }
+
+  .btn-lang:hover:not(:disabled) {
+    background-color: $color-second-neutral-light;
+    border-color: $primary-300;
+    color: $color-primary-600;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .btn-lang.active {
+    background-color: $color-second-neutral-light;
+    border-color: $color-primary;
+    color: $color-primary-600;
+    font-weight: $font-weight-bold;
+    box-shadow: 0 2px 8px rgba(254, 77, 19, 0.2);
+  }
+
+  .error-message {
+    background: rgba(255, 0, 0, 0.1);
+    border: 2px solid rgba(255, 0, 0, 0.3);
+    border-radius: 8px;
+    padding: 1rem;
+    margin: 1rem 0;
+    max-width: 100%;
+  }
+
+  .error-message p {
+    margin: 0;
+    color: #d32f2f;
+  }
+
+  @media (max-width: 768px) {
+    .camera-tool-header {
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .btn {
+      min-width: 120px;
+      padding: 0.75rem 1.5rem;
+      font-size: 0.9rem;
+    }
+
+    .tool-result {
+      padding: 1.5rem;
+    }
+
+    .english-name {
+      font-size: 1.5rem;
+    }
+
+    .translated-name {
+      font-size: 1.1rem;
+    }
+
+    .language-buttons {
+      gap: 0.5rem;
+    }
+
+    .btn-lang {
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+    }
+  }
+}
+

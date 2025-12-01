@@ -1,10 +1,14 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
+#root main:has(.splash-page) {
+  padding-bottom: 0;
+}
+
 .splash-page {
   // Full-screen mobile splash, without navbar padding
   width: 100%;
-  max-width: min(480px, 100vw);
+  max-width: 480px;
   margin: 0 auto;
   min-height: 100vh;
   display: flex;
@@ -14,16 +18,16 @@
   background-color: $secondary-50;
   text-align: center;
   // Only vertical padding so the page background aligns exactly with the animation frame
-  padding: $spacing-xs 0;
+  padding: 1rem 0;
 
   &__header {
     .splash-logo {
       width: 30rem;
-      max-width: 420px;
       margin: 0 auto;
       display: block;
     }
   }
+
 
   &__tagline {
     font-size: $font-size-h3;

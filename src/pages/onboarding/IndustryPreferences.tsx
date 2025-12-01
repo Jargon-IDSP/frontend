@@ -153,7 +153,7 @@ export default function IndustryPreferences() {
           onSelect={setSelectedIndustry}
           onNext={handleFinish}
           onSkip={handleSkip}
-          isLastStep={!isUpdating}
+          isLastStep={false}
           showSkip={!isUpdating}
           nextButtonText={isUpdating ? 'Done' : undefined}
         />
@@ -170,6 +170,7 @@ export default function IndustryPreferences() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

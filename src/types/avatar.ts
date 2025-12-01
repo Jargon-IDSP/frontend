@@ -9,6 +9,7 @@ export interface AvatarConfig {
   shoes?: string;
   accessories?: string;
   bodyColor?: string;
+  hairColor?: string;
   unlockedItems?: string[];
 }
 
@@ -36,6 +37,8 @@ export interface AvatarSpriteProps {
   spritePath?: string;
 
   bodyColor?: string;
+
+  hairColor?: string;
 }
 
 export interface AvatarDisplayProps {
@@ -73,6 +76,7 @@ export interface AvatarOptions {
   shoes: string[];
   accessories: string[];
   bodyColors: string[];
+  hairColors: string[];
 }
 
 export interface AvatarOptionItem {

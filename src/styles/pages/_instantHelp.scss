@@ -1,0 +1,44 @@
+@use "../variables" as *;
+@use "../mixins" as *;
+
+.instant-help-page {
+  padding: 2rem 1rem;
+  text-align: center;
+
+  .instant-help-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+
+    button {
+      background-color: transparent;
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      transition: opacity 0.2s ease;
+
+      &:hover {
+        opacity: 0.7;
+      }
+
+      img {
+        width: 24px;
+        height: 24px;
+      }
+    }
+
+    h1.page-title {
+      font-family: $font-family-primary;
+      font-size: $font-size-h1;
+      text-align: start;
+      color: $color-quaternary-800;
+      font-weight: $font-weight-bold;
+      margin: 0;
+      flex: 1;
+      margin-left: 1rem;
+    }
+  }
+}
+

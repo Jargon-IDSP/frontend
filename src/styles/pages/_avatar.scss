@@ -2,6 +2,10 @@
 @use "../variables" as *;
 @use "../mixins" as *;
 
+#root main:has(.avatar-onboarding-page) {
+  padding-bottom: 0;
+}
+
 .avatar-edit-page, .avatar-view-page, .avatar-onboarding-page {
     padding: 1rem;
     max-width: 480px;
