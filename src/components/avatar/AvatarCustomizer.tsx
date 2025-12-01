@@ -14,7 +14,6 @@ const BODY_COLOR_CLASSES = [
   'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
 ];
 
-// Cache to avoid re-fetching the same symbols
 const symbolCache = new Map<string, string>();
 
 async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<string | null> {
@@ -106,11 +105,15 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
 
   useEffect(() => {
     if (avatar) {
-      setAvatarReady(false);
+      setAvatarReady(false); 
       setConfig(avatar);
       setSelectedBody(avatar.body || 'body-1');
+      
+      const timer = setTimeout(() => {
+        setAvatarReady(true);
+      }, 150);
 
-      setTimeout(() => setAvatarReady(true), 100);
+      return () => clearTimeout(timer);
     }
   }, [avatar]);
 
@@ -466,8 +469,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       />
     );
   };
-
-  const isFullyLoading = isLoading;
 
   return (
     <div className="avatar-customization">
