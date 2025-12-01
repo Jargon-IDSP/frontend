@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import * as tf from '@tensorflow/tfjs';
 import { useAuth } from '@clerk/clerk-react';
+import { Volume2 } from 'lucide-react';
 import { BACKEND_URL } from '../lib/api';
 import { SupportedLanguages, type Language } from '../types/language';
 import '../styles/components/_cameraToolIdentifier.scss';
@@ -85,6 +86,9 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
   const [videoReady, setVideoReady] = useState(false);
   const [model, setModel] = useState<tf.LayersModel | null>(null);
   const [modelLoading, setModelLoading] = useState(false);
+  const [speakingToolName, setSpeakingToolName] = useState<boolean>(false);
+  const [speechRate, setSpeechRate] = useState<number>(1.0);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -121,8 +125,57 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
       }
+      // Cleanup: stop speech synthesis when component unmounts
+      if (speechSynthesisRef.current) {
+        window.speechSynthesis.cancel();
+      }
     };
   }, [stream]);
+
+  // Handle text-to-speech for tool name
+  const handleSpeakToolName = useCallback((toolName: string) => {
+    // Cancel any ongoing speech
+    if (speechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingToolName(false);
+    }
+
+    // If clicking the same tool name that's speaking, stop it
+    if (speakingToolName) {
+      setSpeakingToolName(false);
+      return;
+    }
+
+    // Check if browser supports speech synthesis
+    if (!("speechSynthesis" in window)) {
+      console.warn("Speech synthesis not supported in this browser");
+      return;
+    }
+
+    // Create speech utterance
+    const utterance = new SpeechSynthesisUtterance(toolName);
+    utterance.lang = "en-US";
+    utterance.rate = speechRate;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // Handle speech end
+    utterance.onend = () => {
+      setSpeakingToolName(false);
+      speechSynthesisRef.current = null;
+    };
+
+    // Handle speech error
+    utterance.onerror = (error) => {
+      console.error("Speech synthesis error:", error);
+      setSpeakingToolName(false);
+      speechSynthesisRef.current = null;
+    };
+
+    speechSynthesisRef.current = utterance;
+    setSpeakingToolName(true);
+    window.speechSynthesis.speak(utterance);
+  }, [speakingToolName, speechRate]);
 
   // Effect to ensure video plays when stream changes or when returning from captured image
   useEffect(() => {
@@ -583,6 +636,17 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
               )}
               <div className="tool-name">
                 <p className="english-name">{result.toolName.english}</p>
+                <button
+                  className="tool-name-speak-button"
+                  onClick={() => handleSpeakToolName(result.toolName.english)}
+                  aria-label={`Speak ${result.toolName.english}`}
+                  title={`Speak ${result.toolName.english}`}
+                >
+                  <Volume2
+                    size={20}
+                    className={speakingToolName ? "speaking" : ""}
+                  />
+                </button>
                 {result.toolName.languageCode !== 'english' && result.toolName.translated && result.toolName.translated !== result.toolName.english && (
                   <p className="translated-name">
                     ({result.toolName.language}: {result.toolName.translated})

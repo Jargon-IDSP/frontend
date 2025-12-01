@@ -4,6 +4,8 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
+import { useState, useRef, useEffect } from "react";
+import { Volume2, ChevronUp, ChevronDown } from "lucide-react";
 import { useLearning } from "../../hooks/useLearning";
 import { useUserPreferences } from "../../hooks/useUserPreferences";
 import { useDocument } from "../../hooks/useDocument";
@@ -71,6 +73,78 @@ export default function TermList() {
   const terms = data?.data || [];
   const isEmpty = terms.length === 0;
   const showLoading = !data && !error;
+  const [speakingTermId, setSpeakingTermId] = useState<string | null>(null);
+  const [speechRate, setSpeechRate] = useState<number>(1.0);
+  const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
+
+  // Cleanup speech on unmount
+  useEffect(() => {
+    return () => {
+      if (speechSynthesisRef.current) {
+        window.speechSynthesis.cancel();
+      }
+    };
+  }, []);
+
+  // Handle speed adjustments
+  const handleSpeedUp = () => {
+    setSpeechRate((prevRate) => Math.min(prevRate + 0.25, 2.0));
+  };
+
+  const handleSpeedDown = () => {
+    setSpeechRate((prevRate) => Math.max(prevRate - 0.25, 0.5));
+  };
+
+  // Handle text-to-speech
+  const handleSpeak = (term: Term) => {
+    // Cancel any ongoing speech
+    if (speechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingTermId(null);
+    }
+
+    // If clicking the same term that's speaking, stop it
+    if (speakingTermId === term.id) {
+      setSpeakingTermId(null);
+      return;
+    }
+
+    // Check if definition exists
+    if (!term.definition) {
+      console.warn("No definition available for this term");
+      return;
+    }
+
+    // Check if browser supports speech synthesis
+    if (!("speechSynthesis" in window)) {
+      console.warn("Speech synthesis not supported in this browser");
+      return;
+    }
+
+    // Create speech utterance for the definition
+    const utterance = new SpeechSynthesisUtterance(term.definition);
+    utterance.lang = "en-US";
+    utterance.rate = speechRate;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // Handle speech end
+    utterance.onend = () => {
+      setSpeakingTermId(null);
+      speechSynthesisRef.current = null;
+    };
+
+    // Handle speech error
+    utterance.onerror = (error) => {
+      console.error("Speech synthesis error:", error);
+      setSpeakingTermId(null);
+      speechSynthesisRef.current = null;
+    };
+
+    speechSynthesisRef.current = utterance;
+    setSpeakingTermId(term.id);
+    window.speechSynthesis.speak(utterance);
+  };
 
   // Generate dynamic title
   const getPageTitle = () => {
@@ -125,8 +199,47 @@ export default function TermList() {
                     <li key={term.id || index} className="termlist-item">
                       <div className="termlist-item-number">{index + 1}.</div>
                       <div className="termlist-item-content">
-                        <div className="termlist-item-term">
-                          {term.term}
+                        <div className="termlist-item-term-wrapper">
+                          <div className="termlist-item-term">
+                            {term.term}
+                          </div>
+                          <div className="termlist-item-tts-controls">
+                            <button
+                              className="termlist-item-speed-button"
+                              onClick={handleSpeedDown}
+                              aria-label="Decrease speech speed"
+                              title={`Decrease speed (current: ${speechRate.toFixed(2)}x)`}
+                              disabled={speechRate <= 0.5}
+                            >
+                              <ChevronDown size={16} />
+                            </button>
+                            <div className="termlist-item-speaker-wrapper">
+                              <button
+                                className="termlist-item-speak-button"
+                                onClick={() => handleSpeak(term)}
+                                aria-label={`Speak definition for ${term.term}`}
+                                title={`Speak definition for ${term.term} (speed: ${speechRate.toFixed(2)}x)`}
+                                disabled={!term.definition}
+                              >
+                                <Volume2
+                                  size={20}
+                                  className={speakingTermId === term.id ? "speaking" : ""}
+                                />
+                              </button>
+                              <span className="termlist-item-speed-indicator">
+                                {speechRate.toFixed(1)}x
+                              </span>
+                            </div>
+                            <button
+                              className="termlist-item-speed-button"
+                              onClick={handleSpeedUp}
+                              aria-label="Increase speech speed"
+                              title={`Increase speed (current: ${speechRate.toFixed(2)}x)`}
+                              disabled={speechRate >= 2.0}
+                            >
+                              <ChevronUp size={16} />
+                            </button>
+                          </div>
                         </div>
                         {term.nativeTerm && (
                           <div className="termlist-item-translation">

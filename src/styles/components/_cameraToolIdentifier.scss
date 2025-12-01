@@ -220,6 +220,37 @@
     font-family: $font-family-primary;
   }
 
+  .tool-name-speak-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: $spacing-xs;
+    border-radius: 4px;
+    color: $color-primary;
+    transition: all 0.2s ease;
+    margin: $spacing-md auto 0;
+    flex-shrink: 0;
+
+    &:hover {
+      background-color: rgba($color-primary, 0.1);
+      transform: scale(1.1);
+    }
+
+    &:active {
+      transform: scale(0.95);
+    }
+
+    svg {
+      &.speaking {
+        color: $color-primary;
+        animation: pulse 1.5s ease-in-out infinite;
+      }
+    }
+  }
+
   .translated-name {
     font-size: $font-size-h3;
     margin: $spacing-sm 0;
