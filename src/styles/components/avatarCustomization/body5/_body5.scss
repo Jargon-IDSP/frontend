@@ -451,9 +451,6 @@
     left: 50%;
     width: 80%;
   }
-  &[data-shape="shape-05"][data-headwear="round-hat"] .avatar-layer--hair {
-  display: none;
-  }
 
     &[data-shape="shape-05"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat"] {
     top: -5%;
@@ -474,9 +471,6 @@
     top: -25%;
     left: 50%;
     width: 80%;
-  }
-  &[data-shape="shape-05-h1"][data-headwear="round-hat"] .avatar-layer--hair {
-  display: none;
   }
 
     &[data-shape="shape-05-h1"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat"] {
@@ -553,10 +547,7 @@
     left: 50%;
     width: 80%;
   }
-  &[data-shape^="shape-05"][data-headwear="round-hat-2"] .avatar-layer--hair {
-  display: none;
-  }
-  
+
   // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
 
    &[data-shape^="shape-05"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-2"] {
@@ -640,9 +631,7 @@
     left: 48%;
     width: 45%;
   }
-&[data-shape^="shape-05"][data-headwear="round-hat-3"] .avatar-layer--hair {
-  display: none;
-  }
+
   // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
   &[data-shape^="shape-05"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
     top: -6%;
@@ -669,9 +658,7 @@
     left: 53%;
     width: 50%;
   }
-  &[data-shape="shape-05-h1"][data-headwear="round-hat-3"] .avatar-layer--hair {
-  display: none;
-  }
+
     &[data-shape="shape-05-h1"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
     top: -23%;
     left: 53%;
@@ -690,9 +677,6 @@
     top: -20%;
     left: 55%;
     width: 50%;
-  }
-   &[data-shape="shape-05-h2"][data-headwear="round-hat-3"] .avatar-layer--hair {
-  display: none;
   }
 
      &[data-shape="shape-05-h2"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
@@ -714,9 +698,6 @@
     left: 52%;
     width: 45%;
   }
-  &[data-shape="shape-05-h3"][data-headwear="round-hat-3"] .avatar-layer--hair {
-  display: none;
-  }
 
      &[data-shape="shape-05-h3"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
     top: -8%;
@@ -736,9 +717,6 @@
     top: -8%;
     left: 52%;
     width: 50%;
-  }
-  &[data-shape="shape-05-h4"][data-headwear="round-hat-3"] .avatar-layer--hair {
-  display: none;
   }
 
      &[data-shape="shape-05-h4"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
