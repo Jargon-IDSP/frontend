@@ -38,11 +38,15 @@ export default function SplashPage() {
             (animateOut ? " splash-animation-screen--exit" : "")
           }
         >
-          <img
-            src={splashAnimation}
-            alt="Jargon splash animation"
-            className="splash-animation-screen__image"
-          />
+          <div className="splash-animation-screen__frame">
+            <div className="splash-animation-screen__panel">
+              <img
+                src={splashAnimation}
+                alt="Jargon splash animation"
+                className="splash-animation-screen__panel__image"
+              />
+            </div>
+          </div>
         </div>
       )}
 
