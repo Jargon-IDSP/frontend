@@ -23,16 +23,14 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: $color-primary; // orange fills the entire page area
-    box-shadow: 0 0 0 2px $color-primary; // cover any 1px gaps from sub-pixel rounding
   }
 
   &__panel {
-    // Slide the GIF horizontally; width matches the frame/page
+    // Entire orange panel slides out, including background
     width: 100%;
     margin-left: 0;
     height: 100%;
-    background-color: transparent;
+    background-color: $color-primary; // orange background moves with the panel
     display: flex;
     align-items: center;
     justify-content: center;
