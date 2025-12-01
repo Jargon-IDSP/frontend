@@ -192,20 +192,24 @@ body {
   justify-content: space-between;
   align-items: center;
   margin: 1.5rem auto;
-  padding: 1rem 1rem 0 1rem;
+  padding: 1rem 1rem 0 0.2rem;
   gap: 1rem;
+}
+.home-page .top-header .notification-bell {
+  margin-top: -3.5rem;
+  margin-right: -1.5rem;
 }
 .home-page .welcome-text-section {
   flex: 1;
 }
 .home-page .welcome-text-section .welcome-text {
-  color: #652a15;
+  color: #4f2110;
   font-size: 24px;
   font-weight: 300;
   margin: 0 0 0.25rem 0;
 }
 .home-page .welcome-text-section .welcome-title {
-  color: #652a15;
+  color: #6f2e17;
   font-size: 28px;
   font-weight: 700;
   margin: 0;
@@ -329,7 +333,7 @@ body {
   margin-bottom: 0.25rem;
   text-align: left;
   margin-bottom: 1rem;
-  color: #652a15;
+  color: #4f2110;
 }
 .home-page .tick-box {
   display: flex;
@@ -361,8 +365,8 @@ body {
   color: #652a15;
 }
 .home-page .tick-box-circle {
-  width: clamp(35px, 4vw, 50px);
-  height: clamp(35px, 4vw, 50px);
+  width: clamp(35px, 4vw, 38px);
+  height: clamp(35px, 4vw, 38px);
   border-radius: 50%;
   border: clamp(2px, 0.3vw, 3px) solid #fe4d13;
   background-color: #fffdf4;
@@ -389,7 +393,7 @@ body {
   margin-bottom: 0.25rem;
   text-align: left;
   margin-left: 0;
-  color: #652a15;
+  color: #4f2110;
 }
 .home-page .top-leaderboard .leaderboard-content {
   background-color: #f1eae8;
@@ -528,7 +532,7 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
-  color: #652a15;
+  color: #4f2110;
 }
 .home-page .community-file-card .community-content {
   position: relative;
@@ -598,8 +602,7 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
-  color: #652a15;
-  margin-bottom: 1rem;
+  color: #4f2110;
 }
 .home-page .camera-file-card .camera-content {
   background-color: #ffba0a;
@@ -717,7 +720,7 @@ body {
   color: #393939;
   margin-bottom: 0.25rem;
   text-align: left;
-  color: #652a15;
+  color: #4f2110;
 }
 .home-page .start-learning-card .learning-content {
   padding: 0;
