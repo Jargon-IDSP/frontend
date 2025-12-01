@@ -1,13 +1,18 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
+
+#root main:has(.industry-preferences) {
+  padding-bottom: 0;
+}
+
 .industry-preferences {
   display: flex;
   flex-direction: column;
-  background-color: $color-second-neutral-light;
-  // Override navbar padding since navbar is hidden on onboarding pages
+  background-color: $second-neutral-50;
   padding-bottom: $spacing-md;
   min-height: 100vh;
+  padding: 1rem;;
 
   &__header {
     display: flex;
