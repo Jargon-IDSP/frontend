@@ -189,21 +189,24 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   useEffect(() => {
     const noHairHeadwear = config.headwear &&
       (config.headwear === 'round-hat' ||
-       config.headwear === 'round-hat-2' ||
-       config.headwear === 'round-hat-3');
+       config.headwear === 'round-hat-2');
     const noHairEyewear = config.eyewear &&
       (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
 
     const restrictiveHeadwear = config.headwear &&
-      (config.headwear === 'hard-hat' || config.headwear === 'cap');
+      (config.headwear === 'hard-hat' ||
+       config.headwear === 'cap' ||
+       config.headwear === 'round-hat-3');
 
     if ((noHairHeadwear || noHairEyewear) && config.hair) {
       updateConfig('hair', undefined);
     }
 
     if (restrictiveHeadwear && config.hair &&
-        config.hair !== 'hair-1' && config.hair !== 'hair-7') {
-      updateConfig('hair', 'hair-1');
+        config.hair !== 'hair-1' &&
+        config.hair !== 'hair-5' &&
+        config.hair !== 'hair-7') {
+      updateConfig('hair', undefined);
     }
   }, [config.headwear, config.eyewear, config.hair]);
 
@@ -284,8 +287,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       case 'hair':
         const noHairHeadwear = config.headwear &&
           (config.headwear === 'round-hat' ||
-           config.headwear === 'round-hat-2' ||
-           config.headwear === 'round-hat-3');
+           config.headwear === 'round-hat-2');
         const noHairEyewear = config.eyewear &&
           (config.eyewear === 'orange-mask' || config.eyewear === 'orange-mask-2');
 
@@ -293,9 +295,11 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           var hairOptions: string[] = [];
         } else {
           const restrictiveHeadwear = config.headwear &&
-            (config.headwear === 'hard-hat' || config.headwear === 'cap');
+            (config.headwear === 'hard-hat' ||
+             config.headwear === 'cap' ||
+             config.headwear === 'round-hat-3');
           var hairOptions = restrictiveHeadwear
-            ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-7')
+            ? avatarOptions.hair.filter(id => id === 'hair-1' || id === 'hair-5' || id === 'hair-7')
             : avatarOptions.hair;
         }
         const facialOptions = (config.expression && config.expression.includes('-h1'))
