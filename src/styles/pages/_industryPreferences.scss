@@ -1,3 +1,4 @@
+@use 'sass:color';
 @use '../variables' as *;
 @use '../mixins' as *;
 
@@ -7,12 +8,11 @@
 }
 
 .industry-preferences {
-  display: flex;
-  flex-direction: column;
-  background-color: $second-neutral-50;
-  padding-bottom: $spacing-md;
+  padding: 1rem;
+  max-width: 480px;
+  position: relative;
   min-height: 100vh;
-  padding: 1rem;;
+  padding-bottom: 100px;
 
   &__header {
     display: flex;
@@ -33,6 +33,73 @@
     flex-direction: column;
     justify-content: center;
     padding: $spacing-md 0;
+
+    .onboarding-form__header {
+      display: none; // Title is now in OnboardingHeader
+    }
+
+    .onboarding-form__option {
+      min-width: 366px;
+      width: 366px;
+      margin: 0 auto;
+      border-radius: 18px;
+      border: 1px solid $primary-100;
+      padding: 1rem 1.5rem;
+      font-size: $font-size-body;
+      font-weight: $font-weight-regular;
+      color: $primary-200;
+      cursor: pointer;
+      text-align: left !important;
+      transition: all $transition-normal;
+      background-color: $second-neutral-50;
+      justify-content: flex-start !important;
+
+      &:hover {
+        transform: none !important;
+        box-shadow: none !important;
+      }
+
+      &:active {
+        transform: none !important;
+      }
+
+      &--selected {
+        background-color: $second-neutral-50;
+        border-color: $primary-500;
+        color: $primary-600;
+        font-weight: $font-weight-regular;
+      }
+    }
+
+    .onboarding-form__button {
+      &--primary {
+        min-width: 366px;
+        width: 366px;
+        margin: 60px auto 0 auto;
+        padding: $spacing-md $spacing-xl;
+        background-color: $quinary-500;
+        border: none;
+        border-radius: $border-radius-lg;
+        font-size: $font-size-body;
+        font-weight: $font-weight-medium;
+        color: white;
+        cursor: pointer;
+        transition: all $transition-normal;
+
+        &:hover:not(:disabled) {
+          background-color: color.adjust($quinary-500, $lightness: 10%);
+        }
+
+        &:active:not(:disabled) {
+          transform: scale(0.98);
+        }
+
+        &:disabled {
+          opacity: 0.6;
+          cursor: not-allowed;
+        }
+      }
+    }
   }
 
   &__loading {

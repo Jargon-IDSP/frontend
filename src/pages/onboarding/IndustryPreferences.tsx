@@ -6,7 +6,8 @@ import { OnboardingForm } from '../../components/onboarding/OnboardingForm';
 import type { OnboardingOption } from '../../types/onboardingForm';
 import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
-// import rockyWhiteLogo from '/rockyWhite.svg';
+import OnboardingHeader from '../../components/onboarding/OnboardingHeader';
+import LoadingBar from '../../components/LoadingBar';
 import '../../styles/pages/_industryPreferences.scss';
 
 const industryOptions: OnboardingOption[] = [
@@ -125,12 +126,23 @@ export default function IndustryPreferences() {
     }
   };
 
+  if (isLoading) {
+    return (
+      <>
+        <LoadingBar isLoading={true} hasData={false} text="Loading" />
+      </>
+    );
+  }
+
   return (
-    <div className="container">
-      <div className="industry-preferences">
-      {/* <div className="industry-preferences__header">
-        <img src={rockyWhiteLogo} alt="Rocky Logo" className="industry-preferences__logo" />
-      </div> */}
+    <div className="container industry-preferences">
+      <OnboardingHeader
+        title="What trade are you in?"
+        subtitle="Choose a trade to start learning with!"
+        onBack={() => navigate(-1)}
+        progressPercentage={50}
+        showProgress={true}
+      />
 
       <div className="industry-preferences__content">
         <OnboardingForm

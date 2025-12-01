@@ -6,7 +6,8 @@ import { OnboardingForm } from '../../components/onboarding/OnboardingForm';
 import type { OnboardingOption } from '../../types/onboardingForm';
 import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
-import goBackIcon from '../../assets/icons/goBackIcon.svg';
+import OnboardingHeader from '../../components/onboarding/OnboardingHeader';
+import LoadingBar from '../../components/LoadingBar';
 import '../../styles/pages/_languagePreferences.scss';
 
 const languageOptions: OnboardingOption[] = [
@@ -94,66 +95,38 @@ export default function LanguagePreferences() {
 
   if (isLoading) {
     return (
-      <div className="container">
-        <div className="language-preferences">
-          <div className="language-preferences__header">
-            <button
-              className="language-preferences__back-button"
-              onClick={() => navigate(-1)}
-              aria-label="Go Back"
-            >
-              <img src={goBackIcon} alt="Go Back" />
-            </button>
-            <h1 className="language-preferences__title">Settings</h1>
-            <div className="language-preferences__header-spacer" />
-          </div>
-          <div className="language-preferences__loading">Loading...</div>
-        </div>
-      </div>
+      <>
+        <LoadingBar isLoading={true} hasData={false} text="Loading" />
+      </>
     );
   }
 
-  if (isUpdating) {
-    return (
-      <div className="container">
-        <div className="language-preferences">
-          <div className="language-preferences__header">
-            <button
-              className="language-preferences__back-button"
-              onClick={() => navigate(-1)}
-              aria-label="Go Back"
-            >
-              <img src={goBackIcon} alt="Go Back" />
-            </button>
-            <h1 className="language-preferences__title">Settings</h1>
-            <div className="language-preferences__header-spacer" />
+  return (
+    <div className="container">
+      <div className="language-preferences">
+        {/* Header */}
+        <OnboardingHeader
+          title="Choose your own language"
+          onBack={() => navigate(-1)}
+          progressPercentage={25}
+          showProgress={true}
+        />
+
+        {/* Language Section */}
+        <div className="language-preferences__section">
+           <div className="language-preferences__options">
+            {languageOptions.map((option) => (
+              <button
+                key={option.id}
+                className={`language-preferences__option ${
+                  selectedLanguage === option.value ? 'language-preferences__option--selected' : ''
+                }`}
+                onClick={() => setSelectedLanguage(option.value)}
+              >
+                {option.label}
+              </button>
+            ))}
           </div>
-
-          <div className="language-preferences__section">
-            <h2 className="language-preferences__section-title">System Languages</h2>
-
-            <div className="language-preferences__options">
-              {languageOptions.map((option) => (
-                <button
-                  key={option.id}
-                  className={`language-preferences__option ${
-                    selectedLanguage === option.value ? 'language-preferences__option--selected' : ''
-                  }`}
-                  onClick={() => setSelectedLanguage(option.value)}
-                >
-                  {option.label}
-                </button>
-              ))}
-            </div>
-          </div>
-
-          <button
-            className="language-preferences__save-button"
-            onClick={handleSave}
-            disabled={updateLanguageMutation.isPending}
-          >
-            {updateLanguageMutation.isPending ? 'Saving...' : 'Save'}
-          </button>
         </div>
       </div>
     );
