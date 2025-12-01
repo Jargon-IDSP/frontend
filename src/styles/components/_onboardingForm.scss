@@ -7,6 +7,7 @@ $onboarding-secondary: $color-quaternary-dark;
 .onboarding-form {
   display: flex;
   flex-direction: column;
+  padding: 2rem 1rem 1rem 1rem;
   width: 100%;
   gap: $spacing-xl;
 

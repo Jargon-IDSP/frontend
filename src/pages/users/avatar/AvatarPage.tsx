@@ -67,13 +67,12 @@ export function AvatarOnboardingPage() {
   };
 
   const handleSave = () => {
-    // After saving avatar, navigate to home to complete onboarding
     navigate('/');
   };
 
   return (
     <div className="container">
-      <div className="avatar-edit-page">
+      <div className="avatar-onboarding-page">
         <div className="avatar-customization__header">
           <img 
             src={logoOrangeIcon} 

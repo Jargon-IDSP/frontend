@@ -645,7 +645,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           : saveSuccess
           ? 'Saved!'
           : context === 'onboarding'
-          ? 'Next'
+          ? 'Finish'
           : 'Save'}
       </button>
 

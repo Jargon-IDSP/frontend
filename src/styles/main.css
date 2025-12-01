@@ -800,6 +800,10 @@ body {
   max-width: 100%;
 }
 
+#root main:has(.avatar-onboarding-page) {
+  padding-bottom: 0;
+}
+
 .avatar-edit-page, .avatar-view-page, .avatar-onboarding-page {
   padding: 1rem;
   max-width: 480px;
@@ -2802,9 +2806,13 @@ button.back-button {
   transform: translateY(0);
 }
 
+#root main:has(.language-preferences) {
+  padding-bottom: 0;
+}
+
 .language-preferences {
   min-height: 100vh;
-  padding-bottom: 100px;
+  background-color: #fffefc;
 }
 .language-preferences__header {
   display: flex;
@@ -2906,12 +2914,17 @@ button.back-button {
   color: #393939;
 }
 
+#root main:has(.industry-preferences) {
+  padding-bottom: 0;
+}
+
 .industry-preferences {
   display: flex;
   flex-direction: column;
-  background-color: #fffdf4;
+  background-color: #fffefc;
   padding-bottom: 1rem;
   min-height: 100vh;
+  padding: 1rem;
 }
 .industry-preferences__header {
   display: flex;
@@ -8174,6 +8187,7 @@ button.back-button {
 .onboarding-form {
   display: flex;
   flex-direction: column;
+  padding: 2rem 1rem 1rem 1rem;
   width: 100%;
   gap: 2.5rem;
 }
