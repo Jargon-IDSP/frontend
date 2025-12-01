@@ -14,7 +14,6 @@ const BODY_COLOR_CLASSES = [
   'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
 ];
 
-// Cache to avoid re-fetching the same symbols
 const symbolCache = new Map<string, string>();
 
 async function fetchColoredSymbol(symbolId: string, bodyColor: string): Promise<string | null> {
@@ -82,7 +81,6 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   );
 }
 
-<<<<<<< HEAD
 async function fetchColoredHair(symbolId: string, hairColor: string, isFacial: boolean = false): Promise<{ content: string; viewBox: string; hasBlackStroke: boolean } | null> {
   try {
     const response = await fetch('/avatar-sprites.svg');
@@ -144,8 +142,6 @@ function HairPreview({ spriteId, hairColor, className, isFacial = false }: {
 }
 
 // This is how the tabs are defined in the frontend
-=======
->>>>>>> main
 const tabs: Tab[] = [
   { id: 'body', label: 'Body' },
   { id: 'expression', label: 'Expression' },
@@ -167,11 +163,16 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
+    const [avatarReady, setAvatarReady] = useState(false);
+
 
   useEffect(() => {
     if (avatar) {
+      setAvatarReady(false)
       setConfig(avatar);
       setSelectedBody(avatar.body || 'body-1');
+
+      setTimeout(() => setAvatarReady(true), 100);
     }
   }, [avatar]);
 
@@ -305,7 +306,6 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
           { id: '__subtitle__facial__', label: 'Facial Hair', isSubtitle: true },
           { id: 'none-facial', label: 'None', category: 'facial' as const },
           ...facialOptions.map(id => ({ id, label: id, category: 'facial' as const })),
-          // Hair Color section
           { id: '__subtitle__haircolor__', label: 'Hair Color', isSubtitle: true },
           ...avatarOptions.hairColors.map(color => ({
             id: color,
@@ -340,12 +340,8 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
     }
   }, [activeTab, selectedBody, config.headwear, config.facial, config.expression]);
 
-<<<<<<< HEAD
   const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories' | 'hairColor') => {
     // Ignore subtitle clicks
-=======
-  const handleOptionSelect = (optionId: string, category?: 'eyewear' | 'facial' | 'headwear' | 'clothing' | 'shoes' | 'accessories') => {
->>>>>>> main
     if (optionId.startsWith('__subtitle__')) {
       return;
     }
@@ -569,7 +565,7 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
       <LoadingBar isLoading={isFullyLoading} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        {!isLoading && <AvatarDisplay config={config} size={210} />}
+        {!isLoading && avatarReady && <AvatarDisplay config={config} size={210} />}
       </div>
 
       <div className="avatar-customization__input-container">
