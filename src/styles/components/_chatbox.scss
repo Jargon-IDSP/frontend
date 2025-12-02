@@ -10,6 +10,7 @@
   overflow: hidden;
   box-sizing: border-box;
   transition: height 0.3s ease, max-height 0.3s ease;
+  font-family: $font-family-primary;
 
   > div[class*="mx-auto"] {
     display: none;
@@ -79,6 +80,7 @@
       margin: 0;
       font-weight: 500;
       text-align: center;
+      font-family: $font-family-primary;
     }
   }
 
@@ -108,6 +110,7 @@
     padding: 0.75rem;
     background-color: #f9fafb;
     border-radius: 6px;
+    font-family: $font-family-primary;
 
     strong {
       color: #374151;
@@ -147,6 +150,7 @@
     word-wrap: break-word;
     line-height: 1.5;
     font-size: 0.9375rem;
+    font-family: $font-family-primary;
   }
 
   &__message--user &__message-content {
@@ -170,6 +174,7 @@
     text-align: center;
     color: #6b7280;
     font-size: 0.875rem;
+    font-family: $font-family-primary;
   }
 
   &__form {
@@ -190,6 +195,7 @@
     border: 1px solid #e5e7eb;
     border-radius: 6px;
     font-size: 1rem;
+    font-family: $font-family-primary;
 
     &:focus {
       outline: none;
@@ -208,6 +214,7 @@
     transition: background-color 0.2s;
     flex-shrink: 0;
     white-space: nowrap;
+    font-family: $font-family-primary;
 
     &:hover:not(:disabled) {
       background-color: $primary-600;
