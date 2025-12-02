@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
