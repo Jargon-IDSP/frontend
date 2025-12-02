@@ -5,6 +5,7 @@ import { useAuth } from '@clerk/clerk-react';
 import { Volume2 } from 'lucide-react';
 import { BACKEND_URL } from '../lib/api';
 import { SupportedLanguages, type Language } from '../types/language';
+import { useUserPreferences } from '../hooks/useUserPreferences';
 import '../styles/components/_cameraToolIdentifier.scss';
 
 interface ToolResult {
@@ -39,6 +40,52 @@ const normalizeLanguageCode = (code: string): Language => {
     'korean': 'korean',
   };
   return codeMap[code.toLowerCase()] || 'english';
+};
+
+// Client-side translation dictionary for common tools
+const toolTranslations: { [key: string]: { [lang: string]: string } } = {
+  'pliers': {
+    'chinese': '钳子',
+    'french': 'pinces',
+    'spanish': 'alicates',
+    'korean': '펜치',
+    'punjabi': 'ਪਲਾਇਰ',
+    'tagalog': 'pliers',
+  },
+  'hammer': {
+    'chinese': '锤子',
+    'french': 'marteau',
+    'spanish': 'martillo',
+    'korean': '망치',
+    'punjabi': 'ਹਥੌੜਾ',
+    'tagalog': 'martilyo',
+  },
+  'screwdriver': {
+    'chinese': '螺丝刀',
+    'french': 'tournevis',
+    'spanish': 'destornillador',
+    'korean': '드라이버',
+    'punjabi': 'ਸਕ੍ਰੂ ਡਰਾਈਵਰ',
+    'tagalog': 'distornilyador',
+  },
+  'wrench': {
+    'chinese': '扳手',
+    'french': 'clé',
+    'spanish': 'llave',
+    'korean': '렌치',
+    'punjabi': 'ਰੈਂਚ',
+    'tagalog': 'wrench',
+  },
+};
+
+// Helper function to get client-side translation
+const getClientTranslation = (toolName: string, language: Language): string | null => {
+  const normalizedToolName = toolName.toLowerCase().trim();
+  const translations = toolTranslations[normalizedToolName];
+  if (translations && translations[language]) {
+    return translations[language];
+  }
+  return null;
 };
 
 // Helper function to get available languages, using API response or fallback
@@ -76,19 +123,20 @@ interface CameraToolIdentifierProps {
 const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, autoStart = false }) => {
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const { language: userLanguage, loading: languageLoading } = useUserPreferences();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
-  const [isTranslating, setIsTranslating] = useState(false);
   const [result, setResult] = useState<ToolResult | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [selectedLanguage, setSelectedLanguage] = useState<string>('english');
   const [videoReady, setVideoReady] = useState(false);
   const [model, setModel] = useState<tf.LayersModel | null>(null);
   const [modelLoading, setModelLoading] = useState(false);
   const [speakingToolName, setSpeakingToolName] = useState<boolean>(false);
+  const [speakingTranslated, setSpeakingTranslated] = useState<boolean>(false);
   const [speechRate] = useState<number>(1.0);
   const speechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
+  const translatedSpeechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
@@ -129,15 +177,36 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
       if (speechSynthesisRef.current) {
         window.speechSynthesis.cancel();
       }
+      if (translatedSpeechSynthesisRef.current) {
+        window.speechSynthesis.cancel();
+      }
     };
   }, [stream]);
 
+  // Helper function to map language code to BCP 47 language tag
+  const getLanguageCode = (languageCode: string): string => {
+    const languageMap: { [key: string]: string } = {
+      'english': 'en-US',
+      'french': 'fr-FR',
+      'spanish': 'es-ES',
+      'chinese': 'zh-CN',
+      'korean': 'ko-KR',
+      'tagalog': 'tl-PH',
+      'punjabi': 'pa-IN',
+    };
+    return languageMap[languageCode.toLowerCase()] || 'en-US';
+  };
+
   // Handle text-to-speech for tool name
   const handleSpeakToolName = useCallback((toolName: string) => {
-    // Cancel any ongoing speech
+    // Cancel any ongoing speech (both English and translated)
     if (speechSynthesisRef.current) {
       window.speechSynthesis.cancel();
       setSpeakingToolName(false);
+    }
+    if (translatedSpeechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingTranslated(false);
     }
 
     // If clicking the same tool name that's speaking, stop it
@@ -176,6 +245,55 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
     setSpeakingToolName(true);
     window.speechSynthesis.speak(utterance);
   }, [speakingToolName, speechRate]);
+
+  // Handle text-to-speech for translated word
+  const handleSpeakTranslated = useCallback((translatedText: string, languageCode: string) => {
+    // Cancel any ongoing speech (both English and translated)
+    if (speechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingToolName(false);
+    }
+    if (translatedSpeechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingTranslated(false);
+    }
+
+    // If clicking the same translated word that's speaking, stop it
+    if (speakingTranslated) {
+      setSpeakingTranslated(false);
+      return;
+    }
+
+    // Check if browser supports speech synthesis
+    if (!("speechSynthesis" in window)) {
+      console.warn("Speech synthesis not supported in this browser");
+      return;
+    }
+
+    // Create speech utterance with appropriate language
+    const utterance = new SpeechSynthesisUtterance(translatedText);
+    utterance.lang = getLanguageCode(languageCode);
+    utterance.rate = speechRate;
+    utterance.pitch = 1;
+    utterance.volume = 1;
+
+    // Handle speech end
+    utterance.onend = () => {
+      setSpeakingTranslated(false);
+      translatedSpeechSynthesisRef.current = null;
+    };
+
+    // Handle speech error
+    utterance.onerror = (error) => {
+      console.error("Speech synthesis error:", error);
+      setSpeakingTranslated(false);
+      translatedSpeechSynthesisRef.current = null;
+    };
+
+    translatedSpeechSynthesisRef.current = utterance;
+    setSpeakingTranslated(true);
+    window.speechSynthesis.speak(utterance);
+  }, [speakingTranslated, speechRate]);
 
   // Effect to ensure video plays when stream changes or when returning from captured image
   useEffect(() => {
@@ -392,53 +510,131 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
         return;
       }
 
-      // Get translation from backend
-      const response = await fetch(`${BACKEND_URL}/api/translate-tool`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          toolName: toolName,
-          targetLanguage: selectedLanguage === 'english' ? 'en' : 
-                         selectedLanguage === 'french' ? 'fr' :
-                         selectedLanguage === 'spanish' ? 'es' :
-                         selectedLanguage === 'chinese' ? 'zh' :
-                         selectedLanguage === 'tagalog' ? 'tl' :
-                         selectedLanguage === 'punjabi' ? 'pa' :
-                         selectedLanguage === 'korean' ? 'ko' : selectedLanguage,
-        }),
-      });
+      // Convert user's language preference to API language code
+      const getLanguageCode = (lang: string): string => {
+        const langMap: { [key: string]: string } = {
+          'english': 'en',
+          'french': 'fr',
+          'spanish': 'es',
+          'chinese': 'zh',
+          'tagalog': 'tl',
+          'punjabi': 'pa',
+          'korean': 'ko',
+        };
+        return langMap[lang.toLowerCase()] || 'en';
+      };
 
-      const translationData = await response.json();
+      // Try to get translation - first from API, then fallback to client-side dictionary
+      const targetLang = userLanguage && userLanguage !== 'english' ? getLanguageCode(userLanguage) : 'en';
+      console.log('Requesting translation:', { toolName, targetLang, userLanguage });
+      
+      let translationData: any = { error: 'API endpoint not available' };
+      let apiTranslationFailed = false;
+      
+      // Try API first (if endpoint exists)
+      try {
+        const response = await fetch(`${BACKEND_URL}/api/translate-tool`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            toolName: toolName,
+            targetLanguage: targetLang,
+          }),
+        });
+
+        if (response.ok) {
+          translationData = await response.json();
+        } else {
+          apiTranslationFailed = true;
+          console.log('Translation API not available (404), using client-side fallback');
+        }
+      } catch (err) {
+        apiTranslationFailed = true;
+        console.log('Translation API error, using client-side fallback:', err);
+      }
+      
+      // If API failed, try client-side translation
+      if (apiTranslationFailed || translationData.error) {
+        const normalizedUserLang = normalizeLanguageCode(userLanguage || 'english');
+        const clientTranslation = getClientTranslation(toolName, normalizedUserLang);
+        if (clientTranslation) {
+          translationData = {
+            translated: clientTranslation,
+            language: SupportedLanguages.find(l => l.code === normalizedUserLang)?.name || 'English',
+            error: null,
+          };
+          console.log('Using client-side translation:', clientTranslation);
+        }
+      }
+      console.log('=== Translation Debug ===');
+      console.log('Translation API response:', translationData);
+      console.log('User language from preferences:', userLanguage);
+      console.log('Target language code sent:', targetLang);
 
       const availableLanguages = getAvailableLanguages(translationData.allLanguages);
       
-      if (translationData.error) {
-        // If translation fails, still show the detection
-        setResult({
-          toolName: {
-            english: toolName,
-            translated: toolName,
-            language: 'English',
-            languageCode: 'english',
-            confidence: confidence,
-          },
-          allLanguages: availableLanguages,
-        });
+      // Determine if we should show translation (only if user's language is not English)
+      const shouldShowTranslation = userLanguage && userLanguage !== 'english' && userLanguage.toLowerCase() !== 'english';
+      console.log('Should show translation?', shouldShowTranslation);
+      
+      // Get translated text - use the translation if available and no error, otherwise fallback to English
+      let translatedText = toolName;
+      let languageName = 'English';
+      let languageCode: Language = 'english';
+      
+      if (shouldShowTranslation) {
+        // Always set the language code to user's language when they want translation
+        languageCode = normalizeLanguageCode(userLanguage);
+        languageName = SupportedLanguages.find(l => l.code === languageCode)?.name || 'English';
+        console.log('Normalized language code:', languageCode);
+        
+        // Check if translation was successful
+        if (!translationData.error && (translationData.translated || translationData.translation)) {
+          const apiTranslated = translationData.translated || translationData.translation;
+          if (apiTranslated && apiTranslated.trim() !== '' && apiTranslated.toLowerCase() !== toolName.toLowerCase()) {
+            // Only use translation if it's different from the English word
+            translatedText = apiTranslated;
+            languageName = translationData.language || languageName;
+            console.log('✅ Translation successful:', { translatedText, languageName, languageCode });
+          } else {
+            console.log('⚠️ Translation same as English or empty - not showing translation');
+            // If translation is same as English, don't show it
+            languageCode = 'english';
+            languageName = 'English';
+            translatedText = toolName;
+          }
+        } else {
+          console.log('❌ Translation failed or not available:', translationData.error || 'No translation field');
+          // If translation failed, don't show translation area
+          languageCode = 'english';
+          languageName = 'English';
+          translatedText = toolName;
+        }
       } else {
-        setResult({
-          toolName: {
-            english: toolName,
-            translated: translationData.translated || toolName,
-            language: translationData.language || 'English',
-            languageCode: normalizeLanguageCode(selectedLanguage),
-            confidence: confidence,
-          },
-          allLanguages: availableLanguages,
-        });
+        console.log('ℹ️ Not showing translation - user language is English or not set');
       }
+      
+      console.log('Final result data:', { 
+        english: toolName, 
+        translated: translatedText, 
+        language: languageName, 
+        languageCode 
+      });
+      console.log('=== End Translation Debug ===');
+      
+      setResult({
+        toolName: {
+          english: toolName,
+          translated: translatedText,
+          language: languageName,
+          languageCode: languageCode,
+          confidence: confidence,
+        },
+        allLanguages: availableLanguages,
+      });
     } catch (err: any) {
       setError(`Failed to analyze image: ${err.message}`);
       console.error('Error analyzing image:', err);
@@ -452,85 +648,6 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
     setResult(null);
     setError(null);
     // videoReady will be set by the useEffect when stream is active
-  };
-
-  const translateToLanguage = async (languageCode: string) => {
-    if (!result) return;
-
-    setIsTranslating(true);
-    setError(null);
-
-    try {
-      // Convert our language code format to what the API might expect
-      const apiLanguageCode = languageCode === 'english' ? 'en' : 
-                             languageCode === 'french' ? 'fr' :
-                             languageCode === 'spanish' ? 'es' :
-                             languageCode === 'chinese' ? 'zh' :
-                             languageCode === 'tagalog' ? 'tl' :
-                             languageCode === 'punjabi' ? 'pa' :
-                             languageCode === 'korean' ? 'ko' : languageCode;
-
-      console.log('Translating to:', { languageCode, apiLanguageCode, toolName: result.toolName.english });
-
-      // Get authentication token
-      const token = await getToken();
-      if (!token) {
-        setError('Authentication required. Please log in.');
-        setIsTranslating(false);
-        return;
-      }
-
-      const response = await fetch(`${BACKEND_URL}/api/translate-tool`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          toolName: result.toolName.english,
-          targetLanguage: apiLanguageCode,
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error('Translation API error:', response.status, errorText);
-        setError(`Translation failed: ${response.status} ${response.statusText}`);
-        setIsTranslating(false);
-        return;
-      }
-
-      const data = await response.json();
-      console.log('Translation response:', data);
-
-      if (data.error) {
-        setError(data.error);
-        setIsTranslating(false);
-        return;
-      }
-
-      const normalizedCode = normalizeLanguageCode(languageCode);
-      const translatedText = data.translated || data.translation || result.toolName.english;
-      const languageName = data.language || SupportedLanguages.find(l => l.code === normalizedCode)?.name || 'English';
-
-      console.log('Setting translated result:', { translatedText, languageName, normalizedCode });
-
-      setResult({
-        ...result,
-        toolName: {
-          ...result.toolName,
-          translated: translatedText,
-          language: languageName,
-          languageCode: normalizedCode,
-        },
-      });
-      setSelectedLanguage(normalizedCode);
-    } catch (err: any) {
-      console.error('Error translating:', err);
-      setError(`Failed to translate: ${err.message}`);
-    } finally {
-      setIsTranslating(false);
-    }
   };
 
   return (
@@ -620,12 +737,6 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
             </div>
           )}
 
-          {isTranslating && result && (
-            <div className="loading">
-              <p>🌐 Translating...</p>
-            </div>
-          )}
-
           {result && (
             <div className="tool-result">
               <h2>Identified Tool</h2>
@@ -635,55 +746,38 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
                 </div>
               )}
               <div className="tool-name">
-                <p className="english-name">{result.toolName.english}</p>
-                <button
-                  className="tool-name-speak-button"
-                  onClick={() => handleSpeakToolName(result.toolName.english)}
-                  aria-label={`Speak ${result.toolName.english}`}
-                  title={`Speak ${result.toolName.english}`}
-                >
-                  <Volume2
-                    size={20}
-                    className={speakingToolName ? "speaking" : ""}
-                  />
-                </button>
-                {result.toolName.languageCode !== 'english' && result.toolName.translated && result.toolName.translated !== result.toolName.english && (
-                  <p className="translated-name">
-                    ({result.toolName.language}: {result.toolName.translated})
-                  </p>
-                )}
-              </div>
-
-              <div className="language-selector">
-                <h3>View in other languages:</h3>
-                <div className="language-buttons">
-                  {result.allLanguages && result.allLanguages.length > 0 ? (
-                    result.allLanguages.map((lang) => (
-                      <button
-                        key={lang.code}
-                        className={`btn btn-lang ${selectedLanguage === lang.code ? 'active' : ''}`}
-                        onClick={() => translateToLanguage(lang.code)}
-                        disabled={isAnalyzing || isTranslating}
-                      >
-                        {lang.name}
-                      </button>
-                    ))
-                  ) : (
-                    // Fallback: show only the 5 requested languages
-                    SupportedLanguages
-                      .filter(lang => REQUESTED_LANGUAGES.includes(lang.code))
-                      .map((lang) => (
-                        <button
-                          key={lang.code}
-                          className={`btn btn-lang ${selectedLanguage === lang.code ? 'active' : ''}`}
-                          onClick={() => translateToLanguage(lang.code)}
-                          disabled={isAnalyzing || isTranslating}
-                        >
-                          {lang.name}
-                        </button>
-                      ))
-                  )}
+                <div className="english-name-wrapper">
+                  <p className="english-name">{result.toolName.english}</p>
+                  <button
+                    className="tool-name-speak-button"
+                    onClick={() => handleSpeakToolName(result.toolName.english)}
+                    aria-label={`Speak ${result.toolName.english}`}
+                    title={`Speak ${result.toolName.english}`}
+                  >
+                    <Volume2
+                      size={20}
+                      className={speakingToolName ? "speaking" : ""}
+                    />
+                  </button>
                 </div>
+                {result.toolName.languageCode !== 'english' && result.toolName.translated && (
+                  <div className="translated-name-wrapper">
+                    <p className="translated-name">
+                      {result.toolName.translated}
+                    </p>
+                    <button
+                      className="tool-name-speak-button"
+                      onClick={() => handleSpeakTranslated(result.toolName.translated, result.toolName.languageCode)}
+                      aria-label={`Speak ${result.toolName.translated} in ${result.toolName.language}`}
+                      title={`Speak ${result.toolName.translated} in ${result.toolName.language}`}
+                    >
+                      <Volume2
+                        size={20}
+                        className={speakingTranslated ? "speaking" : ""}
+                      />
+                    </button>
+                  </div>
+                )}
               </div>
 
               <button className="btn btn-secondary" onClick={retakePhoto}>
