@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelfLeaderboard } from "../hooks/useSelfLeaderboard";
 import LoadingBar from "./LoadingBar";
 import GoldMedal from "../assets/medals/gold_medal.svg";
@@ -56,12 +56,20 @@ const getRankDisplay = (
 
 type SelfLeaderboardProps = {
   showPlacements?: boolean;
+  onLoadingChange?: (isLoading: boolean) => void;
 };
 
 const SelfLeaderboard: React.FC<SelfLeaderboardProps> = ({
   showPlacements = true,
+  onLoadingChange,
 }) => {
   const { data, isLoading, error } = useSelfLeaderboard(12);
+
+  useEffect(() => {
+    // Only report loading if we're fetching AND don't have data yet
+    const isInitiallyLoading = isLoading && !data;
+    onLoadingChange?.(isInitiallyLoading);
+  }, [isLoading, data, onLoadingChange]);
 
   if (isLoading) {
     return (

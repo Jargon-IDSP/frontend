@@ -10,6 +10,7 @@ import { getLanguageFlag } from "../../utils/languageFlagHelpers";
 import { useProfile } from "../../hooks/useProfile";
 import QRScannerModal from "../../components/QRScannerModal";
 import QRProfileDrawer from "../drawers/QRProfileDrawer";
+import LoadingBar from "../../components/LoadingBar";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import searchIconBlue from "../../assets/icons/searchIconBlue.svg";
 import rockyLogo from "/rocky.svg";
@@ -281,9 +282,7 @@ export default function FriendsPage() {
           {showSuggestions && (
             <>
               {suggestionsLoading ? (
-                <div className="view-friends-loading">
-                  Loading suggestions...
-                </div>
+                <LoadingBar isLoading={suggestionsLoading} text="Loading suggestions" />
               ) : (
                 <>
                   <h2 className="friends-suggestions-title">
@@ -316,7 +315,7 @@ export default function FriendsPage() {
           )}
 
           {searchUsersMutation.isPending && (
-            <div className="view-friends-loading">Searching...</div>
+            <LoadingBar isLoading={searchUsersMutation.isPending} text="Searching" />
           )}
         </div>
       </div>

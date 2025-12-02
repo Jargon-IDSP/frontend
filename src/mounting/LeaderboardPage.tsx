@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
@@ -15,7 +15,6 @@ const LeaderboardPage: React.FC = () => {
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
 
-  // Initialize leaderboardType based on URL parameter
   const initialTab = (tabParam === "general" || tabParam === "private" || tabParam === "self")
     ? tabParam
     : "general";
@@ -52,21 +51,9 @@ const LeaderboardPage: React.FC = () => {
     users.length < 3;
 
   const containerClass = "container container--leaderboard";
-
-  if (loading || profileLoading) {
-    return (
-      <div className={containerClass}>
-        <div className="leaderboard-page leaderboard-error">
-          <LeaderboardHeader
-            activeTab={leaderboardType}
-            onTabChange={setLeaderboardType}
-            showActions={false}
-          />
-          <LoadingBar isLoading={loading || profileLoading} text="Loading Leaderboard" />
-        </div>
-      </div>
-    );
-  }
+  const isLoadingPage =
+    loading ||
+    profileLoading;
 
   if (error) {
     return (
@@ -129,6 +116,8 @@ const LeaderboardPage: React.FC = () => {
             onTabChange={setLeaderboardType}
             showActions={true}
           />
+
+          <LoadingBar isLoading={isLoadingPage} text="Loading Leaderboard" />
 
           {hasInsufficientPrivateConnections ? (
             <div className="leaderboard-empty-state">

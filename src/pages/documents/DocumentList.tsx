@@ -17,7 +17,7 @@ const truncateFilename = (filename: string, maxLength: number = 20): string => {
   return filename.slice(0, maxLength) + '...';
 };
 
-export function DocumentsList({ refresh }: DocumentsListProps) {
+export function DocumentsList({ refresh, onLoadingChange }: DocumentsListProps) {
   const navigate = useNavigate();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
@@ -29,6 +29,12 @@ export function DocumentsList({ refresh }: DocumentsListProps) {
     isLoading: loading,
     error,
   } = useDocuments(refresh);
+
+  useEffect(() => {
+    // Only report loading if we're fetching AND don't have data yet
+    const isInitiallyLoading = loading && (!documents || documents.length === 0);
+    onLoadingChange?.(isInitiallyLoading);
+  }, [loading, documents, onLoadingChange]);
 
   // Deduplicate documents by ID (in case cache returns duplicates)
   const uniqueDocuments = Array.from(

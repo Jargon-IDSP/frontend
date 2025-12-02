@@ -12,6 +12,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   isCurrentUser,
   isClickable = false,
   fromRoute = "/community",
+  onAvatarLoadingChange,
 }) => {
   const navigate = useNavigate();
   const languageFlag = getLanguageFlag(user.language);
@@ -36,6 +37,7 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
             config={user.avatar}
             size={48}
             className="leaderboard-item-avatar"
+            onLoadingChange={onAvatarLoadingChange}
           />
         ) : (
           <img

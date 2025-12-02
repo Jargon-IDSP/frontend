@@ -6,4 +6,5 @@ export interface LeaderboardItemProps {
   isCurrentUser: boolean;
   isClickable?: boolean;
   fromRoute?: string;
+  onAvatarLoadingChange?: (isLoading: boolean) => void;
 }

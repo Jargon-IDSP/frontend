@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo } from "react";
+import { useMemo, useEffect } from "react";
 import { BACKEND_URL } from "../lib/api";
 import type { MonthlyActivityResponse, MonthlyActivityData } from "../types/monthlyActivity";
 
@@ -39,7 +39,11 @@ function MonthBar({ monthData, isCurrentMonth }: { monthData: MonthlyActivityDat
   );
 }
 
-export default function MonthlyActivity() {
+interface MonthlyActivityProps {
+  onLoadingChange?: (isLoading: boolean) => void;
+}
+
+export default function MonthlyActivity({ onLoadingChange }: MonthlyActivityProps) {
   const { getToken } = useAuth();
 
   const fetchMonthlyActivity = async (): Promise<MonthlyActivityData[]> => {
@@ -65,6 +69,12 @@ export default function MonthlyActivity() {
     queryFn: fetchMonthlyActivity,
     staleTime: 5 * 60 * 1000,
   });
+
+  useEffect(() => {
+    // Only report loading if we're fetching AND don't have data yet
+    const isInitiallyLoading = isLoading && (!monthlyData || monthlyData.length === 0);
+    onLoadingChange?.(isInitiallyLoading);
+  }, [isLoading, monthlyData, onLoadingChange]);
 
   const displayData = monthlyData;
 
