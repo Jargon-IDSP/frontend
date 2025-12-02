@@ -306,12 +306,12 @@
 
 [data-slot="drawer-overlay"] {
   z-index: 150 !important;
-  background-color: transparent !important;
+  // background-color: transparent !important;
   pointer-events: none !important;
 
-  @media (min-width: 640px) {
-    display: none !important;
-  }
+  // @media (min-width: 640px) {
+  //   display: none !important;
+  // }
 }
 
 [data-vaul-drawer-direction="right"][data-slot="drawer-content"] {
