@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
@@ -9,13 +9,16 @@ import LeaderboardHeader from "../components/LeaderboardHeader";
 import LoadingBar from "../components/LoadingBar";
 import SelfLeaderboard from "../components/SelfLeaderboard";
 import type { LeaderboardType } from "../types/leaderboardHeader";
+import { AvatarDisplay } from "../components/avatar";
+import rockyWhiteLogo from "/rockyWhite.svg";
+import { getLanguageFlag } from "../utils/languageFlagHelpers";
+import { getLanguageCode } from "../utils/userHelpers";
 
 const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
 
-  // Initialize leaderboardType based on URL parameter
   const initialTab = (tabParam === "general" || tabParam === "private" || tabParam === "self")
     ? tabParam
     : "general";
@@ -52,21 +55,9 @@ const LeaderboardPage: React.FC = () => {
     users.length < 3;
 
   const containerClass = "container container--leaderboard";
-
-  if (loading || profileLoading) {
-    return (
-      <div className={containerClass}>
-        <div className="leaderboard-page leaderboard-error">
-          <LeaderboardHeader
-            activeTab={leaderboardType}
-            onTabChange={setLeaderboardType}
-            showActions={false}
-          />
-          <LoadingBar isLoading={loading || profileLoading} text="Loading Leaderboard" />
-        </div>
-      </div>
-    );
-  }
+  const isLoadingPage =
+    loading ||
+    profileLoading;
 
   if (error) {
     return (
@@ -130,6 +121,8 @@ const LeaderboardPage: React.FC = () => {
             showActions={true}
           />
 
+          <LoadingBar isLoading={isLoadingPage} text="Loading Leaderboard" />
+
           {hasInsufficientPrivateConnections ? (
             <div className="leaderboard-empty-state">
               <img
@@ -151,8 +144,34 @@ const LeaderboardPage: React.FC = () => {
             </div>
           ) : (
             <>
-              {users.length > 0 && (
-                <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
+              {isSelfLeaderboard ? (
+                <div className="friend-profile-avatar" style={{ position: "relative", overflow: "visible" }}>
+                  {profile?.avatar ? (
+                    <AvatarDisplay
+                      config={profile.avatar}
+                      size={120}
+                      className="friend-profile-avatar-display"
+                    />
+                  ) : (
+                    <img src={rockyWhiteLogo} alt="User Avatar" />
+                  )}
+                  {profile?.language && getLanguageFlag(profile.language) && (
+                    <span
+                      className="leaderboard-self-flag"
+                      title={getLanguageCode(profile.language)}
+                    >
+                      <img
+                        src={getLanguageFlag(profile.language)!.src}
+                        alt={getLanguageFlag(profile.language)!.alt}
+                        className="leaderboard-self-flag-icon"
+                      />
+                    </span>
+                  )}
+                </div>
+              ) : (
+                users.length > 0 && (
+                  <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
+                )
               )}
             </>
           )}

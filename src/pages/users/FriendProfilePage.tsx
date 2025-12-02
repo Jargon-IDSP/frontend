@@ -1,6 +1,7 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate, useParams, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
+import { useState, useEffect, useCallback } from "react";
 import { BACKEND_URL } from "../../lib/api";
 import { FriendshipStatus } from "../../types/friend";
 import type { FriendProfile, FriendQuiz } from "../../types/friend";
@@ -340,6 +341,20 @@ export default function FriendProfilePage() {
     friendName: friendDisplayName,
   });
 
+  const [avatarLoaded, setAvatarLoaded] = useState(false);
+
+  const handleAvatarLoadingChange = useCallback((isLoading: boolean) => {
+    setAvatarLoaded(!isLoading);
+  }, []);
+
+  useEffect(() => {
+    if (friendProfile?.avatar) {
+      setAvatarLoaded(false);
+    } else {
+      setAvatarLoaded(true);
+    }
+  }, [friendProfile?.avatar]);
+
   const handleFriendshipAction = () => {
     // If following (one-way) or friends (mutual), unfollow/remove directly
     if (friendshipStatus?.isFriend || friendshipStatus?.isFollowing) {
@@ -421,31 +436,28 @@ export default function FriendProfilePage() {
     isLoadingMedals ||
     isLoadingQuizzes ||
     (isOwnProfile ? false : isLoadingMyRequests) ||
-    (isOwnProfile ? false : isLoadingFriendship);
+    (isOwnProfile ? false : isLoadingFriendship) ||
+    !avatarLoaded;
 
   return (
     <div className="container container--friend-profile">
       <div className="friend-profile-page">
-      {!isLoadingData && (
-        <ProfileHeader
-          from={(location.state as { from?: string })?.from}
-        />
-      )}
-
       <LoadingBar
         isLoading={isLoadingData}
-        hasData={!!friendProfile && !isLoadingData}
         text="Loading profile"
       />
 
-      {!isLoadingData && error && (
+      {error && (
         <div className="friend-profile-error">
           Failed to load profile. Please try again.
         </div>
       )}
 
-      {!isLoadingData && friendProfile && (
+      {friendProfile && (
         <>
+          <ProfileHeader
+            from={(location.state as { from?: string })?.from}
+          />
           <ProfileCard
             displayName={getUserDisplayName(friendProfile)}
             industryName={getIndustryName(friendProfile?.industryId)}
@@ -459,6 +471,7 @@ export default function FriendProfilePage() {
             onFriendshipAction={handleFriendshipAction}
             isSendRequestPending={sendRequestMutation.isPending}
             isRemoveFriendPending={removeFriendMutation.isPending}
+            onAvatarLoadingChange={handleAvatarLoadingChange}
           />
 
           {!isOwnProfile && (

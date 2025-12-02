@@ -63,6 +63,7 @@ export type QuizCategory =
 
 export interface DocumentsListProps {
   refresh: number;
+  onLoadingChange?: (isLoading: boolean) => void;
 }
 
 export interface UploadResponse {

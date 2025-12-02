@@ -1,6 +1,6 @@
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
-import { useState, useMemo } from "react";
+import { useState, useEffect, useMemo, useCallback } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useProfile } from "../../hooks/useProfile";
 import { DocumentsList } from "../documents/DocumentList";
@@ -49,8 +49,22 @@ export default function ProfilePage() {
         isLoading: customWordCountLoading,
         isError: customWordCountError,
     } = useCustomFlashcardStats();
+    const [avatarLoaded, setAvatarLoaded] = useState(false);
+    const [monthlyActivityLoaded, setMonthlyActivityLoaded] = useState(false);
+    const [selfLeaderboardLoaded, setSelfLeaderboardLoaded] = useState(false);
+    const [documentsLoaded, setDocumentsLoaded] = useState(false);
+    const [activeProfileTab, setActiveProfileTab] = useState<
+        "archives" | "achievements"
+    >("archives");
 
-    const isPageLoading = isLoading || badgesLoading || customWordCountLoading;
+    const isPageLoading =
+        isLoading ||
+        badgesLoading ||
+        customWordCountLoading ||
+        !avatarLoaded ||
+        !monthlyActivityLoaded ||
+        (activeProfileTab === "archives" && !documentsLoaded) ||
+        (activeProfileTab === "achievements" && !selfLeaderboardLoaded);
     const accountCreatedAt = data?.createdAt ? new Date(data.createdAt) : null;
     const accountAgeDays = accountCreatedAt
         ? Math.max(
@@ -66,9 +80,6 @@ export default function ProfilePage() {
         : customWordCountError
         ? "—"
         : customWordCount.toLocaleString();
-    const [activeProfileTab, setActiveProfileTab] = useState<
-        "archives" | "achievements"
-    >("archives");
 
     const error = queryError ? (queryError as Error).message : null;
 
@@ -95,6 +106,30 @@ export default function ProfilePage() {
                     icon !== null && icon.url !== null
             );
     }, [userBadges]);
+
+    const handleAvatarLoadingChange = useCallback((isLoading: boolean) => {
+        setAvatarLoaded(!isLoading);
+    }, []);
+
+    const handleMonthlyActivityLoadingChange = useCallback((isLoading: boolean) => {
+        setMonthlyActivityLoaded(!isLoading);
+    }, []);
+
+    const handleSelfLeaderboardLoadingChange = useCallback((isLoading: boolean) => {
+        setSelfLeaderboardLoaded(!isLoading);
+    }, []);
+
+    const handleDocumentsLoadingChange = useCallback((isLoading: boolean) => {
+        setDocumentsLoaded(!isLoading);
+    }, []);
+
+    useEffect(() => {
+        if (data?.avatar) {
+            setAvatarLoaded(false);
+        } else {
+            setAvatarLoaded(true);
+        }
+    }, [data?.avatar]);
 
     const handleSettingsClick = () => {
         navigate("/settings");
@@ -216,18 +251,16 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                         </div>
                     </div>
 
-                    {isPageLoading && (
-                        <LoadingBar
-                            isLoading={true}
-                            text='Loading profile'
-                        />
-                    )}
+                    <LoadingBar
+                        isLoading={isPageLoading}
+                        text='Loading profile'
+                    />
 
                     {error && (
                         <div className='error-message'>Error: {error}</div>
                     )}
 
-                    {!isPageLoading && data && (
+                    {data && (
                         <div className='profile-content'>
                             {/* Profile Avatar Section */}
                             <div className='profile-avatar-section'>
@@ -237,6 +270,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                                             config={data.avatar}
                                             size={120}
                                             className='profile-avatar-large-avatar'
+                                            onLoadingChange={handleAvatarLoadingChange}
                                         />
                                     ) : (
                                         <img
@@ -260,7 +294,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                             </div>
 
                             {/* Monthly Activity */}
-                            <MonthlyActivity />
+                            <MonthlyActivity onLoadingChange={handleMonthlyActivityLoadingChange} />
 
                             {/* Quick Stats */}
                             <div className='profile-mini-cards'>
@@ -341,7 +375,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                                     {activeProfileTab === "archives" ? (
                                         <>
                                             <div className='profile-documents'>
-                                                <DocumentsList refresh={0} />
+                                                <DocumentsList refresh={0} onLoadingChange={handleDocumentsLoadingChange} />
                                             </div>
                                             <div className='profile-help'>
                                                 <button
@@ -404,6 +438,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                                                 </h4>
                                                 <SelfLeaderboard
                                                     showPlacements={false}
+                                                    onLoadingChange={handleSelfLeaderboardLoadingChange}
                                                 />
                                             </div>
                                         </div>

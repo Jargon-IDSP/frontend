@@ -57,7 +57,11 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 
     useEffect(() => {
       let mounted = true;
-      onLoadingChange?.(true);
+
+      // Only report loading if we don't have content yet
+      if (!rawBodyContent) {
+        onLoadingChange?.(true);
+      }
 
       fetchSymbolContent(bodyId)
         .then(content => {
@@ -71,7 +75,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
         });
 
       return () => { mounted = false; };
-    }, [bodyId, onLoadingChange]);
+    }, [bodyId]);
 
     useEffect(() => {
       if (!rawBodyContent) return;
@@ -184,11 +188,8 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
       setFacialContent(coloredContent);
     }, [hairColor, rawFacialData]);
 
-    // Don't render until body content is loaded to prevent sprite sheet flash
     if (!bodyContent) {
-      return (
-        <div className="avatar-fallback" style={{ width: size, height: size, backgroundColor: bodyColor, borderRadius: '50%' }} />
-      );
+      return null;
     }
 
     return (

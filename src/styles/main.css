@@ -3023,7 +3023,7 @@ button.back-button {
   max-width: 480px;
   position: relative;
   min-height: 100vh;
-  padding-bottom: 100px;
+  background-color: #fffefc;
 }
 .industry-preferences__header {
   display: flex;
@@ -3041,14 +3041,27 @@ button.back-button {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 1rem 0;
+  padding: 0;
+  width: 100%;
+  box-sizing: border-box;
+  overflow-x: hidden;
+}
+.industry-preferences__content .onboarding-form {
+  width: 100%;
+  padding: 0;
+  box-sizing: border-box;
 }
 .industry-preferences__content .onboarding-form__header {
   display: none;
 }
+.industry-preferences__content .onboarding-form__options {
+  width: 100%;
+  box-sizing: border-box;
+  margin-top: 20px;
+}
 .industry-preferences__content .onboarding-form__option {
-  min-width: 366px;
-  width: 366px;
+  width: 100%;
+  max-width: 366px;
   margin: 0 auto;
   border-radius: 18px;
   border: 1px solid #ffc8b6;
@@ -3061,6 +3074,7 @@ button.back-button {
   transition: all 0.3s ease;
   background-color: #fffefc;
   justify-content: flex-start !important;
+  box-sizing: border-box;
 }
 .industry-preferences__content .onboarding-form__option:hover {
   transform: none !important;
@@ -3075,9 +3089,13 @@ button.back-button {
   color: #e74611;
   font-weight: 500;
 }
+.industry-preferences__content .onboarding-form__actions {
+  width: 100%;
+  box-sizing: border-box;
+}
 .industry-preferences__content .onboarding-form__button--primary {
-  min-width: 366px;
-  width: 366px;
+  width: 100%;
+  max-width: 366px;
   margin: 60px auto 0 auto;
   padding: 1rem 2.5rem;
   background-color: #365ccc;
@@ -3088,6 +3106,7 @@ button.back-button {
   color: white;
   cursor: pointer;
   transition: all 0.3s ease;
+  box-sizing: border-box;
 }
 .industry-preferences__content .onboarding-form__button--primary:hover:not(:disabled) {
   background-color: rgb(94.6785714286, 124.9880952381, 214.3214285714);
@@ -3790,6 +3809,31 @@ button.back-button {
   min-height: 22px;
   flex-shrink: 0;
   border-radius: 6px;
+  -o-object-fit: cover;
+     object-fit: cover;
+}
+
+.leaderboard-self-flag {
+  position: absolute;
+  display: flex;
+  background-color: #3d190d;
+  align-items: center;
+  justify-content: center;
+  top: 0.5rem;
+  right: 0.5rem;
+  min-width: 70px;
+  box-shadow: 3px 3px 0 0 #3d190d;
+  border-radius: 5px;
+}
+
+.leaderboard-self-flag-icon {
+  width: 70px;
+  height: 50px;
+  min-width: 70px;
+  min-height: 50px;
+  margin-top: -0.2rem;
+  flex-shrink: 0;
+  border-radius: 0;
   -o-object-fit: cover;
      object-fit: cover;
 }
@@ -5522,6 +5566,11 @@ button.back-button {
   font-weight: 700;
   color: #3d190d;
   margin: 0 0 0.25rem 0;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
 }
 
 .friend-profile-industry {
@@ -5644,6 +5693,11 @@ button.back-button {
   color: #652a15;
   flex: 1;
   text-align: left;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  word-break: break-word;
+  -webkit-hyphens: auto;
+          hyphens: auto;
 }
 
 .friend-profile-lesson-edit-icon {

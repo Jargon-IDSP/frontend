@@ -165,19 +165,11 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
   });
   const [selectedBody, setSelectedBody] = useState('body-1');
   const [saveSuccess, setSaveSuccess] = useState(false);
-  const [avatarReady, setAvatarReady] = useState(false);
 
   useEffect(() => {
     if (avatar) {
-      setAvatarReady(false); 
       setConfig(avatar);
       setSelectedBody(avatar.body || 'body-1');
-      
-      const timer = setTimeout(() => {
-        setAvatarReady(true);
-      }, 150);
-
-      return () => clearTimeout(timer);
     }
   }, [avatar]);
 
@@ -569,10 +561,10 @@ export function AvatarCustomizer({ context = 'profile', onSave: onSaveCallback }
 
   return (
     <div className="avatar-customization">
-      <LoadingBar isLoading={isLoading || !avatarReady} hasData={!!avatar} text="Loading avatar" />
+      <LoadingBar isLoading={isLoading} hasData={!!avatar} text="Loading avatar" />
 
       <div className="avatar-customization__preview">
-        {!isLoading && avatarReady && <AvatarDisplay config={config} size={210} />}
+        {!isLoading && <AvatarDisplay config={config} size={210} />}
       </div>
 
       <div className="avatar-customization__input-container">

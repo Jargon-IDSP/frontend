@@ -602,6 +602,30 @@
   object-fit: cover;
 }
 
+.leaderboard-self-flag {
+  position: absolute;
+  display: flex;
+  background-color: #3d190d;
+  align-items: center;
+  justify-content: center;
+  top: calc($spacing-sm);
+  right: calc($spacing-sm);
+  min-width: 70px;
+  box-shadow: 3px 3px 0 0 #3d190d;
+  border-radius: 5px;
+}
+
+.leaderboard-self-flag-icon {
+  width: 70px;
+  height: 50px;
+  min-width: 70px;
+  min-height: 50px;
+  margin-top: -0.2rem;
+  flex-shrink: 0;
+  border-radius: 0;
+  object-fit: cover;
+}
+
 .user-name {
   font-weight: $font-weight-bold;
   font-size: clamp(12px, 1rem, $font-size-body);

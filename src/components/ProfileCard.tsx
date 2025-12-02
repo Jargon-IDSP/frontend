@@ -17,6 +17,7 @@ export default function ProfileCard({
   onFriendshipAction,
   isSendRequestPending,
   isRemoveFriendPending,
+  onAvatarLoadingChange,
 }: ProfileCardProps) {
   const navigate = useNavigate();
   const showUnfollowButton = isFriend || isFollowing;
@@ -52,6 +53,7 @@ export default function ProfileCard({
             config={avatar}
             size={120}
             className="friend-profile-avatar-display"
+            onLoadingChange={onAvatarLoadingChange}
           />
         ) : (
           <img src={rockyWhiteLogo} alt="User Avatar" />

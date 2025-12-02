@@ -4,4 +4,5 @@ export interface PodiumProps {
   users: User[];
   currentUserId?: string;
   fromRoute?: string;
+  onAvatarLoadingChange?: (isLoading: boolean) => void;
 }

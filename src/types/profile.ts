@@ -42,6 +42,7 @@ export interface ProfileCardProps {
   onFriendshipAction: () => void;
   isSendRequestPending: boolean;
   isRemoveFriendPending: boolean;
+  onAvatarLoadingChange?: (isLoading: boolean) => void;
 }
 
 export interface ProfileOverviewProps {

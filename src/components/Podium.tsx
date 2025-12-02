@@ -6,7 +6,7 @@ import { getLanguageFlag } from "../utils/languageFlagHelpers";
 import { AvatarDisplay } from "./avatar";
 import rockyLogo from "/rocky.svg";
 
-const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/leaderboard/full" }) => {
+const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/leaderboard/full", onAvatarLoadingChange }) => {
   const navigate = useNavigate();
   const topThree = users.slice(0, 3);
 
@@ -46,6 +46,7 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/lea
                   config={user.avatar}
                   size={60}
                   className={`podium-avatar rank-${rank}`}
+                  onLoadingChange={onAvatarLoadingChange}
                 />
               ) : (
                 <img
