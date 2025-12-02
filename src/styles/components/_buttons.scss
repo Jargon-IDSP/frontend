@@ -184,6 +184,19 @@
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
+  padding: 0.5rem;
+  // display: flex;
+  // align-items: center;
+  // justify-content: center;
+  flex-shrink: 0;
+  min-width: 48px;
+  min-height: 48px;
   padding-left: 0;
   margin-left: auto;
+
+  img {
+    width: 48px !important;
+    height: 48px !important;
+    flex-shrink: 0;
+  }
 }
