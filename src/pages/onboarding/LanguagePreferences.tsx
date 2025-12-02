@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@clerk/clerk-react';
-import { OnboardingForm } from '../../components/onboarding/OnboardingForm';
 import type { OnboardingOption } from '../../types/onboardingForm';
 import { useProfile } from '../../hooks/useProfile';
 import { BACKEND_URL } from '../../lib/api';
@@ -89,10 +88,6 @@ export default function LanguagePreferences() {
     }
   };
 
-  const handleSkip = () => {
-    navigate('/onboarding/industry');
-  };
-
   if (isLoading) {
     return (
       <>
@@ -107,7 +102,7 @@ export default function LanguagePreferences() {
         {/* Header */}
         <OnboardingHeader
           title="Choose your own language"
-          onBack={() => navigate(-1)}
+          onBack={() => navigate('/onboarding/introduction')}
           progressPercentage={25}
           showProgress={true}
         />
@@ -135,7 +130,7 @@ export default function LanguagePreferences() {
           onClick={handleSave}
           disabled={updateLanguageMutation.isPending}
         >
-          {updateLanguageMutation.isPending ? 'Saving...' : 'Save'}
+          {updateLanguageMutation.isPending ? 'Saving...' : 'Next'}
         </button>
       </div>
     </div>

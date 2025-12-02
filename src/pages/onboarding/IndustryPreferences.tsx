@@ -135,11 +135,12 @@ export default function IndustryPreferences() {
   }
 
   return (
-    <div className="container industry-preferences">
-      <OnboardingHeader
+    <div className="container">
+      <div className="industry-preferences">
+        <OnboardingHeader
         title="What trade are you in?"
         subtitle="Choose a trade to start learning with!"
-        onBack={() => navigate(-1)}
+        onBack={() => navigate('/onboarding/language')}
         progressPercentage={50}
         showProgress={true}
       />
@@ -155,7 +156,7 @@ export default function IndustryPreferences() {
           onSkip={handleSkip}
           isLastStep={false}
           showSkip={!isUpdating}
-          nextButtonText={isUpdating ? 'Done' : undefined}
+          nextButtonText={isUpdating ? 'Next' : undefined}
         />
 
         {submitOnboardingMutation.isPending && (
@@ -169,6 +170,7 @@ export default function IndustryPreferences() {
             {(submitOnboardingMutation.error as Error).message}
           </div>
         )}
+      </div>
       </div>
     </div>
   );
