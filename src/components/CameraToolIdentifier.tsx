@@ -139,6 +139,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
   const translatedSpeechSynthesisRef = useRef<SpeechSynthesisUtterance | null>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const streamRef = useRef<MediaStream | null>(null);
 
   // Load Teachable Machine model on component mount
   useEffect(() => {
@@ -170,8 +171,12 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
   useEffect(() => {
     return () => {
       // Cleanup: stop camera stream when component unmounts
-      if (stream) {
-        stream.getTracks().forEach(track => track.stop());
+      if (streamRef.current) {
+        streamRef.current.getTracks().forEach(track => {
+          track.stop();
+          track.enabled = false;
+        });
+        streamRef.current = null;
       }
       // Cleanup: stop speech synthesis when component unmounts
       if (speechSynthesisRef.current) {
@@ -181,7 +186,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
         window.speechSynthesis.cancel();
       }
     };
-  }, [stream]);
+  }, []);
 
   // Helper function to map language code to BCP 47 language tag
   const getLanguageCode = (languageCode: string): string => {
@@ -383,6 +388,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
         }
       });
       
+      streamRef.current = mediaStream;
       setStream(mediaStream);
     } catch (err: any) {
       setError(`Camera access denied: ${err.message}`);
@@ -398,17 +404,56 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
     }
   }, [model, modelLoading, autoStart, stream, capturedImage, startCamera]);
 
-  const stopCamera = () => {
-    if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+  const stopCamera = async () => {
+    // Get the current stream from ref to avoid stale closure issues
+    const currentStream = streamRef.current;
+    
+    // Stop all camera tracks immediately
+    if (currentStream) {
+      const tracks = currentStream.getTracks();
+      tracks.forEach(track => {
+        track.stop();
+        track.enabled = false;
+      });
+      streamRef.current = null;
       setStream(null);
     }
+    
+    // Clear video element
     if (videoRef.current) {
-      videoRef.current.srcObject = null;
+      const video = videoRef.current;
+      video.srcObject = null;
+      video.pause();
+      video.load(); // Force reload to fully stop video
     }
+    
+    // Stop any ongoing speech synthesis
+    if (speechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingToolName(false);
+      speechSynthesisRef.current = null;
+    }
+    if (translatedSpeechSynthesisRef.current) {
+      window.speechSynthesis.cancel();
+      setSpeakingTranslated(false);
+      translatedSpeechSynthesisRef.current = null;
+    }
+    
+    // Reset component state
+    setCapturedImage(null);
+    setResult(null);
+    setError(null);
+    setVideoReady(false);
+    
+    // Wait a brief moment to ensure camera hardware fully stops
+    // This gives the OS time to turn off the camera indicator light
+    await new Promise(resolve => setTimeout(resolve, 100));
+    
+    // Call onClose callback if provided
     if (onClose) {
       onClose();
     }
+    
     // Navigate back to home page
     navigate('/');
   };
