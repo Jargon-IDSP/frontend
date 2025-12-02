@@ -210,14 +210,45 @@
     border-radius: $border-radius-lg;
     margin: $spacing-md 0;
     border: 1px solid $primary-100;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .english-name-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    width: 100%;
+    margin: $spacing-sm 0;
   }
 
   .english-name {
     font-size: $font-size-h2;
     font-weight: $font-weight-bold;
-    margin: $spacing-sm 0;
+    margin: 0;
     color: $color-quaternary-dark;
     font-family: $font-family-primary;
+    text-align: center;
+  }
+
+  .translated-name-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: $spacing-sm;
+    width: 100%;
+    margin: $spacing-sm 0;
+  }
+
+  .translated-name {
+    font-size: $font-size-h3;
+    margin: 0;
+    color: $color-primary-600;
+    font-weight: $font-weight-medium;
+    font-family: $font-family-primary;
+    text-align: center;
   }
 
   .tool-name-speak-button {
@@ -231,16 +262,20 @@
     border-radius: 4px;
     color: $color-primary;
     transition: all 0.2s ease;
-    margin: $spacing-md auto 0;
     flex-shrink: 0;
 
-    &:hover {
+    &:hover:not(:disabled) {
       background-color: rgba($color-primary, 0.1);
       transform: scale(1.1);
     }
 
-    &:active {
+    &:active:not(:disabled) {
       transform: scale(0.95);
+    }
+
+    &:disabled {
+      opacity: 0.3;
+      cursor: not-allowed;
     }
 
     svg {
@@ -249,14 +284,6 @@
         animation: pulse 1.5s ease-in-out infinite;
       }
     }
-  }
-
-  .translated-name {
-    font-size: $font-size-h3;
-    margin: $spacing-sm 0;
-    color: $color-primary-600;
-    font-weight: $font-weight-medium;
-    font-family: $font-family-primary;
   }
 
   .language-selector {
@@ -332,8 +359,21 @@
       padding: 1.5rem;
     }
 
+    .english-name-wrapper {
+      gap: 0.5rem;
+    }
+
     .english-name {
       font-size: 1.5rem;
+    }
+
+    .tool-name-speak-button {
+      padding: 0.25rem;
+      
+      svg {
+        width: 18px;
+        height: 18px;
+      }
     }
 
     .translated-name {
