@@ -123,7 +123,7 @@ interface CameraToolIdentifierProps {
 const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, autoStart = false }) => {
   const { getToken } = useAuth();
   const navigate = useNavigate();
-  const { language: userLanguage, loading: languageLoading } = useUserPreferences();
+  const { language: userLanguage } = useUserPreferences();
   const [stream, setStream] = useState<MediaStream | null>(null);
   const [capturedImage, setCapturedImage] = useState<string | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);

@@ -109,6 +109,12 @@ export default function TermList() {
       return;
     }
 
+    // Check if term exists
+    if (!term.term) {
+      console.warn("No term available");
+      return;
+    }
+
     // Check if definition exists
     if (!term.definition) {
       console.warn("No definition available for this term");
@@ -121,29 +127,48 @@ export default function TermList() {
       return;
     }
 
-    // Create speech utterance for the definition
-    const utterance = new SpeechSynthesisUtterance(term.definition);
-    utterance.lang = "en-US";
-    utterance.rate = speechRate;
-    utterance.pitch = 1;
-    utterance.volume = 1;
+    setSpeakingTermId(term.id);
 
-    // Handle speech end
-    utterance.onend = () => {
+    const termText = term.term;
+    const definitionText = term.definition;
+
+    // Create utterance for term
+    const termUtterance = new SpeechSynthesisUtterance(termText);
+    termUtterance.lang = "en-US";
+    termUtterance.rate = speechRate;
+    termUtterance.pitch = 1;
+    termUtterance.volume = 1;
+
+    // Create utterance for definition
+    const definitionUtterance = new SpeechSynthesisUtterance(definitionText);
+    definitionUtterance.lang = "en-US";
+    definitionUtterance.rate = speechRate;
+    definitionUtterance.pitch = 1;
+    definitionUtterance.volume = 1;
+
+    // When term finishes, start definition
+    termUtterance.onend = () => {
+      window.speechSynthesis.speak(definitionUtterance);
+    };
+
+    // When definition finishes, clean up
+    definitionUtterance.onend = () => {
       setSpeakingTermId(null);
       speechSynthesisRef.current = null;
     };
 
-    // Handle speech error
-    utterance.onerror = (error) => {
+    // Handle speech errors
+    const handleError = (error: SpeechSynthesisErrorEvent) => {
       console.error("Speech synthesis error:", error);
       setSpeakingTermId(null);
       speechSynthesisRef.current = null;
     };
 
-    speechSynthesisRef.current = utterance;
-    setSpeakingTermId(term.id);
-    window.speechSynthesis.speak(utterance);
+    termUtterance.onerror = handleError;
+    definitionUtterance.onerror = handleError;
+
+    speechSynthesisRef.current = termUtterance;
+    window.speechSynthesis.speak(termUtterance);
   };
 
   // Generate dynamic title
