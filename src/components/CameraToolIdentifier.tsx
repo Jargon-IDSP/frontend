@@ -705,6 +705,15 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
       {error && (
         <div className="error-message">
           <p>⚠️ {error}</p>
+          {error.startsWith('Camera access denied') && (
+            <button 
+              className="btn btn-primary" 
+              onClick={startCamera}
+              style={{ marginTop: '1rem' }}
+            >
+              🔄 Retry
+            </button>
+          )}
         </div>
       )}
 
