@@ -8,6 +8,7 @@ import type { AvatarConfig, AvatarCustomizerProps, Tab, TabId } from '../../type
 import { useAvatar } from '../../hooks/useAvatar';
 import { useUser } from '@clerk/clerk-react';
 import LoadingBar from '../LoadingBar';
+import { getHairColorPalette } from '../../utils/colorUtils';
 
 const BODY_COLOR_CLASSES = [
   'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
@@ -81,7 +82,7 @@ function BodyPreview({ spriteId, bodyColor, className, viewBox }: {
   );
 }
 
-async function fetchColoredHair(symbolId: string, hairColor: string, isFacial: boolean = false): Promise<{ content: string; viewBox: string; hasBlackStroke: boolean } | null> {
+async function fetchColoredHair(symbolId: string, hairColor: string, isFacial: boolean = false): Promise<{ content: string; viewBox: string } | null> {
   try {
     const response = await fetch('/avatar-sprites.svg');
     const svgText = await response.text();
@@ -92,21 +93,25 @@ async function fetchColoredHair(symbolId: string, hairColor: string, isFacial: b
 
     let content = symbol.innerHTML;
     const viewBox = symbol.getAttribute('viewBox') || '0 0 300 300';
-    const hasBlackStroke = /stroke="#000000"|stroke="#000"|stroke="black"/i.test(content);
 
-    const HAIR_COLORS = isFacial
-      ? ['#512e14', '#5b3319', '#602d0b']
-      : ['#512e14', '#5b3319'];
+    const palette = getHairColorPalette(hairColor);
 
-    HAIR_COLORS.forEach(originalColor => {
-      const regex = new RegExp(`fill="${originalColor}"`, 'g');
-      content = content.replace(regex, `fill="${hairColor}"`);
+    const colorMappings = isFacial ? {
+      '#512e14': palette.base,
+      '#5b3319': palette.highlight,
+      '#602d0b': palette.base  // Use base color instead of lowlight
+    } : {
+      '#512e14': palette.base,
+      '#5b3319': palette.highlight
+    };
+
+    // Replace fill colors
+    Object.entries(colorMappings).forEach(([original, replacement]) => {
+      const regex = new RegExp(`fill="${original}"`, 'g');
+      content = content.replace(regex, `fill="${replacement}"`);
     });
 
-    content = content.replace(/\s*stroke="(?!#000000|#000|black)[^"]*"/gi, '');
-    content = content.replace(/\s*stroke-width="[^"]*"/g, '');
-
-    return { content, viewBox, hasBlackStroke };
+    return { content, viewBox };
   } catch (error) {
     console.error('Failed to fetch hair symbol:', error);
     return null;
@@ -119,7 +124,7 @@ function HairPreview({ spriteId, hairColor, className, isFacial = false }: {
   className: string;
   isFacial?: boolean;
 }) {
-  const [data, setData] = useState<{ content: string; viewBox: string; hasBlackStroke: boolean } | null>(null);
+  const [data, setData] = useState<{ content: string; viewBox: string } | null>(null);
 
   useEffect(() => {
     fetchColoredHair(spriteId, hairColor, isFacial).then(result => {
@@ -129,14 +134,11 @@ function HairPreview({ spriteId, hairColor, className, isFacial = false }: {
 
   if (!data) return null;
 
-  const strokeStyle = data.hasBlackStroke ? {} : { stroke: '#000000', strokeWidth: '1px' };
-
   return (
     <svg
       className={className}
       viewBox={data.viewBox}
       dangerouslySetInnerHTML={{ __html: data.content }}
-      style={strokeStyle}
     />
   );
 }

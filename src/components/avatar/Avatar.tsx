@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import type { AvatarProps } from '../../types/avatar';
 import { AvatarSprite } from './AvatarSprite';
 import { getBodyViewBox, toDataAttributeId } from './bodyViewBoxes';
+import { getHairColorPalette } from '../../utils/colorUtils';
 
 
 async function fetchSymbolContent(symbolId: string): Promise<string | null> {
@@ -119,16 +120,20 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
         return;
       }
 
-      const HAIR_COLORS = ['#512e14', '#5b3319'];
+      const palette = getHairColorPalette(hairColor);
       let coloredContent = rawHairData.content;
 
-      HAIR_COLORS.forEach(originalColor => {
-        const regex = new RegExp(`fill="${originalColor}"`, 'g');
-        coloredContent = coloredContent.replace(regex, `fill="${hairColor}"`);
-      });
+      // Map original SVG colors to palette shades
+      const colorMappings = {
+        '#512e14': palette.base,
+        '#5b3319': palette.highlight
+      };
 
-      coloredContent = coloredContent.replace(/\s*stroke="(?!#000000|#000|black)[^"]*"/gi, '');
-      coloredContent = coloredContent.replace(/\s*stroke-width="[^"]*"/g, '');
+      // Replace fill colors
+      Object.entries(colorMappings).forEach(([original, replacement]) => {
+        const regex = new RegExp(`fill="${original}"`, 'g');
+        coloredContent = coloredContent.replace(regex, `fill="${replacement}"`);
+      });
 
       setHairContent(coloredContent);
     }, [hairColor, rawHairData]);
@@ -160,16 +165,21 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
         return;
       }
 
-      const FACIAL_HAIR_COLORS = ['#512e14', '#5b3319', '#602d0b'];
+      const palette = getHairColorPalette(hairColor);
       let coloredContent = rawFacialData.content;
 
-      FACIAL_HAIR_COLORS.forEach(originalColor => {
-        const regex = new RegExp(`fill="${originalColor}"`, 'g');
-        coloredContent = coloredContent.replace(regex, `fill="${hairColor}"`);
-      });
+      // Map original SVG colors to palette shades (facial hair uses base color for all shades)
+      const colorMappings = {
+        '#512e14': palette.base,
+        '#5b3319': palette.highlight,
+        '#602d0b': palette.base  // Use base color instead of lowlight
+      };
 
-      coloredContent = coloredContent.replace(/\s*stroke="(?!#000000|#000|black)[^"]*"/gi, '');
-      coloredContent = coloredContent.replace(/\s*stroke-width="[^"]*"/g, '');
+      // Replace fill colors
+      Object.entries(colorMappings).forEach(([original, replacement]) => {
+        const regex = new RegExp(`fill="${original}"`, 'g');
+        coloredContent = coloredContent.replace(regex, `fill="${replacement}"`);
+      });
 
       setFacialContent(coloredContent);
     }, [hairColor, rawFacialData]);
@@ -206,7 +216,6 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
             viewBox={hairViewBox}
             dangerouslySetInnerHTML={{ __html: hairContent }}
             data-hair={hairDataId}
-            style={/stroke="#000000"|stroke="#000"|stroke="black"/i.test(hairContent) ? {} : { stroke: '#000000', strokeWidth: '1px' }}
           />
         )}
 
@@ -216,7 +225,6 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
             viewBox={facialViewBox}
             dangerouslySetInnerHTML={{ __html: facialContent }}
             data-facial={toDataAttributeId(config.facial, 'facial')}
-            style={/stroke="#000000"|stroke="#000"|stroke="black"/i.test(facialContent) ? {} : { stroke: '#000000', strokeWidth: '1px' }}
           />
         )}
 
