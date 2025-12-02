@@ -9,6 +9,10 @@ import LeaderboardHeader from "../components/LeaderboardHeader";
 import LoadingBar from "../components/LoadingBar";
 import SelfLeaderboard from "../components/SelfLeaderboard";
 import type { LeaderboardType } from "../types/leaderboardHeader";
+import { AvatarDisplay } from "../components/avatar";
+import rockyWhiteLogo from "/rockyWhite.svg";
+import { getLanguageFlag } from "../utils/languageFlagHelpers";
+import { getLanguageCode } from "../utils/userHelpers";
 
 const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate();
@@ -140,8 +144,34 @@ const LeaderboardPage: React.FC = () => {
             </div>
           ) : (
             <>
-              {users.length > 0 && (
-                <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
+              {isSelfLeaderboard ? (
+                <div className="friend-profile-avatar" style={{ position: "relative", overflow: "visible" }}>
+                  {profile?.avatar ? (
+                    <AvatarDisplay
+                      config={profile.avatar}
+                      size={120}
+                      className="friend-profile-avatar-display"
+                    />
+                  ) : (
+                    <img src={rockyWhiteLogo} alt="User Avatar" />
+                  )}
+                  {profile?.language && getLanguageFlag(profile.language) && (
+                    <span
+                      className="leaderboard-self-flag"
+                      title={getLanguageCode(profile.language)}
+                    >
+                      <img
+                        src={getLanguageFlag(profile.language)!.src}
+                        alt={getLanguageFlag(profile.language)!.alt}
+                        className="leaderboard-self-flag-icon"
+                      />
+                    </span>
+                  )}
+                </div>
+              ) : (
+                users.length > 0 && (
+                  <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
+                )
               )}
             </>
           )}
