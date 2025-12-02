@@ -2296,9 +2296,10 @@ button.back-button {
 }
 .fullTranslationOverview .top {
   display: grid;
-  grid-template-columns: 0.3fr 1fr 0.3fr;
+  grid-template-columns: auto 1fr auto;
   align-items: center;
   margin: 1rem 0;
+  gap: 0.5rem;
 }
 .fullTranslationOverview h1 {
   grid-column: 2;
@@ -2306,6 +2307,18 @@ button.back-button {
   font-size: 28px;
   font-weight: 700;
   color: #652a15;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 0;
+}
+.fullTranslationOverview .top .button-options {
+  min-width: 48px;
+  min-height: 48px;
+}
+.fullTranslationOverview .top .button-options img {
+  width: 48px !important;
+  height: 48px !important;
 }
 .fullTranslationOverview h2 {
   text-align: right;
@@ -6743,8 +6756,18 @@ button.back-button {
   border: none;
   cursor: pointer;
   transition: all 0.2s ease;
-  padding-left: 0;
-  margin-left: auto;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  min-width: 48px;
+  min-height: 48px;
+}
+.button-options img {
+  width: 48px !important;
+  height: 48px !important;
+  flex-shrink: 0;
 }
 
 .card {

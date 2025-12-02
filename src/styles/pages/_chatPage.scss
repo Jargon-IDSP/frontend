@@ -2,15 +2,18 @@
   padding: 2rem;
   max-width: 900px;
   margin: 0 auto;
+  font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 
   &__title {
     margin-bottom: 4px;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   &__subtitle {
     font-size: 12px;
     color: #666;
     margin-bottom: 0.75rem;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   &__error {
@@ -20,6 +23,7 @@
     margin-bottom: 1rem;
     border-radius: 4px;
     white-space: pre-wrap;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   &__form {
@@ -29,6 +33,7 @@
 
   &__label {
     font-weight: 600;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   &__textarea {
@@ -36,15 +41,21 @@
     border-radius: 6px;
     border: 1px solid #ccc;
     resize: vertical;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   &__button-group {
     display: flex;
     gap: 8px;
+
+    button {
+      font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
   }
 
   &__reply-title {
     margin-top: 1.25rem;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 
   &__reply-box {
@@ -56,5 +67,6 @@
     max-height: 420px;
     overflow-y: auto;
     background: #fafafa;
+    font-family: 'Poppins', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   }
 }

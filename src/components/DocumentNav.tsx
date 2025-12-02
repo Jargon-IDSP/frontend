@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import type { DocumentNavProps } from "../types/documentNav";
+import { truncateFilename } from "../utils/stringUtils";
 import translateFileIcon from "../assets/icons/translateFileIcon.svg";
 import fileIconB from "../assets/icons/fileIconB.svg";
 import lessonIcon from "../assets/icons/lessonIcon.svg";
@@ -43,7 +44,7 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
           onClick={onBackClick}
           style={{ cursor: onBackClick ? "pointer" : "default" }}
         />
-        <h1>{title}</h1>
+        <h1 title={title}>{truncateFilename(title, 25)}</h1>
         {(onSubtitleClick || lessonId) && (
           <button
             // className="subtitle-button"
