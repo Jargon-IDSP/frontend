@@ -45,31 +45,29 @@ export default function EditNameDrawer({
       }
       return response.json();
     },
-    onSuccess: () => {
+    onSuccess: async () => {
       // Invalidate all document-related queries
-      queryClient.invalidateQueries({ queryKey: ["documents"] });
-      queryClient.invalidateQueries({ queryKey: ["document", documentId] });
-      queryClient.invalidateQueries({
-        queryKey: ["documentQuizzes", documentId],
-      });
-      queryClient.invalidateQueries({
-        queryKey: ["documentTranslation", documentId],
-      });
+      await Promise.all([
+        queryClient.invalidateQueries({ queryKey: ["documents"] }),
+        queryClient.invalidateQueries({ queryKey: ["document", documentId] }),
+        queryClient.invalidateQueries({
+          queryKey: ["documentQuizzes", documentId],
+        }),
+        queryClient.invalidateQueries({
+          queryKey: ["documentTranslation", documentId],
+        }),
+        // Invalidate category queries (documents by category - shows file names in category folders)
+        queryClient.invalidateQueries({ queryKey: ["documents", "by-category"] }),
+        queryClient.invalidateQueries({ queryKey: ["profile"] }),
+        queryClient.invalidateQueries({ queryKey: ["friendLessons"] }),
+        queryClient.invalidateQueries({ queryKey: ["customQuizzes"] }),
+      ]);
 
-      // Invalidate profile queries (shows user's documents)
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-
-      // Invalidate friend lesson queries (in case viewing as friend)
-      queryClient.invalidateQueries({ queryKey: ["friendLessons"] });
-
-      // Invalidate any quiz-related queries that might show document name
-      queryClient.invalidateQueries({ queryKey: ["customQuizzes"] });
+      // Refetch category queries to ensure UI updates immediately
+      await queryClient.refetchQueries({ queryKey: ["documents", "by-category"] });
 
       setError("");
       onOpenChange(false);
-
-      // Refresh the page to show updated document name
-      window.location.reload();
     },
     onError: (err: Error) => {
       setError(err.message);

@@ -180,6 +180,10 @@ const EditLessonPage: React.FC = () => {
       queryClient.invalidateQueries({
         queryKey: ["documentQuizzes", lessonData?.documentId],
       });
+      
+      // Invalidate category queries (documents by category - shows file names in category folders)
+      queryClient.invalidateQueries({ queryKey: ["documents", "by-category"] });
+      
       queryClient.invalidateQueries({ queryKey: ["friendLessons"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["customQuizzes"] });
