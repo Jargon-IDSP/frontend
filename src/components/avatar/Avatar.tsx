@@ -261,8 +261,7 @@ export function Avatar({
     }, [hairColor, rawFacialData]);
 
     // Wait for SVG sprites to load (shoes, clothing, eyewear, headwear, accessories)
-    // Since sprites use <use> elements referencing the same SVG file as body, once body is loaded,
-    // the SVG file should be available. We just need to wait for DOM to render the sprite elements.
+    // We need to verify that the sprite sheet is loaded and all sprite elements are rendered
     useEffect(() => {
       // Check if any sprites are needed
       const hasSprites = !!(
@@ -281,21 +280,135 @@ export function Avatar({
       // Reset loading state when sprites are needed
       setSpritesLoaded(false);
 
-      // Once body is loaded, the SVG file is available. Wait for sprite elements to render.
-      // We'll mark sprites as loaded after body is loaded and a short delay for rendering
-      if (bodyLoaded) {
-        const timeout = setTimeout(() => {
-          setSpritesLoaded(true);
-        }, 150); // Small delay to allow <use> elements to render
-        return () => clearTimeout(timeout);
+      // Wait for body to be loaded first (this ensures the sprite sheet fetch has started)
+      if (!bodyLoaded || !bodyContent) {
+        return;
       }
+
+      let mounted = true;
+      let checkComplete = false;
+      let timeout: NodeJS.Timeout | null = null;
+
+      // First, ensure the sprite sheet is loaded
+      const ensureSpriteSheetLoaded = async () => {
+        try {
+          // Fetch the sprite sheet to ensure it's cached
+          await fetch('/avatar-sprites.svg');
+        } catch (e) {
+          console.warn('Failed to preload sprite sheet:', e);
+        }
+
+        if (!mounted) return;
+
+        // Wait for the DOM to render the sprite elements
+        // Use multiple animation frames to ensure rendering is complete
+        let frameCount = 0;
+        const maxFrames = 10; // Wait up to 10 frames (~167ms at 60fps)
+
+        const checkFrames = () => {
+          if (checkComplete || !mounted) return;
+          
+          frameCount++;
+          
+          // Check if sprite elements are in the DOM
+          // The container is the AvatarSprite div, which is the parent of bodySvgRef's parent
+          const container = bodySvgRef.current?.parentElement?.parentElement;
+          if (container) {
+            const spriteElements = container.querySelectorAll('.avatar-layer svg use[href*="avatar-sprites.svg"]');
+            
+            // If we have the expected number of sprite elements, check if they're rendered
+            const expectedSpriteCount = [
+              config.shoes,
+              config.clothing,
+              config.eyewear,
+              config.headwear,
+              config.accessories,
+            ].filter(Boolean).length;
+
+            if (spriteElements.length >= expectedSpriteCount && expectedSpriteCount > 0) {
+              // Check if elements are actually rendered by checking their bounding boxes
+              let allRendered = true;
+              spriteElements.forEach((el) => {
+                try {
+                  const useEl = el as SVGUseElement;
+                  const svg = useEl.ownerSVGElement;
+                  if (svg) {
+                    const rect = svg.getBoundingClientRect();
+                    // If the SVG has dimensions, it's likely rendered
+                    // We check the parent container too
+                    if (rect.width === 0 && rect.height === 0) {
+                      allRendered = false;
+                    }
+                  } else {
+                    allRendered = false;
+                  }
+                } catch (e) {
+                  // If we can't check, assume not ready
+                  allRendered = false;
+                }
+              });
+
+              if (allRendered && mounted) {
+                checkComplete = true;
+                setSpritesLoaded(true);
+                if (timeout) clearTimeout(timeout);
+                return;
+              }
+            } else if (expectedSpriteCount === 0) {
+              // No sprites expected, mark as loaded
+              if (mounted) {
+                checkComplete = true;
+                setSpritesLoaded(true);
+                if (timeout) clearTimeout(timeout);
+                return;
+              }
+            }
+          }
+
+          // Continue checking for more frames if not loaded yet
+          if (frameCount < maxFrames && mounted && !checkComplete) {
+            requestAnimationFrame(checkFrames);
+          } else if (mounted && !checkComplete) {
+            // Fallback: mark as loaded after max frames
+            // This ensures we don't wait forever if sprites fail to load
+            checkComplete = true;
+            setSpritesLoaded(true);
+            if (timeout) clearTimeout(timeout);
+          }
+        };
+
+        // Start checking after a small delay to allow initial render
+        requestAnimationFrame(() => {
+          if (mounted) {
+            requestAnimationFrame(checkFrames);
+          }
+        });
+
+        // Safety timeout: if sprites don't load within 1 second, mark as loaded anyway
+        timeout = setTimeout(() => {
+          if (mounted && !checkComplete) {
+            checkComplete = true;
+            setSpritesLoaded(true);
+          }
+        }, 1000);
+      };
+
+      ensureSpriteSheetLoaded();
+
+      return () => {
+        mounted = false;
+        checkComplete = true;
+        if (timeout) clearTimeout(timeout);
+      };
     }, [
       bodyLoaded,
+      bodyContent,
       config.shoes,
       config.clothing,
       config.eyewear,
       config.headwear,
       config.accessories,
+      bodySvgRef,
     ]);
 
     // Report loading state when all parts are ready
