@@ -54,24 +54,36 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
     const [rawFacialData, setRawFacialData] = useState<{ content: string; viewBox: string } | null>(null);
     const [facialContent, setFacialContent] = useState<string>('');
     const [facialViewBox, setFacialViewBox] = useState<string>('0 0 300 300');
+    
+    // Track loading states for all parts
+    // Initialize based on whether parts are needed
+    const [bodyLoaded, setBodyLoaded] = useState(false);
+    const [hairLoaded, setHairLoaded] = useState(!config.hair); // No hair means already "loaded"
+    const [facialLoaded, setFacialLoaded] = useState(!config.facial); // No facial means already "loaded"
+    const [spritesLoaded, setSpritesLoaded] = useState(!(config.shoes || config.clothing || config.eyewear || config.headwear || config.accessories)); // No sprites means already "loaded"
+
+    // Report initial loading state
+    useEffect(() => {
+      if (!bodyContent) {
+        onLoadingChange?.(true);
+      }
+    }, []);
 
     useEffect(() => {
       let mounted = true;
 
-      // Only report loading if we don't have content yet
-      if (!rawBodyContent) {
-        onLoadingChange?.(true);
-      }
-
+      setBodyLoaded(false);
       fetchSymbolContent(bodyId)
         .then(content => {
           if (content && mounted) {
             setRawBodyContent(content);
+            setBodyLoaded(true);
+          } else if (mounted) {
+            setBodyLoaded(true);
           }
-          if (mounted) onLoadingChange?.(false);
         })
         .catch(() => {
-          if (mounted) onLoadingChange?.(false);
+          if (mounted) setBodyLoaded(true);
         });
 
       return () => { mounted = false; };
@@ -100,19 +112,27 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
     useEffect(() => {
       if (!config.hair) {
         setRawHairData(null);
+        setHairLoaded(true); // No hair means it's "loaded"
         return;
       }
 
+      setHairLoaded(false);
       let mounted = true;
       fetchSymbolWithViewBox(config.hair)
         .then(data => {
           if (data && mounted) {
             setRawHairData(data);
             setHairViewBox(data.viewBox);
+            setHairLoaded(true);
+          } else if (mounted) {
+            setHairLoaded(true);
           }
         })
         .catch(() => {
-          if (mounted) setRawHairData(null);
+          if (mounted) {
+            setRawHairData(null);
+            setHairLoaded(true);
+          }
         });
 
       return () => { mounted = false; };
@@ -145,19 +165,27 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
     useEffect(() => {
       if (!config.facial) {
         setRawFacialData(null);
+        setFacialLoaded(true); // No facial means it's "loaded"
         return;
       }
 
+      setFacialLoaded(false);
       let mounted = true;
       fetchSymbolWithViewBox(config.facial)
         .then(data => {
           if (data && mounted) {
             setRawFacialData(data);
             setFacialViewBox(data.viewBox);
+            setFacialLoaded(true);
+          } else if (mounted) {
+            setFacialLoaded(true);
           }
         })
         .catch(() => {
-          if (mounted) setRawFacialData(null);
+          if (mounted) {
+            setRawFacialData(null);
+            setFacialLoaded(true);
+          }
         });
 
       return () => { mounted = false; };
@@ -187,6 +215,42 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 
       setFacialContent(coloredContent);
     }, [hairColor, rawFacialData]);
+
+    // Wait for SVG sprites to load (shoes, clothing, eyewear, headwear, accessories)
+    // Since sprites use <use> elements referencing the same SVG file as body, once body is loaded,
+    // the SVG file should be available. We just need to wait for DOM to render the sprite elements.
+    useEffect(() => {
+      // Check if any sprites are needed
+      const hasSprites = !!(config.shoes || config.clothing || config.eyewear || config.headwear || config.accessories);
+      
+      if (!hasSprites) {
+        setSpritesLoaded(true);
+        return;
+      }
+
+      // Reset loading state when sprites are needed
+      setSpritesLoaded(false);
+
+      // Once body is loaded, the SVG file is available. Wait for sprite elements to render.
+      // We'll mark sprites as loaded after body is loaded and a short delay for rendering
+      if (bodyLoaded) {
+        const timeout = setTimeout(() => {
+          setSpritesLoaded(true);
+        }, 150); // Small delay to allow <use> elements to render
+        return () => clearTimeout(timeout);
+      }
+    }, [bodyLoaded, config.shoes, config.clothing, config.eyewear, config.headwear, config.accessories]);
+
+    // Report loading state when all parts are ready
+    useEffect(() => {
+      const allPartsLoaded = bodyLoaded && hairLoaded && facialLoaded && spritesLoaded && bodyContent;
+      if (allPartsLoaded) {
+        onLoadingChange?.(false);
+      } else if (bodyContent) {
+        // Still loading other parts
+        onLoadingChange?.(true);
+      }
+    }, [bodyLoaded, hairLoaded, facialLoaded, spritesLoaded, bodyContent, onLoadingChange]);
 
     if (!bodyContent) {
       return null;
