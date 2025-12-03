@@ -1,66 +1,89 @@
-import { useEffect, useRef, useState } from 'react';
-import type { AvatarProps } from '../../types/avatar';
-import { AvatarSprite } from './AvatarSprite';
-import { getBodyViewBox, toDataAttributeId } from './bodyViewBoxes';
-import { getHairColorPalette } from '../../utils/colorUtils';
-
+import { useEffect, useRef, useState } from "react";
+import type { AvatarProps } from "../../types/avatar";
+import { AvatarSprite } from "./AvatarSprite";
+import { getBodyViewBox, toDataAttributeId } from "./bodyViewBoxes";
+import { getHairColorPalette } from "../../utils/colorUtils";
 
 async function fetchSymbolContent(symbolId: string): Promise<string | null> {
   try {
-    const response = await fetch('/avatar-sprites.svg');
+    const response = await fetch("/avatar-sprites.svg");
     const svgText = await response.text();
     const parser = new DOMParser();
-    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const doc = parser.parseFromString(svgText, "image/svg+xml");
     const symbol = doc.getElementById(symbolId);
     if (!symbol) return null;
     return symbol.innerHTML;
   } catch (error) {
-    console.error('Failed to fetch symbol:', error);
+    console.error("Failed to fetch symbol:", error);
     return null;
   }
 }
 
-async function fetchSymbolWithViewBox(symbolId: string): Promise<{ content: string; viewBox: string } | null> {
+async function fetchSymbolWithViewBox(
+  symbolId: string
+): Promise<{ content: string; viewBox: string } | null> {
   try {
-    const response = await fetch('/avatar-sprites.svg');
+    const response = await fetch("/avatar-sprites.svg");
     const svgText = await response.text();
     const parser = new DOMParser();
-    const doc = parser.parseFromString(svgText, 'image/svg+xml');
+    const doc = parser.parseFromString(svgText, "image/svg+xml");
     const symbol = doc.getElementById(symbolId);
     if (!symbol) return null;
     return {
       content: symbol.innerHTML,
-      viewBox: symbol.getAttribute('viewBox') || '0 0 300 300'
+      viewBox: symbol.getAttribute("viewBox") || "0 0 300 300",
     };
   } catch (error) {
-    console.error('Failed to fetch symbol:', error);
+    console.error("Failed to fetch symbol:", error);
     return null;
   }
 }
 
-export function Avatar({ config, size = 100, className = '', renderMode = 'svg', onLoadingChange }: AvatarProps) {
-  const bodyId = config.expression || config.body || 'body-1';
-  const bodyColor = config.bodyColor || '#ffba0a';
-  const hairColor = config.hairColor || '#512e14';
+export function Avatar({
+  config,
+  size = 100,
+  className = "",
+  renderMode = "svg",
+  onLoadingChange,
+}: AvatarProps) {
+  const bodyId = config.expression || config.body || "body-1";
+  const bodyColor = config.bodyColor || "#ffba0a";
+  const hairColor = config.hairColor || "#512e14";
 
-  if (renderMode === 'layered') {
-    const hairDataId = config.hair ? toDataAttributeId(config.hair, 'hair') : undefined;
+  if (renderMode === "layered") {
+    const hairDataId = config.hair
+      ? toDataAttributeId(config.hair, "hair")
+      : undefined;
     const bodySvgRef = useRef<SVGSVGElement>(null);
-    const [rawBodyContent, setRawBodyContent] = useState<string>('');
-    const [bodyContent, setBodyContent] = useState<string>('');
-    const [rawHairData, setRawHairData] = useState<{ content: string; viewBox: string } | null>(null);
-    const [hairContent, setHairContent] = useState<string>('');
-    const [hairViewBox, setHairViewBox] = useState<string>('0 0 300 300');
-    const [rawFacialData, setRawFacialData] = useState<{ content: string; viewBox: string } | null>(null);
-    const [facialContent, setFacialContent] = useState<string>('');
-    const [facialViewBox, setFacialViewBox] = useState<string>('0 0 300 300');
-    
+    const [rawBodyContent, setRawBodyContent] = useState<string>("");
+    const [bodyContent, setBodyContent] = useState<string>("");
+    const [rawHairData, setRawHairData] = useState<{
+      content: string;
+      viewBox: string;
+    } | null>(null);
+    const [hairContent, setHairContent] = useState<string>("");
+    const [hairViewBox, setHairViewBox] = useState<string>("0 0 300 300");
+    const [rawFacialData, setRawFacialData] = useState<{
+      content: string;
+      viewBox: string;
+    } | null>(null);
+    const [facialContent, setFacialContent] = useState<string>("");
+    const [facialViewBox, setFacialViewBox] = useState<string>("0 0 300 300");
+
     // Track loading states for all parts
     // Initialize based on whether parts are needed
     const [bodyLoaded, setBodyLoaded] = useState(false);
     const [hairLoaded, setHairLoaded] = useState(!config.hair); // No hair means already "loaded"
     const [facialLoaded, setFacialLoaded] = useState(!config.facial); // No facial means already "loaded"
-    const [spritesLoaded, setSpritesLoaded] = useState(!(config.shoes || config.clothing || config.eyewear || config.headwear || config.accessories)); // No sprites means already "loaded"
+    const [spritesLoaded, setSpritesLoaded] = useState(
+      !(
+        config.shoes ||
+        config.clothing ||
+        config.eyewear ||
+        config.headwear ||
+        config.accessories
+      )
+    ); // No sprites means already "loaded"
 
     // Report initial loading state
     useEffect(() => {
@@ -74,7 +97,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 
       setBodyLoaded(false);
       fetchSymbolContent(bodyId)
-        .then(content => {
+        .then((content) => {
           if (content && mounted) {
             setRawBodyContent(content);
             setBodyLoaded(true);
@@ -86,20 +109,37 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           if (mounted) setBodyLoaded(true);
         });
 
-      return () => { mounted = false; };
+      return () => {
+        mounted = false;
+      };
     }, [bodyId]);
 
     useEffect(() => {
       if (!rawBodyContent) return;
 
       const BODY_COLOR_CLASSES = [
-        'st17', 'st18', 'st19', 'st20', 'st21', 'st22', 'st23', 'st24',
-        'st25', 'st26', 'st27', 'st30', 'st31', 'st32', 'st33', 'st34', 'st49'
+        "st17",
+        "st18",
+        "st19",
+        "st20",
+        "st21",
+        "st22",
+        "st23",
+        "st24",
+        "st25",
+        "st26",
+        "st27",
+        "st30",
+        "st31",
+        "st32",
+        "st33",
+        "st34",
+        "st49",
       ];
 
       let coloredContent = rawBodyContent;
-      BODY_COLOR_CLASSES.forEach(className => {
-        const regex = new RegExp(`class="${className}"`, 'g');
+      BODY_COLOR_CLASSES.forEach((className) => {
+        const regex = new RegExp(`class="${className}"`, "g");
         coloredContent = coloredContent.replace(
           regex,
           `class="${className}" fill="${bodyColor}"`
@@ -119,7 +159,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
       setHairLoaded(false);
       let mounted = true;
       fetchSymbolWithViewBox(config.hair)
-        .then(data => {
+        .then((data) => {
           if (data && mounted) {
             setRawHairData(data);
             setHairViewBox(data.viewBox);
@@ -135,12 +175,14 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           }
         });
 
-      return () => { mounted = false; };
+      return () => {
+        mounted = false;
+      };
     }, [config.hair]);
 
     useEffect(() => {
       if (!rawHairData) {
-        setHairContent('');
+        setHairContent("");
         return;
       }
 
@@ -149,13 +191,13 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 
       // Map original SVG colors to palette shades
       const colorMappings = {
-        '#512e14': palette.base,
-        '#5b3319': palette.highlight
+        "#512e14": palette.base,
+        "#5b3319": palette.highlight,
       };
 
       // Replace fill colors
       Object.entries(colorMappings).forEach(([original, replacement]) => {
-        const regex = new RegExp(`fill="${original}"`, 'g');
+        const regex = new RegExp(`fill="${original}"`, "g");
         coloredContent = coloredContent.replace(regex, `fill="${replacement}"`);
       });
 
@@ -172,7 +214,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
       setFacialLoaded(false);
       let mounted = true;
       fetchSymbolWithViewBox(config.facial)
-        .then(data => {
+        .then((data) => {
           if (data && mounted) {
             setRawFacialData(data);
             setFacialViewBox(data.viewBox);
@@ -188,12 +230,14 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           }
         });
 
-      return () => { mounted = false; };
+      return () => {
+        mounted = false;
+      };
     }, [config.facial]);
 
     useEffect(() => {
       if (!rawFacialData) {
-        setFacialContent('');
+        setFacialContent("");
         return;
       }
 
@@ -202,14 +246,14 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 
       // Map original SVG colors to palette shades (facial hair uses base color for all shades)
       const colorMappings = {
-        '#512e14': palette.base,
-        '#5b3319': palette.highlight,
-        '#602d0b': palette.base  // Use base color instead of lowlight
+        "#512e14": palette.base,
+        "#5b3319": palette.highlight,
+        "#602d0b": palette.base, // Use base color instead of lowlight
       };
 
       // Replace fill colors
       Object.entries(colorMappings).forEach(([original, replacement]) => {
-        const regex = new RegExp(`fill="${original}"`, 'g');
+        const regex = new RegExp(`fill="${original}"`, "g");
         coloredContent = coloredContent.replace(regex, `fill="${replacement}"`);
       });
 
@@ -221,8 +265,14 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
     // the SVG file should be available. We just need to wait for DOM to render the sprite elements.
     useEffect(() => {
       // Check if any sprites are needed
-      const hasSprites = !!(config.shoes || config.clothing || config.eyewear || config.headwear || config.accessories);
-      
+      const hasSprites = !!(
+        config.shoes ||
+        config.clothing ||
+        config.eyewear ||
+        config.headwear ||
+        config.accessories
+      );
+
       if (!hasSprites) {
         setSpritesLoaded(true);
         return;
@@ -239,18 +289,37 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
         }, 150); // Small delay to allow <use> elements to render
         return () => clearTimeout(timeout);
       }
-    }, [bodyLoaded, config.shoes, config.clothing, config.eyewear, config.headwear, config.accessories]);
+    }, [
+      bodyLoaded,
+      config.shoes,
+      config.clothing,
+      config.eyewear,
+      config.headwear,
+      config.accessories,
+    ]);
 
     // Report loading state when all parts are ready
     useEffect(() => {
-      const allPartsLoaded = bodyLoaded && hairLoaded && facialLoaded && spritesLoaded && bodyContent;
+      const allPartsLoaded =
+        bodyLoaded &&
+        hairLoaded &&
+        facialLoaded &&
+        spritesLoaded &&
+        bodyContent;
       if (allPartsLoaded) {
         onLoadingChange?.(false);
       } else if (bodyContent) {
         // Still loading other parts
         onLoadingChange?.(true);
       }
-    }, [bodyLoaded, hairLoaded, facialLoaded, spritesLoaded, bodyContent, onLoadingChange]);
+    }, [
+      bodyLoaded,
+      hairLoaded,
+      facialLoaded,
+      spritesLoaded,
+      bodyContent,
+      onLoadingChange,
+    ]);
 
     if (!bodyContent) {
       return null;
@@ -271,7 +340,9 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           <AvatarSprite
             spriteId={config.shoes}
             className="avatar-layer avatar-layer--shoes"
-            dataAttributes={{ 'data-shoes': toDataAttributeId(config.shoes, 'shoes') }}
+            dataAttributes={{
+              "data-shoes": toDataAttributeId(config.shoes, "shoes"),
+            }}
           />
         )}
 
@@ -289,7 +360,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
             className="avatar-layer avatar-layer--feature"
             viewBox={facialViewBox}
             dangerouslySetInnerHTML={{ __html: facialContent }}
-            data-facial={toDataAttributeId(config.facial, 'facial')}
+            data-facial={toDataAttributeId(config.facial, "facial")}
           />
         )}
 
@@ -297,7 +368,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           <AvatarSprite
             spriteId={config.eyewear}
             className="avatar-layer avatar-layer--eyewear"
-            dataAttributes={{ 'data-eyewear': config.eyewear }}
+            dataAttributes={{ "data-eyewear": config.eyewear }}
           />
         )}
 
@@ -305,7 +376,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           <AvatarSprite
             spriteId={config.headwear}
             className="avatar-layer avatar-layer--headwear"
-            dataAttributes={{ 'data-headwear': config.headwear }}
+            dataAttributes={{ "data-headwear": config.headwear }}
           />
         )}
 
@@ -313,7 +384,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           <AvatarSprite
             spriteId={config.accessories}
             className="avatar-layer avatar-layer--accessories"
-            dataAttributes={{ 'data-accessories': config.accessories }}
+            dataAttributes={{ "data-accessories": config.accessories }}
           />
         )}
 
@@ -321,7 +392,7 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
           <AvatarSprite
             spriteId={config.clothing}
             className="avatar-layer avatar-layer--clothing"
-            dataAttributes={{ 'data-clothing': config.clothing }}
+            dataAttributes={{ "data-clothing": config.clothing }}
           />
         )}
       </div>
@@ -343,20 +414,28 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
         style={{ fill: bodyColor }}
       />
 
-      {config.shoes && (
-        <AvatarSprite spriteId={config.shoes} x={30} y={220} />
-      )}
+      {config.shoes && <AvatarSprite spriteId={config.shoes} x={30} y={220} />}
 
       {config.clothing && (
         <AvatarSprite spriteId={config.clothing} x={30} y={110} />
       )}
 
       {config.hair && (
-        <AvatarSprite spriteId={config.hair} x={90} y={30} style={{ fill: hairColor }} />
+        <AvatarSprite
+          spriteId={config.hair}
+          x={90}
+          y={30}
+          style={{ fill: hairColor }}
+        />
       )}
 
       {config.facial && (
-        <AvatarSprite spriteId={config.facial} x={105} y={120} style={{ fill: hairColor }} />
+        <AvatarSprite
+          spriteId={config.facial}
+          x={105}
+          y={120}
+          style={{ fill: hairColor }}
+        />
       )}
 
       {config.eyewear && (
@@ -375,18 +454,16 @@ export function Avatar({ config, size = 100, className = '', renderMode = 'svg',
 }
 
 export function AvatarExample() {
-
   return (
     <div>
-      
-      <Avatar 
+      <Avatar
         config={{
-          body: 'body-2',
-          hair: 'hair-3',
-          headwear: 'cap',
-          clothing: 'orange-vest'
-        }} 
-        size={100} 
+          body: "body-2",
+          hair: "hair-3",
+          headwear: "cap",
+          clothing: "orange-vest",
+        }}
+        size={100}
       />
     </div>
   );
@@ -394,50 +471,60 @@ export function AvatarExample() {
 
 export const avatarOptions = {
   bodies: [
-    'body-1', 'body-2', 'body-3', 'body-4', 'body-5',
-    'body-6', 'body-7', 'body-8', 'body-9'
+    "body-1",
+    "body-2",
+    "body-3",
+    "body-4",
+    "body-5",
+    "body-6",
+    "body-7",
+    "body-8",
+    "body-9",
   ],
   expressions: {
-    'body-1': ['body-1-h1', 'body-1-h2', 'body-1-h3', 'body-1-h4'],
-    'body-2': ['body-2-h1', 'body-2-h2', 'body-2-h3', 'body-2-h4'],
-    'body-3': ['body-3-h1', 'body-3-h2', 'body-3-h3', 'body-3-h4'],
-    'body-4': ['body-4-h1', 'body-4-h2', 'body-4-h3', 'body-4-h4'],
-    'body-5': ['body-5-h1', 'body-5-h2', 'body-5-h3', 'body-5-h4'],
-    'body-6': ['body-6-h1', 'body-6-h2', 'body-6-h3', 'body-6-h4'],
-    'body-7': ['body-7-h1', 'body-7-h2', 'body-7-h3', 'body-7-h4'],
-    'body-8': ['body-8-h1', 'body-8-h2', 'body-8-h3', 'body-8-h4'],
-    'body-9': ['body-9-h1', 'body-9-h2', 'body-9-h3', 'body-9-h4']
+    "body-1": ["body-1-h1", "body-1-h2", "body-1-h3", "body-1-h4"],
+    "body-2": ["body-2-h1", "body-2-h2", "body-2-h3", "body-2-h4"],
+    "body-3": ["body-3-h1", "body-3-h2", "body-3-h3", "body-3-h4"],
+    "body-4": ["body-4-h1", "body-4-h2", "body-4-h3", "body-4-h4"],
+    "body-5": ["body-5-h1", "body-5-h2", "body-5-h3", "body-5-h4"],
+    "body-6": ["body-6-h1", "body-6-h2", "body-6-h3", "body-6-h4"],
+    "body-7": ["body-7-h1", "body-7-h2", "body-7-h3", "body-7-h4"],
+    "body-8": ["body-8-h1", "body-8-h2", "body-8-h3", "body-8-h4"],
+    "body-9": ["body-9-h1", "body-9-h2", "body-9-h3", "body-9-h4"],
   },
-  hair: ['hair-1', 'hair-2', 'hair-3', 'hair-4', 'hair-5', 'hair-6', 'hair-7'],
-  headwear: ['cap', 'hard-hat', 'round-hat', 'round-hat-2', 'round-hat-3', 'orange-mask', 'orange-mask-2'],
-  eyewear: ['glasses', 'welding-mask', 'goggles'],
-  facial: ['beard-1', 'beard-2', 'beard-3'],
-  clothing: ['yellow-vest', 'orange-vest', 'name-tag'],
-  shoes: ['shoe-1', 'shoe-2', 'shoe-3'],
-  accessories: ['beauty-spot', 'blush', 'lashes-1'],
-  bodyColors: [
-    '#ffba0a',
-    '#ffdf8e',
-    '#ffc8b6',
-    '#f3cfb0',
-    '#bd9f94',
-    '#8c5845',
-    '#652a15',
-    '#cbc9b9',
-    '#a29f89',
-    '#8c887a',
-    '#7e7c6b',
-    '#c2c2c2',
-    '#616161',
-    '#b2bceb',
-    '#3953cd',
+  hair: ["hair-1", "hair-2", "hair-3", "hair-4", "hair-5", "hair-6", "hair-7"],
+  headwear: [
+    "cap",
+    "hard-hat",
+    "round-hat",
+    "round-hat-2",
+    "round-hat-3",
+    "orange-mask",
+    "orange-mask-2",
   ],
-  hairColors: [
-    '#512e14',
-    '#000000',
-    '#FF6B35',
-    '#ffba0a'
-  ]
+  eyewear: ["glasses", "welding-mask", "goggles"],
+  facial: ["beard-1", "beard-2", "beard-3"],
+  clothing: ["yellow-vest", "orange-vest", "name-tag"],
+  shoes: ["shoe-1", "shoe-2", "shoe-3"],
+  accessories: ["beauty-spot", "blush", "lashes-1"],
+  bodyColors: [
+    "#ffba0a",
+    "#ffdf8e",
+    "#ffc8b6",
+    "#f3cfb0",
+    "#bd9f94",
+    "#8c5845",
+    "#652a15",
+    "#cbc9b9",
+    "#a29f89",
+    "#8c887a",
+    "#7e7c6b",
+    "#c2c2c2",
+    "#616161",
+    "#b2bceb",
+    "#3953cd",
+  ],
+  hairColors: ["#512e14", "#000000", "#FF6B35", "#ffba0a"],
 };
 
 export default Avatar;
