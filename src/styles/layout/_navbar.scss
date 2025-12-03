@@ -39,15 +39,30 @@
       cursor: pointer;
       border-radius: $spacing-sm;
       transition: all 0.2s ease;
-      color: $color-quaternary-dark;
-      
-      &:hover {
-        background-color: rgba($color-secondary, 0.5);
+      color: $secondary-900;
+
+      // Non-active items should be secondary-900 (dark yellow #6b4e04)
+      &:not(.active) {
+        .nav-icon {
+          img {
+            // Filter to change black SVG to match the brown color with yellow tint
+            filter: brightness(0) saturate(100%) invert(40%) sepia(100%) saturate(4000%) hue-rotate(42deg) brightness(0.55) contrast(1.15);
+          }
+        }
       }
-      
 
       .nav-icon {
         font-size: clamp(20px, 5vw, 24px); 
+        color: $secondary-900;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: contain;
+        }
       }
 
       // AI nav item special styling
