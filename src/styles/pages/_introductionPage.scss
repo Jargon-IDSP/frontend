@@ -32,11 +32,11 @@
     min-height: 500px; // Ensures minimum size for visibility
 
     // Mobile-specific adjustments to prevent video cutoff
-    @media (max-width: 768px) {
-      max-height: calc(100vh - 120px); // Reduced space allocation on mobile
-      min-height: 400px; // Lower minimum height for smaller screens
-      overflow: hidden; // Ensure overflow is visible on mobile
-    }
+    // @media (max-width: 768px) {
+    //   max-height: calc(100vh - 120px); // Reduced space allocation on mobile
+    //   min-height: 400px; // Lower minimum height for smaller screens
+    //   overflow: hidden; // Ensure overflow is visible on mobile
+    // }
   }
 
   &__media-container {
