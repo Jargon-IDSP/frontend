@@ -35,7 +35,7 @@
     @media (max-width: 768px) {
       max-height: calc(100vh - 120px); // Reduced space allocation on mobile
       min-height: 400px; // Lower minimum height for smaller screens
-      overflow: visible; // Ensure overflow is visible on mobile
+      overflow: hidden; // Ensure overflow is visible on mobile
     }
   }
 
