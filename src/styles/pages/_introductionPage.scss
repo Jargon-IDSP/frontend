@@ -1,26 +1,34 @@
 @use '../variables' as *;
 @use '../mixins' as *;
 
+// Remove main padding-bottom only for introduction page
+main:has(.introduction-page) {
+  padding-bottom: 0 !important;
+}
+
 .introduction-page {
   display: flex;
   flex-direction: column;
-  background-color: $second-neutral-50;
+  background-color: $secondary-50;
   // Override navbar padding since navbar is hidden on onboarding pages
   padding-bottom: $spacing-md;
   min-height: 100vh;
-  padding-top: $spacing-md;
+
 
   &__title {
-    font-size: $font-size-h1;
-    font-weight: $font-weight-bold;
-    color: $color-primary;
     text-align: center;
-    margin-bottom: $spacing-md;
+    display: flex;
+    justify-content: center;
+  }
+
+  &__wordmark {
+    height: auto;
+    object-fit: contain;
+    display: block;
   }
 
   &__card {
-    background-color: $second-neutral-50;
-    border: none;
+    background-color: $secondary-50;
     width: 100%;
     margin-bottom: $spacing-md;
     position: relative;
@@ -31,12 +39,12 @@
     max-height: calc(100vh - 140px); // Leaves space for title and button
     min-height: 500px; // Ensures minimum size for visibility
 
-    // Mobile-specific adjustments to prevent video cutoff
-    // @media (max-width: 768px) {
-    //   max-height: calc(100vh - 120px); // Reduced space allocation on mobile
-    //   min-height: 400px; // Lower minimum height for smaller screens
-    //   overflow: hidden; // Ensure overflow is visible on mobile
-    // }
+    // Mobile-specific adjustments for smaller card size
+    @media (max-width: $mobile-max) {
+      aspect-ratio: 9 / 16; // Keep same ratio or adjust as needed
+      max-height: calc(100vh - 200px); // Reduced height for mobile
+      min-height: 350px; // Lower minimum height for smaller screens
+    }
   }
 
   &__media-container {
@@ -61,13 +69,15 @@
 
   &__media,
   &__media-placeholder {
-    width: 100%;
-    height: 100%;
-    border-radius: 0;
+    max-width: 100%;
+    max-height: 100%;
+    width: auto;
+    height: auto;
+    border-radius: $border-radius-xl;
     object-fit: contain;
     display: block;
-    border: none;
-    background-color: $second-neutral-50;
+    border: 3px solid $color-primary;
+    background-color: $secondary-50;
   }
 
   &__media {
@@ -89,15 +99,12 @@
   }
 
   &__dots {
-    position: absolute;
-    bottom: $spacing-md;
-    left: 50%;
-    transform: translateX(-50%);
     display: flex;
+    justify-content: center;
     gap: $spacing-sm;
-    z-index: 10;
     padding: $spacing-xs $spacing-sm;
-    background-color: rgba($color-neutral, 0.3);
+    margin: 0 auto $spacing-md;
+    width: fit-content;
     border-radius: $border-radius-md;
     backdrop-filter: blur(4px);
   }
@@ -106,23 +113,26 @@
     width: 8px;
     height: 8px;
     border-radius: 50%;
-    border: none;
-    background-color: rgba(white, 0.6);
+    background-color: $color-foundation-tertiary-50;
+    border: 1px solid $secondary-500;
     cursor: pointer;
-    transition: all $transition-fast;
     padding: 0;
 
-    &:hover {
-      background-color: rgba(white, 0.9);
-      transform: scale(1.3);
-    }
 
     &--active {
-      background-color: white;
-      width: 10px;
-      height: 10px;
+      background-color: $color-foundation-tertiary-500;
       box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+      border: 1px solid $secondary-500;
     }
+  }
+
+  &__description {
+    text-align: center;
+    margin-bottom: $spacing-md;
+    font-size: $font-size-body;
+    font-weight: $font-weight-bold;
+    color: $color-primary;
+    margin-bottom: $spacing-lg;
   }
 
   &__actions {
@@ -132,25 +142,19 @@
   }
 
   &__button {
-    padding: $spacing-md $spacing-xl;
-    border-radius: $border-radius-md;
+    border-radius: $border-radius-xl;
     font-size: $font-size-body;
     font-weight: $font-weight-bold;
     cursor: pointer;
     transition: all $transition-fast;
     border: none;
-    min-width: 150px;
+    padding-right: $spacing-xl;
+    padding-left: $spacing-xl;
 
     &--primary {
       background-color: $color-primary;
       color: white;
-      width: 100%;
-      max-width: 400px;
-
-      &:hover:not(:disabled) {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-      }
+      max-width: 100%;
 
       &:active {
         transform: translateY(0);
