@@ -4,6 +4,7 @@ import { useUser, useAuth } from '@clerk/clerk-react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { BACKEND_URL } from '../../lib/api';
 import '../../styles/pages/_introductionPage.scss';
+import JargonWordmark from '/Jargon_Wordmark.png';
 
 // Media items: GIFs (auto-loop) and local video files
 // For files directly in public folder: use path like '/source.gif' (no subfolder needed)
@@ -26,6 +27,8 @@ export default function IntroductionPage() {
   const touchStartX = useRef<number | null>(null);
   const touchEndX = useRef<number | null>(null);
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([]);
+  const wordmarkRef = useRef<HTMLImageElement>(null);
+  const [wordmarkWidth, setWordmarkWidth] = useState<number | null>(null);
 
   // Mark introduction as viewed in database when component mounts
   const markIntroductionViewedMutation = useMutation({
@@ -66,6 +69,37 @@ export default function IntroductionPage() {
         video.pause();
       }
     });
+  }, [currentMediaIndex]);
+
+  // Match wordmark width to media width
+  useEffect(() => {
+    const updateWordmarkWidth = () => {
+      // Get all media wrappers and find the one that's currently visible
+      const mediaWrappers = carouselRef.current?.querySelectorAll('.introduction-page__media-wrapper');
+      if (mediaWrappers && mediaWrappers[currentMediaIndex]) {
+        const mediaElement = mediaWrappers[currentMediaIndex].querySelector('.introduction-page__media') as HTMLElement;
+        
+        if (mediaElement && wordmarkRef.current) {
+          // Wait a bit for the media to render
+          setTimeout(() => {
+            const mediaWidth = mediaElement.offsetWidth;
+            if (mediaWidth > 0) {
+              setWordmarkWidth(mediaWidth);
+            }
+          }, 100);
+        }
+      }
+    };
+
+    // Update on mount and when media changes
+    updateWordmarkWidth();
+    
+    // Also update on window resize
+    window.addEventListener('resize', updateWordmarkWidth);
+    
+    return () => {
+      window.removeEventListener('resize', updateWordmarkWidth);
+    };
   }, [currentMediaIndex]);
 
   const handleContinue = async () => {
@@ -126,7 +160,15 @@ export default function IntroductionPage() {
 
   return (
     <div className="container introduction-page">
-      {/* <h1 className="introduction-page__title">Jargon</h1> */}
+      <div className="introduction-page__title">
+        <img 
+          ref={wordmarkRef}
+          src={JargonWordmark} 
+          alt="Jargon Wordmark" 
+          className="introduction-page__wordmark"
+          style={wordmarkWidth ? { width: `${wordmarkWidth}px` } : undefined}
+        />
+      </div>
       
       <div 
         className="introduction-page__card"
@@ -167,28 +209,32 @@ export default function IntroductionPage() {
             </div>
           ))}
         </div>
-
-        {/* Dots navigation */}
-        <div className="introduction-page__dots">
-          {MEDIA_ITEMS.map((_, index) => (
-            <button
-              key={index}
-              className={`introduction-page__dot ${
-                index === currentMediaIndex ? 'introduction-page__dot--active' : ''
-              }`}
-              onClick={() => goToMedia(index)}
-              aria-label={`Go to media ${index + 1}`}
-            />
-          ))}
-        </div>
       </div>
+
+      {/* Dots navigation */}
+      <div className="introduction-page__dots">
+        {MEDIA_ITEMS.map((_, index) => (
+          <button
+            key={index}
+            className={`introduction-page__dot ${
+              index === currentMediaIndex ? 'introduction-page__dot--active' : ''
+            }`}
+            onClick={() => goToMedia(index)}
+            aria-label={`Go to media ${index + 1}`}
+          />
+        ))}
+      </div>
+
+      <p className="introduction-page__description">
+        Learn faster with courses, AI, and community.
+      </p>
 
       <div className="introduction-page__actions">
         <button
           className="introduction-page__button introduction-page__button--primary"
           onClick={handleContinue}
         >
-          Continue
+          Skip
         </button>
       </div>
     </div>
