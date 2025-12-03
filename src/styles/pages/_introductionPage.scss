@@ -39,12 +39,15 @@ main:has(.introduction-page) {
     max-height: calc(100vh - 140px); // Leaves space for title and button
     min-height: 500px; // Ensures minimum size for visibility
 
-    // Mobile-specific adjustments for smaller card size
-    // @media (max-width: $mobile-max) {
-    //   aspect-ratio: 9 / 16; // Keep same ratio or adjust as needed
-    //   max-height: calc(100vh - 200px); // Reduced height for mobile
-    //   min-height: 350px; // Lower minimum height for smaller screens
-    // }
+    // Mobile-specific adjustments to prevent video cutoff
+    @media (max-width: $mobile-max) {
+      // Reduce max-height to account for wordmark (~60px), dots (~30px), description (~50px), and button (~50px), plus margins
+      max-height: calc(100vh - 250px);
+      // Remove min-height constraint on mobile to prevent forcing card too tall
+      min-height: unset;
+      // Ensure card fits within viewport
+      max-width: 100vw;
+    }
   }
 
   &__media-container {
