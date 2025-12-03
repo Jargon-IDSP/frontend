@@ -4,7 +4,7 @@
 .introduction-page {
   display: flex;
   flex-direction: column;
-  background-color: $color-second-neutral-light;
+  background-color: $second-neutral-50;
   // Override navbar padding since navbar is hidden on onboarding pages
   padding-bottom: $spacing-md;
   min-height: 100vh;
@@ -19,17 +19,24 @@
   }
 
   &__card {
-    background-color: $color-second-neutral-light;
+    background-color: $second-neutral-50;
     border: none;
     width: 100%;
     margin-bottom: $spacing-md;
     position: relative;
-    overflow: hidden;
+    overflow: hidden; // Changed from hidden to prevent cutting off video
     // Video container - optimized for phone screen recordings (portrait 9:16)
     // Takes up most of the viewport for better visibility of phone screen recordings
     aspect-ratio: 9 / 16; // Portrait phone screen ratio (9:16 = portrait)
     max-height: calc(100vh - 140px); // Leaves space for title and button
     min-height: 500px; // Ensures minimum size for visibility
+
+    // Mobile-specific adjustments to prevent video cutoff
+    @media (max-width: 768px) {
+      max-height: calc(100vh - 120px); // Reduced space allocation on mobile
+      min-height: 400px; // Lower minimum height for smaller screens
+      overflow: visible; // Ensure overflow is visible on mobile
+    }
   }
 
   &__media-container {
@@ -47,7 +54,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    overflow: hidden;
+    overflow: hidden; // Changed from hidden to prevent cutting off video
     border: none;
     border-radius: 0;
   }
@@ -60,7 +67,7 @@
     object-fit: contain;
     display: block;
     border: none;
-    background-color: $color-second-neutral-light;
+    background-color: $second-neutral-50;
   }
 
   &__media {
