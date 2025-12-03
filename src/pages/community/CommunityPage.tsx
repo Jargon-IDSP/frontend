@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
@@ -32,6 +32,8 @@ const CommunityPage: React.FC = () => {
     const navigate = useNavigate();
     const { getToken } = useAuth();
     const [activeTab, setActiveTab] = useState<TabType>("leaderboard");
+    const [avatarLoadingCount, setAvatarLoadingCount] = useState(0);
+    const avatarLoadingRef = useRef<Set<string>>(new Set());
 
     const { data: leaderboardUsers = [], isLoading: leaderboardLoading } =
         useLeaderboard("general");
@@ -56,6 +58,22 @@ const CommunityPage: React.FC = () => {
         retry: 2,
     });
 
+    // Track avatar loading
+    const handleAvatarLoadingChange = (userId: string, isLoading: boolean) => {
+        if (isLoading) {
+            avatarLoadingRef.current.add(userId);
+        } else {
+            avatarLoadingRef.current.delete(userId);
+        }
+        setAvatarLoadingCount(avatarLoadingRef.current.size);
+    };
+
+    // Reset avatar loading when data changes
+    useEffect(() => {
+        avatarLoadingRef.current.clear();
+        setAvatarLoadingCount(0);
+    }, [leaderboardUsers, friends]);
+
     const handleLeaderboardCardClick = () => {
         navigate("/leaderboard/full");
     };
@@ -78,8 +96,19 @@ const CommunityPage: React.FC = () => {
         friendsNoShowImg: noFriendsImg,
     });
 
+    // Determine if we should show the full-page loading screen
+    const isDataLoading = leaderboardLoading || profileLoading || friendsLoading;
+    const areAvatarsLoading = avatarLoadingCount > 0;
+    const showFullPageLoading = isDataLoading || areAvatarsLoading;
+    const allDataLoaded = !isDataLoading && !areAvatarsLoading;
+
     return (
         <div className='container'>
+            <LoadingBar
+                isLoading={showFullPageLoading}
+                hasData={allDataLoaded}
+                text="Loading Community"
+            />
             <main className='community-page'>
                 <div className='community-header'>
                     <img
@@ -132,10 +161,9 @@ const CommunityPage: React.FC = () => {
                                     : undefined
                             }>
                             {leaderboardLoading ? (
-                                <LoadingBar
-                                    isLoading={leaderboardLoading}
-                                    text='Loading Leaderboard'
-                                />
+                                <div style={{ padding: '2rem', textAlign: 'center' }}>
+                                    Loading leaderboard...
+                                </div>
                             ) : hasNoPoints ? (
                                 <div className='leaderboard-preview-empty-state'>
                                     <img
@@ -179,6 +207,9 @@ const CommunityPage: React.FC = () => {
                                                         isCurrentUser
                                                     }
                                                     isClickable={false}
+                                                    onAvatarLoadingChange={(isLoading) =>
+                                                        handleAvatarLoadingChange(user.id, isLoading)
+                                                    }
                                                 />
                                             );
                                         })}
@@ -200,10 +231,9 @@ const CommunityPage: React.FC = () => {
                                     : undefined
                             }>
                             {friendsLoading ? (
-                                <LoadingBar
-                                    isLoading={friendsLoading}
-                                    text='Loading Friends'
-                                />
+                                <div style={{ padding: '2rem', textAlign: 'center' }}>
+                                    Loading friends...
+                                </div>
                             ) : hasNoFriends ? (
                                 <div className='friends-preview-empty-state'>
                                     <img
@@ -257,6 +287,9 @@ const CommunityPage: React.FC = () => {
                                                                 }
                                                                 size={48}
                                                                 className='friends-item-avatar'
+                                                                onLoadingChange={(isLoading) =>
+                                                                    handleAvatarLoadingChange(friend.id, isLoading)
+                                                                }
                                                             />
                                                         ) : (
                                                             <img

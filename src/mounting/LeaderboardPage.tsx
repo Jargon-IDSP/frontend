@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { useLeaderboard } from "../hooks/useLeaderboard";
 import { useProfile } from "../hooks/useProfile";
@@ -18,6 +18,8 @@ const LeaderboardPage: React.FC = () => {
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
   const tabParam = searchParams.get("tab");
+  const [avatarLoadingCount, setAvatarLoadingCount] = useState(0);
+  const avatarLoadingRef = useRef<Set<string>>(new Set());
 
   const initialTab = (tabParam === "general" || tabParam === "private" || tabParam === "self")
     ? tabParam
@@ -39,6 +41,22 @@ const LeaderboardPage: React.FC = () => {
   } = useLeaderboard(leaderboardType === "private" ? "friends" : "general");
   const { data: profile, isLoading: profileLoading } = useProfile();
 
+  // Track avatar loading
+  const handleAvatarLoadingChange = (avatarId: string, isLoading: boolean) => {
+    if (isLoading) {
+      avatarLoadingRef.current.add(avatarId);
+    } else {
+      avatarLoadingRef.current.delete(avatarId);
+    }
+    setAvatarLoadingCount(avatarLoadingRef.current.size);
+  };
+
+  // Reset avatar loading when data changes
+  useEffect(() => {
+    avatarLoadingRef.current.clear();
+    setAvatarLoadingCount(0);
+  }, [users, leaderboardType]);
+
   const userScore = profile?.score ?? 0;
   const hasNoPoints = userScore === 0;
 
@@ -55,9 +73,10 @@ const LeaderboardPage: React.FC = () => {
     users.length < 3;
 
   const containerClass = "container container--leaderboard";
-  const isLoadingPage =
-    loading ||
-    profileLoading;
+  const isDataLoading = loading || profileLoading;
+  const areAvatarsLoading = avatarLoadingCount > 0;
+  const showFullPageLoading = isDataLoading || areAvatarsLoading;
+  const allDataLoaded = !isDataLoading && !areAvatarsLoading;
 
   if (error) {
     return (
@@ -113,6 +132,11 @@ const LeaderboardPage: React.FC = () => {
 
   return (
     <div className={containerClass}>
+      <LoadingBar
+        isLoading={showFullPageLoading}
+        hasData={allDataLoaded}
+        text="Loading Leaderboard"
+      />
       <div className="leaderboard-page">
         <div className="leaderboard-hero">
           <LeaderboardHeader
@@ -120,8 +144,6 @@ const LeaderboardPage: React.FC = () => {
             onTabChange={setLeaderboardType}
             showActions={true}
           />
-
-          <LoadingBar isLoading={isLoadingPage} text="Loading Leaderboard" />
 
           {hasInsufficientPrivateConnections ? (
             <div className="leaderboard-empty-state">
@@ -151,6 +173,9 @@ const LeaderboardPage: React.FC = () => {
                       config={profile.avatar}
                       size={120}
                       className="friend-profile-avatar-display"
+                      onLoadingChange={(isLoading) =>
+                        handleAvatarLoadingChange(`self-${profile.id}`, isLoading)
+                      }
                     />
                   ) : (
                     <img src={rockyWhiteLogo} alt="User Avatar" />
@@ -170,7 +195,14 @@ const LeaderboardPage: React.FC = () => {
                 </div>
               ) : (
                 users.length > 0 && (
-                  <Podium users={users} currentUserId={profile?.id} fromRoute="/leaderboard/full" />
+                  <Podium 
+                    users={users} 
+                    currentUserId={profile?.id} 
+                    fromRoute="/leaderboard/full"
+                    onAvatarLoadingChange={(userId, isLoading) => {
+                      handleAvatarLoadingChange(`podium-${userId}`, isLoading);
+                    }}
+                  />
                 )
               )}
             </>
@@ -195,6 +227,9 @@ const LeaderboardPage: React.FC = () => {
                         isCurrentUser={isCurrentUser}
                         isClickable={true}
                         fromRoute="/leaderboard/full"
+                        onAvatarLoadingChange={(isLoading) =>
+                          handleAvatarLoadingChange(user.id, isLoading)
+                        }
                       />
                     );
                   })}

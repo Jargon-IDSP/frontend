@@ -46,7 +46,12 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/lea
                   config={user.avatar}
                   size={60}
                   className={`podium-avatar rank-${rank}`}
-                  onLoadingChange={onAvatarLoadingChange}
+                  onLoadingChange={(isLoading) => {
+                    // Pass user ID to distinguish between podium avatars
+                    if (onAvatarLoadingChange) {
+                      onAvatarLoadingChange(user.id, isLoading);
+                    }
+                  }}
                 />
               ) : (
                 <img
