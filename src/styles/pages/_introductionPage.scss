@@ -13,11 +13,6 @@ main:has(.introduction-page) {
   // Override navbar padding since navbar is hidden on onboarding pages
   padding-bottom: $spacing-md;
   min-height: 100vh;
-  // Ensure proper spacing and prevent overlapping on mobile
-  @media (max-width: $mobile-max) {
-    gap: 0; // Let individual margins handle spacing
-    overflow-x: hidden; // Prevent horizontal overflow
-  }
 
 
   &__title {
@@ -44,16 +39,12 @@ main:has(.introduction-page) {
     max-height: calc(100vh - 140px); // Leaves space for title and button
     min-height: 500px; // Ensures minimum size for visibility
 
-    // Mobile-specific adjustments to prevent cutoff and overlapping
-    @media (max-width: $mobile-max) {
-      // Remove min-height to allow card to shrink on small screens
-      min-height: 0;
-      // Reduce max-height significantly to account for:
-      // wordmark (~60px) + card margin (16px) + dots (~40px) + description (~50px) + button (~50px) + page padding (16px) = ~232px
-      max-height: calc(100vh - 280px);
-      // Ensure card doesn't exceed viewport
-      max-width: 100%;
-    }
+    // Mobile-specific adjustments for smaller card size
+    // @media (max-width: $mobile-max) {
+    //   aspect-ratio: 9 / 16; // Keep same ratio or adjust as needed
+    //   max-height: calc(100vh - 200px); // Reduced height for mobile
+    //   min-height: 350px; // Lower minimum height for smaller screens
+    // }
   }
 
   &__media-container {
