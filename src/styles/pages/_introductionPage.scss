@@ -134,6 +134,8 @@ main:has(.introduction-page) {
     font-weight: $font-weight-bold;
     color: $color-primary;
     margin-bottom: $spacing-lg;
+    margin-left: 3rem;
+    margin-right: 3rem;
   }
 
   &__actions {
