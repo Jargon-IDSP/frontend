@@ -71,8 +71,8 @@
     border-radius: 18px;
     font-size: $font-size-body;
     font-weight: $font-weight-regular;
-    width: 366px;
-    max-width: 366px;
+    width: 100%;
+    max-width: 480px;
     margin: 0 auto;
     color: $primary-200;
     cursor: pointer;
@@ -95,7 +95,8 @@
     display: block;
     margin: 125px auto;
     padding: $spacing-md $spacing-xl;
-    min-width: 366px;
+    max-width: 480px;
+    width: 100%;
     background-color: $quinary-500;
     border: none;
     border-radius: $border-radius-lg;

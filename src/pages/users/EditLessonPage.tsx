@@ -35,7 +35,6 @@ const EditLessonPage: React.FC = () => {
   >(new Set());
   const [isDeleteDrawerOpen, setIsDeleteDrawerOpen] = useState(false);
 
-  // Fetch lesson details to get current name and documentId
   const { data: lessonData, isLoading } = useQuery({
     queryKey: ["lessonDetails", lessonId, profile?.id],
     queryFn: async () => {
@@ -58,15 +57,12 @@ const EditLessonPage: React.FC = () => {
     enabled: !!lessonId && !!profile?.id,
   });
 
-  // Fetch categories
   const { data: categories = [] } = useCategories();
 
-  // Fetch current document category
   const { data: currentCategoryId } = useDocumentCategory(
     lessonData?.documentId || null
   );
 
-  // Fetch shared users for this lesson
   const { data: sharedUsersData } = useQuery({
     queryKey: ["quizShares", lessonData?.id],
     queryFn: async () => {
@@ -87,7 +83,6 @@ const EditLessonPage: React.FC = () => {
 
   const sharedUsers = sharedUsersData?.shares || [];
 
-  // Fetch friends list (needed for PRIVATE mode selection)
   const { data: friends = [] } = useQuery({
     queryKey: ["friends"],
     queryFn: async () => {
@@ -102,7 +97,6 @@ const EditLessonPage: React.FC = () => {
     staleTime: 5 * 60 * 1000,
   });
 
-  // Initialize selected shared users when data loads
   useEffect(() => {
     if (sharedUsers.length > 0) {
       const userIds = new Set<string>(
@@ -112,14 +106,12 @@ const EditLessonPage: React.FC = () => {
     }
   }, [sharedUsers]);
 
-  // Update newName when lessonData is loaded
   useEffect(() => {
     if (lessonData?.name) {
       setNewName(lessonData.name);
     }
   }, [lessonData]);
 
-  // Update selectedCategoryId when currentCategoryId is loaded
   useEffect(() => {
     if (currentCategoryId !== undefined && currentCategoryId !== null) {
       setSelectedCategoryId(currentCategoryId);
@@ -142,7 +134,6 @@ const EditLessonPage: React.FC = () => {
         name: name.trim(),
       };
 
-      // Only include categoryId if it's different from current
       if (
         categoryId !== undefined &&
         categoryId !== null &&
@@ -169,7 +160,6 @@ const EditLessonPage: React.FC = () => {
       return response.json();
     },
     onSuccess: async () => {
-      // Invalidate all document-related queries
       queryClient.invalidateQueries({ queryKey: ["documents"] });
       queryClient.invalidateQueries({
         queryKey: ["document", lessonData?.documentId],
@@ -181,7 +171,6 @@ const EditLessonPage: React.FC = () => {
         queryKey: ["documentQuizzes", lessonData?.documentId],
       });
       
-      // Invalidate category queries (documents by category - shows file names in category folders)
       queryClient.invalidateQueries({ queryKey: ["documents", "by-category"] });
       
       queryClient.invalidateQueries({ queryKey: ["friendLessons"] });
@@ -190,7 +179,6 @@ const EditLessonPage: React.FC = () => {
       queryClient.invalidateQueries({ queryKey: ["lessonDetails"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
 
-      // Navigate back to profile
       const returnPath = location.state?.from || "/profile";
       navigate(returnPath);
     },
@@ -199,7 +187,6 @@ const EditLessonPage: React.FC = () => {
     },
   });
 
-  // Share mutation - add a friend to the lesson
   const shareMutation = useMutation({
     mutationFn: async (friendId: string) => {
       if (!lessonData?.id) throw new Error("No lesson ID");
@@ -225,7 +212,6 @@ const EditLessonPage: React.FC = () => {
     },
   });
 
-  // Unshare mutation - remove a friend from the lesson
   const unshareMutation = useMutation({
     mutationFn: async (shareId: string) => {
       const token = await getToken();
@@ -254,7 +240,6 @@ const EditLessonPage: React.FC = () => {
       return;
     }
 
-    // Update name and category (unsharing will be handled in onSuccess)
     updateNameMutation.mutate({
       name: newName,
       categoryId:
@@ -283,9 +268,6 @@ const EditLessonPage: React.FC = () => {
   };
 
   const handleDeleteCancel = () => {
-    // This is called after successful deletion (when navigateOnSuccess is false)
-    // or when user cancels the delete action
-    // Invalidate additional queries that DeleteDrawer doesn't handle
     queryClient.invalidateQueries({ queryKey: ["document"] });
     queryClient.invalidateQueries({ queryKey: ["documentQuizzes"] });
     queryClient.invalidateQueries({ queryKey: ["friendLessons"] });
@@ -294,7 +276,6 @@ const EditLessonPage: React.FC = () => {
     queryClient.invalidateQueries({ queryKey: ["lessonDetails"] });
     queryClient.invalidateQueries({ queryKey: ["categories"] });
 
-    // Navigate back to profile (only if deletion succeeded, but we navigate in both cases for safety)
     const returnPath = location.state?.from || "/profile";
     navigate(returnPath);
   };
@@ -471,17 +452,14 @@ const EditLessonPage: React.FC = () => {
                       {(() => {
                         const privacy = profile?.defaultPrivacy || "PRIVATE";
 
-                        // If profile is PUBLIC, always show "Everyone"
                         if (privacy === "PUBLIC") {
                           return "Everyone";
                         }
 
-                        // If profile is FRIENDS, always show "All friends"
                         if (privacy === "FRIENDS") {
                           return "All friends";
                         }
 
-                        // PRIVATE mode - show individual friend names or "No one"
                         if (sharedUsers.length === 0) {
                           return "No one";
                         }
@@ -496,7 +474,6 @@ const EditLessonPage: React.FC = () => {
                           )}, ${getUserDisplayName(sharedUsers[1].sharedWith)}`;
                         }
 
-                        // More than 2 users: show first 2 + count
                         const firstTwo = sharedUsers
                           .slice(0, 2)
                           .map((share: any) =>
@@ -523,13 +500,11 @@ const EditLessonPage: React.FC = () => {
                     <div className="edit-lesson-shared-list">
                       {profile?.defaultPrivacy === "PUBLIC" ||
                       profile?.defaultPrivacy === "FRIENDS" ? (
-                        // PUBLIC or FRIENDS mode: Show only the centered notice
                         <p className="edit-lesson-privacy-note edit-lesson-privacy-note--centered">
                           Update privacy settings to control individual documents
                           visibility
                         </p>
                       ) : (
-                        // PRIVATE mode: Show all friends with checkboxes
                         friends.length > 0 ? (
                           friends.map((friend: any, index: number) => {
                             const friendId = friend.id;
@@ -564,11 +539,9 @@ const EditLessonPage: React.FC = () => {
                                     );
                                     if (e.target.checked) {
                                       newSelected.add(friendId);
-                                      // Immediately share with this friend
                                       shareMutation.mutate(friendId);
                                     } else {
                                       newSelected.delete(friendId);
-                                      // Immediately unshare from this friend
                                       if (share) {
                                         unshareMutation.mutate(share.id);
                                       }
