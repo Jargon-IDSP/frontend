@@ -236,13 +236,19 @@
       transition: all 0.3s ease-in-out;
     }
 
-    .avatar-layer--eyewear[data-eyewear="welding-mask"],
+    .avatar-layer--eyewear[data-eyewear="welding-mask"] {
+      top: 50px;
+      width: 100%;
+      min-height: 113px;
+      max-height: 150px;
+    }
+
     .avatar-layer--eyewear[data-eyewear="orange-mask"],
     .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
       top: 50px;
       width: 100%;
       min-height: 113px;
-      max-height: 150px;
+      max-height: 250px;
     }
 
     // positioning for hats etc
