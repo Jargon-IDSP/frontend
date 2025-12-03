@@ -142,6 +142,9 @@ export default function AccountPage() {
             await queryClient.invalidateQueries({
                 queryKey: ["userPreferences"],
             });
+            // Refetch queries immediately to update all components
+            await queryClient.refetchQueries({ queryKey: ["profile"] });
+            await queryClient.refetchQueries({ queryKey: ["userPreferences"] });
             setHasUnsavedChanges(false);
             setIsSaving(false);
             navigate("/profile");

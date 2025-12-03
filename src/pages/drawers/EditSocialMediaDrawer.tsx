@@ -69,9 +69,12 @@ export default function EditSocialMediaDrawer({
       }
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
-      queryClient.invalidateQueries({ queryKey: ["friendProfile"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      await queryClient.invalidateQueries({ queryKey: ["friendProfile"] });
+      // Refetch queries immediately to update all components
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
+      await queryClient.refetchQueries({ queryKey: ["friendProfile"] });
 
       setError("");
       onOpenChange(false);

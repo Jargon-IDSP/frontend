@@ -62,8 +62,12 @@ export default function LanguagePreferences() {
 
       return await res.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      await queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
+      // Refetch queries immediately to update all components
+      await queryClient.refetchQueries({ queryKey: ['profile'] });
+      await queryClient.refetchQueries({ queryKey: ['userPreferences'] });
 
       if (isUpdating) {
         navigate('/settings');

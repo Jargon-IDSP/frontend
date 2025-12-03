@@ -83,6 +83,9 @@ export default function IndustryPreferences() {
       // Invalidate and refetch profile data
       await queryClient.invalidateQueries({ queryKey: ['profile'] });
       await queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
+      // Refetch queries immediately to update all components
+      await queryClient.refetchQueries({ queryKey: ['profile'] });
+      await queryClient.refetchQueries({ queryKey: ['userPreferences'] });
       // Clear session storage
       sessionStorage.removeItem('onboardingData');
       // Navigate based on context

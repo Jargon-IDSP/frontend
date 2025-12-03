@@ -58,9 +58,12 @@ export default function ManageProfilePage() {
 
       return res.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ['profile'] });
-      queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ['profile'] });
+      await queryClient.invalidateQueries({ queryKey: ['userPreferences'] });
+      // Refetch queries immediately to update all components
+      await queryClient.refetchQueries({ queryKey: ['profile'] });
+      await queryClient.refetchQueries({ queryKey: ['userPreferences'] });
       navigate('/profile');
     },
     onError: (error) => {

@@ -51,8 +51,10 @@ export default function PrivacyDrawer({
 
       return response.json();
     },
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["profile"] });
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["profile"] });
+      // Refetch queries immediately to update all components
+      await queryClient.refetchQueries({ queryKey: ["profile"] });
       onOpenChange(false);
     },
   });
