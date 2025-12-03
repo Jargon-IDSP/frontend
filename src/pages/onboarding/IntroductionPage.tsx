@@ -11,9 +11,9 @@ import JargonWordmark from '/Jargon_Wordmark.png';
 // For files in public/introduction/: use path like '/introduction/intro1.gif'
 // For files in src/assets: import them and use the imported variable
 const MEDIA_ITEMS = [
-  { id: 1, src: '/ready-to-go-course.gif', type: 'gif' }, // GIF - auto loops (file is in public folder)
-  { id: 2, src: '/upload.gif', type: 'gif' },
-  { id: 3, src: '/community.gif', type: 'gif' },
+  { id: 1, src: '/ready-to-go-course.gif', type: 'gif', description: 'Start learning instantly with pre-built lessons designed for your trade.' }, // GIF - auto loops (file is in public folder)
+  { id: 2, src: '/upload.gif', type: 'gif', description: 'Translate, simplify, and learn from your own documents.' },
+  { id: 3, src: '/community.gif', type: 'gif', description: 'Connect, share, and grow with others in your trade.' },
   // Add more items as needed
 ];
 
@@ -226,15 +226,19 @@ export default function IntroductionPage() {
       </div>
 
       <p className="introduction-page__description">
-        Learn faster with courses, AI, and community.
+        {MEDIA_ITEMS[currentMediaIndex]?.description || 'Learn faster with courses, AI, and community.'}
       </p>
 
       <div className="introduction-page__actions">
         <button
           className="introduction-page__button introduction-page__button--primary"
-          onClick={handleContinue}
+          onClick={
+            currentMediaIndex === MEDIA_ITEMS.length - 1
+              ? handleContinue
+              : handleNext
+          }
         >
-          Skip
+          {currentMediaIndex === MEDIA_ITEMS.length - 1 ? 'Skip' : 'Next'}
         </button>
       </div>
     </div>
