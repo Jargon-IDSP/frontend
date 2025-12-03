@@ -10,9 +10,9 @@ import '../../styles/pages/_introductionPage.scss';
 // For files in public/introduction/: use path like '/introduction/intro1.gif'
 // For files in src/assets: import them and use the imported variable
 const MEDIA_ITEMS = [
-  { id: 1, src: '/source.gif', type: 'gif' }, // GIF - auto loops (file is in public folder)
-  { id: 2, src: '/source.gif', type: 'gif' },
-  { id: 3, src: '/source.gif', type: 'gif' },
+  { id: 1, src: '/ready-to-go-course.gif', type: 'gif' }, // GIF - auto loops (file is in public folder)
+  { id: 2, src: '/upload.gif', type: 'gif' },
+  { id: 3, src: '/community.gif', type: 'gif' },
   // Add more items as needed
 ];
 
@@ -126,7 +126,7 @@ export default function IntroductionPage() {
 
   return (
     <div className="container introduction-page">
-      <h1 className="introduction-page__title">Jargon</h1>
+      {/* <h1 className="introduction-page__title">Jargon</h1> */}
       
       <div 
         className="introduction-page__card"
