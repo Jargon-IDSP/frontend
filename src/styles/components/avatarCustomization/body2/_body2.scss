@@ -342,6 +342,13 @@
     width: 55%;
   }
 
+   &[data-shape^="shape-02"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="cap"] {
+    top: 6%;
+    left: 34%;
+    width: 50%;
+  }
+
+
     &[data-shape^="shape-02"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="cap"] {
     top: 8%;
     left: 52%;
@@ -359,6 +366,12 @@
     top: -5%;
     left: 55%;
     width:60%;
+  }
+
+  &[data-shape="shape-02-h1"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="cap"] {
+    top: -10%;
+    left: 36%;
+    width: 50%;
   }
 
   // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
@@ -380,6 +393,11 @@
     left: 60%;
   }
 
+  &[data-shape="shape-02-h2"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="cap"] {
+    top: -2%;
+    left: 40%;
+  }
+
     // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
   &[data-shape="shape-02-h2"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="cap"] {
     top: 0%;
@@ -397,6 +415,12 @@
     top: 15%;
     left: 55%;
     width: 50%;
+  }
+
+  &[data-shape="shape-02-h3"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="cap"] {
+    top: 10%;
+    left: 32%;
+    width: 40%;
   }
 
   &[data-shape="shape-02-h3"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="cap"] {
@@ -417,6 +441,13 @@
     top: 5%;
     left: 60%;
     width: 55%;
+  } 
+
+
+  &[data-shape="shape-02-h4"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="cap"] {
+    top: -2%;
+    left: 40%;
+    width: 48%;
   } 
 
   &[data-shape="shape-02-h4"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="cap"] {
@@ -442,6 +473,12 @@
     width: 50%;
   }
 
+    &[data-shape^="shape-02"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: 2%;
+    left: 35%;
+    width: 48%;
+  }
+
   &[data-shape^="shape-02"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="hard-hat"] {
     top: -2%;
     left: 50%;
@@ -460,6 +497,12 @@
     left: 55%;
     width: 60%;
   }
+
+  &[data-shape="shape-02-h1"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: -15%;
+    left: 35%;
+    width: 50%;
+  }
   
     &[data-shape="shape-02-h1"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="hard-hat"] {
     top: -15%;
@@ -477,6 +520,12 @@
     top: -4.7%;
     left: 55%;
     width: 55%;
+  }
+
+   &[data-shape="shape-02-h2"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: -10%;
+    left: 43%;
+    width: 50%;
   }
   
     &[data-shape="shape-02-h2"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="hard-hat"] {
@@ -497,6 +546,12 @@
     width: 45%;
   }
 
+   &[data-shape="shape-02-h3"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: 6%;
+    left: 38%;
+    width: 45%;
+  }
+
     &[data-shape="shape-02-h3"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="hard-hat"] {
     top: 5%;
     left: 52%;
@@ -508,6 +563,25 @@
     top: -2%;
     left: 48.2%;
     width: 55%;
+  }
+
+  &[data-shape="shape-02-h4"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: -8%;
+    left: 60%;
+    width: 60%;
+  }
+
+    &[data-shape="shape-02-h4"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: -8%;
+    left: 43%;
+    width: 50%;
+  }
+
+  
+    &[data-shape="shape-02-h4"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="hard-hat"] {
+    top: -10%;
+    left: 58%;
+    width: 60%;
   }
 
   // Shape-02 + Round hat 1 combinations for base body
@@ -522,6 +596,7 @@
     top: 8%;
     left: 55%
   }
+  
 
     &[data-shape="shape-02"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat"] {
     top: 8%;
@@ -701,14 +776,19 @@
 // Shape-02 + Round hat 3 combinations for base body
    &[data-shape^="shape-02"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
     top: 12%;
-    left: 43.9%;
-    width: 60%;
+    left: 40%;
+    width: 48%;
   }
 
   // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
   &[data-shape^="shape-02"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 13.9%;
+    top: 10%;
     left: 52%;
+  }
+
+  &[data-shape^="shape-02"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
+    top: 6%;
+    left: 33%;
   }
 
   &[data-shape="shape-02"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
@@ -718,17 +798,23 @@
 
   // Shape-02 + Round hat 3 combinations for base body 1
     &[data-shape="shape-02-h1"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 0%;
-    left: 50%;
+    top: -3%;
+    left: 38%;
   }
 
   // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
     &[data-shape="shape-02-h1"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 0%;
+    top: -5%;
     left: 58%
   }
+
+   &[data-shape="shape-02-h1"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
+    top: -10%;
+    left: 34%
+  }
+
     &[data-shape="shape-02-h1"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: -2%;
+    top: -10%;
     left: 58%
   }
 
@@ -741,27 +827,39 @@
 
 // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
      &[data-shape="shape-02-h2"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 5%;
+    top: 0%;
     left: 58%
   }
 
+   &[data-shape="shape-02-h2"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
+    top: -2%;
+    left: 39%;
+    width: 50%;
+  }
+
      &[data-shape="shape-02-h2"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 0%;
+    top: -5%;
     left: 58%
   }
 
   // Shape-02 + Round hat 3 combinations for base body 3
     &[data-shape="shape-02-h3"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 18%;
-    left: 50%;
-    width: 52%;
+    top: 19%;
+    left: 48%;
+    width: 50%;
   }
 
 // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
    &[data-shape="shape-02-h3"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 15%;
-    left: 55%;
-    width: 55%;
+    top: 12%;
+    left: 58%;
+    width: 52%;
+  }
+
+   &[data-shape="shape-02-h3"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
+    top: 12%;
+    left: 33%;
+    width: 40%;
   }
 
      &[data-shape="shape-02-h3"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
@@ -780,14 +878,21 @@
 
 // Only allow users to double up for hats with hairstyle 1 and hairstyle 7. The others would realistically be hidden by the hat - and do not render properly
   &[data-shape="shape-02-h4"][data-hair="hair-01"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 7%;
-    left: 55%;
+    top: 0%;
+    left: 58%;
     width: 55%;
   }
 
+  &[data-shape="shape-02-h4"][data-hair="hair-05"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
+    top: 0%;
+    left: 38%;
+    width: 45%;
+  }
+
      &[data-shape="shape-02-h4"][data-hair="hair-07"] .avatar-layer--headwear[data-headwear="round-hat-3"] {
-    top: 5%;
-    left: 58%
+    top: 2%;
+    left: 58%;
+    width: 60%;
   }
 
 // hats end here
@@ -900,71 +1005,72 @@
 
   // Shape-02 + orange mask combinations for base body
   &[data-shape^="shape-02"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
-    top: 25%;
+    top: 21%;
     left: 52%;
-    width: 60%;
+    width: 75%;
   }
 
     // Shape-02 + orange mask combinations for base body 1
   &[data-shape="shape-02-h1"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
     width: 80%;
-    top: 15%;
-    left: 58%;
+    top: 6%;
+    left: 55%;
   }
 
     // Shape-02 + orange mask combinations for base body 2
    &[data-shape="shape-02-h2"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
-    width: 75%;
-    top: 20%;
-    left: 60%;
+    width: 80%;
+    top: 12%;
+    left: 58%;
   }
 
     // Shape-02 + orange mask combinations for base body 3
    &[data-shape="shape-02-h3"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
-    width: 60%;
-    top: 30%;
+    width: 70%;
+    top: 25%;
     left: 55%;
   }
 
     // Shape-02 + orange mask combinations for base body 4
    &[data-shape="shape-02-h4"] .avatar-layer--eyewear[data-eyewear="orange-mask"] {
     width: 75%;
-    top: 20%;
-    left: 58%;
+    top: 15%;
+    left: 54%;
   }
 
 
      // Shape-02 + orange mask 2 combinations for base body
   &[data-shape^="shape-02"] .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 24%;
+    top: 13%;
     left: 55%;
-    width: 85%;
+    width: 80%;
   }
 
        // Shape-02 + orange mask 2 combinations for base body 1
   &[data-shape="shape-02-h1"] .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 12%;
-    left: 60%;
-    width: 100%;
+    top: 0%;
+    left: 58%;
+    width: 85%;
   }
 
        // Shape-02 + orange mask 2 combinations for base body 2
    &[data-shape="shape-02-h2"] .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 18%;
-    left: 65%;
+    top: 9%;
+    left: 62%;
   }
 
        // Shape-02 + orange mask 2 combinations for base body 3
    &[data-shape="shape-02-h3"] .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 28%;
-    left: 58%;
+    top: 19%;
+    left: 54%;
+    width: 70%;
   }
 
        // Shape-02 + orange mask 2 combinations for base body 4
    &[data-shape="shape-02-h4"] .avatar-layer--eyewear[data-eyewear="orange-mask-2"] {
-    top: 20%;
-    left: 60%;
-    width: 100%;
+    top: 6%;
+    left: 56%;
+    width: 80%;
   }
 
   // Masks end here
