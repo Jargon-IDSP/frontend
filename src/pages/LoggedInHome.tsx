@@ -22,6 +22,7 @@ export default function LoggedInHome() {
   const { data: profile, isLoading: isProfileLoading } = useProfile();
   const [hasCheckedRedirect, setHasCheckedRedirect] = useState(false);
   const [isWordReady, setIsWordReady] = useState(false);
+  const [isStartLearningReady, setIsStartLearningReady] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -90,7 +91,7 @@ export default function LoggedInHome() {
     }
   };
 
-  const isPageLoading = isProfileLoading || !user || !profile || !hasCheckedRedirect || !isWordReady;
+  const isPageLoading = isProfileLoading || !user || !profile || !hasCheckedRedirect || !isWordReady || !isStartLearningReady;
 
 return (
   <div className='container'>
@@ -158,7 +159,7 @@ return (
               onReady={() => setIsWordReady(true)}
             />
             <DailyCheckIn />
-            <StartLearningCard />
+            <StartLearningCard onReady={() => setIsStartLearningReady(true)} />
             <InstantHelpCard />
             <CommunityCard />
             <UploadFileCard />
