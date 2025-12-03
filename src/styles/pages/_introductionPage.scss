@@ -40,11 +40,11 @@ main:has(.introduction-page) {
     min-height: 500px; // Ensures minimum size for visibility
 
     // Mobile-specific adjustments for smaller card size
-    @media (max-width: $mobile-max) {
-      aspect-ratio: 9 / 16; // Keep same ratio or adjust as needed
-      max-height: calc(100vh - 200px); // Reduced height for mobile
-      min-height: 350px; // Lower minimum height for smaller screens
-    }
+    // @media (max-width: $mobile-max) {
+    //   aspect-ratio: 9 / 16; // Keep same ratio or adjust as needed
+    //   max-height: calc(100vh - 200px); // Reduced height for mobile
+    //   min-height: 350px; // Lower minimum height for smaller screens
+    // }
   }
 
   &__media-container {
