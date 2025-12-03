@@ -84,9 +84,11 @@ export function useMarkAsRead() {
       return response.json();
     },
     onSuccess: () => {
-      // Invalidate and refetch
+      // Invalidate and immediately refetch all notification queries across the app
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      queryClient.refetchQueries({ queryKey: ["notifications"] });
+      queryClient.refetchQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 }
@@ -112,8 +114,11 @@ export function useMarkAllAsRead() {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate and immediately refetch all notification queries across the app
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      queryClient.refetchQueries({ queryKey: ["notifications"] });
+      queryClient.refetchQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 }
@@ -139,8 +144,11 @@ export function useDeleteNotification() {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate and immediately refetch all notification queries across the app
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      queryClient.refetchQueries({ queryKey: ["notifications"] });
+      queryClient.refetchQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 }
@@ -166,8 +174,11 @@ export function useClearAllNotifications() {
       return response.json();
     },
     onSuccess: () => {
+      // Invalidate and immediately refetch all notification queries across the app
       queryClient.invalidateQueries({ queryKey: ["notifications"] });
       queryClient.invalidateQueries({ queryKey: ["notifications", "unread-count"] });
+      queryClient.refetchQueries({ queryKey: ["notifications"] });
+      queryClient.refetchQueries({ queryKey: ["notifications", "unread-count"] });
     },
   });
 }
