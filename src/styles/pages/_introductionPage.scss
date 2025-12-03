@@ -19,9 +19,8 @@
   }
 
   &__card {
-    background-color: white;
-    border-radius: $border-radius-lg;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: $color-second-neutral-light;
+    border: none;
     width: 100%;
     margin-bottom: $spacing-md;
     position: relative;
@@ -49,15 +48,19 @@
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    border: none;
+    border-radius: 0;
   }
 
   &__media,
   &__media-placeholder {
     width: 100%;
     height: 100%;
-    border-radius: $border-radius-lg;
+    border-radius: 0;
     object-fit: contain;
     display: block;
+    border: none;
+    background-color: $color-second-neutral-light;
   }
 
   &__media {
@@ -72,10 +75,10 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba($color-neutral, 0.1);
     color: $color-neutral;
     font-size: $font-size-h3;
     font-weight: $font-weight-medium;
+    border: none;
   }
 
   &__dots {
