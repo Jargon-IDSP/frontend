@@ -46,6 +46,10 @@ export default function CategoryStudy() {
 
   const isWaitingForStatusData = justUploaded && !displayStatusData;
 
+  const hasDocumentsData = documents.length > 0;
+  const hasCachedData = hasDocumentsData;
+  const showGeneralLoading = !hasCachedData && isLoading && !isWaitingForStatusData;
+
   useEffect(() => {
     if (statusData?.status.status === "completed" && justUploadedDocId) {
       refetch();
@@ -76,6 +80,10 @@ export default function CategoryStudy() {
 
       {isWaitingForStatusData && (
         <LoadingBar isLoading={true} text="Loading document status" />
+      )}
+
+      {showGeneralLoading && (
+        <LoadingBar isLoading={true} text="Loading documents" />
       )}
 
       {justUploaded && displayStatusData && (

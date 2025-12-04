@@ -70,8 +70,7 @@ export function Avatar({
     const [facialContent, setFacialContent] = useState<string>("");
     const [facialViewBox, setFacialViewBox] = useState<string>("0 0 300 300");
 
-    // Track loading states for all parts
-    // Initialize based on whether parts are needed
+
     const [bodyLoaded, setBodyLoaded] = useState(false);
     const [hairLoaded, setHairLoaded] = useState(!config.hair); // No hair means already "loaded"
     const [facialLoaded, setFacialLoaded] = useState(!config.facial); // No facial means already "loaded"
@@ -83,9 +82,8 @@ export function Avatar({
         config.headwear ||
         config.accessories
       )
-    ); // No sprites means already "loaded"
+    ); 
 
-    // Report initial loading state
     useEffect(() => {
       if (!bodyContent) {
         onLoadingChange?.(true);
@@ -152,7 +150,7 @@ export function Avatar({
     useEffect(() => {
       if (!config.hair) {
         setRawHairData(null);
-        setHairLoaded(true); // No hair means it's "loaded"
+        setHairLoaded(true);
         return;
       }
 
@@ -189,13 +187,11 @@ export function Avatar({
       const palette = getHairColorPalette(hairColor);
       let coloredContent = rawHairData.content;
 
-      // Map original SVG colors to palette shades
       const colorMappings = {
         "#512e14": palette.base,
         "#5b3319": palette.highlight,
       };
 
-      // Replace fill colors
       Object.entries(colorMappings).forEach(([original, replacement]) => {
         const regex = new RegExp(`fill="${original}"`, "g");
         coloredContent = coloredContent.replace(regex, `fill="${replacement}"`);
@@ -207,7 +203,7 @@ export function Avatar({
     useEffect(() => {
       if (!config.facial) {
         setRawFacialData(null);
-        setFacialLoaded(true); // No facial means it's "loaded"
+        setFacialLoaded(true); 
         return;
       }
 
@@ -244,14 +240,12 @@ export function Avatar({
       const palette = getHairColorPalette(hairColor);
       let coloredContent = rawFacialData.content;
 
-      // Map original SVG colors to palette shades (facial hair uses base color for all shades)
       const colorMappings = {
         "#512e14": palette.base,
         "#5b3319": palette.highlight,
-        "#602d0b": palette.base, // Use base color instead of lowlight
+        "#602d0b": palette.base, 
       };
 
-      // Replace fill colors
       Object.entries(colorMappings).forEach(([original, replacement]) => {
         const regex = new RegExp(`fill="${original}"`, "g");
         coloredContent = coloredContent.replace(regex, `fill="${replacement}"`);
@@ -260,10 +254,8 @@ export function Avatar({
       setFacialContent(coloredContent);
     }, [hairColor, rawFacialData]);
 
-    // Wait for SVG sprites to load (shoes, clothing, eyewear, headwear, accessories)
-    // We need to verify that the sprite sheet is loaded and all sprite elements are rendered
+
     useEffect(() => {
-      // Check if any sprites are needed
       const hasSprites = !!(
         config.shoes ||
         config.clothing ||
@@ -277,10 +269,8 @@ export function Avatar({
         return;
       }
 
-      // Reset loading state when sprites are needed
       setSpritesLoaded(false);
 
-      // Wait for body to be loaded first (this ensures the sprite sheet fetch has started)
       if (!bodyLoaded || !bodyContent) {
         return;
       }
@@ -289,10 +279,8 @@ export function Avatar({
       let checkComplete = false;
       let timeout: NodeJS.Timeout | null = null;
 
-      // First, ensure the sprite sheet is loaded
       const ensureSpriteSheetLoaded = async () => {
         try {
-          // Fetch the sprite sheet to ensure it's cached
           await fetch('/avatar-sprites.svg');
         } catch (e) {
           console.warn('Failed to preload sprite sheet:', e);
@@ -300,23 +288,19 @@ export function Avatar({
 
         if (!mounted) return;
 
-        // Wait for the DOM to render the sprite elements
-        // Use multiple animation frames to ensure rendering is complete
         let frameCount = 0;
-        const maxFrames = 10; // Wait up to 10 frames (~167ms at 60fps)
+        const maxFrames = 10; 
 
         const checkFrames = () => {
           if (checkComplete || !mounted) return;
           
           frameCount++;
           
-          // Check if sprite elements are in the DOM
-          // The container is the AvatarSprite div, which is the parent of bodySvgRef's parent
+
           const container = bodySvgRef.current?.parentElement?.parentElement;
           if (container) {
             const spriteElements = container.querySelectorAll('.avatar-layer svg use[href*="avatar-sprites.svg"]');
             
-            // If we have the expected number of sprite elements, check if they're rendered
             const expectedSpriteCount = [
               config.shoes,
               config.clothing,
@@ -326,7 +310,6 @@ export function Avatar({
             ].filter(Boolean).length;
 
             if (spriteElements.length >= expectedSpriteCount && expectedSpriteCount > 0) {
-              // Check if elements are actually rendered by checking their bounding boxes
               let allRendered = true;
               spriteElements.forEach((el) => {
                 try {
@@ -334,8 +317,6 @@ export function Avatar({
                   const svg = useEl.ownerSVGElement;
                   if (svg) {
                     const rect = svg.getBoundingClientRect();
-                    // If the SVG has dimensions, it's likely rendered
-                    // We check the parent container too
                     if (rect.width === 0 && rect.height === 0) {
                       allRendered = false;
                     }
@@ -343,7 +324,6 @@ export function Avatar({
                     allRendered = false;
                   }
                 } catch (e) {
-                  // If we can't check, assume not ready
                   allRendered = false;
                 }
               });
@@ -355,7 +335,6 @@ export function Avatar({
                 return;
               }
             } else if (expectedSpriteCount === 0) {
-              // No sprites expected, mark as loaded
               if (mounted) {
                 checkComplete = true;
                 setSpritesLoaded(true);
@@ -365,26 +344,21 @@ export function Avatar({
             }
           }
 
-          // Continue checking for more frames if not loaded yet
           if (frameCount < maxFrames && mounted && !checkComplete) {
             requestAnimationFrame(checkFrames);
           } else if (mounted && !checkComplete) {
-            // Fallback: mark as loaded after max frames
-            // This ensures we don't wait forever if sprites fail to load
             checkComplete = true;
             setSpritesLoaded(true);
             if (timeout) clearTimeout(timeout);
           }
         };
 
-        // Start checking after a small delay to allow initial render
         requestAnimationFrame(() => {
           if (mounted) {
             requestAnimationFrame(checkFrames);
           }
         });
 
-        // Safety timeout: if sprites don't load within 1 second, mark as loaded anyway
         timeout = setTimeout(() => {
           if (mounted && !checkComplete) {
             checkComplete = true;
@@ -411,7 +385,6 @@ export function Avatar({
       bodySvgRef,
     ]);
 
-    // Report loading state when all parts are ready
     useEffect(() => {
       const allPartsLoaded =
         bodyLoaded &&
@@ -422,7 +395,6 @@ export function Avatar({
       if (allPartsLoaded) {
         onLoadingChange?.(false);
       } else if (bodyContent) {
-        // Still loading other parts
         onLoadingChange?.(true);
       }
     }, [

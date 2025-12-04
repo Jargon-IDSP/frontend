@@ -22,13 +22,9 @@ const StartLearningCard: React.FC<StartLearningCardProps> = ({ onReady }) => {
   };
 
   const handleImageError = () => {
-    // Even if image fails to load, consider it "ready" so loading screen doesn't hang
     setImageLoaded(true);
   };
 
-  // const handleContinueLearning = () => {
-  //   navigate('/learning');
-  // };
 
   return (
     <div className="start-learning-card">
@@ -43,13 +39,7 @@ const StartLearningCard: React.FC<StartLearningCardProps> = ({ onReady }) => {
           onError={handleImageError}
         />
 
-        {/* <img src={StartLearningImage} alt="Start Learning" className="learning-image" />
-        <button 
-          className="btn btn-primary learning-button"
-          onClick={handleContinueLearning}
-        >
-          Continue Learning
-        </button> */}
+      
       </div>
     </div>
   );

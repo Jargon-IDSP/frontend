@@ -27,7 +27,6 @@ const LeaderboardPage: React.FC = () => {
 
   const [leaderboardType, setLeaderboardType] = useState<LeaderboardType>(initialTab);
 
-  // Update state when URL parameter changes
   useEffect(() => {
     if (tabParam === "general" || tabParam === "private" || tabParam === "self") {
       setLeaderboardType(tabParam);
@@ -73,11 +72,16 @@ const LeaderboardPage: React.FC = () => {
     users.length < 3;
 
   const containerClass = "container container--leaderboard";
+  
+  const hasUsersData = users.length > 0;
+  const hasProfileData = profile !== undefined;
+  const hasCachedData = hasUsersData || hasProfileData;
+  
   const isDataLoading = loading || profileLoading;
   const areAvatarsLoading = avatarLoadingCount > 0;
-  const showFullPageLoading = isDataLoading || areAvatarsLoading;
+  const showFullPageLoading = !hasCachedData && (isDataLoading || areAvatarsLoading);
   const allDataLoaded = !isDataLoading && !areAvatarsLoading;
-
+  
   if (error) {
     return (
       <div className={containerClass}>
