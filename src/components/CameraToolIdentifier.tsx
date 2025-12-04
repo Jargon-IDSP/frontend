@@ -698,20 +698,20 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
   return (
     <div className="camera-tool-identifier">
       <div className="camera-tool-header">
-        <h2>🔧 Tool Identifier</h2>
+        <h2>Tool Identifier</h2>
         <p className="subtitle">Identify construction tools with AI</p>
       </div>
 
       {error && (
         <div className="error-message">
-          <p>⚠️ {error}</p>
+          <p>{error}</p>
           {error.startsWith('Camera access denied') && (
             <button 
               className="btn btn-primary" 
               onClick={startCamera}
               style={{ marginTop: '1rem' }}
             >
-              🔄 Retry
+              Retry
             </button>
           )}
         </div>
@@ -719,7 +719,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
 
       {modelLoading && (
         <div className="loading">
-          <p>🤖 Loading AI model...</p>
+          <p>Loading AI model...</p>
           <p className="loading-subtitle">This may take a moment on first load</p>
         </div>
       )}
@@ -731,7 +731,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
             onClick={startCamera}
             disabled={!model}
           >
-            📷 Start Camera
+            Start Camera
           </button>
           {!model && (
             <p className="loading-subtitle">Waiting for AI model to load...</p>
@@ -759,10 +759,10 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
           </div>
           <div className="button-group">
             <button className="btn btn-capture" onClick={captureImage}>
-              📸 Capture
+              Capture
             </button>
             <button className="btn btn-secondary" onClick={stopCamera}>
-              ❌ Stop Camera
+              Stop Camera
             </button>
           </div>
         </div>
@@ -777,17 +777,17 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
           {!result && !isAnalyzing && (
             <div className="button-group">
               <button className="btn btn-primary" onClick={analyzeImage}>
-                🔍 Identify Tool
+                Identify Tool
               </button>
               <button className="btn btn-secondary" onClick={retakePhoto}>
-                📷 Retake
+                Retake
               </button>
             </div>
           )}
 
           {isAnalyzing && !result && (
             <div className="loading">
-              <p>🔍 Analyzing image...</p>
+              <p>Analyzing image...</p>
             </div>
           )}
 
@@ -835,7 +835,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
               </div>
 
               <button className="btn btn-secondary" onClick={retakePhoto}>
-                📷 Identify Another Tool
+                Identify Another Tool
               </button>
             </div>
           )}
