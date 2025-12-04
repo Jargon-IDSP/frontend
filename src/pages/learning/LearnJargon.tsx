@@ -20,14 +20,14 @@ export default function LearnJargon() {
         <div className='container'>
             <div className='learningOverview'>
                 <div className='learningOverviewHeader'>
-                    <div className='headerContent'>
-                        <h1>
-                            <span className='badge'>{industryName}</span>
+                    <div className='headerContent' style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
+                        <span className='badge'>{industryName}</span>
+                        <h1 style={{ display: 'block', margin: 0 }}>
                             My Courses
                         </h1>
                         <p>
-                            Let’s learn and get some badges today! Who knows
-                            maybe we’ll even get on the leaderboard this week...
+                            Let's learn and get some badges today! Who knows
+                            maybe we'll even get on the leaderboard this week...
                         </p>
                     </div>
                     <img
