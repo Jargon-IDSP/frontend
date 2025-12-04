@@ -2266,6 +2266,8 @@ button.back-button {
 .instant-help-page {
   padding: 2rem 1rem;
   text-align: center;
+  background-color: #ffdf8e;
+  min-height: 100vh;
 }
 .instant-help-page .instant-help-header {
   display: flex;
@@ -3238,7 +3240,7 @@ main:has(.introduction-page) {
 .leaderboard-page:has(.leaderboard-empty-state) {
   justify-content: flex-start;
   align-items: center;
-  padding-top: 1rem;
+  padding-top: 0.5rem;
   background: #fff8dd;
 }
 .leaderboard-page:has(.leaderboard-empty-state):before {
@@ -3406,6 +3408,7 @@ main:has(.introduction-page) {
 .leaderboard-page:has(.leaderboard-empty-state) {
   height: 100vh;
   background: #ffc83b;
+  height: 100%;
 }
 
 .leaderboard-hero {
@@ -3477,7 +3480,7 @@ main:has(.introduction-page) {
 }
 .leaderboard-page:has(.leaderboard-empty-state) .leaderboard-title {
   position: relative;
-  margin-bottom: 1.5rem;
+  margin-bottom: 0.25rem;
   margin-top: 0;
 }
 
@@ -4108,28 +4111,48 @@ main:has(.introduction-page) {
   margin-bottom: 1.5rem;
   margin-top: -2.5rem;
   border-radius: 9999px;
-  background: #B4370D;
+  background: #fe8861;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   position: relative;
   z-index: 2;
+}
+.community-page .community-tabs::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 50%;
+  height: 100%;
+  background-color: #fe4d13;
+  border-radius: 9999px;
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+  transition: transform 0.3s ease;
+  z-index: 0;
+}
+.community-page .community-tabs:has(.community-tab:last-child.community-tab--active)::before {
+  transform: translateX(100%);
 }
 .community-page .community-tab {
   flex: 1;
   padding: 0.75rem 1.5rem;
   font-size: 16px;
   font-weight: 600;
-  color: #FFC8B6;
+  color: #FFFFFF;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
   background: transparent;
+  position: relative;
+  z-index: 1;
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+.community-page .community-tab:hover {
+  color: #FFFFFF;
 }
 .community-page .community-tab--active {
-  color: white;
-  background-color: #fe4d13;
+  color: #FFFFFF;
   font-weight: 700;
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
 }
 .community-page .community-content {
   border: 1px solid #6f2e17;
@@ -6695,8 +6718,7 @@ main:has(.introduction-page) {
 }
 
 .choose-file-button {
-  background-color: #652a15;
-  border-color: #652a15;
+  background-color: #fe4d13;
   width: 276px;
   height: 48px;
   padding: 10px 85px;
@@ -10071,7 +10093,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   transform: translateX(-50%);
   width: auto;
   height: auto;
-  max-height: 100%;
+  max-height: 50px;
   z-index: 1;
   transition: all 0.3s ease-in-out;
 }
@@ -10885,6 +10907,8 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: 45%;
   left: 55%;
   width: 150%;
+  min-height: 40px;
+  max-height: 90px;
 }
 .avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--accessories[data-accessories=blush] {
   display: none;
@@ -10892,6 +10916,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 .avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--accessories[data-accessories=blush] {
   top: 28%;
   left: 62%;
+  max-height: 70px;
 }
 .avatar-customization__canvas[data-shape=shape-01-h2] .avatar-layer--accessories[data-accessories=blush] {
   top: 46%;
@@ -10903,6 +10928,8 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: 50%;
   left: 60%;
   width: 5%;
+  min-height: 3px;
+  max-height: 8px;
 }
 .avatar-customization__canvas[data-shape=shape-01-h1] .avatar-layer--accessories[data-accessories=beauty-spot] {
   top: 45%;
@@ -10920,6 +10947,8 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   top: 40%;
   left: 57%;
   width: 35%;
+  min-height: 15px;
+  max-height: 25px;
 }
 .avatar-customization__canvas[data-shape^=shape-01-h1] .avatar-layer--accessories[data-accessories=lashes-1] {
   top: 33.5%;
@@ -10936,6 +10965,34 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
 .avatar-customization__canvas[data-shape^=shape-01-h4] .avatar-layer--accessories[data-accessories=lashes-1] {
   top: 40%;
   left: 58%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--accessories[data-accessories=lashes-2] {
+  top: 42%;
+  left: 57%;
+  width: 35%;
+  min-height: 15px;
+  max-height: 25px;
+}
+.avatar-customization__canvas[data-shape^=shape-01-h1] .avatar-layer--accessories[data-accessories=lashes-2] {
+  top: 35%;
+  left: 57%;
+}
+.avatar-customization__canvas[data-shape^=shape-01-h2] .avatar-layer--accessories[data-accessories=lashes-2] {
+  top: 36.5%;
+  left: 65%;
+}
+.avatar-customization__canvas[data-shape^=shape-01-h3] .avatar-layer--accessories[data-accessories=lashes-2] {
+  top: 43%;
+  left: 54%;
+}
+.avatar-customization__canvas[data-shape^=shape-01-h4] .avatar-layer--accessories[data-accessories=lashes-2] {
+  top: 40%;
+  left: 58%;
+}
+.avatar-customization__canvas[data-shape^=shape-01] .avatar-layer--clothing[data-clothing=yellow-vest] {
+  top: 45%;
+  left: 56%;
+  width: 80%;
 }
 
 .avatar-customization__canvas[data-shape^=shape-02] .avatar-layer--shoes[data-shoes=shoe-01] {

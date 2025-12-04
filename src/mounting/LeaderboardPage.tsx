@@ -73,13 +73,9 @@ const LeaderboardPage: React.FC = () => {
 
   const containerClass = "container";
   
-  const hasUsersData = users.length > 0;
-  const hasProfileData = profile !== undefined;
-  const hasCachedData = hasUsersData || hasProfileData;
-  
   const isDataLoading = loading || profileLoading;
   const areAvatarsLoading = avatarLoadingCount > 0;
-  const showFullPageLoading = !hasCachedData && (isDataLoading || areAvatarsLoading);
+  const showFullPageLoading = isDataLoading || areAvatarsLoading;
   const allDataLoaded = !isDataLoading && !areAvatarsLoading;
 
   if (error) {
