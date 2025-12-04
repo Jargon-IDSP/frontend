@@ -93,8 +93,7 @@
 
 .choose-file-button {
   @extend .btn;
-  background-color: $color-quaternary-dark;
-  border-color: $color-quaternary-dark;
+  background-color: $primary-500;
   width: 276px;
   height: 48px;
   padding: 10px 85px;
