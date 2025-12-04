@@ -3,6 +3,7 @@
 @use "../mixins" as *;
 
 .categoriesPage {
+  font-family: $font-family-primary;
   width: 100vw;
   max-width: min(480px, 100vw);
   margin: 0 auto;
@@ -36,6 +37,7 @@
     font-weight: $font-weight-bold;
     text-align: left;
     grid-column: 2;
+    padding-left: 1rem;
   }
 }
 
