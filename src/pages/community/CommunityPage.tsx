@@ -93,15 +93,10 @@ const CommunityPage: React.FC = () => {
         friendsShowImg: findYourFriendsImg,
         friendsNoShowImg: noFriendsImg,
     });
-
-   const hasLeaderboardData = leaderboardUsers.length > 0;
-    const hasProfileData = profile !== undefined;
-    const hasFriendsData = friends.length > 0;
-    const hasCachedData = hasLeaderboardData || hasProfileData || hasFriendsData;
     
-    const isDataLoading = leaderboardLoading || profileLoading || friendsLoading;
+   const isDataLoading = leaderboardLoading || profileLoading || friendsLoading;
     const areAvatarsLoading = avatarLoadingCount > 0;
-    const showFullPageLoading = !hasCachedData && (isDataLoading || areAvatarsLoading);
+    const showFullPageLoading = isDataLoading || areAvatarsLoading;
     const allDataLoaded = !isDataLoading && !areAvatarsLoading;
 
     return (
@@ -155,11 +150,7 @@ const CommunityPage: React.FC = () => {
                                     ? handleLeaderboardCardClick
                                     : undefined
                             }>
-                            {leaderboardLoading ? (
-                                <div style={{ padding: '2rem', textAlign: 'center' }}>
-                                    Loading leaderboard...
-                                </div>
-                            ) : hasNoPoints ? (
+                            {hasNoPoints ? (
                                 <div className='leaderboard-preview-empty-state'>
                                     <img
                                         src={LeaderboardConnectAvatar}
@@ -225,11 +216,7 @@ const CommunityPage: React.FC = () => {
                                     ? handleFriendsCardClick
                                     : undefined
                             }>
-                            {friendsLoading ? (
-                                <div style={{ padding: '2rem', textAlign: 'center' }}>
-                                    Loading friends...
-                                </div>
-                            ) : hasNoFriends ? (
+                            {hasNoFriends ? (
                                 <div className='friends-preview-empty-state'>
                                     <img
                                         src={friendsNoShowImg}
