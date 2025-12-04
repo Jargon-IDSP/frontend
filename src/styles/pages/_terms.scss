@@ -5,6 +5,7 @@
   @include page-layout;
   padding: $spacing-xl;
   padding-bottom: 0;
+  font-family: $font-family-primary;
   
   &-header {
     margin-bottom: 0;

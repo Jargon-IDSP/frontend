@@ -4,6 +4,7 @@
 
 .bossPage {
     margin: 1rem;
+    font-family: $font-family-primary;
 
     .headerContent {
         display: flex;
@@ -34,13 +35,14 @@
             .levelLabel {
                 font-size: 0.875rem;
                 font-weight: $font-weight-regular;
-                color: $quaternary-900;
+                color: $quaternary-800;
             }
 
             h1 {
                 margin: 0;
                 font-size: 1.5rem;
                 font-weight: $font-weight-bold;
+                color: $quaternary-800;
             }
 
             .badge {

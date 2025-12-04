@@ -1,6 +1,7 @@
 @use '../variables' as *;
 
 .flip-card-wrapper {
+  font-family: $font-family-primary;
   position: relative;
   width: 100%;
   padding-top: 100px;

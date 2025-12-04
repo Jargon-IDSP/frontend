@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: clamp(1rem, 5vw, 3rem);
+    padding: clamp(0.5rem, 5vw, 3rem);
     background: $color-secondary;
     position: relative;
     overflow: hidden;

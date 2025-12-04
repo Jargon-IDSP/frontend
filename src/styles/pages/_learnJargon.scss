@@ -4,30 +4,112 @@
 
 .learningOverview {
   padding: 2rem 1rem 0 1rem;
+  font-family: $font-family-primary;
 
   .lessonFolders {
     display: grid;
-    margin: auto;
+    margin: 0; // center the grid
     grid-template-rows: 4fr 4fr;
-    gap: 1rem;
+    gap: 2rem;
     width: 100%;
-
+    max-width: 400px; // prevent stretching full width
+    min-height: 100px;
+    box-sizing: border-box;
+    justify-items: center;
+  
     .prebuilt {
         grid-row: 1;
         grid-column: span 2;
         width: 100%;
+        position: relative;
+    }
+
+    .prebuilt-shadow {
+        position: absolute;
+        top: 25px;
+        left: 8px;
+        right: -8px;
+        bottom: -8px;
+        background-color: $quaternary-800;
+        border-radius: 24px;
+        z-index: 0;
+        pointer-events: none;
+    }
+
+    .generated-container {
+        grid-row: 2;
+        grid-column: 1;
+        position: relative;
+        display: inline-block;
+        width: auto;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .generated-shadow {
+        position: absolute;
+        top: 17px;
+        left: 2px;
+        right: -5px;
+        bottom: 38px;
+        background-color: $quaternary-800;
+        min-height: 226px;
+        max-height: 228px;
+        border-radius: 24px;
+        z-index: 0;
+        pointer-events: none;
     }
 
     .generated {
+        position: relative;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 24px;
+        z-index: 1;
+        cursor: pointer;
+        display: block;
+    }
+
+    .friends-container {
         grid-row: 2;
-        grid-column: 1;
-        width: 100%;
+        grid-column: 2;
+        position: relative;
+        display: inline-block;
+        width: auto;
+        height: auto;
+        margin: 0;
+        padding: 0;
+    }
+
+    .friends-shadow {
+        position: absolute;
+        top: 17px;
+        left: 0px;
+        right: -7px;
+        bottom: 35px;
+        background-color: $quaternary-800;
+        min-height: 230px;
+        max-height: 234px;
+        border-radius: 24px;
+        z-index: 0;
+        pointer-events: none;
     }
 
     .friends {
-        grid-row: 2;
-        grid-column: 2;
-        width: 100%;
+        position: relative;
+        width: auto;
+        height: auto;
+        max-width: 100%;
+        object-fit: contain;
+        border-radius: 24px;
+        z-index: 1;
+        cursor: pointer;
+        display: block;
+        transform: scale(1.02);
+        transform-origin: center top;
     }
   }
 
@@ -35,7 +117,7 @@
     display: grid;
     grid-template-columns: 2fr 1fr;
     align-items: center;
-    gap: 2rem;
+    gap: 1rem;
     margin: 0 0.5rem 1rem 0.5rem;
 
     .headerContent {
@@ -48,7 +130,7 @@
             color: white;
             padding: 0.25rem 0.75rem;
             border-radius: 1rem;
-            font-size: 0.875rem;
+            font-size: $font-size-tag;
             font-weight: $font-weight-regular;
             align-self: flex-start;
         }
@@ -57,20 +139,22 @@
             font-size: $font-size-h1;
             font-weight: $font-weight-bold;
             margin: 0;
+            color: $quaternary-700;
         }
 
         p {
-            font-size: $font-size-tag;
+            font-size: 0.65rem;
             font-weight: $font-weight-regular;
-            color: $color-neutral;
+            color: $quaternary-700;
             margin: 0;
         }
     }
 
     img {
         grid-column: 2;
-        max-width: 100%;
+        max-width: 120%;
         height: auto;
+        transform: translateY(1rem);
     }
 }
 
@@ -85,4 +169,5 @@ h2 {
     border-radius: 15px;
     margin-bottom: 0.5rem;
 }
+
 }

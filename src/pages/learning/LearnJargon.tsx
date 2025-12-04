@@ -43,6 +43,7 @@ export default function LearnJargon() {
 
                 <div className='lessonFolders'>
                     <div className='prebuilt'>
+                        <div className='prebuilt-shadow'></div>
                         <NavigationCard
                             title=''
                             description=''
@@ -56,19 +57,25 @@ export default function LearnJargon() {
                     </div>
 
 
-                    <img
-                        className='generated'
-                        src={generated}
-                        alt='Custom Lessons'
-                        onClick={() => navigate("/learning/custom/categories")}
-                    />
+                    <div className='generated-container'>
+                        <div className='generated-shadow'></div>
+                        <img
+                            className='generated'
+                            src={generated}
+                            alt='Custom Lessons'
+                            onClick={() => navigate("/learning/custom/categories")}
+                        />
+                    </div>
 
-                    <img
-                        className='friends'
-                        src={friends}
-                        alt='Custom Lessons'
-                        onClick={() => navigate("/learning/shared")}
-                    />
+                    <div className='friends-container'>
+                        <div className='friends-shadow'></div>
+                        <img
+                            className='friends'
+                            src={friends}
+                            alt='Custom Lessons'
+                            onClick={() => navigate("/learning/shared")}
+                        />
+                    </div>
                 </div>
 
                 {/* <NavigationCard
