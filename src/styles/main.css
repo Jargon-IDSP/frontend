@@ -6152,23 +6152,28 @@ main:has(.introduction-page) {
   gap: 2rem;
   margin: 0 0.5rem 1rem 0.5rem;
 }
-.learningOverview .learningOverviewHeader .headerContent h1 {
-  font-size: 28px;
-  font-weight: 700;
+.learningOverview .learningOverviewHeader .headerContent {
   display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 0.5rem;
+  flex-direction: column;
+  gap: 0.5rem;
 }
-.learningOverview .learningOverviewHeader .headerContent h1 .badge {
+.learningOverview .learningOverviewHeader .headerContent .badge {
   background-color: #fe4d13;
   color: white;
   padding: 0.25rem 0.75rem;
   border-radius: 1rem;
   font-size: 0.875rem;
   font-weight: 500;
+  align-self: flex-start;
+}
+.learningOverview .learningOverviewHeader .headerContent h1 {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
 }
 .learningOverview .learningOverviewHeader .headerContent p {
+  font-size: 10px;
+  font-weight: 500;
   color: #393939;
   margin: 0;
 }
@@ -9872,6 +9877,7 @@ input[type=radio]:checked ~ .privacy-drawer-option-content h3 {
   gap: 0.1rem;
   width: 100%;
   margin-bottom: 1rem;
+  padding-left: 0.5rem;
 }
 .avatar-customization__logo {
   width: 75px;

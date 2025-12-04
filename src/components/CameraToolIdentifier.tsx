@@ -7,6 +7,7 @@ import { BACKEND_URL } from '../lib/api';
 import { SupportedLanguages, type Language } from '../types/language';
 import { useUserPreferences } from '../hooks/useUserPreferences';
 import '../styles/components/_cameraToolIdentifier.scss';
+import LoadingBar from './LoadingBar';
 
 interface ToolResult {
   toolName: {
@@ -719,8 +720,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
 
       {modelLoading && (
         <div className="loading">
-          <p>Loading AI model...</p>
-          <p className="loading-subtitle">This may take a moment on first load</p>
+          <LoadingBar isLoading={modelLoading} text="Loading AI model" />
         </div>
       )}
 
@@ -753,7 +753,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
             <canvas ref={canvasRef} style={{ display: 'none' }} />
             {!videoReady && (
               <div className="video-loading">
-                <p>Loading camera...</p>
+                <LoadingBar isLoading={!videoReady} text="Loading camera" />
               </div>
             )}
           </div>
@@ -787,7 +787,7 @@ const CameraToolIdentifier: React.FC<CameraToolIdentifierProps> = ({ onClose, au
 
           {isAnalyzing && !result && (
             <div className="loading">
-              <p>Analyzing image...</p>
+              <LoadingBar isLoading={isAnalyzing} text="Analyzing image" />
             </div>
           )}
 
