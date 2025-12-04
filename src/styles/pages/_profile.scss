@@ -45,10 +45,10 @@
 
 .profile-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
   margin-bottom: $spacing-lg;
   position: relative;
+  gap: $spacing-md;
 }
 
 .profile-back-button {
@@ -96,12 +96,14 @@
   font-weight: $font-weight-bold;
   color: $color-quaternary-dark;
   margin: 0;
+  margin-left: 0;
 }
 
 .profile-header-actions {
   display: flex;
   align-items: center;
   gap: $spacing-sm;
+  margin-left: auto;
 }
 
 .profile-notifications-icon {
