@@ -70,11 +70,31 @@
   margin-bottom: $spacing-lg;
   margin-top: -$spacing-xl; // Negative margin to overlap image
   border-radius: 9999px;
-  background: $color-primary-700;
+  background: $color-primary-300;
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
   position: relative;
   z-index: 2; // Ensure tabs are above the image
+
+  // Sliding background indicator
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 50%; // For 2 tabs
+    height: 100%;
+    background-color: $color-primary;
+    border-radius: 9999px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    transition: transform $transition-normal;
+    z-index: 0;
+  }
+
+  // Slide to second tab when friends tab is active
+  &:has(.community-tab:last-child.community-tab--active)::before {
+    transform: translateX(100%);
+  }
 }
 
 .community-tab {
@@ -82,18 +102,23 @@
   padding: 0.75rem 1.5rem;
   font-size: $font-size-body;
   font-weight: $font-weight-medium;
-  color: $color-primary-100;
+  color: #FFFFFF;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
-//   transition: all $transition-normal;
-  background: transparent;
+  background: transparent; // Removed background color for sliding effect
+  position: relative;
+  z-index: 1;
+  transition: color $transition-normal, font-weight $transition-normal; // Added transition for smooth text change
+
+  &:hover {
+    color: #FFFFFF; // Added hover effect
+  }
 
   &--active {
-    color: white;
-    background-color: $color-primary;
+    color: #FFFFFF;
     font-weight: $font-weight-bold;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    // Removed background-color and box-shadow for sliding effect
   }
 }
 
