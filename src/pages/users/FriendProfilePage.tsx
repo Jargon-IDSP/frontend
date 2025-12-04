@@ -22,7 +22,6 @@ import { useNotificationContext } from "../../contexts/NotificationContext";
 export default function FriendProfilePage() {
   const { friendId } = useParams<{ friendId: string }>();
   const navigate = useNavigate();
-  const location = useLocation();
   const { getToken } = useAuth();
   const { showToast } = useNotificationContext();
 

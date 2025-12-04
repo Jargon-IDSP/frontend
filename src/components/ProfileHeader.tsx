@@ -1,10 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import goBackIcon from "../assets/icons/goBackIcon.svg";
 import NotificationBell from "./NotificationBell";
 
 export default function ProfileHeader() {
-  const navigate = useNavigate();
   const { navigateBack } = useSmartNavigation();
 
   return (

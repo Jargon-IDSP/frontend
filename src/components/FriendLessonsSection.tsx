@@ -143,7 +143,6 @@ export default function FriendLessonsSection({
   getUserDisplayName,
   onLessonClick,
 }: FriendLessonsSectionProps) {
-  const navigate = useNavigate();
   const { navigateWithOrigin } = useSmartNavigation();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();

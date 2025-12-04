@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import { getLanguageFlag } from "../utils/languageFlagHelpers";
@@ -12,10 +11,8 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   rank,
   isCurrentUser,
   isClickable = false,
-  fromRoute = "/community",
   onAvatarLoadingChange,
 }) => {
-  const navigate = useNavigate();
   const { navigateWithOrigin } = useSmartNavigation();
   const languageFlag = getLanguageFlag(user.language);
 
