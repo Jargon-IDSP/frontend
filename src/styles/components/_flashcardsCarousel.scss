@@ -30,8 +30,8 @@
 }
 
 .flashcards-carousel-button {
-  min-width: 60px;
-  height: 48px;
+  min-width: 80px;
+  height: 64px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -54,6 +54,8 @@
   
   img {
     display: block;
+    width: 40px;
+    height: 40px;
   }
   
   &.flashcards-carousel-finish {
