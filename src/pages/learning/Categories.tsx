@@ -4,12 +4,14 @@ import { CategoryFolderWithDocuments } from "@/components/learning/CategoryFolde
 import { CategoriesCard } from "@/components/learning/CategoriesCard";
 import { useCategories } from "@/hooks/useCategories";
 import { useCreateCategory } from "@/hooks/useCreateCategory";
+import { useSmartNavigation } from "@/hooks/useSmartNavigation";
 import { AddFolderModal } from "@/components/AddFolderModal";
 import folderIcon from "../../assets/icons/folderIcon.svg";
 import dictionaryBottom from "../../assets/dictionaryBottom.svg";
 
 export default function Categories() {
   const navigate = useNavigate();
+  const { navigateBack } = useSmartNavigation();
   const { data: categories, isLoading, error } = useCategories();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const createCategory = useCreateCategory();
@@ -32,7 +34,7 @@ export default function Categories() {
     <div className="categoriesPage">
       <CategoriesCard
         title="Generated Lessons"
-        onBack={() => navigate(-1)}
+        onBack={() => navigateBack("/learning/custom")}
         rightIcon={
           <img
             src={folderIcon}

@@ -156,6 +156,8 @@ export default function FriendProfilePage() {
       return data.data || { status: null, hasAccess: false };
     },
     enabled: !!friendId && !!currentUserProfile && !isOwnProfile,
+    retry: false,
+    staleTime: 60000,
   });
 
   // Fetch friend's quiz count (all custom quizzes they created)
@@ -455,9 +457,7 @@ export default function FriendProfilePage() {
 
       {friendProfile && (
         <>
-          <ProfileHeader
-            from={(location.state as { from?: string })?.from}
-          />
+          <ProfileHeader />
           <ProfileCard
             displayName={getUserDisplayName(friendProfile)}
             industryName={getIndustryName(friendProfile?.industryId)}

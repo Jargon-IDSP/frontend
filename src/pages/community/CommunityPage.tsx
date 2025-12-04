@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { useLeaderboard } from "../../hooks/useLeaderboard";
@@ -30,8 +30,10 @@ import { AvatarDisplay } from "../../components/avatar";
 
 const CommunityPage: React.FC = () => {
     const navigate = useNavigate();
+    const location = useLocation();
     const { getToken } = useAuth();
-    const [activeTab, setActiveTab] = useState<TabType>("leaderboard");
+    const initialTab = (location.state as { tab?: TabType })?.tab || "leaderboard";
+    const [activeTab, setActiveTab] = useState<TabType>(initialTab);
     const [avatarLoadingCount, setAvatarLoadingCount] = useState(0);
     const avatarLoadingRef = useRef<Set<string>>(new Set());
 

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "../styles/components/_loadingBar.scss";
 import loadingAnimation from "../assets/loadingAnimation.svg";
 
@@ -16,29 +16,83 @@ export default function LoadingBar({
   text = "Loading",
 }: LoadingBarProps) {
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const [isVisible, setIsVisible] = useState(false);
+
+  const animationStartedRef = useRef(false);
+  const animationLockedRef = useRef(false);
+  const intervalRef = useRef<NodeJS.Timeout | null>(null);
+  const debounceTimerRef = useRef<NodeJS.Timeout | null>(null);
 
   useEffect(() => {
-    if (isLoading) {
+    if (isLoading && !animationStartedRef.current) {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+        debounceTimerRef.current = null;
+      }
+
+      animationStartedRef.current = true;
+      animationLockedRef.current = true;
+      setIsVisible(true);
       setLoadingProgress(0);
-      const interval = setInterval(() => {
-         setLoadingProgress((prev) => (prev >= 90 ? prev : prev + 15));
-     }, 150);
-      return () => clearInterval(interval);
-    } else if (hasData || hasError) {
+
+      intervalRef.current = setInterval(() => {
+        setLoadingProgress((prev) => {
+          if (prev >= 90) return prev;
+          return prev + 15;
+        });
+      }, 150);
+    } else if (!isLoading && animationStartedRef.current) {
+      debounceTimerRef.current = setTimeout(() => {
+        if (intervalRef.current) {
+          clearInterval(intervalRef.current);
+          intervalRef.current = null;
+        }
+        setIsVisible(false);
+        setLoadingProgress(0);
+        animationStartedRef.current = false;
+        animationLockedRef.current = false;
+      }, 300);
+    }
+
+    return () => {
+      if (debounceTimerRef.current) {
+        clearTimeout(debounceTimerRef.current);
+      }
+      if (intervalRef.current && !isLoading) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+  }, [isLoading]);
+
+  useEffect(() => {
+    if (animationLockedRef.current && (hasData || hasError)) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+
       setLoadingProgress(100);
-      const timeout = setTimeout(() => setLoadingProgress(0), 500);
+
+      const timeout = setTimeout(() => {
+        setLoadingProgress(0);
+        setIsVisible(false);
+        animationStartedRef.current = false;
+        animationLockedRef.current = false;
+      }, 500);
+
       return () => clearTimeout(timeout);
     }
-  }, [isLoading, hasData, hasError]);
+  }, [hasData, hasError]);
 
-  if (!isLoading) return null;
+  if (!isVisible) return null;
 
   return (
     <div className="loading-bar">
       <div className="loading-bar__animation">
-        <img 
-          src={loadingAnimation} 
-          alt="Loading animation" 
+        <img
+          src={loadingAnimation}
+          alt="Loading animation"
           className="loading-bar__svg"
         />
       </div>

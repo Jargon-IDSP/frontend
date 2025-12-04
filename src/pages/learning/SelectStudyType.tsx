@@ -9,6 +9,7 @@ import LoadingBar from "../../components/LoadingBar";
 import type { Document } from "../../types/document";
 import { useDocument } from "../../hooks/useDocument";
 import { useDocumentAccess } from "../../hooks/useDocumentAccess";
+import { useSmartNavigation } from "../../hooks/useSmartNavigation";
 import LessonOptionsDrawer from "../drawers/LessonOptionsDrawer";
 
 const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
@@ -16,6 +17,7 @@ const BACKEND_URL = import.meta.env.VITE_BACKEND_URL;
 export default function SelectStudyType() {
   const navigate = useNavigate();
   const location = useLocation();
+  const { navigateBack } = useSmartNavigation();
   const { getToken } = useAuth();
   const { documentId } = useParams<{ documentId: string }>();
   const [selectedDocument, setSelectedDocument] = useState<Document | null>(
@@ -101,11 +103,11 @@ export default function SelectStudyType() {
 
   const handleBackClick = () => {
     if (documentId) {
-      navigate(-1);
+      navigateBack("/learning/custom");
     } else if (selectedDocument) {
       setSelectedDocument(null);
     } else {
-      navigate("/learning/custom");
+      navigateBack("/learning/custom");
     }
   };
 
