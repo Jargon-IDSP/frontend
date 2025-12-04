@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate, useLocation } from "react-router-dom";
 import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import type { DocumentNavProps } from "../types/documentNav";
 import { truncateFilename } from "../utils/stringUtils";
@@ -19,8 +18,6 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
   onSubtitleClick,
   lessonId,
 }) => {
-  const navigate = useNavigate();
-  const location = useLocation();
   const { navigateWithOrigin } = useSmartNavigation();
   const isLessonDisabled = !onLessonClick;
 

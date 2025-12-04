@@ -1,5 +1,4 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import type { PodiumProps } from "../types/podium";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
@@ -7,8 +6,7 @@ import { getLanguageFlag } from "../utils/languageFlagHelpers";
 import { AvatarDisplay } from "./avatar";
 import rockyLogo from "/rocky.svg";
 
-const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/leaderboard/full", onAvatarLoadingChange }) => {
-  const navigate = useNavigate();
+const Podium: React.FC<PodiumProps> = ({ users, currentUserId, onAvatarLoadingChange }) => {
   const { navigateWithOrigin } = useSmartNavigation();
   const topThree = users.slice(0, 3);
 

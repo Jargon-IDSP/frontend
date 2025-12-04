@@ -1,5 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
 import { CategoryFolderWithDocuments } from "@/components/learning/CategoryFolderWithDocuments";
 import { CategoriesCard } from "@/components/learning/CategoriesCard";
 import { useCategories } from "@/hooks/useCategories";
@@ -10,7 +9,6 @@ import folderIcon from "../../assets/icons/folderIcon.svg";
 import dictionaryBottom from "../../assets/dictionaryBottom.svg";
 
 export default function Categories() {
-  const navigate = useNavigate();
   const { navigateBack } = useSmartNavigation();
   const { data: categories, isLoading, error } = useCategories();
   const [isModalOpen, setIsModalOpen] = useState(false);
