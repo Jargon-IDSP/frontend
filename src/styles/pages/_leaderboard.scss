@@ -201,6 +201,7 @@
 }
 
 .leaderboard-page:has(.leaderboard-empty-state) {
+  height: 100vh;
   background: $color-secondary-400;
 }
 .leaderboard-hero {
