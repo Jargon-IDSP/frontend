@@ -71,7 +71,7 @@ const LeaderboardPage: React.FC = () => {
     isPrivateLeaderboard &&
     users.length < 3;
 
-  const containerClass = "container container--leaderboard";
+  const containerClass = "container";
   
   const hasUsersData = users.length > 0;
   const hasProfileData = profile !== undefined;
@@ -81,7 +81,7 @@ const LeaderboardPage: React.FC = () => {
   const areAvatarsLoading = avatarLoadingCount > 0;
   const showFullPageLoading = !hasCachedData && (isDataLoading || areAvatarsLoading);
   const allDataLoaded = !isDataLoading && !areAvatarsLoading;
-  
+
   if (error) {
     return (
       <div className={containerClass}>

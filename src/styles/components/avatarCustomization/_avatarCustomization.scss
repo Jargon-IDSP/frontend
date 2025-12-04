@@ -268,9 +268,6 @@
       transition: all 0.3s ease-in-out;
     }
 
-    // positioning for accessories (makeup, beauty spots, etc)
-    // Base canvas: 210px × 250px
-
     .avatar-layer--accessories {
       position: absolute;
       bottom: auto;
@@ -279,7 +276,7 @@
       transform: translateX(-50%);
       width: auto;
       height: auto;
-      max-height: 50px; // Keeps makeup from rendering too large
+      max-height: 100%;
       z-index: 1;
       transition: all 0.3s ease-in-out;
     }
@@ -311,7 +308,6 @@
     }
   }
 
-  // Hide sprite sheet SVG if accidentally loaded
   #Layer_1 {
     display: none !important;
   }
