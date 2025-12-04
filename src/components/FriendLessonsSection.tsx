@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CategoriesCard } from "./learning/CategoriesCard";

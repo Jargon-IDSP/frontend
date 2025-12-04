@@ -1,5 +1,5 @@
 import { useAuth } from "@clerk/clerk-react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useQuery } from "@tanstack/react-query";
 import { useState, useEffect, useCallback } from "react";
 import { BACKEND_URL } from "../../lib/api";
@@ -25,7 +25,6 @@ export default function FriendProfilePage() {
   const { getToken } = useAuth();
   const { showToast } = useNotificationContext();
 
-  // Fetch current user's profile to check if viewing own profile
   const { data: currentUserProfile, isLoading: isLoadingCurrentUser } = useQuery({
     queryKey: ["profile"],
     queryFn: async () => {
@@ -41,24 +40,20 @@ export default function FriendProfilePage() {
 
   const isOwnProfile = currentUserProfile?.id === friendId;
 
-  // Fetch friend profile data
   const { data: friendProfile, isLoading, error } = useQuery({
     queryKey: ["friendProfile", friendId],
     queryFn: async (): Promise<FriendProfile> => {
       const token = await getToken();
 
-      // Try to fetch from users endpoint first
       let res = await fetch(`${BACKEND_URL}/api/users/${friendId}`, {
         headers: { Authorization: `Bearer ${token}` },
       });
 
-      // If that works, return the data
       if (res.ok) {
         const data = await res.json();
         return data.data || data;
       }
 
-      // If users endpoint fails, try getting from friendships list
       const friendsRes = await fetch(`${BACKEND_URL}/friendships`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -73,7 +68,6 @@ export default function FriendProfilePage() {
         }
       }
 
-      // If both fail, try getting basic info from leaderboard
       const leaderboardRes = await fetch(`${BACKEND_URL}/leaderboard`, {
         headers: { Authorization: `Bearer ${token}` },
       });
@@ -84,7 +78,6 @@ export default function FriendProfilePage() {
         const user = users.find((u: any) => u.id === friendId);
 
         if (user) {
-          // Return minimal profile data from leaderboard
           return {
             id: user.id,
             username: null,
@@ -103,7 +96,6 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
-  // Fetch follower count
   const { data: followerCountData, isLoading: isLoadingFollowerCount } = useQuery({
     queryKey: ["followerCount", friendId],
     queryFn: async () => {
@@ -121,7 +113,6 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
-  // Fetch following count
   const { data: followingCountData, isLoading: isLoadingFollowingCount } = useQuery({
     queryKey: ["followingCount", friendId],
     queryFn: async () => {
@@ -139,7 +130,6 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
-  // Fetch lesson request status
   const { data: lessonRequestStatus } = useQuery({
     queryKey: ["lessonRequestStatus", friendId],
     queryFn: async () => {
@@ -159,7 +149,6 @@ export default function FriendProfilePage() {
     staleTime: 60000,
   });
 
-  // Fetch friend's quiz count (all custom quizzes they created)
   const { data: quizCountData, isLoading: isLoadingQuizCount } = useQuery({
     queryKey: ["friendQuizCount", friendId],
     queryFn: async () => {
@@ -177,7 +166,6 @@ export default function FriendProfilePage() {
     enabled: !!friendId,
   });
 
-  // Fetch user badges
   const { data: userBadges, isLoading: isLoadingBadges } = useQuery({
     queryKey: ["userBadges", friendId],
     queryFn: async (): Promise<UserBadge[]> => {
