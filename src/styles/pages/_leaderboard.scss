@@ -350,6 +350,31 @@
   box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
   overflow: hidden;
 
+  // Sliding background indicator
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: calc(100% / 3); // For 3 tabs
+    height: 100%;
+    background-color: white;
+    border-radius: 9999px;
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    transition: transform $transition-normal;
+    z-index: 0;
+  }
+
+  // Slide to second tab when private tab is active
+  &:has(.leaderboard-tab:nth-child(2).leaderboard-tab--active)::before {
+    transform: translateX(100%);
+  }
+
+  // Slide to third tab when self tab is active
+  &:has(.leaderboard-tab:nth-child(3).leaderboard-tab--active)::before {
+    transform: translateX(200%);
+  }
+
   .leaderboard-page:has(.leaderboard-empty-state) & {
     margin-bottom: $spacing-xl;
     position: relative;
@@ -363,16 +388,18 @@
   padding: 0.65rem 1.25rem;
   font-size: $font-size-body;
   font-weight: $font-weight-medium;
-  color: $color-quinary-50;
+  color: $quinary-500;
   border: none;
   border-radius: 9999px;
   cursor: pointer;
-  transition: all $transition-normal;
+  transition: color $transition-normal, font-weight $transition-normal;
   min-width: 0;
-  background: transparent;
+  background: transparent; // Removed background color for sliding effect
+  position: relative;
+  z-index: 1;
 
   &:hover {
-    color: rgba($color-quinary, 0.7);
+    color: rgba($quinary-500, 0.7);
   }
 
   &:focus-visible {
@@ -382,9 +409,8 @@
 
   &--active {
     color: $color-quinary-600;
-    background-color: white;
     font-weight: $font-weight-bold;
-    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.18);
+    // Removed background-color and box-shadow for sliding effect
   }
 }
 
