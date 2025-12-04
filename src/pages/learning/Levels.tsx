@@ -80,7 +80,6 @@ export default function ExistingLevels() {
     return level?.unlocked === false || (level?.unlocked === undefined && levelId > 1);
   };
 
-  // Combine both loading states to prevent content jitter
   const isLoading = profileLoading || levelsLoading;
 
   const getStudySessions = (levelId: number): StudySession[] => {

@@ -279,8 +279,7 @@
       transform: translateX(-50%);
       width: auto;
       height: auto;
-      min-height: 40px;
-      max-height: 50px;
+      max-height: 50px; // Keeps makeup from rendering too large
       z-index: 1;
       transition: all 0.3s ease-in-out;
     }

@@ -55,7 +55,6 @@ export default function LearnJargon() {
                         />
                     </div>
 
-                    {/* <img className="prebuilt" src={prebuilt} alt="Prebuilt Lessons" onClick={() => navigate("/learning/existing/levels")}/> */}
 
                     <img
                         className='generated'

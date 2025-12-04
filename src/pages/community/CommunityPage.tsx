@@ -19,14 +19,12 @@ import LeaderboardConnectAvatar from "../../assets/leaderboardConnectAvatar.svg"
 import findYourFriendsImg from "/findYourFriendsImg.svg";
 import noFriendsImg from "/noFriendsImg.svg";
 import rockyLogo from "/rocky.svg";
-// import rockyWhiteLogo from '/rockyWhite.svg';
 import communityPageLeaderShowImg from "/communityPageLeaderShowImg.svg";
 import communityPageLeaderNoShowImg from "/communityPageLeaderNoShowImg.svg";
 import { BACKEND_URL } from "../../lib/api";
 import type { Friend, FriendsResponse } from "../../types/friend";
 import friendsNoShowImg from "../../../public/FriendsNoShowImg.svg";
 import { AvatarDisplay } from "../../components/avatar";
-// Styles are imported via main.scss
 
 const CommunityPage: React.FC = () => {
     const navigate = useNavigate();
@@ -60,7 +58,6 @@ const CommunityPage: React.FC = () => {
         retry: 2,
     });
 
-    // Track avatar loading
     const handleAvatarLoadingChange = (userId: string, isLoading: boolean) => {
         if (isLoading) {
             avatarLoadingRef.current.add(userId);
@@ -70,7 +67,6 @@ const CommunityPage: React.FC = () => {
         setAvatarLoadingCount(avatarLoadingRef.current.size);
     };
 
-    // Reset avatar loading when data changes
     useEffect(() => {
         avatarLoadingRef.current.clear();
         setAvatarLoadingCount(0);
@@ -98,10 +94,14 @@ const CommunityPage: React.FC = () => {
         friendsNoShowImg: noFriendsImg,
     });
 
-    // Determine if we should show the full-page loading screen
+   const hasLeaderboardData = leaderboardUsers.length > 0;
+    const hasProfileData = profile !== undefined;
+    const hasFriendsData = friends.length > 0;
+    const hasCachedData = hasLeaderboardData || hasProfileData || hasFriendsData;
+    
     const isDataLoading = leaderboardLoading || profileLoading || friendsLoading;
     const areAvatarsLoading = avatarLoadingCount > 0;
-    const showFullPageLoading = isDataLoading || areAvatarsLoading;
+    const showFullPageLoading = !hasCachedData && (isDataLoading || areAvatarsLoading);
     const allDataLoaded = !isDataLoading && !areAvatarsLoading;
 
     return (
@@ -121,13 +121,6 @@ const CommunityPage: React.FC = () => {
                 </div>
                 <div className='community-header-actions'>
                     <NotificationBell />
-                    {/* <button
-              className="community-settings-icon"
-              onClick={() => navigate("/profile")}
-              aria-label="Profile"
-            >
-              <img src={rockyWhiteLogo} alt="Rocky" className="rocky-logo" />
-            </button> */}
                 </div>
 
                 <div className='community-tabs'>

@@ -5,6 +5,7 @@ import { useCategories } from "@/hooks/useCategories";
 import { useCreateCategory } from "@/hooks/useCreateCategory";
 import { useSmartNavigation } from "@/hooks/useSmartNavigation";
 import { AddFolderModal } from "@/components/AddFolderModal";
+import LoadingBar from "@/components/LoadingBar";
 import folderIcon from "../../assets/icons/folderIcon.svg";
 import dictionaryBottom from "../../assets/dictionaryBottom.svg";
 
@@ -13,6 +14,9 @@ export default function Categories() {
   const { data: categories, isLoading, error } = useCategories();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const createCategory = useCreateCategory();
+
+  const hasCachedData = categories !== undefined;
+  const showLoading = !hasCachedData && isLoading;
 
   const handleCreateFolder = async (name: string) => {
     try {
@@ -30,6 +34,11 @@ export default function Categories() {
 
   return (
     <div className="categoriesPage">
+      <LoadingBar
+        isLoading={showLoading}
+        hasData={!isLoading}
+        text="Loading categories"
+      />
       <CategoriesCard
         title="Generated Lessons"
         onBack={() => navigateBack("/learning/custom")}
@@ -44,9 +53,7 @@ export default function Categories() {
           bottomImages={[dictionaryBottom]}
 
       >
-        {isLoading ? (
-          <div className="categoriesLoading">Loading categories...</div>
-        ) : error ? (
+        {error ? (
           <div className="categoriesError">
             Failed to load categories. Please try again.
           </div>

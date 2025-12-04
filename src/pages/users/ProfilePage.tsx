@@ -21,7 +21,6 @@ import settingsIcon from "../../assets/icons/settingsIcon.svg";
 import "../../styles/pages/_profile.scss";
 import "../../styles/pages/_friendProfile.scss";
 
-// Eagerly import all badge images using glob
 const badgeModules = import.meta.glob<string>("../../assets/badges/**/*.svg", {
     eager: true,
     import: "default",
@@ -57,14 +56,20 @@ export default function ProfilePage() {
         "archives" | "achievements"
     >("archives");
 
+    const hasProfileData = data !== undefined;
+    const hasBadgesData = userBadges !== undefined;
+    const hasCustomWordCountData = customWordCount !== undefined;
+    const hasCachedData = hasProfileData || hasBadgesData || hasCustomWordCountData;
+    
     const isPageLoading =
-        isLoading ||
+        !hasCachedData &&
+        (isLoading ||
         badgesLoading ||
         customWordCountLoading ||
         !avatarLoaded ||
         !monthlyActivityLoaded ||
         (activeProfileTab === "archives" && !documentsLoaded) ||
-        (activeProfileTab === "achievements" && !selfLeaderboardLoaded);
+        (activeProfileTab === "achievements" && !selfLeaderboardLoaded));
     const accountCreatedAt = data?.createdAt ? new Date(data.createdAt) : null;
     const accountAgeDays = accountCreatedAt
         ? Math.max(
@@ -83,7 +88,6 @@ export default function ProfilePage() {
 
     const error = queryError ? (queryError as Error).message : null;
 
-    // Get badge icon URLs from glob imports
     const badgeIcons = useMemo(() => {
         if (!userBadges) return [];
 
@@ -135,7 +139,6 @@ export default function ProfilePage() {
         navigate("/settings");
     };
 
-    // Chat handlers
     const handleOpenChat = () => {
         setShowChatModal(true);
     };
@@ -147,7 +150,6 @@ export default function ProfilePage() {
         chatMutation.reset();
     };
 
-    // Chat mutation
     const chatMutation = useMutation({
         mutationFn: async (prompt: string) => {
             const token = await getToken();
@@ -193,7 +195,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                 id: Date.now().toString(),
             };
             setChatHistory((prev) => [...prev, assistantMessage]);
-            // Input already cleared in handleSendChat
         },
     });
 
@@ -202,7 +203,7 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
         if (!chatPrompt.trim() || chatMutation.isPending) return;
 
         const promptToSend = chatPrompt.trim();
-        setChatPrompt(""); // Clear immediately for better UX
+        setChatPrompt(""); 
 
         const userMessage: ChatMessage = {
             role: "user",
@@ -216,7 +217,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
     return (
         <>
-            {/* Privacy Settings Drawer */}
             <PrivacyDrawer
                 open={isPrivacyDrawerOpen}
                 onOpenChange={setIsPrivacyDrawerOpen}
@@ -224,7 +224,10 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
             <div className='container'>
                 <div className='profile-page'>
-                    {/* Header with title and settings icon */}
+                    <LoadingBar
+                        isLoading={isPageLoading}
+                        text='Loading profile'
+                    />
                     <div className='profile-header'>
                         <button
                             className='profile-go-back-button'
@@ -251,10 +254,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                         </div>
                     </div>
 
-                    <LoadingBar
-                        isLoading={isPageLoading}
-                        text='Loading profile'
-                    />
 
                     {error && (
                         <div className='error-message'>Error: {error}</div>
@@ -262,7 +261,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
 
                     {data && (
                         <div className='profile-content'>
-                            {/* Profile Avatar Section */}
                             <div className='profile-avatar-section'>
                                 <div className='profile-avatar-large'>
                                     {data.avatar ? (
@@ -293,10 +291,8 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                                 </p>
                             </div>
 
-                            {/* Monthly Activity */}
                             <MonthlyActivity onLoadingChange={handleMonthlyActivityLoadingChange} />
 
-                            {/* Quick Stats */}
                             <div className='profile-mini-cards'>
                                 <div className='profile-mini-card'>
                                     <p className='profile-mini-card-value'>
@@ -318,31 +314,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                                 </div>
                             </div>
 
-                            {/* Profile Card - Commented out for future use */}
-                            {/* <div className="profile-card">
-              <div className="profile-card-avatar">
-                <img src={rockyWhiteLogo} alt="User Avatar" className="profile-avatar-image" />
-              </div>
-              <div className="profile-card-info">
-                <h2 className="profile-card-name">
-                  {data.firstName
-                    ? `${data.firstName}`
-                    : data.username || data.email || 'User'}
-                </h2>
-                <p className="profile-card-industry">
-                  {data.industryId ? industryIdToName[data.industryId] || 'Not set' : 'Not set'}
-                </p>
-              </div>
-              <button
-                className="profile-card-edit"
-                onClick={() => navigate("/profile/manage")}
-                aria-label="Edit profile"
-              >
-                <img src={editIcon} alt="Edit" />
-              </button>
-            </div> */}
-
-                            {/* Sections Tabs */}
                             <div className='profile-sections'>
                                 <div className='profile-tabs'>
                                     <button
@@ -450,7 +421,6 @@ Remember: Be supportive, keep it brief, and explain like you're talking to a fri
                 </div>
             </div>
 
-            {/* Chat Modal */}
             <ChatModal
                 isOpen={showChatModal}
                 onClose={handleCloseChat}
