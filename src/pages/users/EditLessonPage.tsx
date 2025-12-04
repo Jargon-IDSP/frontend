@@ -6,6 +6,7 @@ import { BACKEND_URL } from "../../lib/api";
 import { useProfile } from "../../hooks/useProfile";
 import { useCategories } from "../../hooks/useCategories";
 import { useDocumentCategory } from "../../hooks/useDocumentCategory";
+import { useSmartNavigation } from "../../hooks/useSmartNavigation";
 import { getUserDisplayName } from "../../utils/userHelpers";
 import LoadingBar from "../../components/LoadingBar";
 import goBackIcon from "../../assets/icons/goBackIcon.svg";
@@ -20,6 +21,7 @@ const EditLessonPage: React.FC = () => {
   const { lessonId } = useParams<{ lessonId: string }>();
   const navigate = useNavigate();
   const location = useLocation();
+  const { navigateBack } = useSmartNavigation();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
   const { data: profile } = useProfile();
@@ -172,15 +174,14 @@ const EditLessonPage: React.FC = () => {
       });
       
       queryClient.invalidateQueries({ queryKey: ["documents", "by-category"] });
-      
+
       queryClient.invalidateQueries({ queryKey: ["friendLessons"] });
       queryClient.invalidateQueries({ queryKey: ["profile"] });
       queryClient.invalidateQueries({ queryKey: ["customQuizzes"] });
       queryClient.invalidateQueries({ queryKey: ["lessonDetails"] });
       queryClient.invalidateQueries({ queryKey: ["categories"] });
 
-      const returnPath = location.state?.from || "/profile";
-      navigate(returnPath);
+      navigateBack("/profile");
     },
     onError: (err: Error) => {
       setError(err.message);
@@ -259,8 +260,7 @@ const EditLessonPage: React.FC = () => {
   );
 
   const handleCancel = () => {
-    const returnPath = location.state?.from || "/profile";
-    navigate(returnPath);
+    navigateBack("/profile");
   };
 
   const handleDelete = () => {
@@ -276,8 +276,7 @@ const EditLessonPage: React.FC = () => {
     queryClient.invalidateQueries({ queryKey: ["lessonDetails"] });
     queryClient.invalidateQueries({ queryKey: ["categories"] });
 
-    const returnPath = location.state?.from || "/profile";
-    navigate(returnPath);
+    navigateBack("/profile");
   };
 
   if (isLoading || !profile) {

@@ -157,6 +157,7 @@ export default function FullTranslationView() {
           from: location.pathname,
           lessonName: documentTitle,
         },
+        replace: true,
       });
       return;
     }
@@ -181,6 +182,7 @@ export default function FullTranslationView() {
               from: location.pathname,
               lessonName: documentTitle,
             },
+            replace: true,
           });
         }
       }

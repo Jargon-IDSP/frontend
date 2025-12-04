@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import type { DocumentNavProps } from "../types/documentNav";
 import { truncateFilename } from "../utils/stringUtils";
 import translateFileIcon from "../assets/icons/translateFileIcon.svg";
@@ -20,15 +21,16 @@ const DocumentNav: React.FC<DocumentNavProps> = ({
 }) => {
   const navigate = useNavigate();
   const location = useLocation();
+  const { navigateWithOrigin } = useSmartNavigation();
   const isLessonDisabled = !onLessonClick;
 
   const handleSubtitleClick = () => {
     if (lessonId) {
-      navigate(`/profile/lessons/${lessonId}/edit`, {
+      navigateWithOrigin(`/profile/lessons/${lessonId}/edit`, {
         state: {
-          from: location.pathname,
           lessonName: title,
         },
+        replace: true,
       });
     } else if (onSubtitleClick) {
       onSubtitleClick();

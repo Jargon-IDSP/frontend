@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useAuth } from "@clerk/clerk-react";
 import { useNavigate } from "react-router-dom";
 import { BACKEND_URL } from "../../lib/api";
+import { useSmartNavigation } from "../../hooks/useSmartNavigation";
 import type { Friend, FriendsResponse } from "../../types/friend";
 import { getUserDisplayName, getLanguageCode } from "../../utils/userHelpers";
 import { getLanguageFlag } from "../../utils/languageFlagHelpers";
@@ -11,13 +12,13 @@ import goBackIcon from "../../assets/icons/goBackIcon.svg";
 import rockyLogo from "/rocky.svg";
 import rockyWhiteLogo from "/rockyWhite.svg";
 import { AvatarDisplay } from "../../components/avatar";
-// Styles will be added later
 
 type TabType = "friends" | "followers" | "following";
 
 const ViewFriendsPage: React.FC = () => {
   const { getToken } = useAuth();
   const navigate = useNavigate();
+  const { navigateWithOrigin } = useSmartNavigation();
   const [activeTab, setActiveTab] = useState<TabType>("friends");
   const { data: profile } = useProfile();
 
@@ -119,7 +120,7 @@ const ViewFriendsPage: React.FC = () => {
               } leaderboard-item--clickable`}
               onClick={() => {
                 if (!isCurrentUser) {
-                  navigate(`/profile/friends/${user.id}`, { state: { from: "/community/friends" } });
+                  navigateWithOrigin(`/profile/friends/${user.id}`);
                 }
               }}
             >

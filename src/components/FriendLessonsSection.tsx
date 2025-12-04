@@ -4,6 +4,7 @@ import { useAuth } from "@clerk/clerk-react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CategoriesCard } from "./learning/CategoriesCard";
 import { BACKEND_URL } from "../lib/api";
+import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import type { FriendQuiz } from "../types/friend";
 import lockIcon from "../assets/icons/lockIcon.svg";
 import lessonIconWrench from "../assets/icons/lessonIconWrench.svg";
@@ -143,6 +144,7 @@ export default function FriendLessonsSection({
   onLessonClick,
 }: FriendLessonsSectionProps) {
   const navigate = useNavigate();
+  const { navigateWithOrigin } = useSmartNavigation();
   const { getToken } = useAuth();
   const queryClient = useQueryClient();
   const { showToast } = useNotificationContext();
@@ -339,17 +341,16 @@ export default function FriendLessonsSection({
                   className="friend-profile-lesson-edit-icon"
                   onClick={(e) => {
                     e.stopPropagation();
-                    // Navigate to edit lesson page
                     const currentPath = window.location.pathname;
                     const userId = currentPath.includes("/profile/friends/")
                       ? currentPath.split("/profile/friends/")[1]
                       : "me";
-                    navigate(`/profile/lessons/${quiz.id}/edit`, {
+                    navigateWithOrigin(`/profile/lessons/${quiz.id}/edit`, {
                       state: {
-                        from: currentPath,
                         userId: userId !== "me" ? userId : undefined,
                         lessonName: quiz.name
-                      }
+                      },
+                      replace: true,
                     });
                   }}
                 />

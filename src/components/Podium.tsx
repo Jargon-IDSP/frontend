@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import type { PodiumProps } from "../types/podium";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import { getLanguageFlag } from "../utils/languageFlagHelpers";
@@ -8,6 +9,7 @@ import rockyLogo from "/rocky.svg";
 
 const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/leaderboard/full", onAvatarLoadingChange }) => {
   const navigate = useNavigate();
+  const { navigateWithOrigin } = useSmartNavigation();
   const topThree = users.slice(0, 3);
 
   const podiumUsers = [
@@ -38,7 +40,7 @@ const Podium: React.FC<PodiumProps> = ({ users, currentUserId, fromRoute = "/lea
           <div
             key={user.id}
             className={`podium-item rank-${rank} podium-item--clickable`}
-            onClick={() => navigate(`/profile/friends/${user.id}`, { state: { from: fromRoute } })}
+            onClick={() => navigateWithOrigin(`/profile/friends/${user.id}`)}
           >
             <div className="rocky-avatar">
               {user.avatar ? (

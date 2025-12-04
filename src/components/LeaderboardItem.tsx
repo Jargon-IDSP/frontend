@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import { getUserDisplayName, getLanguageCode } from "../utils/userHelpers";
 import { getLanguageFlag } from "../utils/languageFlagHelpers";
 import type { LeaderboardItemProps } from "../types/leaderboardItem";
@@ -15,11 +16,12 @@ const LeaderboardItem: React.FC<LeaderboardItemProps> = ({
   onAvatarLoadingChange,
 }) => {
   const navigate = useNavigate();
+  const { navigateWithOrigin } = useSmartNavigation();
   const languageFlag = getLanguageFlag(user.language);
 
   const handleClick = () => {
     if (isClickable) {
-      navigate(`/profile/friends/${user.id}`, { state: { from: fromRoute } });
+      navigateWithOrigin(`/profile/friends/${user.id}`);
     }
   };
 

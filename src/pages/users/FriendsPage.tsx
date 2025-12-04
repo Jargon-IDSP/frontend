@@ -229,7 +229,7 @@ export default function FriendsPage() {
           <div className="leaderboard-header">
             <button
               className="leaderboard-back-button"
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/community", { state: { tab: "friends" }, replace: true })}
             >
               <img src={goBackIcon} alt="Back" />
             </button>

@@ -134,6 +134,7 @@ export function DocumentsList({ refresh, onLoadingChange }: DocumentsListProps) 
           lessonName: lesson.name || doc.filename,
           from: "/profile",
         },
+        replace: true,
       });
     } catch (error) {
       console.error("Failed to open lesson editor:", error);

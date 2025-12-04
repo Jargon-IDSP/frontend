@@ -2779,25 +2779,30 @@ button.back-button {
   color: #6F2E17;
 }
 
+main:has(.introduction-page) {
+  padding-bottom: 0 !important;
+}
+
 .introduction-page {
   display: flex;
   flex-direction: column;
-  background-color: #fffdf4;
+  background-color: #fff8e7;
   padding-bottom: 1rem;
   min-height: 100vh;
-  padding-top: 1rem;
 }
 .introduction-page__title {
-  font-size: 28px;
-  font-weight: 700;
-  color: #fe4d13;
   text-align: center;
-  margin-bottom: 1rem;
+  display: flex;
+  justify-content: center;
+}
+.introduction-page__wordmark {
+  height: auto;
+  -o-object-fit: contain;
+     object-fit: contain;
+  display: block;
 }
 .introduction-page__card {
-  background-color: white;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  background-color: #fff8e7;
   width: 100%;
   margin-bottom: 1rem;
   position: relative;
@@ -2821,14 +2826,21 @@ button.back-button {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  border: none;
+  border-radius: 0;
+  padding-bottom: 4rem;
 }
 .introduction-page__media, .introduction-page__media-placeholder {
-  width: 100%;
-  height: 100%;
-  border-radius: 12px;
+  max-width: 100%;
+  max-height: 100%;
+  width: auto;
+  height: auto;
+  border-radius: 30px;
   -o-object-fit: contain;
      object-fit: contain;
   display: block;
+  border: 3px solid #fe4d13;
+  background-color: #fff8e7;
 }
 .introduction-page__media[src] {
   -o-object-fit: contain;
@@ -2838,21 +2850,19 @@ button.back-button {
   display: flex;
   align-items: center;
   justify-content: center;
-  background-color: rgba(57, 57, 57, 0.1);
   color: #393939;
   font-size: 20px;
   font-weight: 600;
+  border: none;
 }
 .introduction-page__dots {
-  position: absolute;
-  bottom: 1rem;
-  left: 50%;
-  transform: translateX(-50%);
   display: flex;
+  justify-content: center;
   gap: 0.5rem;
-  z-index: 10;
   padding: 0.25rem 0.5rem;
-  background-color: rgba(57, 57, 57, 0.3);
+  margin: 0 auto 1rem;
+  width: -moz-fit-content;
+  width: fit-content;
   border-radius: 8px;
   -webkit-backdrop-filter: blur(4px);
           backdrop-filter: blur(4px);
@@ -2861,21 +2871,23 @@ button.back-button {
   width: 8px;
   height: 8px;
   border-radius: 50%;
-  border: none;
-  background-color: rgba(255, 255, 255, 0.6);
+  background-color: #FFECF0;
+  border: 1px solid #ffba0a;
   cursor: pointer;
-  transition: all 0.15s ease;
   padding: 0;
 }
-.introduction-page__dot:hover {
-  background-color: rgba(255, 255, 255, 0.9);
-  transform: scale(1.3);
-}
 .introduction-page__dot--active {
-  background-color: white;
-  width: 10px;
-  height: 10px;
+  background-color: #FE4366;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  border: 1px solid #ffba0a;
+}
+.introduction-page__description {
+  text-align: center;
+  margin-bottom: 1rem;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fe4d13;
+  margin-bottom: 1.5rem;
 }
 .introduction-page__actions {
   display: flex;
@@ -2883,24 +2895,19 @@ button.back-button {
   width: 100%;
 }
 .introduction-page__button {
-  padding: 1rem 2.5rem;
-  border-radius: 8px;
+  border-radius: 30px;
   font-size: 16px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.15s ease;
   border: none;
-  min-width: 150px;
+  padding-right: 2.5rem;
+  padding-left: 2.5rem;
 }
 .introduction-page__button--primary {
   background-color: #fe4d13;
   color: white;
-  width: 100%;
-  max-width: 400px;
-}
-.introduction-page__button--primary:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  max-width: 100%;
 }
 .introduction-page__button--primary:active {
   transform: translateY(0);
@@ -2967,8 +2974,8 @@ button.back-button {
   border-radius: 18px;
   font-size: 16px;
   font-weight: 500;
-  width: 366px;
-  max-width: 366px;
+  width: 100%;
+  max-width: 480px;
   margin: 0 auto;
   color: #ffad92;
   cursor: pointer;
@@ -2988,7 +2995,8 @@ button.back-button {
   display: block;
   margin: 125px auto;
   padding: 1rem 2.5rem;
-  min-width: 366px;
+  max-width: 480px;
+  width: 100%;
   background-color: #365ccc;
   border: none;
   border-radius: 12px;

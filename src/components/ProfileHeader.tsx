@@ -1,24 +1,17 @@
 import { useNavigate } from "react-router-dom";
+import { useSmartNavigation } from "../hooks/useSmartNavigation";
 import goBackIcon from "../assets/icons/goBackIcon.svg";
 import NotificationBell from "./NotificationBell";
-import type { ProfileHeaderProps } from "../types/profile";
 
-export default function ProfileHeader({
-  from,
-}: ProfileHeaderProps) {
+export default function ProfileHeader() {
   const navigate = useNavigate();
+  const { navigateBack } = useSmartNavigation();
 
   return (
     <div className="friend-profile-header">
       <button
         className="friend-profile-back-button"
-        onClick={() => {
-          if (from) {
-            navigate(from);
-          } else {
-            navigate("/leaderboard/full");
-          }
-        }}
+        onClick={() => navigateBack("/leaderboard/full")}
       >
         <img src={goBackIcon} alt="Back" />
       </button>
