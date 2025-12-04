@@ -14,7 +14,7 @@
   &:has(.leaderboard-empty-state) {
     justify-content: flex-start;
     align-items: center;
-    padding-top: $spacing-md;
+    padding-top: $spacing-sm;
     background: $color-second-neutral;
 
     &:before {
@@ -202,6 +202,7 @@
 
 .leaderboard-page:has(.leaderboard-empty-state) {
   background: $color-secondary-400;
+  height: 100%;
 }
 .leaderboard-hero {
   padding-bottom: $spacing-xl;
@@ -257,7 +258,7 @@
 
   .leaderboard-page:has(.leaderboard-empty-state) & {
     position: relative;
-    margin-bottom: $spacing-lg;
+    margin-bottom: $spacing-xs;
     margin-top: 0;
   }
 }
