@@ -134,12 +134,13 @@
   }
 
   .btn-secondary {
-    background-color: $secondary-500;
+    background-color: $secondary-200;
     color: $error-500;
     border: none;
     border-radius: $border-radius-lg;
     font-family: $font-family-primary;
     font-weight: $font-weight-medium;
+    box-shadow: none;
   }
 
   .tool-result .btn-secondary {
@@ -156,11 +157,11 @@
   }
 
   .btn-secondary:hover {
-    background-color: $secondary-500;
+    background-color: $secondary-200;
     border-color: $quinary-500;
     color: $quinary-500;
     transform: translateY(-2px);
-    // box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
   }
 
   .loading {
@@ -188,7 +189,7 @@
   }
 
   .tool-result h2 {
-    margin: 0 0 $spacing-md 0;
+    margin: 0 0 $spacing-xs 0;
     font-size: $font-size-h2;
     font-weight: $font-weight-bold;
     color: $color-quaternary-dark;
@@ -210,6 +211,7 @@
     border-radius: $border-radius-xl;
     font-size: $font-size-label;
     font-weight: $font-weight-medium;
+    margin-top: -10px;
     margin-bottom: $spacing-md;
     border: none;
     color: $success-500;
@@ -237,7 +239,7 @@
   }
 
   .english-name {
-    font-size: $font-size-h2;
+    font-size: 2rem !important;
     font-weight: $font-weight-bold;
     margin: 0;
     color: white;
@@ -376,7 +378,7 @@
     }
 
     .english-name {
-      font-size: 1.5rem;
+      font-size: 2.5rem !important;
     }
 
     .tool-name-speak-button {
