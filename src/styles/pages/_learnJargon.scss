@@ -39,25 +39,29 @@
     margin: 0 0.5rem 1rem 0.5rem;
 
     .headerContent {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+
+        .badge {
+            background-color: $color-primary;
+            color: white;
+            padding: 0.25rem 0.75rem;
+            border-radius: 1rem;
+            font-size: 0.875rem;
+            font-weight: $font-weight-regular;
+            align-self: flex-start;
+        }
+
         h1 {
             font-size: $font-size-h1;
             font-weight: $font-weight-bold;
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-            margin-bottom: 0.5rem;
-
-            .badge {
-                background-color: $color-primary;
-                color: white;
-                padding: 0.25rem 0.75rem;
-                border-radius: 1rem;
-                font-size: 0.875rem;
-                font-weight: $font-weight-regular;
-            }
+            margin: 0;
         }
 
         p {
+            font-size: $font-size-tag;
+            font-weight: $font-weight-regular;
             color: $color-neutral;
             margin: 0;
         }
