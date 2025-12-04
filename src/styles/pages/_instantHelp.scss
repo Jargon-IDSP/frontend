@@ -4,6 +4,8 @@
 .instant-help-page {
   padding: 2rem 1rem;
   text-align: center;
+  background-color: $secondary-200;
+  min-height: 100vh;
 
   .instant-help-header {
     display: flex;
