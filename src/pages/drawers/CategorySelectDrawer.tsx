@@ -86,15 +86,15 @@ export default function CategorySelectDrawer({
       <Drawer open={isOpen} onOpenChange={onClose} direction="bottom">
         <DrawerContent className="mx-auto w-[100vw] max-w-[480px] max-h-[65vh] sm:max-h-[90vh]">
           <DrawerHeader>
-            <DrawerTitle>Select a Category</DrawerTitle>
-            <DrawerDescription>
+            <DrawerTitle className="text-xl font-semibold text-[#fe4d13]">Select a Category</DrawerTitle>
+            <DrawerDescription className="text-[13px] font-semibold text-[#6F2E17]">
               Choose where to organize <strong>{filename}</strong>
             </DrawerDescription>
           </DrawerHeader>
 
           <div className="flex-1 overflow-y-auto px-4 pb-4">
             {isLoading ? (
-              <div className="text-center py-8 text-gray-500">
+              <div className="text-center py-8 text-[13px] font-semibold text-[#6F2E17]">
                 Loading categories...
               </div>
             ) : (
@@ -112,7 +112,7 @@ export default function CategorySelectDrawer({
                         }`}
                       >
                         <div className="flex items-center justify-between">
-                          <h3 className="font-semibold text-base">
+                          <h3 className="text-[13px] font-semibold text-[#6F2E17]">
                             {category.name}
                           </h3>
                           {selectedId === category.id && (
@@ -123,7 +123,7 @@ export default function CategorySelectDrawer({
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
+                  <div className="text-center py-8 text-[13px] font-semibold text-[#6F2E17]">
                     No categories available
                   </div>
                 )}
@@ -139,7 +139,7 @@ export default function CategorySelectDrawer({
                       alt="Add folder"
                       className="w-5 h-5"
                     />
-                    <span className="font-medium">Add a Custom Category</span>
+                    <span className="text-[13px] font-semibold text-[#fe8861]">Add a Custom Category</span>
                   </button>
                 </div>
               </>
@@ -151,10 +151,10 @@ export default function CategorySelectDrawer({
               <Button
                 onClick={handleSelect}
                 disabled={!selectedId || isSubmitting}
-                className={`w-full sm:flex-1 sm:py-2 ${
+                className={`w-full sm:flex-1 sm:py-2 text-[13px] font-semibold ${
                   selectedId && !isSubmitting
                     ? "bg-[#fe4d13] hover:bg-[#e74611] text-white"
-                    : ""
+                    : "bg-[#e7e6df] text-[#4f2110]"
                 }`}
               >
                 {isSubmitting ? "Continue..." : "Continue"}
@@ -163,7 +163,7 @@ export default function CategorySelectDrawer({
                 variant="outline"
                 onClick={onClose}
                 disabled={isSubmitting}
-                className="w-full sm:flex-1 text-red-500 hover:bg-red-50 sm:py-2"
+                className="w-full sm:flex-1 text-[13px] font-semibold text-[#c40000] hover:bg-red-50 sm:py-2"
               >
                 Cancel
               </Button>
