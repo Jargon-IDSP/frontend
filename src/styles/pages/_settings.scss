@@ -68,10 +68,11 @@
 .settings-header {
   display: flex;
   align-items: center;
-  justify-content: space-between;
   padding: $spacing-md $spacing-lg;
+  padding-top: 2rem;
   top: 0;
   z-index: 10;
+  gap: $spacing-md;
 }
 
 .settings-back-button {
@@ -92,14 +93,15 @@
 }
 
 .settings-title {
-  font-size: $font-size-h2;
-  font-weight: $font-weight-medium;
+  font-size: $font-size-h1;
+  font-weight: $font-weight-bold;
   color: $color-quaternary-dark;
   margin: 0;
+  margin-left: 0;
 }
 
 .settings-header-spacer {
-  width: 40px;
+  display: none;
 }
 
 .settings-section {
