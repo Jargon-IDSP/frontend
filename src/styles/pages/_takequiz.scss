@@ -4,6 +4,7 @@
 
 // Quiz Completion Styles
 .quiz-completion {
+    font-family: $font-family-primary;
     padding: 2rem;
     max-width: 800px;
     margin: 0 auto;
@@ -133,6 +134,7 @@
   display: flex;
   justify-content: flex-end;
   margin-bottom: $spacing-md;
+  font-family: $font-family-primary;
 }
 
 .translate-button {
@@ -142,7 +144,7 @@
   border-radius: 6px;
   font-weight: $font-weight-regular;
   font-size: $font-size-label;
-  width: 150px;
+  width: 155px;
   transition: background-color $transition-fast, transform $transition-fast;
 
   &:disabled {

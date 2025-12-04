@@ -18,11 +18,11 @@
     }
 }
 
-.quzi-title {
+.quiz-title {
     @include card-title;
 }
 
-.quzi-number {
+.quiz-number {
     margin-left: $spacing-sm;
     font-size: $font-size-label;
     color: $color-quaternary-dark;
@@ -37,6 +37,7 @@
     border: none;
     font-size: $font-size-body;
     font-weight: $font-weight-regular;
+    font-family: $font-family-primary;
    
     
 }
@@ -74,7 +75,7 @@
 
 .quiz-choices-button {
     margin-left: auto;
- margin-right: auto;
+    margin-right: auto;
     font-size: $font-size-label;
     font-weight: $font-weight-regular;
     width: 95%;
